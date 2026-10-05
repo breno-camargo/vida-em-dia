@@ -1,0 +1,15 @@
+node_modules/
+dist/
+dist-ssr/
+.env*
+!.env.example
+*.local
+*.log
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+.vercel/
+coverage/
+*.tsbuildinfo
