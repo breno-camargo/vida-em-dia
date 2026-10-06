@@ -14,7 +14,7 @@ import { AjudaExercicio } from '../componentes/AjudaExercicio'
 import { EditorExercicio } from '../componentes/EditorExercicio'
 import { useTelaLigada } from '../hooks/useTelaLigada'
 import { MiniaturaExercicio } from '../componentes/MiniaturaExercicio'
-import { ChevronDown, Plus, ClipboardPlus, MessageSquare, ArrowLeft, Smartphone, Check, Trophy, X } from 'lucide-react'
+import { ChevronDown, Plus, ClipboardPlus, MessageSquare, ArrowLeft, Smartphone, Check, Trophy, X, Pencil } from 'lucide-react'
 import { SelecionarDescanso } from '../componentes/SelecionarDescanso'
 import { Painel } from '../componentes/Painel'
 import { recordesDoTreino } from '../dados/historico'
@@ -25,6 +25,8 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
     clearTimeout(descarte.current)
     return () => { descarte.current = setTimeout(() => { void descartarTreinoLivreVazio(id).catch(() => undefined) }, 0) }
   }, [id])
+  const [nomeAberto, definirNomeAberto] = useState(false)
+  const [nomeTreino, definirNomeTreino] = useState('')
   const cards = useRef(new Map<string, HTMLDetailsElement>())
   const avisosRecordes = useRef(new Set<string>())
   const [avisoRecorde, definirAvisoRecorde] = useState<Record<string, { nome: string; marcas: string[] }>>({})
@@ -76,10 +78,11 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
     window.scrollTo({ top: 0 })
   }} />
   return <>
-    <div className="painel andamento-treino"><h2>{treino.titulo ?? 'Treino livre'}</h2><p>{series.filter(s => s.concluida_em).length} de {series.length} séries concluídas</p><button className="botao-secundario manter-tela" onClick={() => void tela.manter()}><Smartphone size={18} aria-hidden="true" /><span>{tela.estado}</span></button><small>Salvo neste aparelho. Você pode sair e continuar depois.</small></div>
+    <div className="painel andamento-treino"><div className="titulo-andamento"><h2>{treino.titulo ?? 'Treino livre'}</h2>{!treino.ficha_id && <button type="button" aria-label="Dar um nome ao treino livre" onClick={() => { definirNomeTreino(treino.titulo === 'Treino livre' ? '' : treino.titulo ?? ''); definirNomeAberto(true) }}><Pencil size={16} aria-hidden="true" />Nomear</button>}</div><p>{series.filter(s => s.concluida_em).length} de {series.length} séries concluídas</p><button className="botao-secundario manter-tela" onClick={() => void tela.manter()}><Smartphone size={18} aria-hidden="true" /><span>{tela.estado}</span></button><small>Salvo neste aparelho. Você pode sair e continuar depois.</small></div>
     {erro && <p role="alert" className="erro">{erro}</p>}
     {Object.keys(avisoRecorde).length > 0 && <div className="aviso-recorde" role="status"><Trophy className="icone-recorde" size={20} aria-hidden="true" /><div><strong>{Object.keys(avisoRecorde).length > 1 ? 'Novos recordes' : 'Novo recorde'}</strong>{Object.entries(avisoRecorde).map(([exercicioId, aviso]) => <p key={exercicioId}><b>{aviso.nome}</b><br />{aviso.marcas.join(' · ')}</p>)}</div><button aria-label="Fechar aviso de recorde" onClick={() => definirAvisoRecorde({})}><X size={16} aria-hidden="true" /></button></div>}
     {removido && <button className="botao-secundario" disabled={ocupado} onClick={() => void executar(async () => { await removido.desfazer(); definirRemovido(null) })}>Desfazer remoção</button>}
+    {nomeAberto && <Painel titulo="Nome do treino livre" fechar={() => definirNomeAberto(false)}><form className="formulario" onSubmit={e => { e.preventDefault(); void executar(async () => { await tabela('treinos').update(id, { titulo: nomeTreino.trim() || 'Treino livre', atualizado_em: new Date().toISOString() }); definirNomeAberto(false) }) }}><label>Nome (opcional)<input autoFocus maxLength={80} value={nomeTreino} onChange={e => definirNomeTreino(e.target.value)} placeholder="Ex.: treino de sábado" /></label><p className="nota-resumo">Este nome aparece no histórico e no card do treino.</p><button type="submit" className="botao-principal largura-total" disabled={ocupado}>Salvar nome</button></form></Painel>}
     <Descanso fim={treino.descanso_fim} alterar={fim => void executar(() => atualizarDescanso(fim))} />
     {itens.map((item, indice) => {
       const ex = exercicios.find(e => e.id === item.exercicio_id)
@@ -170,6 +173,7 @@ function Desempenho({ exercicioId, semPeso }: { exercicioId: string; semPeso: bo
   }, [exercicioId])
   return <div className="ultimo-desempenho">{dados?.ultimas.length ? <><span>Último treino</span><p>{dados.ultimas.length} séries: {dados.ultimas.map(s => `${s.repeticoes} repetições${s.modo_carga === 'peso_corporal' ? '' : ` com ${s.peso_total.toLocaleString('pt-BR')} kg`}`).join(' · ')}</p>{!semPeso && <small>Maior carga já registrada: {dados.melhor.toLocaleString('pt-BR')} kg</small>}</> : <p>{semPeso ? 'Primeiro treino: registre as repetições de cada série.' : 'Primeiro treino: registre a carga e as repetições de cada série.'}</p>}</div>
 }
+
 
 
 
