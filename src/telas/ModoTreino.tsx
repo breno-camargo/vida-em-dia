@@ -100,7 +100,7 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
           const novos = recordes.filter(r => !avisosRecordes.current.has(`${item.exercicio_id}-${r}`))
           if (novos.length) {
             novos.forEach(r => avisosRecordes.current.add(`${item.exercicio_id}-${r}`))
-            definirAvisoRecorde(anteriores => ({ ...anteriores, [item.exercicio_id]: { nome: item.nome, marcas: recordes.map(r => r === 'reps' ? 'Mais repetições em uma série' : r === 'rm' ? '1RM estimado' : r === 'carga' ? 'Maior carga' : 'Maior volume') } }))
+            definirAvisoRecorde(anteriores => ({ ...anteriores, [item.exercicio_id]: { nome: item.nome, marcas: recordes.map(r => r === 'reps' ? 'Mais repetições em uma série' : r === 'rm' ? 'Força estimada' : r === 'carga' ? 'Maior carga' : 'Maior volume') } }))
           }
           const pendentes = await tabela('series_treino').where('[treino_id+exercicio_id]').equals([id, item.exercicio_id]).filter(serie => !serie.apagado_em && !serie.concluida_em).count()
           const card = cards.current.get(item.id)
@@ -170,6 +170,7 @@ function Desempenho({ exercicioId, semPeso }: { exercicioId: string; semPeso: bo
   }, [exercicioId])
   return <div className="ultimo-desempenho">{dados?.ultimas.length ? <><span>Último treino</span><p>{dados.ultimas.length} séries: {dados.ultimas.map(s => `${s.repeticoes} repetições${s.modo_carga === 'peso_corporal' ? '' : ` com ${s.peso_total.toLocaleString('pt-BR')} kg`}`).join(' · ')}</p>{!semPeso && <small>Maior carga já registrada: {dados.melhor.toLocaleString('pt-BR')} kg</small>}</> : <p>{semPeso ? 'Primeiro treino: registre as repetições de cada série.' : 'Primeiro treino: registre a carga e as repetições de cada série.'}</p>}</div>
 }
+
 
 
 
