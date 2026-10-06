@@ -26,6 +26,6 @@ export function EditorFicha({ ficha, iniciais, exercicios, fechar }: { ficha: Fi
     <label>Buscar para adicionar<input value={busca} onChange={e => definirBusca(e.target.value)} placeholder="Nome do exercício" /></label>
     <div className="seletor-exercicios">{exercicios.filter(ex => !itens.some(item => item.exercicio_id === ex.id) && ex.nome.toLocaleLowerCase('pt-BR').includes(busca.toLocaleLowerCase('pt-BR'))).map(ex => <button type="button" key={ex.id} onClick={() => definirItens([...itens, { ...criarRegistro(ficha.user_id), ficha_id: ficha.id, exercicio_id: ex.id, ordem: itens.length, series_planejadas: 3, descanso_segundos: ex.descanso_padrao_segundos }])}>Adicionar · {ex.nome}</button>)}</div>
     {erro && <p className="erro" role="alert">{erro}</p>}<button disabled={salvando} className="botao-principal">{salvando ? 'Salvando…' : 'Salvar ficha'}</button>
-    <small>Iniciar sessões e registrar séries chega na etapa 3.</small>
+    <small>Durante o treino, você poderá alterar o planejamento só daquele dia.</small>
   </form></Painel>
 }

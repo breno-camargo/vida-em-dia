@@ -19,12 +19,18 @@ export interface FichaExercicio extends Registro {
 export interface Treino extends Registro {
   ficha_id?: string; data: string; inicio: string; fim?: string
   duracao_minutos?: number; calorias?: number; observacao: string
+  titulo?: string; descanso_fim?: string | null; peso_corporal?: number
+}
+export interface TreinoExercicio extends Registro {
+  treino_id: string; exercicio_id: string; nome: string; ordem: number; descanso_segundos: number
 }
 export interface SerieTreino extends Registro {
   treino_id: string; exercicio_id: string; numero_serie: number
   tipo: 'aquecimento' | 'normal' | 'falha' | 'dropset'
   peso_digitado: number; peso_total: number; repeticoes: number; rpe?: number
   concluida_em?: string; recorde: boolean
+  modo_carga?: 'total' | 'por_lado'; peso_barra?: number
+  reducoes?: { peso_digitado: number; repeticoes: number }[]
 }
 export interface CardioSessao extends Registro {
   treino_id?: string; data: string
@@ -73,6 +79,7 @@ export interface Configuracao extends Registro {
 export interface Tabelas {
   exercicios: Exercicio; fichas: Ficha; ficha_exercicios: FichaExercicio
   treinos: Treino; series_treino: SerieTreino; cardio_sessoes: CardioSessao
+  treino_exercicios: TreinoExercicio
   medidas_corporais: MedidaCorporal; atividade_diaria: AtividadeDiaria; feriados: Feriado
   refeicoes_dia: RefeicaoDia; alimentos_favoritos: AlimentoFavorito; combos_refeicao: ComboRefeicao
   agua_dia: AguaDia; consumo_diario_meta: ConsumoDiarioMeta; fotos: Foto; configuracoes: Configuracao
