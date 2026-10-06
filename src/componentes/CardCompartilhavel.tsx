@@ -13,11 +13,12 @@ export function CardCompartilhavel({ treino, dados, fechar }: { treino: Treino; 
     void criarCardTreino(treino, dados, foto).then(imagem => { if (!ativo) return; endereco = URL.createObjectURL(imagem); definirBlob(imagem); definirUrl(endereco) }).catch(() => { if (ativo) definirErro('Não foi possível gerar o card. Tente outra foto.') })
     return () => { ativo = false; if (endereco) URL.revokeObjectURL(endereco) }
   }, [treino, dados, foto])
-  return <Painel titulo="Compartilhar conquista" fechar={fechar}><p className="subtitulo-seletor">Imagem para Stories · foto opcional</p>{url ? <img className="preview-card" src={url} alt="Card com resultados reais do treino" /> : <p role="status">Gerando imagem…</p>}<label className="anexar">Escolher foto<input type="file" accept="image/*" onChange={e => { definirFoto(e.target.files?.[0]); definirErro('') }} /></label>{foto && <button className="botao-secundario" onClick={() => definirFoto(undefined)}>Remover foto</button>}<p className="nota-resumo">A foto é usada apenas neste card e não é armazenada no app.</p>{erro && <p className="erro" role="alert">{erro}</p>}<button className="botao-principal largura-total" disabled={!blob || ocupado} onClick={async () => {
+  return <Painel titulo="Compartilhar conquista" fechar={fechar}><p className="subtitulo-seletor">Imagem para Stories · foto opcional</p>{url ? <img className="preview-card" src={url} alt="Card com resultados reais do treino" /> : <p role="status">Gerando imagem…</p>}<label className="foto-card">Adicionar foto ao card<input type="file" accept="image/*" onChange={e => { definirFoto(e.target.files?.[0]); definirErro('') }} /></label>{foto && <button className="botao-secundario" onClick={() => definirFoto(undefined)}>Remover foto</button>}<p className="nota-resumo">A foto é usada apenas neste card e não é armazenada no app.</p>{erro && <p className="erro" role="alert">{erro}</p>}<button className="botao-principal largura-total" disabled={!blob || ocupado} onClick={async () => {
     if (!blob) return
     const arquivo = new File([blob], `vida-em-dia-${treino.data}.png`, { type: 'image/png' })
     definirOcupado(true)
     try { if (navigator.canShare?.({ files: [arquivo] })) await navigator.share({ files: [arquivo], title: 'Meu treino no Vida em Dia' }); else { const link = document.createElement('a'); link.href = url; link.download = arquivo.name; link.click() } } catch (error) { if (!(error instanceof DOMException && error.name === 'AbortError')) definirErro('Não foi possível compartilhar. Use Baixar imagem.') } finally { definirOcupado(false) }
   }}>Compartilhar imagem</button>{url && <a className="botao-secundario baixar-card" href={url} download={`vida-em-dia-${treino.data}.png`}>Baixar imagem</a>}</Painel>
 }
+
 
