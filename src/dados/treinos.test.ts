@@ -126,3 +126,20 @@ test('salve o treino anterior ao iniciar outro e preserve as séries', async () 
   expect((await tabela('series_treino').get(series[0].id))?.concluida_em).toBeTruthy()
   expect((await tabela('series_treino').get(series[1].id))?.concluida_em).toBeUndefined()
 })
+
+test('separe os grupos antigos sem alterar ids, fichas ou instruções próprias', async () => {
+  const schema = Object.fromEntries(banco.tables.map(t => [t.name, [t.schema.primKey.src, ...t.schema.indexes.map(i => i.src)].join(', ')]))
+  const ex = (await tabela('exercicios').toArray()).find(e => e.nome === 'Panturrilha em pé')!
+  await banco.delete()
+  const antigo = new Dexie('vida-em-dia'); antigo.version(3).stores(schema)
+  const gluteo = { ...ex, ...criarRegistro(), nome: 'Elevação pélvica', grupo_muscular: 'Glúteos e panturrilhas', musculos: 'Minha descrição personalizada' }
+  await antigo.table('exercicios').bulkAdd([{ ...ex, grupo_muscular: 'Glúteos e panturrilhas', musculos: 'Glúteos e panturrilhas' }, gluteo])
+  const item = { ...criarRegistro(), ficha_id: crypto.randomUUID(), exercicio_id: ex.id, ordem: 0, series_planejadas: 3 }
+  await antigo.table('ficha_exercicios').add(item)
+  antigo.close(); await banco.open()
+  expect((await tabela('exercicios').get(ex.id))?.grupo_muscular).toBe('Panturrilhas')
+  expect((await tabela('exercicios').get(ex.id))?.musculos).toBe('Panturrilhas')
+  expect((await tabela('exercicios').get(gluteo.id))?.grupo_muscular).toBe('Glúteos')
+  expect((await tabela('exercicios').get(gluteo.id))?.musculos).toBe('Minha descrição personalizada')
+  expect((await tabela('ficha_exercicios').get(item.id))?.exercicio_id).toBe(ex.id)
+})

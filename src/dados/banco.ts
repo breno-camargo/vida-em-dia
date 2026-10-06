@@ -34,3 +34,12 @@ banco.version(3).stores({
     if (item.peso_barra === undefined) item.peso_barra = 0
   })
 })
+banco.version(4).stores({}).upgrade(async transacao => {
+  const atualizado = new Date().toISOString()
+  await transacao.table('exercicios').where('grupo_muscular').equals('Glúteos e panturrilhas').modify(item => {
+    const grupo = item.nome.toLocaleLowerCase('pt-BR').includes('panturrilha') ? 'Panturrilhas' : 'Glúteos'
+    item.grupo_muscular = grupo
+    if (item.musculos === 'Glúteos e panturrilhas') item.musculos = grupo
+    item.atualizado_em = atualizado
+  })
+})
