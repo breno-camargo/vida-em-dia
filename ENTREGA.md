@@ -28,6 +28,7 @@ A Vercel acompanha main em produção. Não use --prod na homologação. Abra o 
 6. Edite/desfaça uma conclusão, copie a anterior e acrescente série extra.
 7. Feche e reabra: Continuar treino deve preservar séries e descanso.
 8. Adicione/remova/reordene exercícios do dia e confirme que a ficha original não mudou.
+   Toque no nome para abrir/recolher as séries e na foto para abrir Músculos, Instruções e Equipamento. Confira também no editor de fichas e confirme que o planejamento não salvo continua intacto ao fechar a ajuda. Gráficos de Evolução chegam na etapa 4.
 9. Abra a ajuda/fotos e volte sem perder o andamento; use Manter tela ligada.
 10. Finalize, confira resumo e estimativa editável e inicie outra sessão para conferir o último desempenho.
 11. Faça treino livre e salve o planejamento como ficha.

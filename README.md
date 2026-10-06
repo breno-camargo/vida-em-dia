@@ -36,6 +36,8 @@ Use Iniciar treino em uma ficha ou Iniciar treino livre. As séries ficam preenc
 
 Exercícios aparecem em cards recolhíveis no treino e no editor de fichas. Toque no nome para abrir abaixo. O card mostra a miniatura da máquina quando cadastrada, resumo e progresso; dentro dele, todas as séries ficam em linhas compactas com reps, kg e Concluir. Abra Opções para tipo, carga por lado, ajustes +/−, drop set e RPE. Recolher o card não apaga alterações nem interrompe o descanso.
 
+Toque na miniatura para abrir o detalhe sem expandir as séries. O painel oferece Músculos (texto cadastrado), Instruções (um passo por linha e link de vídeo), Equipamento (nome e fotos da máquina) e Evolução (indicação da etapa 4, ainda sem gráficos). A edição da ajuda também funciona enquanto edita uma ficha, preservando seu planejamento ainda não salvo. Imagens anatômicas e de execução de bancos abertos chegam na etapa 14; não há indicadores fictícios de popularidade.
+
 Tipos de série: normal, aquecimento, até a falha e drop set. No drop set, adicione reduções de carga e reps antes de Concluir; não há descanso entre reduções. RPE opcional fica recolhido. Carga por lado calcula lado × 2 + barra; use barra 0 se não quiser somá-la. Aquecimento fica fora do volume e usa descanso de até 30 segundos.
 
 Concluir salva a série imediatamente e inicia descanso quando há outra série no mesmo exercício. A última sugere o próximo exercício. O timer usa o timestamp de término; a renderização é atualizada com setTimeout, sem diminuir um contador. Ao retornar do bloqueio, mostra o tempo correto e quanto passou do término. O som é liberado no toque em Concluir; o alerta visual continua independente do áudio. Não há notificações em segundo plano. Inclui +15 s, -15 s, pular e silenciar.
