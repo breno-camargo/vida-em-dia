@@ -8,9 +8,10 @@ export interface Registro {
 export type TipoDia = 'util' | 'fds_feriado'
 export interface Exercicio extends Registro {
   nome: string; tipo: 'forca' | 'cardio'; grupo_muscular: string; equipamento: string
-  descanso_padrao_segundos: number; modo_carga: 'total' | 'por_lado'; peso_barra: number
+  descanso_padrao_segundos: number; modo_carga: 'total' | 'por_lado' | 'peso_corporal'; peso_barra: number
   nota_fixa: string; como_fazer: string; musculos: string; video_url?: string
   origem: 'manual' | 'banco_aberto'; referencia_externa?: string
+  alvo_reps?: number
 }
 export interface Ficha extends Registro { nome: string; ordem: number }
 export interface FichaExercicio extends Registro {
@@ -29,7 +30,7 @@ export interface SerieTreino extends Registro {
   tipo: 'aquecimento' | 'normal' | 'falha' | 'dropset'
   peso_digitado: number; peso_total: number; repeticoes: number; rpe?: number
   concluida_em?: string; recorde: boolean
-  modo_carga?: 'total' | 'por_lado'; peso_barra?: number
+  modo_carga?: 'total' | 'por_lado' | 'peso_corporal'; peso_barra?: number
   reducoes?: { peso_digitado: number; repeticoes: number }[]
 }
 export interface CardioSessao extends Registro {
@@ -84,3 +85,4 @@ export interface Tabelas {
   refeicoes_dia: RefeicaoDia; alimentos_favoritos: AlimentoFavorito; combos_refeicao: ComboRefeicao
   agua_dia: AguaDia; consumo_diario_meta: ConsumoDiarioMeta; fotos: Foto; configuracoes: Configuracao
 }
+

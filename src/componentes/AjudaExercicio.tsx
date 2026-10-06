@@ -7,6 +7,8 @@ import type { Exercicio, Foto } from '../dados/modelos'
 import { processarImagem } from '../utilitarios/imagem'
 import { dataLocal } from '../utilitarios/data'
 import { Dumbbell } from 'lucide-react'
+import { lazy, Suspense } from 'react'
+const EvolucaoExercicio = lazy(() => import('./EvolucaoExercicio').then(modulo => ({ default: modulo.EvolucaoExercicio })))
 function ImagemLocal({ foto }: { foto: Foto }) {
   const ref = useRef<HTMLImageElement>(null)
   useEffect(() => {
@@ -33,7 +35,7 @@ export function AjudaExercicio({ exercicio, online, fechar, editar }: { exercici
     {aba === 'Instruções' && <><section className="ajuda-texto"><h3>Nota fixa</h3><p>{exercicio.nota_fixa || 'Adicione a regulagem da máquina ou uma dica pessoal.'}</p><h3>Como fazer</h3>{exercicio.como_fazer.trim() ? <ol className="passos-exercicio">{exercicio.como_fazer.split(/\n+/).filter(linha => linha.trim()).map((linha, indice) => <li key={indice}>{linha.replace(/^\s*\d+[.)]\s*/, '')}</li>)}</ol> : <p>Você pode escrever um passo por linha ao editar.</p>}</section>
       {online ? <a className="botao-principal" href={video} target="_blank" rel="noopener noreferrer">Ver execução</a> : <p className="nota">Conecte-se à internet para abrir o vídeo. Suas fotos e instruções continuam disponíveis offline.</p>}
     </>}
-    {aba === 'Evolução' && <section className="painel"><h2>Seu desempenho</h2><p>Histórico, recordes e gráficos deste exercício estarão aqui na ETAPA 4.</p></section>}
+    {aba === 'Evolução' && <Suspense fallback={<p role="status">Carregando evolução…</p>}><EvolucaoExercicio id={exercicio.id} /></Suspense>}
     {aba === 'Equipamento' && <><section className="ajuda-texto"><h3>Equipamento</h3><p>{exercicio.equipamento || 'Ainda não informado. Cadastre o nome da máquina ao editar.'}</p></section>
     <div className="fotos-maquina">{fotos?.map(foto => <figure key={foto.id}><ImagemLocal foto={foto} />
       <button className="botao-secundario" disabled={ocupado} onClick={async () => { try { await repositorio('fotos').apagar(foto.id); definirApagada(foto) } catch { definirErro('Não foi possível remover a foto.') } }}>Remover foto</button></figure>)}</div>

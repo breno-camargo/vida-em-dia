@@ -8,16 +8,19 @@ import type { Exercicio, Ficha, FichaExercicio } from '../dados/modelos'
 import { EditorExercicio } from '../componentes/EditorExercicio'
 import { EditorFicha } from '../componentes/EditorFicha'
 import { AjudaExercicio } from '../componentes/AjudaExercicio'
-import { iniciarTreino, treinoAtivo } from '../dados/treinos'
+import { iniciarTreino, treinoAtivo, descartarTreinoLivreVazio } from '../dados/treinos'
 import { ModoTreino } from './ModoTreino'
-import { Ellipsis, Play, Plus, ArrowRight, Dumbbell, ChevronDown } from 'lucide-react'
+import { Ellipsis, Play, Plus, ArrowRight, Dumbbell, ChevronDown, Image } from 'lucide-react'
 import { Painel } from '../componentes/Painel'
+import { CompartilharUltimo } from '../componentes/CompartilharUltimo'
 
 const normalizar = (texto: string) => texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR')
 export function Treino({ online }: { online: boolean }) {
   const exercicios = useLiveQuery(() => repositorio('exercicios').listar().then(itens => itens.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'))))
   const fichas = useLiveQuery(() => repositorio('fichas').listar().then(itens => itens.sort((a, b) => a.ordem - b.ordem)))
   const ativo = useLiveQuery(treinoAtivo)
+  const ultimoFinalizado = useLiveQuery(() => tabela('treinos').filter(t => !!t.fim && !t.apagado_em).sortBy('fim').then(t => t.at(-1)))
+  const [cardFinalizado, definirCardFinalizado] = useState<string | null>(null)
   const planejamento = useLiveQuery(() => repositorio('ficha_exercicios').listar())
   const [sessao, definirSessao] = useState<string | null>(null)
   const [abrirResumo, definirAbrirResumo] = useState(false)
@@ -64,10 +67,11 @@ export function Treino({ online }: { online: boolean }) {
   if (!exercicios || !fichas) return <p role="status">Carregando seu espaço…</p>
   const filtrados = exercicios.filter(ex => normalizar(`${ex.nome} ${ex.equipamento}`).includes(normalizar(busca)))
   const gruposBiblioteca = [...new Set(filtrados.map(ex => ex.grupo_muscular.trim() || 'Outros'))].sort((a, b) => a.localeCompare(b, 'pt-BR'))
-  if (sessao) return <ModoTreino id={sessao} online={online} abrirResumo={abrirResumo} fechar={() => { definirSessao(null); definirAbrirResumo(false) }} />
+  if (sessao) return <ModoTreino id={sessao} online={online} abrirResumo={abrirResumo} fechar={() => void executar(async () => { await descartarTreinoLivreVazio(sessao); definirSessao(null); definirAbrirResumo(false) })} concluido={id => { definirSessao(null); definirAbrirResumo(false); definirCardFinalizado(id) }} />
   return <>
     {ativo && <section className="retomar-treino"><span className="etiqueta">SEU TREINO ESTÁ SALVO</span><h2>{ativo.titulo ?? 'Treino livre'}</h2><button onClick={() => definirSessao(ativo.id)}>Continuar treino <ArrowRight size={20} /></button></section>}
     <div className="abas-treino"><button aria-pressed={secao === 'fichas'} onClick={() => definirSecao('fichas')}>Minhas fichas</button><button aria-pressed={secao === 'biblioteca'} onClick={() => definirSecao('biblioteca')}>Exercícios ({exercicios.length})</button></div>
+    {secao === 'fichas' && ultimoFinalizado && <section className="ultimo-concluido"><span>Último treino concluído</span><strong>{ultimoFinalizado.titulo ?? 'Treino livre'}</strong><button className="botao-secundario" onClick={() => definirCardFinalizado(ultimoFinalizado.id)}><Image size={18} aria-hidden="true" />Ver Card<ArrowRight size={16} aria-hidden="true" /></button></section>}
     {erro && <p role="alert" className="erro">{erro}</p>}
     {desfazer && <div className="desfazer" role="status">{desfazer.texto}<button disabled={ocupado} onClick={() => void executar(async () => { await desfazer.executar(); definirDesfazer(null) })}>Desfazer</button></div>}
     {secao === 'fichas' ? <>
@@ -98,10 +102,13 @@ export function Treino({ online }: { online: boolean }) {
     </>}
     {novoPedido && <Painel centralizado titulo="Já existe um treino em andamento" fechar={() => definirNovoPedido(null)}><p className="subtitulo-seletor">Você pode concluir o atual ou salvar seu andamento e iniciar o treino escolhido. Séries pendentes não serão marcadas como feitas.</p><button type="button" className="botao-principal largura-total" disabled={ocupado} onClick={() => void executar(async () => { const atual = await treinoAtivo(); definirNovoPedido(null); if (atual) { definirAbrirResumo(true); definirSessao(atual.id) } })}>Concluir treino atual</button><button type="button" className="botao-secundario" disabled={ocupado} onClick={() => void executar(async () => { const id = await iniciarTreino(novoPedido.fichaId, true); definirNovoPedido(null); definirAbrirResumo(false); definirSessao(id) })}>Salvar atual e iniciar outro</button>{erro && <p className="erro" role="alert">{erro}</p>}</Painel>}
     {edicao && <EditorExercicio exercicio={edicao} fechar={() => definirEdicao(null)} />}
+    {cardFinalizado && <CompartilharUltimo id={cardFinalizado} fechar={() => definirCardFinalizado(null)} />}
     {ficha && <EditorFicha ficha={ficha.dados} iniciais={ficha.itens} exercicios={exercicios} fechar={() => definirFicha(null)} />}
     {ajuda && <AjudaExercicio exercicio={ajuda} online={online} fechar={() => definirAjuda(null)} editar={() => { definirEdicao(ajuda); definirAjuda(null) }} />}
   </>
 }
+
+
 
 
 

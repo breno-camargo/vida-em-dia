@@ -3,8 +3,20 @@ import { criarRegistro } from './repositorio'
 import type { Exercicio, SerieTreino, Treino, TreinoExercicio } from './modelos'
 import { dataLocal } from '../utilitarios/data'
 import { cargaTotal, validarSerie, caloriasMusculacao } from '../utilitarios/treino'
+import { desempenho, efetivas } from '../utilitarios/evolucao'
 
 export async function treinoAtivo() { return tabela('treinos').filter(t => !t.fim && !t.apagado_em).first() }
+export async function descartarTreinoLivreVazio(id: string) {
+  return banco.transaction('rw', tabela('treinos'), tabela('treino_exercicios'), tabela('series_treino'), async () => {
+    const treino = await tabela('treinos').get(id)
+    if (!treino || treino.ficha_id || treino.fim || treino.apagado_em) return
+    const itens = await tabela('treino_exercicios').where('treino_id').equals(id).filter(i => !i.apagado_em).count()
+    const series = await tabela('series_treino').where('treino_id').equals(id).filter(s => !s.apagado_em).count()
+    if (itens || series) return
+    const agora = new Date().toISOString()
+    await tabela('treinos').update(id, { apagado_em: agora, atualizado_em: agora })
+  })
+}
 export async function ultimasSeries(exercicio_id: string) {
   const treinos = await tabela('treinos').filter(t => Boolean(t.fim) && !t.apagado_em).toArray()
   const series = await tabela('series_treino').where('exercicio_id').equals(exercicio_id).filter(s => Boolean(s.concluida_em) && !s.apagado_em && treinos.some(t => t.id === s.treino_id)).toArray()
@@ -17,9 +29,9 @@ export async function montarExercicio(treino: Treino, ex: Exercicio, quantidade:
   await tabela('treino_exercicios').add(item)
   const series: SerieTreino[] = Array.from({ length: quantidade }, (_, indice) => {
     const anterior = ultimas[indice] ?? ultimas.at(-1)
-    const modo = anterior?.modo_carga ?? ex.modo_carga
+    const modo = ex.modo_carga === 'peso_corporal' ? 'peso_corporal' : anterior?.modo_carga ?? ex.modo_carga
     const barra = anterior?.peso_barra ?? ex.peso_barra
-    const peso = anterior?.peso_digitado ?? 0
+    const peso = modo === 'peso_corporal' ? 0 : anterior?.peso_digitado ?? 0
     return { ...criarRegistro(treino.user_id), treino_id: treino.id, exercicio_id: ex.id, numero_serie: indice + 1, tipo: 'normal', peso_digitado: peso, peso_total: cargaTotal(peso, modo, barra), repeticoes: anterior?.repeticoes ?? 10, recorde: false, modo_carga: modo, peso_barra: barra }
   })
   await tabela('series_treino').bulkAdd(series)
@@ -68,7 +80,13 @@ export async function concluirSerie(dados: SerieTreino) {
     if (!treino || treino.fim || !salva || salva.apagado_em) throw new Error('Esta série não está disponível.')
     if (salva.concluida_em) return
     const agora = new Date().toISOString()
-    await tabela('series_treino').put({ ...dados, peso_total: cargaTotal(dados.peso_digitado, dados.modo_carga, dados.peso_barra), concluida_em: agora, atualizado_em: agora })
+    const anteriores = await tabela('treinos').filter(t => !!t.fim && !t.apagado_em).toArray()
+    const anterioresSeries = await tabela('series_treino').where('exercicio_id').equals(dados.exercicio_id).filter(s => !s.apagado_em && !!s.concluida_em && (anteriores.some(t => t.id === s.treino_id) || s.treino_id === treino.id)).toArray()
+    const serie = { ...dados, peso_total: cargaTotal(dados.peso_digitado, dados.modo_carga, dados.peso_barra), concluida_em: agora, atualizado_em: agora }
+    const melhor = desempenho(anterioresSeries)
+    const atual = desempenho([serie])
+    serie.recorde = dados.tipo !== 'aquecimento' && efetivas(anterioresSeries).length > 0 && (atual.pesoCorporal ? atual.reps > melhor.reps : atual.carga > melhor.carga || atual.rm > melhor.rm)
+    await tabela('series_treino').put(serie)
     const pendentes = await tabela('series_treino').where('[treino_id+exercicio_id]').equals([dados.treino_id, dados.exercicio_id]).filter(s => !s.concluida_em && !s.apagado_em).count()
     const pendentesTreino = pendentes || await tabela('series_treino').where('treino_id').equals(dados.treino_id).filter(s => !s.concluida_em && !s.apagado_em).count()
     const exercicio = await tabela('treino_exercicios').where('treino_id').equals(dados.treino_id).filter(e => e.exercicio_id === dados.exercicio_id && !e.apagado_em).first()
@@ -97,3 +115,5 @@ export async function aplicarValoresProximas(dados: SerieTreino) {
     await tabela('series_treino').bulkPut([{ ...dados, ...valores }, ...seguintes.map(s => ({ ...s, ...valores }))])
   })
 }
+
+

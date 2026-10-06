@@ -4,7 +4,7 @@ PWA pessoal de treino, cardio, medidas, alimentação e saúde. Interface em por
 
 ## Estado do projeto
 
-ETAPAS 1, 2 e 3 aprovadas (v0.1.0, v0.2.0 e v0.3.0), mantendo o verde original. O usuário validou a etapa 3 no iPhone e aprovou a conclusão em 06/10/2026. As etapas 4 a 14 não foram implementadas.
+ETAPAS 1, 2 e 3 aprovadas (v0.1.0, v0.2.0 e v0.3.0), mantendo o verde original. O usuário validou a etapa 3 no iPhone e aprovou a conclusão em 06/10/2026. ETAPA 4 aprovada em 06/10/2026 (v0.4.0), após validação do checklist pelo usuário e correção final do vazamento no painel do card. As etapas 5 a 14 não foram implementadas.
 
 Inclui React, TypeScript, Vite, Tailwind, Dexie, cinco abas, tema escuro, configurações informativas, ícones, manifest e service worker. Já há registro local de treinos. Login, sincronização e backup chegam nas próximas etapas. O modo claro chega na etapa 13.
 
@@ -147,4 +147,28 @@ Em 06/10/2026, o usuário pediu e aprovou deixar para a etapa 4 um card de resul
 Descanso da etapa 3: painel central obrigatório entre séries e exercícios, mantido aberto após zerar até a ação Continuar. Oferece ±15 segundos, pular/continuar e silenciar; acrescentar tempo após o término começa a contar a partir de agora. Bipes nos últimos 10 segundos e alerta final de aproximadamente 3 segundos; silenciar ou continuar interrompe o som. A última série do treino não inicia descanso. Validar áudio no Safari/iPhone físico.
 
 A migração 4 separa Glúteos e Panturrilhas nos exercícios já cadastrados, preservando IDs e vínculos de fichas/treinos. Descrições próprias de músculos são mantidas. A biblioteca nova e o editor também usam os grupos separados.
+
+
+
+## ETAPA 4 — histórico e evolução (aguardando aprovação)
+
+A aba Evolução reúne os treinos concluídos e a evolução por exercício. Busque por nome da ficha, exercício ou data (ISO ou formato brasileiro). Cada sessão mostra as séries realizadas e pode ser removida com Desfazer; a remoção é lógica e preserva as séries para restauração.
+
+No detalhe do exercício, Evolução mostra carga máxima, maior volume por sessão, 1RM estimado por Epley, comparação de carga com a sessão anterior e gráficos Recharts de carga e volume. Aquecimentos, séries pendentes e registros excluídos não entram nas métricas. Drop sets somam as reduções com carga total. Recordes são recalculados a partir dos dados visíveis, inclusive de treinos antigos; a primeira sessão estabelece a referência, sem recordes fictícios. Durante o treino, superar uma marca anterior exibe Novo recorde.
+
+O editor do exercício permite ajustar o alvo de reps (padrão 12). Se todas as séries normais da última sessão, sem pendências, atingirem o alvo, aparece uma sugestão de aumentar a carga gradualmente. Se sessões recentes registrarem pelo menos quatro semanas sem aumento de carga máxima, aparece um aviso de recuperação. As sugestões não alteram cargas automaticamente.
+
+Após finalizar, a lista de fichas oferece Gerar card para compartilhar para o último treino. Qualquer treino do histórico também oferece Compartilhar. O card PNG vertical 1080 × 1920 inclui foto opcional, nome, data, duração, volume, exercícios, séries, recordes e grupos. Calorias aparecem como estimativa quando há peso registrado; caso contrário, aparece um traço. A foto fica apenas em memória para este card, sem cadastro permanente (galeria de progresso na etapa 11). A imagem é gerada no aparelho, sem serviço externo. Compartilhar usa o menu nativo quando suportado; Baixar imagem permite salvar e publicar manualmente. Não há publicação automática em redes sociais.
+
+Typecheck, lint, 25 testes e build passaram. Falta validar no iPhone: gráfico/toque, card com foto, download e compartilhamento, incluindo funcionamento offline. Main continua na versão aprovada v0.3.0; nenhuma tag v0.4.0 foi criada.
+
+### Tutorial de primeiro acesso — planejado para a etapa 13
+
+Solicitado em 06/10/2026: transformar a apresentação inicial em um tutorial curto, com opção de pular. Mostrar apenas no primeiro acesso da conta, guardar a conclusão ou o pulo por usuário e permitir rever pelas configurações. O vínculo por conta depende da autenticação da etapa 8. Nos acessos seguintes, a aba Hoje deve priorizar o resumo da rotina e as ações úteis, sem repetir a apresentação de como usar o app. Implementação adiada para a etapa 13, de experiência e acabamento.
+
+Ajuste da etapa 4: exercícios podem usar modo Peso corporal, exibindo apenas série, repetições, conclusão e opções. O catálogo usa esse padrão para barra fixa, flexão de braços, abdominal no solo, elevação de pernas e prancha abdominal. A migração preserva séries concluídas e históricos anteriores; converte apenas séries pendentes de sessões abertas. O peso corporal não soma kg ao volume nem gera sugestão de aumentar carga. O editor permite escolher o modo por exercício e as opções da série permitem ajustar casos específicos. Detalhes do histórico e referência do último treino usam descrições claras, sem a notação @.
+
+### Padrão obrigatório de seletores
+
+Preferência definida em 06/10/2026: todos os seletores devem seguir o padrão visual de rolagem do app, usando o componente compartilhado Rolagem e confirmação explícita antes de salvar. Aplicar a valores como repetições, carga, descanso, peso da barra e esforço/RPE, inclusive nas próximas etapas. Evitar listas nativas de select e seletores com aparência diferente. Para opções categóricas, adaptar a mesma experiência de rolagem com rótulos legíveis; abas de navegação e botões de ação continuam com seus componentes próprios. Ao revisar telas existentes, substituir os seletores antigos que ainda estiverem fora desse padrão.
 

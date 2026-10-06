@@ -4,14 +4,14 @@ import { beforeEach, expect, test } from 'vitest'
 import { banco, tabela } from './banco'
 import { iniciarBanco } from './configuracoes'
 import { iniciarBiblioteca } from './biblioteca'
-import { iniciarTreino, treinoAtivo, concluirSerie, aplicarValoresProximas } from './treinos'
+import { descartarTreinoLivreVazio, adicionarExercicio, iniciarTreino, treinoAtivo, concluirSerie, aplicarValoresProximas } from './treinos'
 import { criarRegistro } from './repositorio'
 import { salvarFicha } from './fichas'
 import { cargaTotal, volumeSeries, segundosRestantes } from '../utilitarios/treino'
 
 beforeEach(async () => { await banco.delete(); await banco.open(); await iniciarBanco(); await iniciarBiblioteca() })
 async function preparar() {
-  const ex = (await tabela('exercicios').toArray()).find(e => e.tipo === 'forca')!
+  const ex = (await tabela('exercicios').toArray()).find(e => e.tipo === 'forca' && e.modo_carga !== 'peso_corporal')!
   const ficha = { ...criarRegistro(), nome: 'A', ordem: 0 }
   await salvarFicha(ficha, [{ ...criarRegistro(), ficha_id: ficha.id, exercicio_id: ex.id, ordem: 0, series_planejadas: 2, descanso_segundos: 120 }])
   return { ficha, ex }
@@ -143,4 +143,64 @@ test('separe os grupos antigos sem alterar ids, fichas ou instruções próprias
   expect((await tabela('exercicios').get(gluteo.id))?.musculos).toBe('Minha descrição personalizada')
   expect((await tabela('ficha_exercicios').get(item.id))?.exercicio_id).toBe(ex.id)
 })
+
+
+test('marque recorde real ao superar carga anterior e exclua aquecimentos', async () => {
+  const { ficha } = await preparar()
+  const anterior = await iniciarTreino(ficha.id)
+  const anteriores = await tabela('series_treino').where('treino_id').equals(anterior).toArray()
+  await concluirSerie({ ...anteriores[0], peso_digitado: 20 })
+  await tabela('treinos').update(anterior, { fim: new Date().toISOString() })
+  const atual = await iniciarTreino(ficha.id)
+  const series = await tabela('series_treino').where('treino_id').equals(atual).toArray()
+  await concluirSerie({ ...series[0], tipo: 'aquecimento', peso_digitado: 100 })
+  expect((await tabela('series_treino').get(series[0].id))?.recorde).toBe(false)
+  await concluirSerie({ ...series[1], peso_digitado: 25 })
+  expect((await tabela('series_treino').get(series[1].id))?.recorde).toBe(true)
+})
+
+test('remova e restaure um treino no histórico sem apagar suas séries', async () => {
+  const { removerTreino, restaurarTreino } = await import('./historico')
+  const { ficha } = await preparar()
+  const id = await iniciarTreino(ficha.id)
+  const series = await tabela('series_treino').where('treino_id').equals(id).toArray()
+  await concluirSerie(series[0])
+  await tabela('treinos').update(id, { fim: new Date().toISOString() })
+  await removerTreino(id)
+  expect((await tabela('treinos').get(id))?.apagado_em).toBeTruthy()
+  expect(await tabela('series_treino').where('treino_id').equals(id).count()).toBe(2)
+  await restaurarTreino(id)
+  expect((await tabela('treinos').get(id))?.apagado_em).toBeNull()
+  expect((await tabela('series_treino').get(series[0].id))?.concluida_em).toBeTruthy()
+})
+
+test('registre peso corporal sem carga e sem volume artificial', async () => {
+  const ex = (await tabela('exercicios').where('nome').equals('Barra fixa').first())!
+  expect(ex.modo_carga).toBe('peso_corporal')
+  const ficha = { ...criarRegistro(), nome: 'Corpo', ordem: 0 }
+  await salvarFicha(ficha, [{ ...criarRegistro(), ficha_id: ficha.id, exercicio_id: ex.id, ordem: 0, series_planejadas: 2, descanso_segundos: 90 }])
+  const id = await iniciarTreino(ficha.id)
+  const series = await tabela('series_treino').where('treino_id').equals(id).sortBy('numero_serie')
+  expect(series.every(s => s.modo_carga === 'peso_corporal' && s.peso_total === 0)).toBe(true)
+  await concluirSerie({ ...series[0], repeticoes: 12, peso_digitado: 20, peso_barra: 20 })
+  const salva = (await tabela('series_treino').get(series[0].id))!
+  expect(salva.repeticoes).toBe(12)
+  expect(salva.peso_total).toBe(0)
+  expect(volumeSeries([salva])).toBe(0)
+})
+
+
+
+test('descarte o treino livre vazio ao sair e preserve um treino com exercício', async () => {
+  const vazio = await iniciarTreino()
+  await descartarTreinoLivreVazio(vazio)
+  expect(await treinoAtivo()).toBeUndefined()
+  expect((await tabela('treinos').get(vazio))?.fim).toBeUndefined()
+  const id = await iniciarTreino()
+  const ex = (await tabela('exercicios').toArray()).find(e => e.tipo === 'forca')!
+  await adicionarExercicio((await tabela('treinos').get(id))!, ex)
+  await descartarTreinoLivreVazio(id)
+  expect((await treinoAtivo())?.id).toBe(id)
+})
+
 
