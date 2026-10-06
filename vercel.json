@@ -1,0 +1,1 @@
+{"framework":"vite","buildCommand":"npm run typecheck && npm run lint && npm run build","outputDirectory":"dist","headers":[{"source":"/sw.js","headers":[{"key":"Cache-Control","value":"no-cache"}]}],"rewrites":[{"source":"/((?!.*\\.).*)","destination":"/index.html"}]}
