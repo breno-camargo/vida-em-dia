@@ -1,4 +1,5 @@
 import 'fake-indexeddb/auto'
+import Dexie from 'dexie'
 import { beforeEach, expect, test } from 'vitest'
 import { banco, tabela } from './banco'
 import { iniciarBanco } from './configuracoes'
@@ -56,4 +57,17 @@ test('preencha a próxima sessão com o desempenho da última sessão finalizada
 test('calcule tempo pelo término mesmo após suspender a execução', () => {
   expect(segundosRestantes('2026-10-05T12:00:00Z', Date.parse('2026-10-05T12:00:20Z'))).toBe(-20)
   expect(cargaTotal(30, 'por_lado', 20)).toBe(80)
+})
+test('preserve sessões e cargas anteriores ao migrar a versão 2 para 3', async () => {
+  const schema = Object.fromEntries(banco.tables.filter(t => t.name !== 'treino_exercicios').map(t => [t.name, [t.schema.primKey.src, ...t.schema.indexes.map(i => i.src)].join(', ')]))
+  await banco.delete()
+  const antigo = new Dexie('vida-em-dia'); antigo.version(2).stores(schema)
+  const treino = { ...criarRegistro(), data: '2026-10-05', inicio: new Date().toISOString(), observacao: 'Registro antigo' }
+  const serie = { ...criarRegistro(), treino_id: treino.id, exercicio_id: crypto.randomUUID(), numero_serie: 1, tipo: 'normal', peso_digitado: 30, peso_total: 30, repeticoes: 10, recorde: false }
+  await antigo.table('treinos').add(treino); await antigo.table('series_treino').add(serie)
+  antigo.close(); await banco.open()
+  expect((await tabela('treinos').get(treino.id))?.observacao).toBe('Registro antigo')
+  expect((await tabela('series_treino').get(serie.id))?.peso_total).toBe(30)
+  expect((await tabela('series_treino').get(serie.id))?.modo_carga).toBe('total')
+  expect(await tabela('treino_exercicios').count()).toBe(0)
 })
