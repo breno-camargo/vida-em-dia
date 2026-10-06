@@ -10,7 +10,7 @@ import { EditorFicha } from '../componentes/EditorFicha'
 import { AjudaExercicio } from '../componentes/AjudaExercicio'
 import { iniciarTreino, treinoAtivo } from '../dados/treinos'
 import { ModoTreino } from './ModoTreino'
-import { Ellipsis, Play, Plus, ArrowRight, Dumbbell, ChevronDown } from 'lucide-react'
+import { Ellipsis, Play, Plus, ArrowRight, Dumbbell, ChevronDown, Image } from 'lucide-react'
 import { Painel } from '../componentes/Painel'
 import { CompartilharUltimo } from '../componentes/CompartilharUltimo'
 
@@ -71,7 +71,7 @@ export function Treino({ online }: { online: boolean }) {
   return <>
     {ativo && <section className="retomar-treino"><span className="etiqueta">SEU TREINO ESTÁ SALVO</span><h2>{ativo.titulo ?? 'Treino livre'}</h2><button onClick={() => definirSessao(ativo.id)}>Continuar treino <ArrowRight size={20} /></button></section>}
     <div className="abas-treino"><button aria-pressed={secao === 'fichas'} onClick={() => definirSecao('fichas')}>Minhas fichas</button><button aria-pressed={secao === 'biblioteca'} onClick={() => definirSecao('biblioteca')}>Exercícios ({exercicios.length})</button></div>
-    {secao === 'fichas' && ultimoFinalizado && <section className="ultimo-concluido"><span>Último treino concluído</span><strong>{ultimoFinalizado.titulo ?? 'Treino livre'}</strong><button className="botao-secundario" onClick={() => definirCardFinalizado(ultimoFinalizado.id)}>Ver Card</button></section>}
+    {secao === 'fichas' && ultimoFinalizado && <section className="ultimo-concluido"><span>Último treino concluído</span><strong>{ultimoFinalizado.titulo ?? 'Treino livre'}</strong><button className="botao-secundario" onClick={() => definirCardFinalizado(ultimoFinalizado.id)}><Image size={18} aria-hidden="true" />Ver Card<ArrowRight size={16} aria-hidden="true" /></button></section>}
     {erro && <p role="alert" className="erro">{erro}</p>}
     {desfazer && <div className="desfazer" role="status">{desfazer.texto}<button disabled={ocupado} onClick={() => void executar(async () => { await desfazer.executar(); definirDesfazer(null) })}>Desfazer</button></div>}
     {secao === 'fichas' ? <>
@@ -107,6 +107,7 @@ export function Treino({ online }: { online: boolean }) {
     {ajuda && <AjudaExercicio exercicio={ajuda} online={online} fechar={() => definirAjuda(null)} editar={() => { definirEdicao(ajuda); definirAjuda(null) }} />}
   </>
 }
+
 
 
 
