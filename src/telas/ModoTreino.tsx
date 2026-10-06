@@ -86,7 +86,7 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
       return <details className="exercicio-treino exercicio-recolhivel" key={item.id} ref={elemento => { if (elemento) cards.current.set(item.id, elemento); else cards.current.delete(item.id) }}>
         <summary className="cabecalho-exercicio"><MiniaturaExercicio id={item.exercicio_id} nome={item.nome} abrir={ex ? () => definirAjuda(ex) : undefined} /><span className="resumo-exercicio"><strong>{item.nome}</strong><small>{grupo.length} séries · {resumoReps.length === 1 ? resumoReps[0] : 'várias'} reps · {semPeso ? 'Peso corporal' : resumoCargas.length === 1 ? `${resumoCargas[0]} kg` : 'cargas variadas'}</small><small>{feitas}/{grupo.length} concluídas{proxima?.exercicio_id === item.exercicio_id ? ' · Próximo exercício' : ''}</small></span><ChevronDown className="seta-exercicio" size={20} aria-hidden="true" /></summary>
         <div className="conteudo-exercicio"><Desempenho exercicioId={item.exercicio_id} semPeso={semPeso} />
-        {ex && <><p className="nota-fixa">{ex.nota_fixa || 'Adicione uma nota fixa na ajuda do exercício.'}</p><button className="botao-secundario" onClick={() => definirAjuda(ex)}>Como fazer ? · editar nota</button></>}
+        {ex && <>{ex.nota_fixa.trim() && <p className="nota-fixa">{ex.nota_fixa}</p>}<button className="botao-secundario" onClick={() => definirAjuda(ex)}>Instruções do exercício</button></>}
         <SelecionarDescanso valor={item.descanso_segundos} confirmar={async descanso_segundos => { await tabela('treino_exercicios').update(item.id, { descanso_segundos, atualizado_em: new Date().toISOString() }) }} />
         <div className={`cabecalho-series${semPeso ? ' sem-peso' : ''}`} aria-hidden="true"><span>SÉRIE</span><span>REPS</span>{!semPeso && <span>KG</span>}<span>FEITO</span></div>
         {grupo.map((s, i) => <Serie key={`${s.id}-${s.concluida_em ?? 'pendente'}`} serie={s} destaque={s.id === proxima?.id} anterior={grupo[i - 1]} salvar={salvarSerie} concluir={async dados => {
@@ -165,6 +165,7 @@ function Desempenho({ exercicioId, semPeso }: { exercicioId: string; semPeso: bo
   }, [exercicioId])
   return <div className="ultimo-desempenho">{dados?.ultimas.length ? <><span>Último treino</span><p>{dados.ultimas.length} séries: {dados.ultimas.map(s => `${s.repeticoes} repetições${s.modo_carga === 'peso_corporal' ? '' : ` com ${s.peso_total.toLocaleString('pt-BR')} kg`}`).join(' · ')}</p>{!semPeso && <small>Maior carga já registrada: {dados.melhor.toLocaleString('pt-BR')} kg</small>}</> : <p>{semPeso ? 'Primeiro treino: registre as repetições de cada série.' : 'Primeiro treino: registre a carga e as repetições de cada série.'}</p>}</div>
 }
+
 
 
 
