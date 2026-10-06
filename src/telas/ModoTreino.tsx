@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { banco, tabela } from '../dados/banco'
 import { criarRegistro, repositorio } from '../dados/repositorio'
-import { adicionarExercicio, concluirSerie, ultimasSeries } from '../dados/treinos'
+import { adicionarExercicio, concluirSerie, ultimasSeries, aplicarValoresProximas } from '../dados/treinos'
 import { salvarFicha } from '../dados/fichas'
 import type { Exercicio, SerieTreino } from '../dados/modelos'
 import { cargaTotal, validarSerie, volumeSeries } from '../utilitarios/treino'
@@ -14,6 +14,7 @@ import { EditorExercicio } from '../componentes/EditorExercicio'
 import { useTelaLigada } from '../hooks/useTelaLigada'
 import { MiniaturaExercicio } from '../componentes/MiniaturaExercicio'
 import { ChevronDown } from 'lucide-react'
+import { SelecionarDescanso } from '../componentes/SelecionarDescanso'
 
 export function ModoTreino({ id, online, fechar }: { id: string; online: boolean; fechar: () => void }) {
   const treino = useLiveQuery(() => tabela('treinos').get(id), [id])
@@ -62,7 +63,7 @@ export function ModoTreino({ id, online, fechar }: { id: string; online: boolean
   return <>
     <div className="painel"><h2>{treino.titulo ?? 'Treino livre'}</h2><p>{series.filter(s => s.concluida_em).length} de {series.length} séries concluídas</p><button className="botao-secundario" onClick={() => void tela.manter()}>{tela.estado}</button><small>Salvo neste aparelho. Você pode sair e continuar depois.</small></div>
     {erro && <p role="alert" className="erro">{erro}</p>}
-    {removido && <button className="botao-secundario" disabled={ocupado} onClick={() => void executar(async () => { await removido.desfazer(); definirRemovido(null) })}>Desfazer remoção do exercício</button>}
+    {removido && <button className="botao-secundario" disabled={ocupado} onClick={() => void executar(async () => { await removido.desfazer(); definirRemovido(null) })}>Desfazer remoção</button>}
     <Descanso fim={treino.descanso_fim} alterar={fim => void executar(() => atualizarDescanso(fim))} />
     {itens.map((item, indice) => {
       const ex = exercicios.find(e => e.id === item.exercicio_id)
@@ -74,15 +75,19 @@ export function ModoTreino({ id, online, fechar }: { id: string; online: boolean
         <summary className="cabecalho-exercicio"><MiniaturaExercicio id={item.exercicio_id} nome={item.nome} abrir={ex ? () => definirAjuda(ex) : undefined} /><span className="resumo-exercicio"><strong>{item.nome}</strong><small>{grupo.length} séries · {resumoReps.length === 1 ? resumoReps[0] : 'várias'} reps · {resumoCargas.length === 1 ? `${resumoCargas[0]} kg` : 'cargas variadas'}</small><small>{feitas}/{grupo.length} concluídas{proxima?.exercicio_id === item.exercicio_id ? ' · Próximo exercício' : ''}</small></span><ChevronDown className="seta-exercicio" size={20} aria-hidden="true" /></summary>
         <div className="conteudo-exercicio"><Desempenho exercicioId={item.exercicio_id} />
         {ex && <><p className="nota-fixa">{ex.nota_fixa || 'Adicione uma nota fixa na ajuda do exercício.'}</p><button className="botao-secundario" onClick={() => definirAjuda(ex)}>Como fazer ? · editar nota</button></>}
-        <label className="formulario">Descanso deste exercício (s)<input type="number" inputMode="numeric" min="0" max="1800" value={item.descanso_segundos} onChange={e => { const valor = Number(e.target.value); if (Number.isFinite(valor) && valor >= 0 && valor <= 1800) void executar(async () => { await tabela('treino_exercicios').update(item.id, { descanso_segundos: valor, atualizado_em: new Date().toISOString() }) }) }} /></label>
+        <SelecionarDescanso valor={item.descanso_segundos} confirmar={async descanso_segundos => { await tabela('treino_exercicios').update(item.id, { descanso_segundos, atualizado_em: new Date().toISOString() }) }} />
         <div className="cabecalho-series" aria-hidden="true"><span>SÉRIE</span><span>REPS</span><span>KG</span><span>FEITO</span></div>
         {grupo.map((s, i) => <Serie key={`${s.id}-${s.concluida_em ?? 'pendente'}`} serie={s} destaque={s.id === proxima?.id} anterior={grupo[i - 1]} salvar={salvarSerie} concluir={async dados => { void tela.manter(); await concluirSerie(dados) }} desfazer={async () => {
           await banco.transaction('rw', tabela('series_treino'), tabela('treinos'), async () => { await tabela('series_treino').update(s.id, { concluida_em: undefined, atualizado_em: new Date().toISOString() }); await atualizarDescanso(null) })
+        }} aplicarProximas={aplicarValoresProximas} remover={async () => {
+          await banco.transaction('rw', tabela('series_treino'), tabela('treinos'), async () => { await repositorio('series_treino').apagar(s.id); await atualizarDescanso(null) })
+          definirRemovido({ desfazer: async () => { await repositorio('series_treino').salvar(s) } })
         }} />)}
         {grupo.length > 0 && grupo.every(s => s.concluida_em) && <p className="nota">Exercício concluído. {itens[indice + 1] ? `Próximo: ${itens[indice + 1].nome}` : 'Você pode finalizar o treino.'}</p>}
         <div className="acoes"><button disabled={ocupado} onClick={() => void executar(async () => {
-          const ultima = grupo.at(-1)
-          if (ultima) await tabela('series_treino').add({ ...ultima, ...criarRegistro(treino.user_id), concluida_em: undefined, recorde: false, numero_serie: Math.max(0, ...grupo.map(s => s.numero_serie)) + 1 })
+          const ultima = grupo.at(-1) ?? { ...criarRegistro(treino.user_id), treino_id: id, exercicio_id: item.exercicio_id, numero_serie: 0, tipo: 'normal' as const, peso_digitado: 0, peso_total: 0, repeticoes: 10, recorde: false, modo_carga: ex?.modo_carga ?? 'total', peso_barra: ex?.peso_barra ?? 20 }
+          const anteriores = await tabela('series_treino').where('[treino_id+exercicio_id]').equals([id, item.exercicio_id]).toArray()
+          await tabela('series_treino').add({ ...ultima, ...criarRegistro(treino.user_id), concluida_em: undefined, recorde: false, numero_serie: Math.max(0, ...anteriores.map(s => s.numero_serie)) + 1 })
         })}>Série extra</button><button disabled={ocupado || indice === 0} onClick={() => void executar(async () => {
           const outro = itens[indice - 1]
           await banco.transaction('rw', tabela('treino_exercicios'), async () => {

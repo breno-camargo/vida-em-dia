@@ -2,42 +2,57 @@ import { useState } from 'react'
 import type { SerieTreino } from '../dados/modelos'
 import { cargaTotal } from '../utilitarios/treino'
 import { liberarAudio } from '../utilitarios/alerta'
-function Numero({ rotulo, valor, alterar, passo = 1, decimal = false }: { rotulo: string; valor: number; alterar: (valor: number) => void; passo?: number; decimal?: boolean }) {
-  return <label>{rotulo}<div className="ajuste-numero"><button type="button" aria-label={`Diminuir ${rotulo}`} onClick={() => alterar(Math.max(0, valor - passo))}>−</button><input type="number" min="0" step={passo} inputMode={decimal ? 'decimal' : 'numeric'} value={valor} onChange={e => alterar(Number(e.target.value))} /><button type="button" aria-label={`Aumentar ${rotulo}`} onClick={() => alterar(valor + passo)}>+</button></div></label>
-}
-export function Serie({ serie, destaque, anterior, salvar, concluir, desfazer }: {
+import { Painel } from './Painel'
+import { SelecionarValores } from './SelecionarValores'
+export function Serie({ serie, destaque, anterior, salvar, concluir, desfazer, aplicarProximas, remover }: {
   serie: SerieTreino; destaque: boolean; anterior?: SerieTreino
   salvar: (serie: SerieTreino) => Promise<void>; concluir: (serie: SerieTreino) => Promise<void>; desfazer: () => Promise<void>
+  aplicarProximas: (serie: SerieTreino) => Promise<void>; remover: () => Promise<void>
 }) {
   const [dados, definir] = useState(serie)
-  const [editar, definirEditar] = useState(false)
+  const [versao, definirVersao] = useState(serie.atualizado_em)
+  if (versao !== serie.atualizado_em) { definirVersao(serie.atualizado_em); definir(serie) }
   const [erro, definirErro] = useState('')
   const [ocupado, definirOcupado] = useState(false)
+  const [tipoAberto, definirTipoAberto] = useState(false)
+  const [valoresAbertos, definirValoresAbertos] = useState(false)
+  const [reducaoAtiva, definirReducaoAtiva] = useState<number | null>(null)
   const realizar = async (acao: () => Promise<void>) => {
     definirOcupado(true); definirErro('')
-    try { await acao(); definirEditar(false) } catch (error) { definirErro(error instanceof Error ? error.message : 'Não foi possível salvar a série.') }
+    try { await acao() } catch (error) { definirErro(error instanceof Error ? error.message : 'Não foi possível salvar a série.') }
     finally { definirOcupado(false) }
   }
   const alterar = (campo: Partial<SerieTreino>) => {
     const novos = { ...dados, ...campo }; definir(novos)
-    if (!serie.concluida_em) void salvar(novos).catch(() => definirErro('Não foi possível guardar a alteração. Tente salvar novamente.'))
+    void salvar(novos).catch(() => definirErro('Não foi possível guardar a alteração. Tente salvar novamente.'))
   }
-  if (serie.concluida_em && !editar) return <section className="serie serie-compacta concluida" aria-label={`Série ${serie.numero_serie} concluída`}><div className="linha-serie"><strong>{serie.numero_serie}</strong><span>{serie.repeticoes}</span><span>{serie.peso_digitado}</span><button className="concluir-compacto" aria-label={`Editar série ${serie.numero_serie} concluída`} onClick={() => definirEditar(true)}>Feita</button></div><details className="opcoes-serie"><summary>Opções · {serie.tipo === 'aquecimento' ? 'Aquecimento' : serie.tipo === 'dropset' ? 'Drop set' : serie.tipo === 'falha' ? 'Até a falha' : 'Normal'}</summary><p>{serie.peso_total} kg no total{serie.tipo === 'dropset' ? ` + ${serie.reducoes?.length ?? 0} reduções` : ''}</p><div className="acoes"><button onClick={() => definirEditar(true)}>Editar</button><button disabled={ocupado} onClick={() => void realizar(desfazer)}>Desfazer conclusão</button></div></details>{erro && <p role="alert">{erro}</p>}</section>
-  return <section className={`serie serie-compacta ${destaque ? 'proxima-serie' : ''}`} aria-label={`Série ${serie.numero_serie}${destaque ? ', próxima série' : ''}`}>
-    <div className="linha-serie"><strong>{serie.numero_serie}</strong><input aria-label={`Repetições da série ${serie.numero_serie}`} type="number" inputMode="numeric" min="1" value={dados.repeticoes} onChange={e => alterar({ repeticoes: Number(e.target.value) })} /><input aria-label={`Carga digitada em kg da série ${serie.numero_serie}`} type="number" inputMode="decimal" min="0" step="0.5" value={dados.peso_digitado} onChange={e => alterar({ peso_digitado: Number(e.target.value) })} /><button className="concluir-compacto" disabled={ocupado} onClick={() => { liberarAudio(); void realizar(() => serie.concluida_em ? salvar(dados) : concluir(dados)) }}>{ocupado ? '…' : serie.concluida_em ? 'Salvar' : 'Concluir'}</button></div>
+  return <section className={`serie serie-compacta ${serie.concluida_em ? 'concluida' : destaque ? 'proxima-serie' : ''}`} aria-label={`Série ${serie.numero_serie}${serie.concluida_em ? ', concluída' : destaque ? ', próxima série' : ''}`}>
+    <div className="linha-serie"><button className={`tipo-serie ${dados.tipo}`} aria-label={`Tipo da série ${serie.numero_serie}`} onClick={() => definirTipoAberto(true)}>{dados.tipo === 'aquecimento' ? 'A' : dados.tipo === 'dropset' ? 'D' : dados.tipo === 'falha' ? 'F' : serie.numero_serie}</button><button className="valor-serie" aria-label={`Selecionar repetições da série ${serie.numero_serie}`} onClick={() => definirValoresAbertos(true)}>{dados.repeticoes}</button><button className="valor-serie" aria-label={`Selecionar carga da série ${serie.numero_serie}`} onClick={() => definirValoresAbertos(true)}>{dados.peso_digitado.toLocaleString('pt-BR')}</button><button className="concluir-compacto" aria-label={serie.concluida_em ? `Desfazer conclusão da série ${serie.numero_serie}` : `Concluir série ${serie.numero_serie}`} disabled={ocupado} onClick={() => { liberarAudio(); void realizar(() => serie.concluida_em ? desfazer() : concluir(dados)) }}>{ocupado ? '…' : serie.concluida_em ? 'Feita' : 'Concluir'}</button></div>
     {dados.modo_carga === 'por_lado' && <small className="carga-por-lado">Por lado · total {cargaTotal(dados.peso_digitado, dados.modo_carga, dados.peso_barra)} kg</small>}
     <details className="opcoes-serie"><summary>Opções · {dados.tipo === 'normal' ? 'Normal' : dados.tipo === 'aquecimento' ? 'Aquecimento' : dados.tipo === 'falha' ? 'Até a falha' : 'Drop set'}{destaque ? ' · Próxima' : ''}</summary><div className="formulario">
-    <label>Tipo<select value={dados.tipo} onChange={e => alterar({ tipo: e.target.value as SerieTreino['tipo'] })}><option value="normal">Normal</option><option value="aquecimento">Aquecimento</option><option value="falha">Até a falha</option><option value="dropset">Drop set</option></select></label>
     <label>Carga<select value={dados.modo_carga ?? 'total'} onChange={e => alterar({ modo_carga: e.target.value as SerieTreino['modo_carga'] })}><option value="total">Total</option><option value="por_lado">Por lado</option></select></label>
-    <Numero rotulo={dados.modo_carga === 'por_lado' ? 'Peso de um lado (kg)' : 'Peso total (kg)'} valor={dados.peso_digitado} passo={0.5} decimal alterar={peso_digitado => alterar({ peso_digitado })} />
-    {dados.modo_carga === 'por_lado' && <label>Barra (kg, use 0 para não somar)<input type="number" inputMode="decimal" min="0" max="100" step="0.5" value={dados.peso_barra ?? 20} onChange={e => alterar({ peso_barra: Number(e.target.value) })} /></label>}
+    {dados.modo_carga === 'por_lado' && <label>Barra (kg, use 0 para não somar)<select value={dados.peso_barra ?? 20} onChange={e => alterar({ peso_barra: Number(e.target.value) })}>{Array.from({ length: 201 }, (_, i) => <option key={i} value={i / 2}>{i / 2} kg</option>)}</select></label>}
     <small>Carga total: {cargaTotal(dados.peso_digitado, dados.modo_carga, dados.peso_barra)} kg</small>
-    <Numero rotulo="Repetições" valor={dados.repeticoes} alterar={repeticoes => alterar({ repeticoes })} />
-    {dados.tipo === 'dropset' && <div>{(dados.reducoes ?? []).map((reducao, i) => <div className="reducao" key={i}><span>Redução {i + 1}</span><Numero decimal passo={0.5} rotulo="Carga digitada (kg)" valor={reducao.peso_digitado} alterar={peso_digitado => alterar({ reducoes: dados.reducoes!.map((r, j) => i === j ? { ...r, peso_digitado } : r) })} /><Numero rotulo="Repetições da redução" valor={reducao.repeticoes} alterar={repeticoes => alterar({ reducoes: dados.reducoes!.map((r, j) => i === j ? { ...r, repeticoes } : r) })} /><button type="button" className="botao-secundario" onClick={() => alterar({ reducoes: dados.reducoes!.filter((_, j) => j !== i) })}>Retirar redução</button></div>)}<button type="button" className="botao-secundario" onClick={() => alterar({ reducoes: [...(dados.reducoes ?? []), { peso_digitado: Math.max(0, dados.peso_digitado * 0.75), repeticoes: dados.repeticoes }] })}>Adicionar redução sem descanso</button></div>}
-    <details><summary>Esforço (opcional)</summary><label>RPE · 1 a 10<input type="number" inputMode="decimal" min="1" max="10" step="0.5" value={dados.rpe ?? ''} onChange={e => alterar({ rpe: e.target.value === '' ? undefined : Number(e.target.value) })} /></label></details>
+    {dados.tipo === 'dropset' && <div>{(dados.reducoes ?? []).map((reducao, i) => <div className="reducao" key={i}><span>Redução {i + 1}</span><button type="button" className="botao-descanso" onClick={() => definirReducaoAtiva(i)}>{reducao.repeticoes} reps · {reducao.peso_digitado.toLocaleString('pt-BR')} kg<span>Alterar</span></button><button type="button" className="botao-secundario" onClick={() => alterar({ reducoes: dados.reducoes!.filter((_, j) => j !== i) })}>Retirar redução</button></div>)}<button type="button" className="botao-secundario" onClick={() => alterar({ reducoes: [...(dados.reducoes ?? []), { peso_digitado: Math.max(0, dados.peso_digitado * 0.75), repeticoes: dados.repeticoes }] })}>Adicionar redução sem descanso</button></div>}
+    <details><summary>Esforço (opcional)</summary><label>RPE · 1 a 10<select value={dados.rpe ?? ''} onChange={e => alterar({ rpe: e.target.value === '' ? undefined : Number(e.target.value) })}><option value="">Sem RPE</option>{Array.from({ length: 19 }, (_, i) => <option key={i} value={1 + i / 2}>{1 + i / 2}</option>)}</select></label></details>
     {anterior && <button className="botao-secundario" disabled={ocupado} onClick={() => { const copia = { ...dados, peso_digitado: anterior.peso_digitado, repeticoes: anterior.repeticoes, modo_carga: anterior.modo_carga, peso_barra: anterior.peso_barra }; definir(copia); void realizar(() => salvar(copia)) }}>Copiar série anterior</button>}
     {!serie.concluida_em && <button className="botao-secundario" disabled={ocupado} onClick={() => void realizar(() => salvar(dados))}>Salvar sem concluir</button>}
     </div></details>
     {erro && <p className="erro" role="alert">{erro}</p>}
+    {valoresAbertos && <SelecionarValores titulo={`Série ${serie.numero_serie}`} reps={dados.repeticoes} peso={dados.peso_digitado} permitirProximas={!serie.concluida_em} fechar={() => definirValoresAbertos(false)} confirmar={async (repeticoes, peso_digitado, proximas) => {
+      const novos = { ...dados, repeticoes, peso_digitado }
+      if (proximas) await aplicarProximas(novos); else await salvar(novos)
+      definir(novos)
+    }} />}
+    {reducaoAtiva !== null && dados.reducoes?.[reducaoAtiva] && <SelecionarValores titulo={`Redução ${reducaoAtiva + 1}`} reps={dados.reducoes[reducaoAtiva].repeticoes} peso={dados.reducoes[reducaoAtiva].peso_digitado} fechar={() => definirReducaoAtiva(null)} confirmar={async (repeticoes, peso_digitado) => {
+      const novos = { ...dados, reducoes: dados.reducoes!.map((r, i) => i === reducaoAtiva ? { peso_digitado, repeticoes } : r) }
+      await salvar(novos); definir(novos)
+    }} />}
+    {tipoAberto && <Painel titulo="Tipo de série" fechar={() => definirTipoAberto(false)}><div className="lista-tipos">{([
+      ['normal', 'Série normal', 'Conta no volume do treino.'], ['aquecimento', 'Aquecimento', 'Descanso menor e fora do volume.'], ['falha', 'Até a falha', 'Marque quando terminar até a falha.'], ['dropset', 'Drop set', 'Reduções sem descanso entre elas.'],
+    ] as const).map(([tipo, nome, texto]) => <button key={tipo} className={dados.tipo === tipo ? 'selecionado' : ''} onClick={async () => {
+      const novos = { ...dados, tipo }; definirOcupado(true)
+      try { await salvar(novos); definir(novos); definirTipoAberto(false) } catch { definirErro('Não foi possível alterar o tipo.') } finally { definirOcupado(false) }
+    }} disabled={ocupado}><span className={`tipo-serie ${tipo}`}>{tipo === 'normal' ? serie.numero_serie : tipo === 'aquecimento' ? 'A' : tipo === 'dropset' ? 'D' : 'F'}</span><span><strong>{nome}</strong><small>{texto}</small></span></button>)}<button className="remover-serie" disabled={ocupado} onClick={() => void realizar(async () => { await remover(); definirTipoAberto(false) })}>Remover série</button></div></Painel>}
   </section>
 }
