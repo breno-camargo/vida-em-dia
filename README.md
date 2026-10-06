@@ -4,7 +4,7 @@ PWA pessoal de treino, cardio, medidas, alimentação e saúde. Interface em por
 
 ## Estado do projeto
 
-ETAPAS 1, 2 e 3 aprovadas (v0.1.0, v0.2.0 e v0.3.0), mantendo o verde original. O usuário validou a etapa 3 no iPhone e aprovou a conclusão em 06/10/2026. ETAPA 4 implementada para homologação em test, aguardando aprovação. As etapas 5 a 14 não foram implementadas.
+ETAPAS 1, 2 e 3 aprovadas (v0.1.0, v0.2.0 e v0.3.0), mantendo o verde original. O usuário validou a etapa 3 no iPhone e aprovou a conclusão em 06/10/2026. ETAPA 4 aprovada em 06/10/2026 (v0.4.0), após validação do checklist pelo usuário e correção final do vazamento no painel do card. As etapas 5 a 14 não foram implementadas.
 
 Inclui React, TypeScript, Vite, Tailwind, Dexie, cinco abas, tema escuro, configurações informativas, ícones, manifest e service worker. Já há registro local de treinos. Login, sincronização e backup chegam nas próximas etapas. O modo claro chega na etapa 13.
 
@@ -171,3 +171,4 @@ Ajuste da etapa 4: exercícios podem usar modo Peso corporal, exibindo apenas s�
 ### Padrão obrigatório de seletores
 
 Preferência definida em 06/10/2026: todos os seletores devem seguir o padrão visual de rolagem do app, usando o componente compartilhado Rolagem e confirmação explícita antes de salvar. Aplicar a valores como repetições, carga, descanso, peso da barra e esforço/RPE, inclusive nas próximas etapas. Evitar listas nativas de select e seletores com aparência diferente. Para opções categóricas, adaptar a mesma experiência de rolagem com rótulos legíveis; abas de navegação e botões de ação continuam com seus componentes próprios. Ao revisar telas existentes, substituir os seletores antigos que ainda estiverem fora desse padrão.
+
