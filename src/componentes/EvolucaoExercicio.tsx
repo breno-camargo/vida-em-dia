@@ -26,9 +26,10 @@ export function EvolucaoExercicio({ id }: { id: string }) {
     <small className="nota-resumo">Aquecimentos não contam nos recordes. O 1RM é uma estimativa, não uma carga para testar.</small></>}
     <h3>Histórico do exercício</h3>
     {!sessoes.length && <p className="nota">Seu primeiro treino concluído aparecerá aqui.</p>}
-    {[...sessoes].reverse().map(s => <details className="grupo-exercicios sessao-exercicio" key={s.treino.id}><summary><span>{new Date(`${s.treino.data}T12:00:00`).toLocaleDateString('pt-BR')}<small>{s.treino.titulo ?? 'Treino'}</small></span><small>{semPeso ? `${repsSessao(s.series)} reps` : `Volume: ${s.volume.toLocaleString('pt-BR')} kg`}</small></summary><div className="historico-series">{s.recordes.length > 0 && <p className="verde">Novo recorde: {s.recordes.map(r => r === 'rm' ? '1RM estimado' : r).join(', ')}</p>}{s.series.map(serie => <p key={serie.id}>{serie.numero_serie}. {serie.repeticoes} reps{serie.modo_carga === 'peso_corporal' ? ' · Peso corporal' : ` × ${serie.peso_total.toLocaleString('pt-BR')} kg`} · {serie.tipo}{serie.tipo === 'dropset' && serie.reducoes?.map((r, i) => <small key={i}> · redução: {r.repeticoes} reps × {r.peso_digitado} kg {serie.modo_carga === 'por_lado' ? 'por lado' : ''}</small>)}</p>)}</div></details>)}
+    {[...sessoes].reverse().map(s => <details className="grupo-exercicios sessao-exercicio" key={s.treino.id}><summary><span>{new Date(`${s.treino.data}T12:00:00`).toLocaleDateString('pt-BR')}<small>{s.treino.titulo ?? 'Treino'}</small></span><small>{semPeso ? `${repsSessao(s.series)} reps` : `Volume: ${s.volume.toLocaleString('pt-BR')} kg`}</small></summary><div className="historico-series">{s.recordes.length > 0 && <p className="verde">Novo recorde: {s.recordes.map(r => r === 'reps' ? 'Mais repetições em uma série' : r === 'rm' ? '1RM estimado' : r).join(', ')}</p>}{s.series.map(serie => <p key={serie.id}>{serie.numero_serie}. {serie.repeticoes} reps{serie.modo_carga === 'peso_corporal' ? ' · Peso corporal' : ` × ${serie.peso_total.toLocaleString('pt-BR')} kg`} · {serie.tipo}{serie.tipo === 'dropset' && serie.reducoes?.map((r, i) => <small key={i}> · redução: {r.repeticoes} reps × {r.peso_digitado} kg {serie.modo_carga === 'por_lado' ? 'por lado' : ''}</small>)}</p>)}</div></details>)}
   </section>
 }
+
 
 
 
