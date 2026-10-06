@@ -1,3 +1,4 @@
+import { MiniaturaExercicio } from '../componentes/MiniaturaExercicio'
 import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { banco, tabela } from '../dados/banco'
@@ -79,11 +80,11 @@ export function Treino({ online }: { online: boolean }) {
       <button className="treino-livre" disabled={ocupado} onClick={() => void executar(async () => { await iniciar() })}><Plus size={20} /><span>Treino livre<small>Monte seu treino do dia</small></span><ArrowRight size={18} /></button>
     </> : <>
       <div className="formulario"><label>Buscar exercício<input type="search" value={busca} onChange={e => definirBusca(e.target.value)} placeholder="Nome ou equipamento" /></label>
-        <label>Grupo muscular<select value={grupo} onChange={e => definirGrupo(e.target.value)}><option value="">Todos os grupos</option>{[...new Set(exercicios.map(ex => ex.grupo_muscular))].filter(Boolean).map(g => <option key={g}>{g}</option>)}</select></label></div>
+        <div className="filtro-musculos" role="group" aria-label="Grupo muscular"><button type="button" aria-pressed={!grupo} onClick={() => definirGrupo('')}>Todos</button>{[...new Set(exercicios.map(ex => ex.grupo_muscular))].filter(Boolean).sort((a, b) => a.localeCompare(b, 'pt-BR')).map(g => <button type="button" key={g} aria-pressed={grupo === g} onClick={() => definirGrupo(g)}>{g}</button>)}</div></div>
       <button className="botao-principal largura-total" onClick={() => definirEdicao({ ...criarRegistro(), nome: '', tipo: 'forca', grupo_muscular: '', equipamento: '', descanso_padrao_segundos: 90, modo_carga: 'total', peso_barra: 20, nota_fixa: '', como_fazer: '', musculos: '', origem: 'manual' })}>Adicionar exercício</button>
-      {exercicios.filter(ex => (!grupo || ex.grupo_muscular === grupo) && normalizar(`${ex.nome} ${ex.equipamento}`).includes(normalizar(busca))).map(ex => <section className="painel exercicio-cartao" key={ex.id}>
-        <h2>{ex.nome}</h2><p>{ex.grupo_muscular || 'Sem grupo'} · {ex.tipo === 'forca' ? 'Força' : 'Cardio'}</p>
-        <div className="acoes"><button aria-label={`Ajuda de ${ex.nome}`} onClick={() => definirAjuda(ex)}>Como fazer ?</button><button onClick={() => definirEdicao(ex)}>Editar</button><button disabled={ocupado} onClick={() => void executar(async () => {
+      {exercicios.filter(ex => (!grupo || ex.grupo_muscular === grupo) && normalizar(`${ex.nome} ${ex.equipamento}`).includes(normalizar(busca))).map(ex => <section className="painel exercicio-cartao biblioteca-cartao" key={ex.id}>
+        <div className="biblioteca-cabecalho"><MiniaturaExercicio id={ex.id} nome={ex.nome} abrir={() => definirAjuda(ex)} /><div><h2>{ex.nome}</h2><p>{ex.grupo_muscular || 'Sem grupo'} · {ex.tipo === 'forca' ? 'Força' : 'Cardio'}</p></div></div>
+        <div className="acoes"><button aria-label={`Ajuda de ${ex.nome}`} onClick={() => definirAjuda(ex)}>Instruções</button><button onClick={() => definirEdicao(ex)}>Editar</button><button disabled={ocupado} onClick={() => void executar(async () => {
           const vinculos = await tabela('ficha_exercicios').where('exercicio_id').equals(ex.id).filter(item => !item.apagado_em).count()
           if (vinculos) throw new Error('Retire este exercício das fichas antes de excluí-lo.')
           await repositorio('exercicios').apagar(ex.id)
@@ -98,4 +99,5 @@ export function Treino({ online }: { online: boolean }) {
     {ajuda && <AjudaExercicio exercicio={ajuda} online={online} fechar={() => definirAjuda(null)} editar={() => { definirEdicao(ajuda); definirAjuda(null) }} />}
   </>
 }
+
 
