@@ -70,9 +70,10 @@ export async function concluirSerie(dados: SerieTreino) {
     const agora = new Date().toISOString()
     await tabela('series_treino').put({ ...dados, peso_total: cargaTotal(dados.peso_digitado, dados.modo_carga, dados.peso_barra), concluida_em: agora, atualizado_em: agora })
     const pendentes = await tabela('series_treino').where('[treino_id+exercicio_id]').equals([dados.treino_id, dados.exercicio_id]).filter(s => !s.concluida_em && !s.apagado_em).count()
+    const pendentesTreino = pendentes || await tabela('series_treino').where('treino_id').equals(dados.treino_id).filter(s => !s.concluida_em && !s.apagado_em).count()
     const exercicio = await tabela('treino_exercicios').where('treino_id').equals(dados.treino_id).filter(e => e.exercicio_id === dados.exercicio_id && !e.apagado_em).first()
     const segundos = dados.tipo === 'aquecimento' ? Math.min(30, exercicio?.descanso_segundos ?? 30) : exercicio?.descanso_segundos ?? 90
-    await tabela('treinos').update(dados.treino_id, { descanso_fim: pendentes && segundos > 0 ? new Date(Date.now() + segundos * 1000).toISOString() : null, atualizado_em: agora })
+    await tabela('treinos').update(dados.treino_id, { descanso_fim: pendentesTreino && segundos > 0 ? new Date(Date.now() + segundos * 1000).toISOString() : null, atualizado_em: agora })
   })
 }
 export async function adicionarExercicio(treino: Treino, ex: Exercicio) {

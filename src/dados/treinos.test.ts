@@ -64,6 +64,17 @@ test('exclua aquecimento do volume e some reduções de drop set pela carga tota
   await concluirSerie({ ...series[1], tipo: 'dropset', modo_carga: 'por_lado', peso_barra: 20, peso_digitado: 30, repeticoes: 10, reducoes: [{ peso_digitado: 20, repeticoes: 5 }] })
   expect(volumeSeries(await tabela('series_treino').where('treino_id').equals(id).toArray())).toBe(1100)
 })
+test('mantenha o descanso entre exercícios enquanto houver séries pendentes', async () => {
+  const { ficha } = await preparar()
+  const outro = (await tabela('exercicios').toArray()).find(e => e.tipo === 'forca' && e.grupo_muscular === 'Costas')!
+  await tabela('ficha_exercicios').add({ ...criarRegistro(), ficha_id: ficha.id, exercicio_id: outro.id, ordem: 1, series_planejadas: 1, descanso_segundos: 60 })
+  const id = await iniciarTreino(ficha.id)
+  const series = await tabela('series_treino').where('treino_id').equals(id).toArray()
+  for (const serie of series.filter(s => s.exercicio_id !== outro.id)) await concluirSerie(serie)
+  expect((await tabela('treinos').get(id))?.descanso_fim).toBeTruthy()
+  await concluirSerie(series.find(s => s.exercicio_id === outro.id)!)
+  expect((await tabela('treinos').get(id))?.descanso_fim).toBeNull()
+})
 test('preencha a próxima sessão com o desempenho da última sessão finalizada', async () => {
   const { ficha } = await preparar(); const id = await iniciarTreino(ficha.id)
   const series = await tabela('series_treino').where('treino_id').equals(id).sortBy('numero_serie')
