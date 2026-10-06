@@ -4,7 +4,7 @@ PWA pessoal de treino, cardio, medidas, alimentação e saúde. Interface em por
 
 ## Estado do projeto
 
-ETAPA 1 implementada localmente, aguardando publicação de homologação e aprovação. Nenhuma etapa aprovada ainda. As etapas 2 a 14 não foram implementadas; as abas exibem estados vazios com a indicação da etapa correspondente.
+ETAPA 1 aprovada com o tema verde original; versão v0.1.0 preparada para envio à produção. As etapas 2 a 14 não foram implementadas; as abas exibem estados vazios com a indicação da etapa correspondente.
 
 Inclui React, TypeScript, Vite, Tailwind, Dexie, cinco abas, tema escuro, configurações informativas, ícones, manifest e service worker. Não há login, registro de treino, sincronização ou backup nesta etapa. O modo claro chega na etapa 13.
 

@@ -1,3 +1,3 @@
 # Histórico de versões
 
-Nenhuma etapa aprovada. A ETAPA 1 aguarda homologação e aprovação explícita antes da versão v0.1.0.
+- v0.1.0 — ETAPA 1 aprovada em 05/10/2026: base React, PWA offline, navegação, tema escuro verde e schema Dexie.

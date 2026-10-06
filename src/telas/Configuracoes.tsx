@@ -6,5 +6,5 @@ export function Configuracoes({ instalado, persistente }: { instalado: boolean; 
     <div><dt>Último backup</dt><dd>Nunca</dd></div>
   </dl><p>Instalar, sincronizar e exportar backups ajuda a proteger seus dados. A persistência depende do navegador.</p></section>
     <section className="painel"><h2>Em breve</h2><p>Backup na etapa 7. Conta e sincronização na etapa 8. Personalização do tema na etapa 13.</p></section>
-    <section className="painel"><h2>Sobre o Vida em Dia</h2><p>Seu espaço pessoal de treino, alimentação e evolução.</p><small>ETAPA 1 · Base do projeto em homologação</small></section></>
+    <section className="painel"><h2>Sobre o Vida em Dia</h2><p>Seu espaço pessoal de treino, alimentação e evolução.</p><small>Versão 0.1.0 · Base do projeto</small></section></>
 }
