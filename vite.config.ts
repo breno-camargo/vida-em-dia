@@ -8,7 +8,7 @@ export default defineConfig({ plugins: [react(), tailwindcss(), VitePWA({
     name: 'Vida em Dia', short_name: 'Vida em Dia', lang: 'pt-BR',
     description: 'Seu espaço pessoal de treino, alimentação e evolução.',
     start_url: '/', scope: '/', display: 'standalone', orientation: 'portrait',
-    theme_color: '#101714', background_color: '#101714',
+    theme_color: '#101720', background_color: '#101720',
     icons: [
       { src: '/icons/icone-192.png', sizes: '192x192', type: 'image/png' },
       { src: '/icons/icone-512.png', sizes: '512x512', type: 'image/png' },
@@ -17,3 +17,4 @@ export default defineConfig({ plugins: [react(), tailwindcss(), VitePWA({
   },
   workbox: { globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2}'], navigateFallback: '/index.html' }
 })] })
+
