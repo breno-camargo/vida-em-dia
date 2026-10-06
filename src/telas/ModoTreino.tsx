@@ -14,7 +14,7 @@ import { AjudaExercicio } from '../componentes/AjudaExercicio'
 import { EditorExercicio } from '../componentes/EditorExercicio'
 import { useTelaLigada } from '../hooks/useTelaLigada'
 import { MiniaturaExercicio } from '../componentes/MiniaturaExercicio'
-import { ChevronDown, Plus, ClipboardPlus } from 'lucide-react'
+import { ChevronDown, Plus, ClipboardPlus, MessageSquare } from 'lucide-react'
 import { SelecionarDescanso } from '../componentes/SelecionarDescanso'
 import { Painel } from '../componentes/Painel'
 
@@ -133,7 +133,7 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false }: { id: st
       </details>
     })}
     <details className="acao-treino"><summary><span className="icone-acao"><Plus size={20} /></span><span>Adicionar exercício<small>Somente neste treino</small></span><ChevronDown size={18} className="seta-acao" /></summary><div className="formulario"><label>Buscar<input type="search" value={busca} onChange={e => definirBusca(e.target.value)} /></label><ListaExercicios exercicios={exercicios.filter(ex => ex.tipo === 'forca' && !itens.some(i => i.exercicio_id === ex.id))} busca={busca} ocupado={ocupado} adicionar={ex => void executar(() => adicionarExercicio(treino, ex))} /></div></details>
-    <div className="observacao-treino formulario"><label>Observação do treino <span className="opcional">Opcional</span><textarea placeholder="Como foi seu treino?" value={treino.observacao} onChange={e => { const observacao = e.target.value; void executar(async () => { await tabela('treinos').update(id, { observacao, atualizado_em: new Date().toISOString() }) }) }} /></label></div>
+    <details className="acao-treino"><summary><span className="icone-acao"><MessageSquare size={20} /></span><span>Observação do treino<small>{treino.observacao.trim() ? 'Nota salva · toque para editar' : 'Opcional · toque para adicionar'}</small></span><ChevronDown size={18} className="seta-acao" /></summary><div className="formulario"><label>Como foi seu treino?<textarea placeholder="Como foi seu treino?" value={treino.observacao} onChange={e => { const observacao = e.target.value; void executar(async () => { await tabela('treinos').update(id, { observacao, atualizado_em: new Date().toISOString() }) }) }} /></label></div></details>
     {!treino.ficha_id && <details className="acao-treino"><summary><span className="icone-acao"><ClipboardPlus size={20} /></span><span>Salvar como ficha<small>Reutilize este planejamento</small></span><ChevronDown size={18} className="seta-acao" /></summary><div className="formulario"><label>Nome<input value={nomeFicha} onChange={e => definirNomeFicha(e.target.value)} /></label><button className="botao-secundario" disabled={ocupado} onClick={() => void executar(async () => {
       const nova = { ...criarRegistro(treino.user_id), nome: nomeFicha, ordem: Date.now() }
       await salvarFicha(nova, itens.map((item, ordem) => ({ ...criarRegistro(treino.user_id), ficha_id: nova.id, exercicio_id: item.exercicio_id, ordem, series_planejadas: series.filter(s => s.exercicio_id === item.exercicio_id).length, descanso_segundos: item.descanso_segundos })))
@@ -153,6 +153,7 @@ function Desempenho({ exercicioId }: { exercicioId: string }) {
   }, [exercicioId])
   return <small className="ultimo-desempenho">{dados?.ultimas.length ? `Último: ${dados.ultimas.map(s => `${s.repeticoes} reps @ ${s.peso_total} kg`).join(' · ')} | Melhor carga: ${dados.melhor} kg` : 'Primeira sessão · preencha peso e repetições'}</small>
 }
+
 
 
 
