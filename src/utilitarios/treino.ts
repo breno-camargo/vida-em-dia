@@ -1,5 +1,6 @@
 import type { SerieTreino } from '../dados/modelos'
-export function cargaTotal(peso: number, modo: 'total' | 'por_lado' = 'total', barra = 0) {
+export function cargaTotal(peso: number, modo: 'total' | 'por_lado' | 'peso_corporal' = 'total', barra = 0) {
+  if (modo === 'peso_corporal') return 0
   return modo === 'por_lado' ? peso * 2 + barra : peso
 }
 export function volumeSeries(series: SerieTreino[]) {
@@ -13,3 +14,4 @@ export function validarSerie(serie: SerieTreino) {
   if (serie.rpe !== undefined && (!Number.isFinite(serie.rpe) || serie.rpe < 1 || serie.rpe > 10)) throw new Error('Use um RPE entre 1 e 10, ou deixe vazio.')
   if (serie.tipo === 'dropset' && (serie.reducoes ?? []).some(r => !valida(r.peso_digitado, r.repeticoes))) throw new Error('Confira as cargas e repetições do drop set.')
 }
+

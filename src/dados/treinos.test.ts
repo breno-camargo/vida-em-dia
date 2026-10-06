@@ -11,7 +11,7 @@ import { cargaTotal, volumeSeries, segundosRestantes } from '../utilitarios/trei
 
 beforeEach(async () => { await banco.delete(); await banco.open(); await iniciarBanco(); await iniciarBiblioteca() })
 async function preparar() {
-  const ex = (await tabela('exercicios').toArray()).find(e => e.tipo === 'forca')!
+  const ex = (await tabela('exercicios').toArray()).find(e => e.tipo === 'forca' && e.modo_carga !== 'peso_corporal')!
   const ficha = { ...criarRegistro(), nome: 'A', ordem: 0 }
   await salvarFicha(ficha, [{ ...criarRegistro(), ficha_id: ficha.id, exercicio_id: ex.id, ordem: 0, series_planejadas: 2, descanso_segundos: 120 }])
   return { ficha, ex }
@@ -173,3 +173,19 @@ test('remova e restaure um treino no histórico sem apagar suas séries', async 
   expect((await tabela('treinos').get(id))?.apagado_em).toBeNull()
   expect((await tabela('series_treino').get(series[0].id))?.concluida_em).toBeTruthy()
 })
+
+test('registre peso corporal sem carga e sem volume artificial', async () => {
+  const ex = (await tabela('exercicios').where('nome').equals('Barra fixa').first())!
+  expect(ex.modo_carga).toBe('peso_corporal')
+  const ficha = { ...criarRegistro(), nome: 'Corpo', ordem: 0 }
+  await salvarFicha(ficha, [{ ...criarRegistro(), ficha_id: ficha.id, exercicio_id: ex.id, ordem: 0, series_planejadas: 2, descanso_segundos: 90 }])
+  const id = await iniciarTreino(ficha.id)
+  const series = await tabela('series_treino').where('treino_id').equals(id).sortBy('numero_serie')
+  expect(series.every(s => s.modo_carga === 'peso_corporal' && s.peso_total === 0)).toBe(true)
+  await concluirSerie({ ...series[0], repeticoes: 12, peso_digitado: 20, peso_barra: 20 })
+  const salva = (await tabela('series_treino').get(series[0].id))!
+  expect(salva.repeticoes).toBe(12)
+  expect(salva.peso_total).toBe(0)
+  expect(volumeSeries([salva])).toBe(0)
+})
+
