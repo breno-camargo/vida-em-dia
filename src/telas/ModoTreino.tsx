@@ -19,7 +19,7 @@ import { SelecionarDescanso } from '../componentes/SelecionarDescanso'
 import { Painel } from '../componentes/Painel'
 import { recordesDoTreino } from '../dados/historico'
 
-export function ModoTreino({ id, online, fechar, abrirResumo = false }: { id: string; online: boolean; fechar: () => void; abrirResumo?: boolean }) {
+export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido }: { id: string; online: boolean; fechar: () => void; abrirResumo?: boolean; concluido: (id: string) => void }) {
   const cards = useRef(new Map<string, HTMLDetailsElement>())
   const avisosRecordes = useRef(new Set<string>())
   const [avisoRecorde, definirAvisoRecorde] = useState('')
@@ -67,7 +67,7 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false }: { id: st
     const fim = new Date().toISOString()
     await tabela('treinos').update(id, { fim, duracao_minutos: Math.round((Date.parse(fim) - Date.parse(treino.inicio)) / 60000), calorias, peso_corporal, descanso_fim: null, atualizado_em: fim })
     tela.parar()
-    fechar()
+    concluido(id)
     window.scrollTo({ top: 0 })
   }} />
   return <>
