@@ -5,7 +5,7 @@ import { Rolagem } from './Rolagem'
 import type { Exercicio } from '../dados/modelos'
 import { repositorio } from '../dados/repositorio'
 const pesosBarra = Array.from({ length: 201 }, (_, i) => i / 2)
-const grupos = ['Abdômen', 'Bíceps', 'Cardio', 'Costas', 'Glúteos e panturrilhas', 'Ombros', 'Peito', 'Pernas', 'Tríceps']
+const grupos = ['Abdômen', 'Bíceps', 'Cardio', 'Costas', 'Glúteos', 'Ombros', 'Panturrilhas', 'Peito', 'Pernas', 'Tríceps']
 export function EditorExercicio({ exercicio, fechar }: { exercicio: Exercicio; fechar: () => void }) {
   const formularioId = useId()
   const [dados, definir] = useState(exercicio)
