@@ -1,23 +1,29 @@
-# Entrega da ETAPA 3 aprovada
+# Entrega da ETAPA 4 para homologação
 
-O usuário validou o funcionamento no iPhone e aprovou a conclusão em 06/10/2026. Versão v0.3.0 preparada para produção.
+ETAPAS 1 a 3 aprovadas. Main continua em v0.3.0. Etapa 4 implementada em etapa-4-historico-evolucao e integrada em test para conferência; aguarda aprovação do usuário.
 
-Inclui treino por ficha e livre, recuperação offline do andamento, tipos de séries, carga total/por lado, seletores por rolagem, aplicação às próximas pendentes, descanso central com ±15 s e bipes nos últimos 10 segundos, avanço entre exercícios, confirmação ao trocar de sessão e conclusão com ações fixas. Biblioteca agrupada por músculos, Glúteos e Panturrilhas separados por migração que preserva os vínculos existentes. Calorias automáticas pelo peso registrado; cadastro de medidas chega na etapa 5. Cardio chega na etapa 6.
+## Publicar o preview
 
-## Publicar a versão aprovada
-
-No terminal autenticado do usuário, dentro do projeto:
+No terminal autenticado, dentro do projeto:
 
 ```bat
-git push origin main test etapa-3-modo-treino
-git push origin v0.3.0
-git switch main
-npx vercel --prod
-git switch test
+git push -u origin etapa-4-historico-evolucao
+git push origin test
+npx vercel
 ```
 
-Se o push de main já gerar uma implantação de produção bem-sucedida, a implantação manual é dispensável. Endereço definitivo: https://vida-em-dia-sable.vercel.app/
+Abra o endereço marcado como Preview. Não use --prod nesta homologação.
 
-## Próxima etapa
+## Conferir no iPhone
 
-Etapa 4: histórico, recordes, progressão, gráficos e card compartilhável com foto opcional e dados reais. Sua implementação aguarda solicitação do usuário.
+1. Abra Evolução: treinos antigos concluídos devem aparecer. Busque por ficha, exercício e data.
+2. Abra um treino e confira séries, cargas totais e volume. Remova e use Desfazer.
+3. Em Por exercício ou Ajuda > Evolução, confira gráficos, recordes e a seta de comparação. Aquecimentos não devem contar.
+4. Conclua outra sessão com maior carga: confira Novo recorde e os novos dados no histórico.
+5. Configure o alvo de reps no editor. Atinja o alvo em todas as séries normais e confira a sugestão de progressão.
+6. Gere o card do último treino ou pelo histórico. Teste sem foto, com foto, Baixar imagem e Compartilhar no iPhone. A imagem deve mostrar dados reais.
+7. Abra o preview uma vez, desligue a internet e confira histórico, gráficos e geração do card offline.
+
+Typecheck, lint, 25 testes e build passaram. Os cálculos, migração, recordes, aquecimentos, persistência e remoção/restauração têm testes automáticos. Áudio confirmado pelo usuário na etapa 3. Compartilhamento nativo e aparência ainda precisam de teste no iPhone.
+
+A aprovação da etapa inteira é necessária antes de integrar test em main e criar v0.4.0. Cardio, medidas, sincronização, backup e super séries permanecem nas etapas previstas.

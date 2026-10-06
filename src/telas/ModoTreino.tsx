@@ -17,9 +17,12 @@ import { MiniaturaExercicio } from '../componentes/MiniaturaExercicio'
 import { ChevronDown, Plus, ClipboardPlus, MessageSquare } from 'lucide-react'
 import { SelecionarDescanso } from '../componentes/SelecionarDescanso'
 import { Painel } from '../componentes/Painel'
+import { recordesDoTreino } from '../dados/historico'
 
 export function ModoTreino({ id, online, fechar, abrirResumo = false }: { id: string; online: boolean; fechar: () => void; abrirResumo?: boolean }) {
   const cards = useRef(new Map<string, HTMLDetailsElement>())
+  const avisosRecordes = useRef(new Set<string>())
+  const [avisoRecorde, definirAvisoRecorde] = useState('')
   const treino = useLiveQuery(() => tabela('treinos').get(id), [id])
   const itens = useLiveQuery(() => tabela('treino_exercicios').where('treino_id').equals(id).filter(e => !e.apagado_em).sortBy('ordem'), [id])
   const series = useLiveQuery(() => tabela('series_treino').where('treino_id').equals(id).filter(s => !s.apagado_em).sortBy('numero_serie'), [id])
@@ -70,6 +73,7 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false }: { id: st
   return <>
     <div className="painel"><h2>{treino.titulo ?? 'Treino livre'}</h2><p>{series.filter(s => s.concluida_em).length} de {series.length} séries concluídas</p><button className="botao-secundario" onClick={() => void tela.manter()}>{tela.estado}</button><small>Salvo neste aparelho. Você pode sair e continuar depois.</small></div>
     {erro && <p role="alert" className="erro">{erro}</p>}
+    {avisoRecorde && <div className="aviso-recorde" role="status"><strong>Novo recorde!</strong><p>{avisoRecorde}</p><button onClick={() => definirAvisoRecorde('')}>Entendi</button></div>}
     {removido && <button className="botao-secundario" disabled={ocupado} onClick={() => void executar(async () => { await removido.desfazer(); definirRemovido(null) })}>Desfazer remoção</button>}
     <Descanso fim={treino.descanso_fim} alterar={fim => void executar(() => atualizarDescanso(fim))} />
     {itens.map((item, indice) => {
@@ -86,6 +90,12 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false }: { id: st
         <div className="cabecalho-series" aria-hidden="true"><span>SÉRIE</span><span>REPS</span><span>KG</span><span>FEITO</span></div>
         {grupo.map((s, i) => <Serie key={`${s.id}-${s.concluida_em ?? 'pendente'}`} serie={s} destaque={s.id === proxima?.id} anterior={grupo[i - 1]} salvar={salvarSerie} concluir={async dados => {
           void tela.manter(); await concluirSerie(dados)
+          const recordes = await recordesDoTreino(id, item.exercicio_id)
+          const novos = recordes.filter(r => !avisosRecordes.current.has(`${item.exercicio_id}-${r}`))
+          if (novos.length) {
+            novos.forEach(r => avisosRecordes.current.add(`${item.exercicio_id}-${r}`))
+            definirAvisoRecorde(`${item.nome}: ${novos.map(r => r === 'rm' ? '1RM estimado' : r === 'carga' ? 'maior carga' : 'maior volume').join(', ')}`)
+          }
           const pendentes = await tabela('series_treino').where('[treino_id+exercicio_id]').equals([id, item.exercicio_id]).filter(serie => !serie.apagado_em && !serie.concluida_em).count()
           const card = cards.current.get(item.id)
           if (pendentes === 0 && card) card.open = false

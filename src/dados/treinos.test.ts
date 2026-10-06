@@ -144,3 +144,32 @@ test('separe os grupos antigos sem alterar ids, fichas ou instruções próprias
   expect((await tabela('ficha_exercicios').get(item.id))?.exercicio_id).toBe(ex.id)
 })
 
+
+test('marque recorde real ao superar carga anterior e exclua aquecimentos', async () => {
+  const { ficha } = await preparar()
+  const anterior = await iniciarTreino(ficha.id)
+  const anteriores = await tabela('series_treino').where('treino_id').equals(anterior).toArray()
+  await concluirSerie({ ...anteriores[0], peso_digitado: 20 })
+  await tabela('treinos').update(anterior, { fim: new Date().toISOString() })
+  const atual = await iniciarTreino(ficha.id)
+  const series = await tabela('series_treino').where('treino_id').equals(atual).toArray()
+  await concluirSerie({ ...series[0], tipo: 'aquecimento', peso_digitado: 100 })
+  expect((await tabela('series_treino').get(series[0].id))?.recorde).toBe(false)
+  await concluirSerie({ ...series[1], peso_digitado: 25 })
+  expect((await tabela('series_treino').get(series[1].id))?.recorde).toBe(true)
+})
+
+test('remova e restaure um treino no histórico sem apagar suas séries', async () => {
+  const { removerTreino, restaurarTreino } = await import('./historico')
+  const { ficha } = await preparar()
+  const id = await iniciarTreino(ficha.id)
+  const series = await tabela('series_treino').where('treino_id').equals(id).toArray()
+  await concluirSerie(series[0])
+  await tabela('treinos').update(id, { fim: new Date().toISOString() })
+  await removerTreino(id)
+  expect((await tabela('treinos').get(id))?.apagado_em).toBeTruthy()
+  expect(await tabela('series_treino').where('treino_id').equals(id).count()).toBe(2)
+  await restaurarTreino(id)
+  expect((await tabela('treinos').get(id))?.apagado_em).toBeNull()
+  expect((await tabela('series_treino').get(series[0].id))?.concluida_em).toBeTruthy()
+})

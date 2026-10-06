@@ -2,6 +2,7 @@ import { useId, useState } from 'react'
 import { Painel } from './Painel'
 import { SelecionarDescanso } from './SelecionarDescanso'
 import { Rolagem } from './Rolagem'
+import { SelecionarSeries } from './SelecionarSeries'
 import type { Exercicio } from '../dados/modelos'
 import { repositorio } from '../dados/repositorio'
 const pesosBarra = Array.from({ length: 201 }, (_, i) => i / 2)
@@ -31,6 +32,7 @@ export function EditorExercicio({ exercicio, fechar }: { exercicio: Exercicio; f
     </fieldset>
     {dados.tipo === 'forca' && <fieldset className="secao-editor"><legend>Planejamento</legend>
       <SelecionarDescanso valor={dados.descanso_padrao_segundos} confirmar={async valor => campo('descanso_padrao_segundos', valor)} />
+      <div><span className="rotulo-editor">Alvo de repetições para progressão</span><SelecionarSeries valor={dados.alvo_reps ?? 12} confirmar={valor => campo('alvo_reps', valor)} rotulo="Repetições" /></div>
       <div><span className="rotulo-editor">Modo de carga</span><div className="escolhas-editor" role="group" aria-label="Modo de carga">{(['total', 'por_lado'] as const).map(modo => <button type="button" key={modo} aria-pressed={dados.modo_carga === modo} onClick={() => campo('modo_carga', modo)}>{modo === 'total' ? 'Total' : 'Por lado'}</button>)}</div></div>
       <button type="button" className="botao-descanso" onClick={() => { definirBarra(dados.peso_barra); definirBarraAberta(true) }}>Peso da barra<strong>{dados.peso_barra.toLocaleString('pt-BR')} kg</strong><span>Alterar</span></button>
       <small className="explicacao-editor">Por lado: o app soma os dois lados e o peso da barra. Em carga total, a barra já está incluída.</small>
