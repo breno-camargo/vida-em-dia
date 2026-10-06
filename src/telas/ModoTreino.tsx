@@ -129,7 +129,7 @@ export function ModoTreino({ id, online, fechar }: { id: string; online: boolean
       await tabela('treinos').update(id, { ficha_id: nova.id, atualizado_em: new Date().toISOString() })
     })}>Salvar ficha</button></div></details>}
     <button className="botao-principal largura-total" onClick={() => definirResumo(true)}>Ver resumo e finalizar</button><button className="botao-secundario" onClick={fechar}>Voltar · continuar depois</button>
-    {perguntarFinalizacao && <Painel titulo="Todas as séries concluídas!" fechar={() => definirPerguntarFinalizacao(false)}><p className="subtitulo-seletor">Você concluiu todos os exercícios. Quer finalizar o treino?</p><button type="button" className="botao-principal largura-total" onClick={() => { definirPerguntarFinalizacao(false); definirResumo(true) }}>Ver resumo e finalizar</button><button type="button" className="botao-secundario" onClick={() => definirPerguntarFinalizacao(false)}>Continuar treino</button></Painel>}
+    {perguntarFinalizacao && <Painel centralizado titulo="Todas as séries concluídas!" fechar={() => definirPerguntarFinalizacao(false)}><p className="subtitulo-seletor">Você concluiu todos os exercícios. Quer finalizar o treino?</p><button type="button" className="botao-principal largura-total" onClick={() => { definirPerguntarFinalizacao(false); definirResumo(true) }}>Ver resumo e finalizar</button><button type="button" className="botao-secundario" onClick={() => definirPerguntarFinalizacao(false)}>Continuar treino</button></Painel>}
     {ajuda && <AjudaExercicio exercicio={ajuda} online={online} fechar={() => definirAjuda(null)} editar={() => { definirEdicao(ajuda); definirAjuda(null) }} />}
     {edicao && <EditorExercicio exercicio={edicao} fechar={() => definirEdicao(null)} />}
   </>
@@ -142,4 +142,5 @@ function Desempenho({ exercicioId }: { exercicioId: string }) {
   }, [exercicioId])
   return <small className="ultimo-desempenho">{dados?.ultimas.length ? `Último: ${dados.ultimas.map(s => `${s.repeticoes} reps @ ${s.peso_total} kg`).join(' · ')} | Melhor carga: ${dados.melhor} kg` : 'Primeira sessão · preencha peso e repetições'}</small>
 }
+
 
