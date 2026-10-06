@@ -46,7 +46,7 @@ Concluir salva a série imediatamente e inicia descanso quando há outra série 
 
 Alterações de carga/reps são guardadas no aparelho. Copie a série anterior, acrescente série extra, edite ou desfaça uma conclusão. Ao reabrir a aba Treino, Continuar treino recupera o andamento. Apenas um treino pode ficar ativo por aparelho.
 
-Resumo: duração, volume sem aquecimento (inclui reduções de drop set), comparação com a última sessão da ficha e calorias estimadas editáveis (MET 5 × peso × horas). Sem peso anterior, o resumo oferece um campo opcional de peso ou edição manual de calorias. Cardio do dia aparece se houver registros; seu cadastro chega na etapa 6. Histórico detalhado, avisos de recorde e progressão chegam na etapa 4.
+Resumo: duração, volume sem aquecimento (inclui reduções de drop set), comparação com a última sessão da ficha e calorias estimadas automaticamente (MET 5 × peso × horas), usando o último peso registrado em medidas corporais. Não há campos de peso nem edição de calorias no resumo. Sem peso cadastrado, a estimativa aparece como indisponível; o cadastro de medidas chega na etapa 5. Cardio do dia aparece se houver registros; seu cadastro chega na etapa 6. Histórico detalhado, avisos de recorde e progressão chegam na etapa 4.
 
 O banco está na versão 3: nova tabela treino_exercicios, cópia do planejamento diário, e campos de carga nas séries anteriores preservados como total. O teste de migração confirma a preservação das sessões e das cargas da versão 2.
 
@@ -138,3 +138,4 @@ Referências: [Vite](https://vite.dev/guide/), [Tailwind com Vite](https://tailw
 Abra o endereço HTTPS no Safari → Compartilhar → Adicionar à Tela de Início → Adicionar. Depois abra pelo ícone. Instale primeiro e só depois faça login ou registre dados, quando essas funções estiverem disponíveis. Safari e app instalado podem usar armazenamentos separados; cada URL tem seus próprios dados.
 
 O app solicita `navigator.storage.persist()` sem depender da concessão. A proteção real será instalar, sincronizar e fazer backups. Esta etapa não implementa notificações, timer, som ou Wake Lock; esses recursos pertencem ao modo treino.
+
