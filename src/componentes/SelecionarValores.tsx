@@ -8,7 +8,7 @@ export function SelecionarValores({ reps, peso, titulo, permitirProximas = false
   const [repeticoes, definirReps] = useState(Math.max(1, reps))
   const [inteiro, definirInteiro] = useState(Math.floor(peso))
   const [fracao, definirFracao] = useState(Number((peso % 1).toFixed(3)))
-  const [proximas, definirProximas] = useState(false)
+  const [proximas, definirProximas] = useState(permitirProximas)
   const [ocupado, definirOcupado] = useState(false)
   const [erro, definirErro] = useState('')
   const listaReps = useMemo(() => Array.from({ length: Math.max(100, reps) }, (_, i) => i + 1), [reps])
