@@ -6,6 +6,7 @@ import { liberarAudio } from '../utilitarios/alerta'
 import { Painel } from './Painel'
 import { SelecionarValores } from './SelecionarValores'
 import { Rolagem } from './Rolagem'
+const pesosBarra = Array.from({ length: 201 }, (_, i) => i / 2)
 const niveisEsforco = [0, ...Array.from({ length: 19 }, (_, i) => 1 + i / 2)]
 export function Serie({ serie, destaque, anterior, salvar, concluir, desfazer, aplicarProximas, remover }: {
   serie: SerieTreino; destaque: boolean; anterior?: SerieTreino
@@ -18,6 +19,8 @@ export function Serie({ serie, destaque, anterior, salvar, concluir, desfazer, a
   const semPeso = dados.modo_carga === 'peso_corporal'
   const [erro, definirErro] = useState('')
   const [ocupado, definirOcupado] = useState(false)
+  const [barraAberta, definirBarraAberta] = useState(false)
+  const [barra, definirBarra] = useState(serie.peso_barra ?? 20)
   const [esforcoAberto, definirEsforcoAberto] = useState(false)
   const [esforco, definirEsforco] = useState(serie.rpe ?? 0)
   const [opcoesAbertas, definirOpcoesAbertas] = useState(false)
@@ -38,7 +41,7 @@ export function Serie({ serie, destaque, anterior, salvar, concluir, desfazer, a
     {dados.modo_carga === 'por_lado' && <small className="carga-por-lado">Por lado · total {cargaTotal(dados.peso_digitado, dados.modo_carga, dados.peso_barra)} kg</small>}
     <div className="opcoes-serie" id={`opcoes-serie-${serie.id}`} hidden={!opcoesAbertas}><div className="formulario">
     {!semPeso && <div><span className="rotulo-editor">Modo de carga</span><div className="escolhas-editor" role="group" aria-label="Modo de carga da série">{(['total', 'por_lado'] as const).map(modo => <button type="button" key={modo} aria-pressed={(dados.modo_carga ?? 'total') === modo} onClick={() => alterar({ modo_carga: modo })}>{modo === 'total' ? 'Total' : 'Por lado'}</button>)}</div></div>}
-    {dados.modo_carga === 'por_lado' && <label>Barra (kg, use 0 para não somar)<select value={dados.peso_barra ?? 20} onChange={e => alterar({ peso_barra: Number(e.target.value) })}>{Array.from({ length: 201 }, (_, i) => <option key={i} value={i / 2}>{i / 2} kg</option>)}</select></label>}
+    {dados.modo_carga === 'por_lado' && <button type="button" className="botao-descanso" onClick={() => { definirBarra(dados.peso_barra ?? 20); definirBarraAberta(true) }}>Peso da barra<strong>{(dados.peso_barra ?? 20).toLocaleString('pt-BR')} kg</strong><span>Alterar</span></button>}
     {!semPeso && <small>Carga total: {cargaTotal(dados.peso_digitado, dados.modo_carga, dados.peso_barra)} kg</small>}
     {!semPeso && dados.tipo === 'dropset' && <div>{(dados.reducoes ?? []).map((reducao, i) => <div className="reducao" key={i}><span>Redução {i + 1}</span><button type="button" className="botao-descanso" onClick={() => definirReducaoAtiva(i)}>{reducao.repeticoes} reps · {reducao.peso_digitado.toLocaleString('pt-BR')} kg<span>Alterar</span></button><button type="button" className="botao-secundario" onClick={() => alterar({ reducoes: dados.reducoes!.filter((_, j) => j !== i) })}>Retirar redução</button></div>)}<button type="button" className="botao-secundario" onClick={() => alterar({ reducoes: [...(dados.reducoes ?? []), { peso_digitado: Math.max(0, dados.peso_digitado * 0.75), repeticoes: dados.repeticoes }] })}>Adicionar redução sem descanso</button></div>}
     <button type="button" className="botao-descanso" onClick={() => { definirEsforco(dados.rpe ?? 0); definirEsforcoAberto(true) }}>Esforço (opcional)<strong>{dados.rpe ? `${dados.rpe.toLocaleString('pt-BR')} / 10` : 'Sem RPE'}</strong><span>Alterar</span></button>
@@ -55,6 +58,7 @@ export function Serie({ serie, destaque, anterior, salvar, concluir, desfazer, a
       const novos = { ...dados, reducoes: dados.reducoes!.map((r, i) => i === reducaoAtiva ? { peso_digitado, repeticoes } : r) }
       await salvar(novos); definir(novos)
     }} />}
+    {barraAberta && <Painel titulo="Peso da barra" fechar={() => definirBarraAberta(false)}><p className="subtitulo-seletor">Use 0 kg para não somar uma barra à carga.</p><Rolagem valores={pesosBarra} inicial={dados.peso_barra ?? 20} rotulo="KG" escolher={definirBarra} formatar={valor => valor.toLocaleString('pt-BR')} /><p className="valor-escolhido">{barra.toLocaleString('pt-BR')} kg</p>{erro && <p className="erro" role="alert">{erro}</p>}<button type="button" className="botao-principal largura-total" disabled={ocupado} onClick={() => void realizar(async () => { const novos = { ...dados, peso_barra: barra }; await salvar(novos); definir(novos); definirBarraAberta(false) })}>Confirmar peso da barra</button></Painel>}
     {esforcoAberto && <Painel titulo="Esforço da série" fechar={() => definirEsforcoAberto(false)}><p className="subtitulo-seletor">Quanto esforço esta série exigiu? · 1 a 10</p><Rolagem valores={niveisEsforco} inicial={dados.rpe ?? 0} rotulo="RPE" escolher={definirEsforco} formatar={valor => valor === 0 ? 'Sem RPE' : valor.toLocaleString('pt-BR')} /><p className="valor-escolhido">{esforco === 0 ? 'Sem esforço registrado' : `${esforco.toLocaleString('pt-BR')} / 10`}</p>{erro && <p className="erro" role="alert">{erro}</p>}<button type="button" className="botao-principal largura-total" disabled={ocupado} onClick={() => void realizar(async () => { const novos = { ...dados, rpe: esforco || undefined }; await salvar(novos); definir(novos); definirEsforcoAberto(false) })}>Confirmar esforço</button></Painel>}
     {tipoAberto && <Painel titulo="Tipo de série" fechar={() => definirTipoAberto(false)}><div className="lista-tipos">{([
       ['normal', 'Série normal', 'Conta no volume do treino.'], ['aquecimento', 'Aquecimento', 'Descanso menor e fora do volume.'], ['falha', 'Até a falha', 'Marque quando terminar até a falha.'], ['dropset', 'Drop set', 'Reduções sem descanso entre elas.'],
@@ -64,6 +68,7 @@ export function Serie({ serie, destaque, anterior, salvar, concluir, desfazer, a
     }} disabled={ocupado}><span className={`tipo-serie ${tipo}`}>{tipo === 'normal' ? serie.numero_serie : tipo === 'aquecimento' ? 'A' : tipo === 'dropset' ? 'D' : 'F'}</span><span><strong>{nome}</strong><small>{texto}</small></span></button>)}<button className="remover-serie" disabled={ocupado} onClick={() => void realizar(async () => { await remover(); definirTipoAberto(false) })}>Remover série</button></div></Painel>}
   </section>
 }
+
 
 
 
