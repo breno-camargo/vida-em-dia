@@ -25,7 +25,7 @@ export default function App() {
   useEffect(() => { void iniciarBanco().then(iniciarBiblioteca).catch(() => definirErro('Não foi possível abrir o armazenamento local. Reabra o app e confira o espaço disponível no aparelho.')) }, [])
   const selecionar = (nova: Aba) => { if (nova === 'Treino') definirEntradaTreino(v => v + 1); definirAba(nova); definirMenu(false); window.scrollTo({ top: 0 }) }
   return <div className={`app ${ambiente.instalado ? 'instalado' : 'nao-instalado'}`}>
-    <header className="cabecalho"><div className="marca"><span><Leaf size={22} /></span><div>vida em dia<small>UM ESPAÇO PARA VOCÊ</small></div></div>
+    <header className="cabecalho"><div className="marca"><span><Leaf size={22} /></span><div>Vida em Dia<small>UM ESPAÇO PARA VOCÊ</small></div></div>
       <button className="botao-icone" aria-label={menu ? 'Fechar configurações' : 'Abrir configurações'} aria-expanded={menu} onClick={() => definirMenu(!menu)}>{menu ? <X /> : <Settings size={22} />}</button>
     </header>
     <main id="conteudo"><div className="linha-data"><span>{new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}</span><span className="estado-rede"><i className={ambiente.online ? 'online' : ''} />{ambiente.online ? 'Online' : 'Offline'}</span></div>
@@ -36,4 +36,5 @@ export default function App() {
     <AvisosPwa /><Navegacao atual={aba} selecionar={selecionar} />
   </div>
 }
+
 
