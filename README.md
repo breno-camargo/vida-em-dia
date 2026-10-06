@@ -4,7 +4,7 @@ PWA pessoal de treino, cardio, medidas, alimentação e saúde. Interface em por
 
 ## Estado do projeto
 
-ETAPAS 1, 2 e 3 aprovadas (v0.1.0, v0.2.0 e v0.3.0), mantendo o verde original. O usuário validou a etapa 3 no iPhone e aprovou a conclusão em 06/10/2026. As etapas 4 a 14 não foram implementadas.
+ETAPAS 1, 2 e 3 aprovadas (v0.1.0, v0.2.0 e v0.3.0), mantendo o verde original. O usuário validou a etapa 3 no iPhone e aprovou a conclusão em 06/10/2026. ETAPA 4 implementada para homologação em test, aguardando aprovação. As etapas 5 a 14 não foram implementadas.
 
 Inclui React, TypeScript, Vite, Tailwind, Dexie, cinco abas, tema escuro, configurações informativas, ícones, manifest e service worker. Já há registro local de treinos. Login, sincronização e backup chegam nas próximas etapas. O modo claro chega na etapa 13.
 
@@ -148,3 +148,16 @@ Descanso da etapa 3: painel central obrigatório entre séries e exercícios, ma
 
 A migração 4 separa Glúteos e Panturrilhas nos exercícios já cadastrados, preservando IDs e vínculos de fichas/treinos. Descrições próprias de músculos são mantidas. A biblioteca nova e o editor também usam os grupos separados.
 
+
+
+## ETAPA 4 — histórico e evolução (aguardando aprovação)
+
+A aba Evolução reúne os treinos concluídos e a evolução por exercício. Busque por nome da ficha, exercício ou data (ISO ou formato brasileiro). Cada sessão mostra as séries realizadas e pode ser removida com Desfazer; a remoção é lógica e preserva as séries para restauração.
+
+No detalhe do exercício, Evolução mostra carga máxima, maior volume por sessão, 1RM estimado por Epley, comparação de carga com a sessão anterior e gráficos Recharts de carga e volume. Aquecimentos, séries pendentes e registros excluídos não entram nas métricas. Drop sets somam as reduções com carga total. Recordes são recalculados a partir dos dados visíveis, inclusive de treinos antigos; a primeira sessão estabelece a referência, sem recordes fictícios. Durante o treino, superar uma marca anterior exibe Novo recorde.
+
+O editor do exercício permite ajustar o alvo de reps (padrão 12). Se todas as séries normais da última sessão, sem pendências, atingirem o alvo, aparece uma sugestão de aumentar a carga gradualmente. Se sessões recentes registrarem pelo menos quatro semanas sem aumento de carga máxima, aparece um aviso de recuperação. As sugestões não alteram cargas automaticamente.
+
+Após finalizar, a lista de fichas oferece Gerar card para compartilhar para o último treino. Qualquer treino do histórico também oferece Compartilhar. O card PNG vertical 1080 × 1920 inclui foto opcional, nome, data, duração, volume, exercícios, séries, recordes e grupos. Calorias aparecem como estimativa quando há peso registrado; caso contrário, aparece um traço. A foto fica apenas em memória para este card, sem cadastro permanente (galeria de progresso na etapa 11). A imagem é gerada no aparelho, sem serviço externo. Compartilhar usa o menu nativo quando suportado; Baixar imagem permite salvar e publicar manualmente. Não há publicação automática em redes sociais.
+
+Typecheck, lint, 25 testes e build passaram. Falta validar no iPhone: gráfico/toque, card com foto, download e compartilhamento, incluindo funcionamento offline. Main continua na versão aprovada v0.3.0; nenhuma tag v0.4.0 foi criada.

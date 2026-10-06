@@ -11,6 +11,7 @@ export interface Exercicio extends Registro {
   descanso_padrao_segundos: number; modo_carga: 'total' | 'por_lado'; peso_barra: number
   nota_fixa: string; como_fazer: string; musculos: string; video_url?: string
   origem: 'manual' | 'banco_aberto'; referencia_externa?: string
+  alvo_reps?: number
 }
 export interface Ficha extends Registro { nome: string; ordem: number }
 export interface FichaExercicio extends Registro {

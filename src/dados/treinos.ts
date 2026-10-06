@@ -3,6 +3,7 @@ import { criarRegistro } from './repositorio'
 import type { Exercicio, SerieTreino, Treino, TreinoExercicio } from './modelos'
 import { dataLocal } from '../utilitarios/data'
 import { cargaTotal, validarSerie, caloriasMusculacao } from '../utilitarios/treino'
+import { desempenho, efetivas } from '../utilitarios/evolucao'
 
 export async function treinoAtivo() { return tabela('treinos').filter(t => !t.fim && !t.apagado_em).first() }
 export async function ultimasSeries(exercicio_id: string) {
@@ -68,7 +69,13 @@ export async function concluirSerie(dados: SerieTreino) {
     if (!treino || treino.fim || !salva || salva.apagado_em) throw new Error('Esta série não está disponível.')
     if (salva.concluida_em) return
     const agora = new Date().toISOString()
-    await tabela('series_treino').put({ ...dados, peso_total: cargaTotal(dados.peso_digitado, dados.modo_carga, dados.peso_barra), concluida_em: agora, atualizado_em: agora })
+    const anteriores = await tabela('treinos').filter(t => !!t.fim && !t.apagado_em).toArray()
+    const anterioresSeries = await tabela('series_treino').where('exercicio_id').equals(dados.exercicio_id).filter(s => !s.apagado_em && !!s.concluida_em && (anteriores.some(t => t.id === s.treino_id) || s.treino_id === treino.id)).toArray()
+    const serie = { ...dados, peso_total: cargaTotal(dados.peso_digitado, dados.modo_carga, dados.peso_barra), concluida_em: agora, atualizado_em: agora }
+    const melhor = desempenho(anterioresSeries)
+    const atual = desempenho([serie])
+    serie.recorde = dados.tipo !== 'aquecimento' && efetivas(anterioresSeries).length > 0 && (atual.carga > melhor.carga || atual.rm > melhor.rm)
+    await tabela('series_treino').put(serie)
     const pendentes = await tabela('series_treino').where('[treino_id+exercicio_id]').equals([dados.treino_id, dados.exercicio_id]).filter(s => !s.concluida_em && !s.apagado_em).count()
     const pendentesTreino = pendentes || await tabela('series_treino').where('treino_id').equals(dados.treino_id).filter(s => !s.concluida_em && !s.apagado_em).count()
     const exercicio = await tabela('treino_exercicios').where('treino_id').equals(dados.treino_id).filter(e => e.exercicio_id === dados.exercicio_id && !e.apagado_em).first()
