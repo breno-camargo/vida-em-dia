@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc -b",
-    "test": "vitest run"
+    "test": "vitest run --fsModuleCache --maxWorkers=1"
   },
   "dependencies": {
     "dexie": "^4.4.6",

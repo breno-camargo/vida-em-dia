@@ -16,6 +16,13 @@ banco.version(1).stores({
   agua_dia: `${base}, data`, consumo_diario_meta: `${base}, data`,
   fotos: `${base}, tipo, data, medida_id, exercicio_id`, configuracoes: `${base}, &chave`,
 })
+banco.version(2).stores({
+  ficha_exercicios: `${base}, ficha_id, exercicio_id, [ficha_id+ordem]`,
+}).upgrade(async transacao => {
+  await transacao.table('ficha_exercicios').toCollection().modify(item => {
+    if (item.descanso_segundos === undefined) item.descanso_segundos = 90
+  })
+})
 export function tabela<K extends keyof Tabelas>(nome: K): Table<Tabelas[K], string> {
   return banco.table(nome)
 }

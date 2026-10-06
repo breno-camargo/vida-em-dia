@@ -4,9 +4,31 @@ PWA pessoal de treino, cardio, medidas, alimentação e saúde. Interface em por
 
 ## Estado do projeto
 
-ETAPA 1 aprovada com o tema verde original; versão v0.1.0 preparada para envio à produção. As etapas 2 a 14 não foram implementadas; as abas exibem estados vazios com a indicação da etapa correspondente.
+ETAPA 1 aprovada e publicada com o tema verde original (v0.1.0). ETAPA 2 aprovada (v0.2.0), preparada para publicação em produção. As etapas 3 a 14 não foram implementadas.
 
 Inclui React, TypeScript, Vite, Tailwind, Dexie, cinco abas, tema escuro, configurações informativas, ícones, manifest e service worker. Não há login, registro de treino, sincronização ou backup nesta etapa. O modo claro chega na etapa 13.
+
+### ETAPA 2
+
+Na aba Treino, use Minhas fichas ou Exercícios. A biblioteca inicial contém 64 exercícios comuns, com busca por nome/equipamento e filtro por grupo. Você pode criar, editar e excluir exercícios. A inicialização é transacional e não recria exercícios excluídos.
+
+Crie fichas com exercícios, séries planejadas e descanso por exercício. Edite, duplique, reordene fichas e exercícios ou exclua com Desfazer. Para simplificar, cada exercício aparece uma vez por ficha. A exclusão de um exercício usado em ficha é bloqueada até removê-lo da ficha. Iniciar treino e treino livre pertencem à etapa 3.
+
+Como fazer abre um painel rápido com fotos da máquina, nota fixa, instruções, músculos e vídeo. Adicione fotos pela câmera/galeria. O aparelho comprime em JPEG 0,7, até 1280 px, e gera miniaturas até 320 px, armazenadas como Blob. Links de vídeo abrem em nova aba; sem link preferido, abre a busca no YouTube. Vídeos exigem internet; fotos e texto funcionam offline. Imagens de execução de bancos externos somente na etapa 14.
+
+O banco está na versão 2, com migração preservando os registros da versão 1 e acrescentando descanso de 90 segundos aos itens antigos. A biblioteca é inicializada uma vez nas configurações.
+
+Checklist da etapa 2 no iPhone:
+
+- Busque supino e filtre por grupo; crie um exercício personalizado e confira após reabrir.
+- Crie ficha A com dois exercícios, altere séries e descanso, reordene e salve.
+- Duplique a ficha; editar a cópia não deve modificar a original.
+- Exclua uma ficha ou exercício livre e toque em Desfazer.
+- Adicione foto pela câmera e pela galeria; reabra a ajuda em modo avião.
+- Edite nota, Como fazer, músculos e vídeo; confira busca no YouTube e link preferido.
+- Abra/feche os painéis e confira teclado, alvos de toque e áreas seguras.
+
+Os testes verificam inicialização idempotente da biblioteca, duplicação independente, exclusão lógica, rejeição de fichas inválidas e migração da versão 1. Compressão de imagens e interação no Safari precisam de conferência no aparelho.
 
 ## Rodar
 
@@ -52,9 +74,10 @@ Nenhuma variável é necessária na etapa 1. `.env.example` reserva nomes públi
 
 ## Git e entrega
 
-- `main`: produção; nesta inicialização contém apenas o `.gitignore`, sem o código da etapa.
+- `main`: produção aprovada da ETAPA 1.
 - `test`: homologação.
 - `etapa-1-base-pwa`: implementação da etapa 1.
+- `etapa-2-exercicios-fichas`: implementação da etapa 2, criada após atualizar `test`.
 
 Como o projeto começou vazio, não existia remoto para executar `git pull`. Um commit inicial de proteção de arquivos serve de ancestral comum às três branches. Nas próximas etapas, atualize `test` com `git pull --ff-only` antes de criar a branch.
 
