@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react'
-export function Painel({ titulo, fechar, children, centralizado = false, acao }: { titulo: string; fechar: () => void; children: ReactNode; centralizado?: boolean; acao?: ReactNode }) {
+export function Painel({ titulo, fechar, children, centralizado = false, acao, fechamentoLivre = true }: { titulo: string; fechar: () => void; children: ReactNode; centralizado?: boolean; acao?: ReactNode; fechamentoLivre?: boolean }) {
   const ref = useRef<HTMLDialogElement>(null)
   const arrasto = useRef<{ id: number; inicio: number; distancia: number } | null>(null)
   const restaurar = () => {
@@ -7,7 +7,7 @@ export function Painel({ titulo, fechar, children, centralizado = false, acao }:
     arrasto.current = null
   }
   useEffect(() => { ref.current?.showModal(); const estilo = document.body.style.overflow; document.body.style.overflow = 'hidden'; return () => { document.body.style.overflow = estilo } }, [])
-  return <dialog ref={ref} className={`painel-modal${centralizado ? ' painel-centralizado' : ''}`} aria-label={titulo} onCancel={fechar}>
+  return <dialog ref={ref} className={`painel-modal${centralizado ? ' painel-centralizado' : ''}`} aria-label={titulo} onCancel={e => { if (fechamentoLivre) fechar(); else e.preventDefault() }}>
     {!centralizado && <button type="button" className="alca-painel" aria-label="Arraste para baixo para fechar o painel" onClick={e => { if (e.detail === 0) fechar() }}
       onPointerDown={e => {
         if (!e.isPrimary || e.button !== 0) return
@@ -24,7 +24,7 @@ export function Painel({ titulo, fechar, children, centralizado = false, acao }:
         restaurar()
         if (deveFechar) fechar()
       }} onPointerCancel={restaurar} onLostPointerCapture={restaurar}><span aria-hidden="true" /></button>}
-    <header><h2>{titulo}</h2>{acao}<button type="button" className="botao-icone" onClick={fechar} aria-label="Fechar painel">✕</button></header>
+    <header><h2>{titulo}</h2>{acao}{fechamentoLivre && <button type="button" className="botao-icone" onClick={fechar} aria-label="Fechar painel">✕</button>}</header>
     <div className="conteudo-modal">{children}</div>
   </dialog>
 }
