@@ -6,7 +6,7 @@ PWA pessoal de treino, cardio, medidas, alimentação e saúde. Interface em por
 
 ETAPA 1 implementada localmente, aguardando publicação de homologação e aprovação. Nenhuma etapa aprovada ainda. As etapas 2 a 14 não foram implementadas; as abas exibem estados vazios com a indicação da etapa correspondente.
 
-Inclui React, TypeScript, Vite, Tailwind, Dexie, cinco abas, tema escuro, configurações informativas, ícones, manifest e service worker. Não há login, registro de treino, sincronização ou backup nesta etapa. O modo claro chega na etapa 13.
+Inclui React, TypeScript, Vite, Tailwind, Dexie, cinco abas, tema escuro com destaques azuis, configurações informativas, ícones, manifest e service worker. Não há login, registro de treino, sincronização ou backup nesta etapa. O modo claro chega na etapa 13.
 
 ## Rodar
 
@@ -80,3 +80,4 @@ Referências: [Vite](https://vite.dev/guide/), [Tailwind com Vite](https://tailw
 Abra o endereço HTTPS no Safari → Compartilhar → Adicionar à Tela de Início → Adicionar. Depois abra pelo ícone. Instale primeiro e só depois faça login ou registre dados, quando essas funções estiverem disponíveis. Safari e app instalado podem usar armazenamentos separados; cada URL tem seus próprios dados.
 
 O app solicita `navigator.storage.persist()` sem depender da concessão. A proteção real será instalar, sincronizar e fazer backups. Esta etapa não implementa notificações, timer, som ou Wake Lock; esses recursos pertencem ao modo treino.
+

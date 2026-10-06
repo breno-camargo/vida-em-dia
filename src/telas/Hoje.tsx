@@ -9,7 +9,7 @@ export function Hoje({ abrir }: { abrir: (aba: Aba) => void }) {
     </section>
     <div className="titulo-secao"><h2>Seu dia, em equilíbrio</h2><span>Hoje</span></div>
     <div className="grade-cartoes">
-      <button className="cartao" onClick={() => abrir('Treino')}><Dumbbell className="verde" /><span>Treino e cardio</span><strong>Vamos começar</strong><small>Seu próximo movimento</small></button>
+      <button className="cartao" onClick={() => abrir('Treino')}><Dumbbell className="cor-principal" /><span>Treino e cardio</span><strong>Vamos começar</strong><small>Seu próximo movimento</small></button>
       <div className="cartao"><Footprints className="amarelo" /><span>Passos</span><strong>— <small>passos</small></strong><small>Ainda sem registros</small></div>
       <button className="cartao" onClick={() => abrir('Comida')}><Utensils className="laranja" /><span>Alimentação</span><strong>— <small>kcal</small></strong><small>Seu diário em breve</small></button>
       <div className="cartao"><Droplets className="azul" /><span>Água</span><strong>— <small>ml</small></strong><small>Um hábito de cada vez</small></div>
@@ -18,3 +18,4 @@ export function Hoje({ abrir }: { abrir: (aba: Aba) => void }) {
     <button className="botao-secundario" disabled>Sincronizar · disponível na etapa 8</button>
   </>
 }
+
