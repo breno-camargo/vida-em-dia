@@ -45,7 +45,7 @@ export function Serie({ serie, destaque, anterior, salvar, concluir, desfazer, a
     {!semPeso && <small>Carga total: {cargaTotal(dados.peso_digitado, dados.modo_carga, dados.peso_barra)} kg</small>}
     {!semPeso && dados.tipo === 'dropset' && <div>{(dados.reducoes ?? []).map((reducao, i) => <div className="reducao" key={i}><span>Redução {i + 1}</span><button type="button" className="botao-descanso" onClick={() => definirReducaoAtiva(i)}>{reducao.repeticoes} reps · {reducao.peso_digitado.toLocaleString('pt-BR')} kg<span>Alterar</span></button><button type="button" className="botao-secundario" onClick={() => alterar({ reducoes: dados.reducoes!.filter((_, j) => j !== i) })}>Retirar redução</button></div>)}<button type="button" className="botao-secundario" onClick={() => alterar({ reducoes: [...(dados.reducoes ?? []), { peso_digitado: Math.max(0, dados.peso_digitado * 0.75), repeticoes: dados.repeticoes }] })}>Adicionar redução sem descanso</button></div>}
     <button type="button" className="botao-descanso" onClick={() => { definirEsforco(dados.rpe ?? 0); definirEsforcoAberto(true) }}>Esforço da série<strong>{dados.rpe ? `${dados.rpe.toLocaleString('pt-BR')} / 10` : 'Não informado'}</strong><span>Alterar</span></button>
-    {anterior && <button className="botao-secundario" disabled={ocupado} onClick={() => { const copia = { ...dados, peso_digitado: anterior.peso_digitado, repeticoes: anterior.repeticoes, modo_carga: anterior.modo_carga, peso_barra: anterior.peso_barra }; definir(copia); void realizar(() => salvar(copia)) }}>Copiar série anterior</button>}
+    {anterior && <button className="botao-secundario" disabled={ocupado} onClick={() => { const copia = { ...dados, peso_digitado: anterior.peso_digitado, repeticoes: anterior.repeticoes, modo_carga: anterior.modo_carga, peso_barra: anterior.peso_barra }; definir(copia); void realizar(() => salvar(copia)) }}>{semPeso ? 'Copiar repetições' : 'Copiar repetições e carga'}</button>}
     </div></div>
     {erro && <p className="erro" role="alert">{erro}</p>}
     {valoresAbertos && <SelecionarValores titulo={`Série ${serie.numero_serie}`} semPeso={semPeso} reps={dados.repeticoes} peso={dados.peso_digitado} permitirProximas={!serie.concluida_em} fechar={() => definirValoresAbertos(false)} confirmar={async (repeticoes, peso_digitado, proximas) => {
@@ -67,6 +67,7 @@ export function Serie({ serie, destaque, anterior, salvar, concluir, desfazer, a
     }} disabled={ocupado}><span className={`tipo-serie ${tipo}`}>{tipo === 'normal' ? serie.numero_serie : tipo === 'aquecimento' ? 'A' : tipo === 'dropset' ? 'D' : 'F'}</span><span><strong>{nome}</strong><small>{texto}</small></span></button>)}<button className="remover-serie" disabled={ocupado} onClick={() => void realizar(async () => { await remover(); definirTipoAberto(false) })}>Remover série</button></div></Painel>}
   </section>
 }
+
 
 
 
