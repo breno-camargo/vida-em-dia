@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Settings, X, Utensils, Ruler, ChartNoAxesCombined, ArrowDownToLine, Leaf } from 'lucide-react'
+import { Settings, X, Utensils, Ruler, ChartNoAxesCombined, Leaf } from 'lucide-react'
 import { Navegacao, type Aba } from './componentes/Navegacao'
 import { EstadoVazio } from './componentes/EstadoVazio'
 import { AvisosPwa } from './componentes/AvisosPwa'
@@ -31,8 +31,8 @@ export default function App() {
       <h1>{menu ? 'Configurações' : aba === 'Hoje' ? 'Olá, vamos cuidar de você?' : aba}</h1>
       {erro && <div role="alert" className="erro">{erro}</div>}
       {menu ? <Configuracoes {...ambiente} /> : aba === 'Hoje' ? <Hoje abrir={selecionar} /> : aba === 'Treino' ? <Treino key={entradaTreino} online={ambiente.online} /> : <EstadoVazio {...proximas[aba]} />}
-      {!ambiente.instalado && <aside className="instalacao"><ArrowDownToLine size={22} /><div><h3>Leve sua rotina com você</h3><p>No iPhone: abra no Safari → Compartilhar → Adicionar à Tela de Início.</p><small>Instale antes de registrar dados ou fazer login. Safari e app instalado podem ter dados separados; cada endereço tem seu próprio armazenamento.</small></div></aside>}
     </main>
     <AvisosPwa /><Navegacao atual={aba} selecionar={selecionar} />
   </div>
 }
+
