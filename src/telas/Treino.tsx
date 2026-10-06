@@ -8,7 +8,7 @@ import type { Exercicio, Ficha, FichaExercicio } from '../dados/modelos'
 import { EditorExercicio } from '../componentes/EditorExercicio'
 import { EditorFicha } from '../componentes/EditorFicha'
 import { AjudaExercicio } from '../componentes/AjudaExercicio'
-import { iniciarTreino, treinoAtivo } from '../dados/treinos'
+import { iniciarTreino, treinoAtivo, descartarTreinoLivreVazio } from '../dados/treinos'
 import { ModoTreino } from './ModoTreino'
 import { Ellipsis, Play, Plus, ArrowRight, Dumbbell, ChevronDown, Image } from 'lucide-react'
 import { Painel } from '../componentes/Painel'
@@ -67,7 +67,7 @@ export function Treino({ online }: { online: boolean }) {
   if (!exercicios || !fichas) return <p role="status">Carregando seu espaço…</p>
   const filtrados = exercicios.filter(ex => normalizar(`${ex.nome} ${ex.equipamento}`).includes(normalizar(busca)))
   const gruposBiblioteca = [...new Set(filtrados.map(ex => ex.grupo_muscular.trim() || 'Outros'))].sort((a, b) => a.localeCompare(b, 'pt-BR'))
-  if (sessao) return <ModoTreino id={sessao} online={online} abrirResumo={abrirResumo} fechar={() => { definirSessao(null); definirAbrirResumo(false) }} concluido={id => { definirSessao(null); definirAbrirResumo(false); definirCardFinalizado(id) }} />
+  if (sessao) return <ModoTreino id={sessao} online={online} abrirResumo={abrirResumo} fechar={() => void executar(async () => { await descartarTreinoLivreVazio(sessao); definirSessao(null); definirAbrirResumo(false) })} concluido={id => { definirSessao(null); definirAbrirResumo(false); definirCardFinalizado(id) }} />
   return <>
     {ativo && <section className="retomar-treino"><span className="etiqueta">SEU TREINO ESTÁ SALVO</span><h2>{ativo.titulo ?? 'Treino livre'}</h2><button onClick={() => definirSessao(ativo.id)}>Continuar treino <ArrowRight size={20} /></button></section>}
     <div className="abas-treino"><button aria-pressed={secao === 'fichas'} onClick={() => definirSecao('fichas')}>Minhas fichas</button><button aria-pressed={secao === 'biblioteca'} onClick={() => definirSecao('biblioteca')}>Exercícios ({exercicios.length})</button></div>
@@ -107,6 +107,7 @@ export function Treino({ online }: { online: boolean }) {
     {ajuda && <AjudaExercicio exercicio={ajuda} online={online} fechar={() => definirAjuda(null)} editar={() => { definirEdicao(ajuda); definirAjuda(null) }} />}
   </>
 }
+
 
 
 
