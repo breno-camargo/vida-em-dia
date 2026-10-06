@@ -7,11 +7,15 @@ import type { Exercicio, Ficha, FichaExercicio } from '../dados/modelos'
 import { EditorExercicio } from '../componentes/EditorExercicio'
 import { EditorFicha } from '../componentes/EditorFicha'
 import { AjudaExercicio } from '../componentes/AjudaExercicio'
+import { iniciarTreino, treinoAtivo } from '../dados/treinos'
+import { ModoTreino } from './ModoTreino'
 
 const normalizar = (texto: string) => texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR')
 export function Treino({ online }: { online: boolean }) {
   const exercicios = useLiveQuery(() => repositorio('exercicios').listar().then(itens => itens.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'))))
   const fichas = useLiveQuery(() => repositorio('fichas').listar().then(itens => itens.sort((a, b) => a.ordem - b.ordem)))
+  const ativo = useLiveQuery(treinoAtivo)
+  const [sessao, definirSessao] = useState<string | null>(null)
   const [secao, definirSecao] = useState<'fichas' | 'biblioteca'>('fichas')
   const [busca, definirBusca] = useState('')
   const [grupo, definirGrupo] = useState('')
@@ -46,14 +50,18 @@ export function Treino({ online }: { online: boolean }) {
     await banco.transaction('rw', tabela('fichas'), () => tabela('fichas').bulkPut(ordenadas.map((item, ordem) => ({ ...item, ordem, atualizado_em: new Date().toISOString() }))))
   }
   if (!exercicios || !fichas) return <p role="status">Carregando seu espaço…</p>
+  if (sessao) return <ModoTreino id={sessao} online={online} fechar={() => definirSessao(null)} />
   return <>
+    {ativo && <section className="painel"><h2>Treino em andamento</h2><p>{ativo.titulo ?? 'Treino livre'}</p><button className="botao-principal largura-total" onClick={() => definirSessao(ativo.id)}>Continuar treino</button></section>}
     <div className="abas-treino"><button aria-pressed={secao === 'fichas'} onClick={() => definirSecao('fichas')}>Minhas fichas</button><button aria-pressed={secao === 'biblioteca'} onClick={() => definirSecao('biblioteca')}>Exercícios ({exercicios.length})</button></div>
     {erro && <p role="alert" className="erro">{erro}</p>}
     {desfazer && <div className="desfazer" role="status">{desfazer.texto}<button disabled={ocupado} onClick={() => void executar(async () => { await desfazer.executar(); definirDesfazer(null) })}>Desfazer</button></div>}
     {secao === 'fichas' ? <>
+      <button className="botao-secundario" disabled={ocupado} onClick={() => void executar(async () => { definirSessao(await iniciarTreino()) })}>Iniciar treino livre</button>
       <button className="botao-principal largura-total" onClick={() => definirFicha({ dados: { ...criarRegistro(), nome: '', ordem: Date.now() }, itens: [] })}>Criar ficha</button>
-      {!fichas.length && <section className="painel"><h2>Sua primeira ficha</h2><p>Organize os exercícios, as séries planejadas e o descanso. A execução do treino chega na etapa 3.</p></section>}
+      {!fichas.length && <section className="painel"><h2>Sua primeira ficha</h2><p>Organize os exercícios, as séries planejadas e o descanso ou inicie um treino livre.</p></section>}
       {fichas.map((item, indice) => <section className="painel ficha-cartao" key={item.id}><button className="abrir-ficha" disabled={ocupado} onClick={() => void executar(() => editarFicha(item))}>{item.nome}<small>Editar exercícios e planejamento</small></button><div className="acoes">
+        <button disabled={ocupado} onClick={() => void executar(async () => { definirSessao(await iniciarTreino(item.id)) })}>Iniciar treino</button>
         <button disabled={ocupado || indice === 0} onClick={() => void executar(() => moverFicha(indice, -1))}>Subir</button>
         <button disabled={ocupado || indice === fichas.length - 1} onClick={() => void executar(() => moverFicha(indice, 1))}>Descer</button>
         <button disabled={ocupado} onClick={() => void executar(() => duplicarFicha(item))}>Duplicar</button>
