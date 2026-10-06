@@ -88,8 +88,17 @@ export function ModoTreino({ id, online, fechar }: { id: string; online: boolean
           const pendentes = await tabela('series_treino').where('[treino_id+exercicio_id]').equals([id, item.exercicio_id]).filter(serie => !serie.apagado_em && !serie.concluida_em).count()
           const card = cards.current.get(item.id)
           if (pendentes === 0 && card) card.open = false
-          const pendentesTreino = await tabela('series_treino').where('treino_id').equals(id).filter(serie => !serie.apagado_em && !serie.concluida_em).count()
-          if (pendentesTreino === 0) definirPerguntarFinalizacao(true)
+          const pendentesTreino = await tabela('series_treino').where('treino_id').equals(id).filter(serie => !serie.apagado_em && !serie.concluida_em).toArray()
+          if (pendentesTreino.length === 0) definirPerguntarFinalizacao(true)
+          else if (pendentes === 0) {
+            const ordem = [...itens.slice(indice + 1), ...itens.slice(0, indice)]
+            const seguinte = ordem.find(exercicio => pendentesTreino.some(serie => serie.exercicio_id === exercicio.exercicio_id))
+            const proximoCard = seguinte && cards.current.get(seguinte.id)
+            if (proximoCard) {
+              proximoCard.open = true
+              proximoCard.scrollIntoView({ block: 'start', behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
+            }
+          }
         }} desfazer={async () => {
           await banco.transaction('rw', tabela('series_treino'), tabela('treinos'), async () => { await tabela('series_treino').update(s.id, { concluida_em: undefined, atualizado_em: new Date().toISOString() }); await atualizarDescanso(null) })
         }} aplicarProximas={aplicarValoresProximas} remover={async () => {
