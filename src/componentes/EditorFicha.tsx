@@ -1,5 +1,5 @@
 import { SelecionarSeries } from './SelecionarSeries'
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { Painel } from './Painel'
 import { ListaExercicios } from './ListaExercicios'
 import type { Exercicio, Ficha, FichaExercicio } from '../dados/modelos'
@@ -11,6 +11,7 @@ import { AjudaExercicio } from './AjudaExercicio'
 import { EditorExercicio } from './EditorExercicio'
 import { SelecionarDescanso } from './SelecionarDescanso'
 export function EditorFicha({ ficha, iniciais, exercicios, fechar }: { ficha: Ficha; iniciais: FichaExercicio[]; exercicios: Exercicio[]; fechar: () => void }) {
+  const formularioId = useId()
   const [nome, definirNome] = useState(ficha.nome)
   const [itens, definirItens] = useState(iniciais)
   const [busca, definirBusca] = useState('')
@@ -20,7 +21,7 @@ export function EditorFicha({ ficha, iniciais, exercicios, fechar }: { ficha: Fi
   const [edicao, definirEdicao] = useState<Exercicio | null>(null)
   const alterar = (id: string, dados: Partial<FichaExercicio>) => definirItens(itens.map(item => item.id === id ? { ...item, ...dados } : item))
   const mover = (indice: number, direcao: number) => { const novos = [...itens]; [novos[indice], novos[indice + direcao]] = [novos[indice + direcao], novos[indice]]; definirItens(novos) }
-  return <Painel titulo={ficha.nome ? 'Editar ficha' : 'Nova ficha'} fechar={fechar}><form className="formulario" onSubmit={async e => {
+  return <Painel titulo={ficha.nome ? 'Editar ficha' : 'Nova ficha'} fechar={fechar} acao={<button type="submit" form={formularioId} disabled={salvando} className="botao-principal salvar-cabecalho">{salvando ? 'Salvando…' : 'Salvar'}</button>}><form id={formularioId} className="formulario" onSubmit={async e => {
     e.preventDefault(); definirSalvando(true); definirErro('')
     try { await salvarFicha({ ...ficha, nome }, itens); fechar() }
     catch (error) { definirErro(error instanceof Error ? error.message : 'Não foi possível salvar a ficha.') }
@@ -34,7 +35,7 @@ export function EditorFicha({ ficha, iniciais, exercicios, fechar }: { ficha: Fi
     </div></details>)}
     <label>Buscar para adicionar<input value={busca} onChange={e => definirBusca(e.target.value)} placeholder="Nome do exercício" /></label>
     <ListaExercicios exercicios={exercicios.filter(ex => !itens.some(item => item.exercicio_id === ex.id))} busca={busca} adicionar={ex => definirItens([...itens, { ...criarRegistro(ficha.user_id), ficha_id: ficha.id, exercicio_id: ex.id, ordem: itens.length, series_planejadas: 3, descanso_segundos: ex.descanso_padrao_segundos }])} />
-    {erro && <p className="erro" role="alert">{erro}</p>}<button disabled={salvando} className="botao-principal">{salvando ? 'Salvando…' : 'Salvar ficha'}</button>
+    {erro && <p className="erro" role="alert">{erro}</p>}
     <small>Durante o treino, você poderá alterar o planejamento só daquele dia.</small>
   </form>
     {ajuda && <AjudaExercicio exercicio={ajuda} online={navigator.onLine} fechar={() => definirAjuda(null)} editar={() => { definirEdicao(ajuda); definirAjuda(null) }} />}
