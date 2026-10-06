@@ -5,7 +5,7 @@ export async function criarCardTreino(treino: Treino, dados: { volume: number; e
   const fundo = ctx.createLinearGradient(0, 0, 1080, 1920); fundo.addColorStop(0, '#263d2d'); fundo.addColorStop(.5, '#101f18'); fundo.addColorStop(1, '#0c1511'); ctx.fillStyle = fundo; ctx.fillRect(0, 0, 1080, 1920)
   ctx.strokeStyle = '#bcec8626'; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect(40, 40, 1000, 1840, 48); ctx.stroke()
   const texto = (conteudo: string, x: number, y: number, tamanho: number, cor = '#edf4ee') => { ctx.fillStyle = cor; ctx.font = `600 ${tamanho}px system-ui`; ctx.fillText(conteudo, x, y, 910) }
-  texto('vida em dia', 80, 130, 44, '#bcec86'); texto('UM TREINO DE CADA VEZ', 80, 185, 22, '#9eafa3')
+  texto('Vida em Dia', 80, 130, 44, '#bcec86'); texto('UM TREINO DE CADA VEZ', 80, 185, 22, '#9eafa3')
   texto(treino.titulo ?? 'Treino livre', 80, 280, 64)
   texto(new Date(`${treino.data}T12:00:00`).toLocaleDateString('pt-BR'), 80, 340, 28, '#9eafa3')
   ctx.fillStyle = '#24392a'; ctx.beginPath(); ctx.roundRect(80, 410, 920, 600, 36); ctx.fill()
@@ -33,3 +33,4 @@ export async function criarCardTreino(treino: Treino, dados: { volume: number; e
   texto('Seu ritmo. Sua constância. Sua conquista.', 80, 1840, 26, '#9eafa3')
   return new Promise<Blob>((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Não foi possível exportar a imagem.')), 'image/png'))
 }
+
