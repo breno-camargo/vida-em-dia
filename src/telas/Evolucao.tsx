@@ -32,7 +32,7 @@ export default function Evolucao() {
   const disponiveis = historico.exercicios.filter(ex => historico.series.some(s => s.exercicio_id === ex.id && s.concluida_em && historico.treinos.some(t => t.id === s.treino_id))).sort((a,b) => a.nome.localeCompare(b.nome, 'pt-BR'))
   return <div className="tela-evolucao">
     <div className="abas-treino"><button aria-pressed={aba === 'historico'} onClick={() => definirAba('historico')}>Meus treinos</button><button aria-pressed={aba === 'exercicios'} onClick={() => definirAba('exercicios')}>Por exercício</button></div>
-    <div className="formulario"><label>Buscar no histórico<input type="search" value={busca} onChange={e => definirBusca(e.target.value)} placeholder="Ficha, exercício ou data" /></label></div>
+    <div className="formulario busca-historico"><label>{aba === 'historico' ? 'Encontrar um treino' : 'Encontrar um exercício'}<input type="search" value={busca} onChange={e => definirBusca(e.target.value)} placeholder={aba === 'historico' ? 'Ex.: treino A, supino ou 06/10/2026' : 'Ex.: supino ou agachamento'} aria-describedby="dica-busca-historico" /></label><small id="dica-busca-historico">{aba === 'historico' ? 'Digite o nome da ficha, um exercício realizado ou a data (dia/mês/ano). Pode usar só uma parte do nome.' : 'Digite o nome ou parte do nome do exercício para ver suas sessões e gráficos.'}</small></div>
     {erro && <p className="erro" role="alert">{erro}</p>}
     {removido && <div className="aviso-remocao"><span>Treino removido do histórico</span><button type="button" onClick={async () => { try { await restaurarTreino(removido); definirRemovido(undefined) } catch { definirErro('Não foi possível desfazer.') } }}>Desfazer</button></div>}
     {!resumos.length && <section className="painel historico-vazio"><h2>Seu caminho começa aqui</h2><p>Finalize um treino para ver seu histórico e evolução.</p></section>}
@@ -42,5 +42,6 @@ export default function Evolucao() {
     {card && <CardCompartilhavel treino={card.treino} dados={card.dados} fechar={() => definirCompartilhar(undefined)} />}
   </div>
 }
+
 
 
