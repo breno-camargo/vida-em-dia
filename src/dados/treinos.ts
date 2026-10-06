@@ -67,3 +67,15 @@ export async function adicionarExercicio(treino: Treino, ex: Exercicio) {
     await montarExercicio(treino, ex, 3, Math.max(-1, ...itens.map(i => i.ordem)) + 1)
   })
 }
+export async function aplicarValoresProximas(dados: SerieTreino) {
+  validarSerie(dados)
+  await banco.transaction('rw', tabela('series_treino'), tabela('treinos'), async () => {
+    const sessao = await tabela('treinos').get(dados.treino_id)
+    const atual = await tabela('series_treino').get(dados.id)
+    if (!sessao || sessao.fim || !atual || atual.apagado_em || atual.concluida_em) throw new Error('Esta série não está mais pendente.')
+    const seguintes = await tabela('series_treino').where('[treino_id+exercicio_id]').equals([dados.treino_id, dados.exercicio_id]).filter(s => !s.apagado_em && !s.concluida_em && s.numero_serie > dados.numero_serie).toArray()
+    const agora = new Date().toISOString()
+    const valores = { peso_digitado: dados.peso_digitado, repeticoes: dados.repeticoes, modo_carga: dados.modo_carga, peso_barra: dados.peso_barra, peso_total: cargaTotal(dados.peso_digitado, dados.modo_carga, dados.peso_barra), atualizado_em: agora }
+    await tabela('series_treino').bulkPut([{ ...dados, ...valores }, ...seguintes.map(s => ({ ...s, ...valores }))])
+  })
+}

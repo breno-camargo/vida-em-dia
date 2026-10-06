@@ -9,12 +9,14 @@ import { EditorFicha } from '../componentes/EditorFicha'
 import { AjudaExercicio } from '../componentes/AjudaExercicio'
 import { iniciarTreino, treinoAtivo } from '../dados/treinos'
 import { ModoTreino } from './ModoTreino'
+import { Ellipsis, Play, Plus, ArrowRight, Dumbbell } from 'lucide-react'
 
 const normalizar = (texto: string) => texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR')
 export function Treino({ online }: { online: boolean }) {
   const exercicios = useLiveQuery(() => repositorio('exercicios').listar().then(itens => itens.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'))))
   const fichas = useLiveQuery(() => repositorio('fichas').listar().then(itens => itens.sort((a, b) => a.ordem - b.ordem)))
   const ativo = useLiveQuery(treinoAtivo)
+  const planejamento = useLiveQuery(() => repositorio('ficha_exercicios').listar())
   const [sessao, definirSessao] = useState<string | null>(null)
   const [secao, definirSecao] = useState<'fichas' | 'biblioteca'>('fichas')
   const [busca, definirBusca] = useState('')
@@ -52,21 +54,20 @@ export function Treino({ online }: { online: boolean }) {
   if (!exercicios || !fichas) return <p role="status">Carregando seu espaço…</p>
   if (sessao) return <ModoTreino id={sessao} online={online} fechar={() => definirSessao(null)} />
   return <>
-    {ativo && <section className="painel"><h2>Treino em andamento</h2><p>{ativo.titulo ?? 'Treino livre'}</p><button className="botao-principal largura-total" onClick={() => definirSessao(ativo.id)}>Continuar treino</button></section>}
+    {ativo && <section className="retomar-treino"><span className="etiqueta">SEU TREINO ESTÁ SALVO</span><h2>{ativo.titulo ?? 'Treino livre'}</h2><button onClick={() => definirSessao(ativo.id)}>Continuar treino <ArrowRight size={20} /></button></section>}
     <div className="abas-treino"><button aria-pressed={secao === 'fichas'} onClick={() => definirSecao('fichas')}>Minhas fichas</button><button aria-pressed={secao === 'biblioteca'} onClick={() => definirSecao('biblioteca')}>Exercícios ({exercicios.length})</button></div>
     {erro && <p role="alert" className="erro">{erro}</p>}
     {desfazer && <div className="desfazer" role="status">{desfazer.texto}<button disabled={ocupado} onClick={() => void executar(async () => { await desfazer.executar(); definirDesfazer(null) })}>Desfazer</button></div>}
     {secao === 'fichas' ? <>
-      <button className="botao-secundario" disabled={ocupado} onClick={() => void executar(async () => { definirSessao(await iniciarTreino()) })}>Iniciar treino livre</button>
-      <button className="botao-principal largura-total" onClick={() => definirFicha({ dados: { ...criarRegistro(), nome: '', ordem: Date.now() }, itens: [] })}>Criar ficha</button>
+      <div className="barra-fichas"><span>{fichas.length} {fichas.length === 1 ? 'ficha' : 'fichas'} de treino</span><button onClick={() => definirFicha({ dados: { ...criarRegistro(), nome: '', ordem: Date.now() }, itens: [] })}><Plus size={18} />Nova ficha</button></div>
       {!fichas.length && <section className="painel"><h2>Sua primeira ficha</h2><p>Organize os exercícios, as séries planejadas e o descanso ou inicie um treino livre.</p></section>}
-      {fichas.map((item, indice) => <section className="painel ficha-cartao" key={item.id}><button className="abrir-ficha" disabled={ocupado} onClick={() => void executar(() => editarFicha(item))}>{item.nome}<small>Editar exercícios e planejamento</small></button><div className="acoes">
-        <button disabled={ocupado} onClick={() => void executar(async () => { definirSessao(await iniciarTreino(item.id)) })}>Iniciar treino</button>
+      {fichas.map((item, indice) => <section className="painel ficha-cartao ficha-nova" key={item.id}><div className="topo-ficha"><span className="icone-ficha"><Dumbbell size={24} /></span><button className="abrir-ficha" disabled={ocupado} onClick={() => void executar(() => editarFicha(item))}>{item.nome}<small>{planejamento?.filter(p => p.ficha_id === item.id).length ?? 0} exercícios · seu planejamento</small></button><details className="menu-ficha"><summary aria-label={`Opções da ficha ${item.nome}`}><Ellipsis size={22} /></summary><div className="acoes">
         <button disabled={ocupado || indice === 0} onClick={() => void executar(() => moverFicha(indice, -1))}>Subir</button>
         <button disabled={ocupado || indice === fichas.length - 1} onClick={() => void executar(() => moverFicha(indice, 1))}>Descer</button>
         <button disabled={ocupado} onClick={() => void executar(() => duplicarFicha(item))}>Duplicar</button>
         <button disabled={ocupado} onClick={() => void executar(() => removerFicha(item))}>Excluir</button>
-      </div></section>)}
+      </div></details></div><button className="iniciar-ficha" disabled={ocupado} onClick={() => void executar(async () => { definirSessao(await iniciarTreino(item.id)) })}><Play size={16} />Iniciar treino <ArrowRight size={18} /></button></section>)}
+      <button className="treino-livre" disabled={ocupado} onClick={() => void executar(async () => { definirSessao(await iniciarTreino()) })}><Plus size={20} /><span>Treino livre<small>Monte seu treino do dia</small></span><ArrowRight size={18} /></button>
     </> : <>
       <div className="formulario"><label>Buscar exercício<input type="search" value={busca} onChange={e => definirBusca(e.target.value)} placeholder="Nome ou equipamento" /></label>
         <label>Grupo muscular<select value={grupo} onChange={e => definirGrupo(e.target.value)}><option value="">Todos os grupos</option>{[...new Set(exercicios.map(ex => ex.grupo_muscular))].filter(Boolean).map(g => <option key={g}>{g}</option>)}</select></label></div>
