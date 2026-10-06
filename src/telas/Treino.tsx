@@ -1,5 +1,5 @@
 import { MiniaturaExercicio } from '../componentes/MiniaturaExercicio'
-import { useState } from 'react'
+import { useId, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { banco, tabela } from '../dados/banco'
 import { criarRegistro, repositorio } from '../dados/repositorio'
@@ -10,7 +10,7 @@ import { EditorFicha } from '../componentes/EditorFicha'
 import { AjudaExercicio } from '../componentes/AjudaExercicio'
 import { iniciarTreino, treinoAtivo } from '../dados/treinos'
 import { ModoTreino } from './ModoTreino'
-import { Ellipsis, Play, Plus, ArrowRight, Dumbbell } from 'lucide-react'
+import { Ellipsis, Play, Plus, ArrowRight, Dumbbell, ChevronDown } from 'lucide-react'
 import { Painel } from '../componentes/Painel'
 
 const normalizar = (texto: string) => texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR')
@@ -24,7 +24,7 @@ export function Treino({ online }: { online: boolean }) {
   const [novoPedido, definirNovoPedido] = useState<{ fichaId?: string } | null>(null)
   const [secao, definirSecao] = useState<'fichas' | 'biblioteca'>('fichas')
   const [busca, definirBusca] = useState('')
-  const [grupo, definirGrupo] = useState('')
+  const acordeaoBiblioteca = useId()
   const [edicao, definirEdicao] = useState<Exercicio | null>(null)
   const [ajuda, definirAjuda] = useState<Exercicio | null>(null)
   const [ficha, definirFicha] = useState<{ dados: Ficha; itens: FichaExercicio[] } | null>(null)
@@ -62,6 +62,8 @@ export function Treino({ online }: { online: boolean }) {
     await banco.transaction('rw', tabela('fichas'), () => tabela('fichas').bulkPut(ordenadas.map((item, ordem) => ({ ...item, ordem, atualizado_em: new Date().toISOString() }))))
   }
   if (!exercicios || !fichas) return <p role="status">Carregando seu espaço…</p>
+  const filtrados = exercicios.filter(ex => normalizar(`${ex.nome} ${ex.equipamento}`).includes(normalizar(busca)))
+  const gruposBiblioteca = [...new Set(filtrados.map(ex => ex.grupo_muscular.trim() || 'Outros'))].sort((a, b) => a.localeCompare(b, 'pt-BR'))
   if (sessao) return <ModoTreino id={sessao} online={online} abrirResumo={abrirResumo} fechar={() => { definirSessao(null); definirAbrirResumo(false) }} />
   return <>
     {ativo && <section className="retomar-treino"><span className="etiqueta">SEU TREINO ESTÁ SALVO</span><h2>{ativo.titulo ?? 'Treino livre'}</h2><button onClick={() => definirSessao(ativo.id)}>Continuar treino <ArrowRight size={20} /></button></section>}
@@ -80,9 +82,10 @@ export function Treino({ online }: { online: boolean }) {
       <button className="treino-livre" disabled={ocupado} onClick={() => void executar(async () => { await iniciar() })}><Plus size={20} /><span>Treino livre<small>Monte seu treino do dia</small></span><ArrowRight size={18} /></button>
     </> : <>
       <div className="formulario"><label>Buscar exercício<input type="search" value={busca} onChange={e => definirBusca(e.target.value)} placeholder="Nome ou equipamento" /></label>
-        <div className="filtro-musculos" role="group" aria-label="Grupo muscular"><button type="button" aria-pressed={!grupo} onClick={() => definirGrupo('')}>Todos</button>{[...new Set(exercicios.map(ex => ex.grupo_muscular))].filter(Boolean).sort((a, b) => a.localeCompare(b, 'pt-BR')).map(g => <button type="button" key={g} aria-pressed={grupo === g} onClick={() => definirGrupo(g)}>{g}</button>)}</div></div>
+      </div>
       <button className="botao-principal largura-total" onClick={() => definirEdicao({ ...criarRegistro(), nome: '', tipo: 'forca', grupo_muscular: '', equipamento: '', descanso_padrao_segundos: 90, modo_carga: 'total', peso_barra: 20, nota_fixa: '', como_fazer: '', musculos: '', origem: 'manual' })}>Adicionar exercício</button>
-      {exercicios.filter(ex => (!grupo || ex.grupo_muscular === grupo) && normalizar(`${ex.nome} ${ex.equipamento}`).includes(normalizar(busca))).map(ex => <section className="painel exercicio-cartao biblioteca-cartao" key={ex.id}>
+      <div className="biblioteca-grupos">{gruposBiblioteca.map((grupo, indice) => <details name={acordeaoBiblioteca} className="grupo-exercicios" key={`${grupo}-${busca.trim() ? 'busca' : 'lista'}`} open={busca.trim() && indice === 0 ? true : undefined}><summary><span>{grupo}</span><small>{filtrados.filter(ex => (ex.grupo_muscular.trim() || 'Outros') === grupo).length}</small><ChevronDown size={18} aria-hidden="true" /></summary><div className="conteudo-grupo-biblioteca">
+      {filtrados.filter(ex => (ex.grupo_muscular.trim() || 'Outros') === grupo).map(ex => <section className="painel exercicio-cartao biblioteca-cartao" key={ex.id}>
         <div className="biblioteca-cabecalho"><MiniaturaExercicio id={ex.id} nome={ex.nome} abrir={() => definirAjuda(ex)} /><div><h2>{ex.nome}</h2><p>{ex.grupo_muscular || 'Sem grupo'} · {ex.tipo === 'forca' ? 'Força' : 'Cardio'}</p></div></div>
         <div className="acoes"><button aria-label={`Ajuda de ${ex.nome}`} onClick={() => definirAjuda(ex)}>Instruções</button><button onClick={() => definirEdicao(ex)}>Editar</button><button disabled={ocupado} onClick={() => void executar(async () => {
           const vinculos = await tabela('ficha_exercicios').where('exercicio_id').equals(ex.id).filter(item => !item.apagado_em).count()
@@ -90,8 +93,8 @@ export function Treino({ online }: { online: boolean }) {
           await repositorio('exercicios').apagar(ex.id)
           definirDesfazer({ texto: 'Exercício removido.', executar: () => repositorio('exercicios').salvar({ ...ex, apagado_em: null }).then(() => undefined) })
         })}>Excluir</button></div>
-      </section>)}
-      {!exercicios.some(ex => (!grupo || ex.grupo_muscular === grupo) && normalizar(`${ex.nome} ${ex.equipamento}`).includes(normalizar(busca))) && <p className="nota">Nenhum exercício encontrado. Tente outro nome ou adicione o seu.</p>}
+      </section>)}</div></details>)}</div>
+      {filtrados.length === 0 && <p className="nota">Nenhum exercício encontrado. Tente outro nome ou adicione o seu.</p>}
     </>}
     {novoPedido && <Painel centralizado titulo="Já existe um treino em andamento" fechar={() => definirNovoPedido(null)}><p className="subtitulo-seletor">Você pode concluir o atual ou salvar seu andamento e iniciar o treino escolhido. Séries pendentes não serão marcadas como feitas.</p><button type="button" className="botao-principal largura-total" disabled={ocupado} onClick={() => void executar(async () => { const atual = await treinoAtivo(); definirNovoPedido(null); if (atual) { definirAbrirResumo(true); definirSessao(atual.id) } })}>Concluir treino atual</button><button type="button" className="botao-secundario" disabled={ocupado} onClick={() => void executar(async () => { const id = await iniciarTreino(novoPedido.fichaId, true); definirNovoPedido(null); definirAbrirResumo(false); definirSessao(id) })}>Salvar atual e iniciar outro</button>{erro && <p className="erro" role="alert">{erro}</p>}</Painel>}
     {edicao && <EditorExercicio exercicio={edicao} fechar={() => definirEdicao(null)} />}
@@ -99,5 +102,6 @@ export function Treino({ online }: { online: boolean }) {
     {ajuda && <AjudaExercicio exercicio={ajuda} online={online} fechar={() => definirAjuda(null)} editar={() => { definirEdicao(ajuda); definirAjuda(null) }} />}
   </>
 }
+
 
 
