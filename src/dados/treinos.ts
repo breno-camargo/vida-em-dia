@@ -6,6 +6,17 @@ import { cargaTotal, validarSerie, caloriasMusculacao } from '../utilitarios/tre
 import { desempenho, efetivas } from '../utilitarios/evolucao'
 
 export async function treinoAtivo() { return tabela('treinos').filter(t => !t.fim && !t.apagado_em).first() }
+export async function descartarTreinoLivreVazio(id: string) {
+  return banco.transaction('rw', tabela('treinos'), tabela('treino_exercicios'), tabela('series_treino'), async () => {
+    const treino = await tabela('treinos').get(id)
+    if (!treino || treino.ficha_id || treino.fim || treino.apagado_em) return
+    const itens = await tabela('treino_exercicios').where('treino_id').equals(id).filter(i => !i.apagado_em).count()
+    const series = await tabela('series_treino').where('treino_id').equals(id).filter(s => !s.apagado_em).count()
+    if (itens || series) return
+    const agora = new Date().toISOString()
+    await tabela('treinos').update(id, { apagado_em: agora, atualizado_em: agora })
+  })
+}
 export async function ultimasSeries(exercicio_id: string) {
   const treinos = await tabela('treinos').filter(t => Boolean(t.fim) && !t.apagado_em).toArray()
   const series = await tabela('series_treino').where('exercicio_id').equals(exercicio_id).filter(s => Boolean(s.concluida_em) && !s.apagado_em && treinos.some(t => t.id === s.treino_id)).toArray()

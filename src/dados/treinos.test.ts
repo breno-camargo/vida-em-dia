@@ -4,7 +4,7 @@ import { beforeEach, expect, test } from 'vitest'
 import { banco, tabela } from './banco'
 import { iniciarBanco } from './configuracoes'
 import { iniciarBiblioteca } from './biblioteca'
-import { iniciarTreino, treinoAtivo, concluirSerie, aplicarValoresProximas } from './treinos'
+import { descartarTreinoLivreVazio, adicionarExercicio, iniciarTreino, treinoAtivo, concluirSerie, aplicarValoresProximas } from './treinos'
 import { criarRegistro } from './repositorio'
 import { salvarFicha } from './fichas'
 import { cargaTotal, volumeSeries, segundosRestantes } from '../utilitarios/treino'
@@ -188,4 +188,19 @@ test('registre peso corporal sem carga e sem volume artificial', async () => {
   expect(salva.peso_total).toBe(0)
   expect(volumeSeries([salva])).toBe(0)
 })
+
+
+
+test('descarte o treino livre vazio ao sair e preserve um treino com exercício', async () => {
+  const vazio = await iniciarTreino()
+  await descartarTreinoLivreVazio(vazio)
+  expect(await treinoAtivo()).toBeUndefined()
+  expect((await tabela('treinos').get(vazio))?.fim).toBeUndefined()
+  const id = await iniciarTreino()
+  const ex = (await tabela('exercicios').toArray()).find(e => e.tipo === 'forca')!
+  await adicionarExercicio((await tabela('treinos').get(id))!, ex)
+  await descartarTreinoLivreVazio(id)
+  expect((await treinoAtivo())?.id).toBe(id)
+})
+
 
