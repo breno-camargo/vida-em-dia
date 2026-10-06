@@ -1,3 +1,4 @@
+import { ListaExercicios } from '../componentes/ListaExercicios'
 import { useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { banco, tabela } from '../dados/banco'
@@ -110,7 +111,7 @@ export function ModoTreino({ id, online, fechar }: { id: string; online: boolean
         </div>
       </details>
     })}
-    <details className="painel"><summary>Adicionar exercício só neste treino</summary><div className="formulario"><label>Buscar<input type="search" value={busca} onChange={e => definirBusca(e.target.value)} /></label><div className="seletor-exercicios">{exercicios.filter(ex => ex.tipo === 'forca' && !itens.some(i => i.exercicio_id === ex.id) && ex.nome.toLocaleLowerCase('pt-BR').includes(busca.toLocaleLowerCase('pt-BR'))).map(ex => <button disabled={ocupado} key={ex.id} onClick={() => void executar(() => adicionarExercicio(treino, ex))}>{ex.nome}</button>)}</div></div></details>
+    <details className="painel"><summary>Adicionar exercício só neste treino</summary><div className="formulario"><label>Buscar<input type="search" value={busca} onChange={e => definirBusca(e.target.value)} /></label><ListaExercicios exercicios={exercicios.filter(ex => ex.tipo === 'forca' && !itens.some(i => i.exercicio_id === ex.id))} busca={busca} ocupado={ocupado} adicionar={ex => void executar(() => adicionarExercicio(treino, ex))} /></div></details>
     <label className="formulario">Observação do treino<textarea value={treino.observacao} onChange={e => { const observacao = e.target.value; void executar(async () => { await tabela('treinos').update(id, { observacao, atualizado_em: new Date().toISOString() }) }) }} /></label>
     {!treino.ficha_id && <details className="painel"><summary>Salvar planejamento como ficha</summary><div className="formulario"><label>Nome<input value={nomeFicha} onChange={e => definirNomeFicha(e.target.value)} /></label><button className="botao-secundario" disabled={ocupado} onClick={() => void executar(async () => {
       const nova = { ...criarRegistro(treino.user_id), nome: nomeFicha, ordem: Date.now() }
@@ -130,3 +131,4 @@ function Desempenho({ exercicioId }: { exercicioId: string }) {
   }, [exercicioId])
   return <small className="ultimo-desempenho">{dados?.ultimas.length ? `Último: ${dados.ultimas.map(s => `${s.repeticoes} reps @ ${s.peso_total} kg`).join(' · ')} | Melhor carga: ${dados.melhor} kg` : 'Primeira sessão · preencha peso e repetições'}</small>
 }
+
