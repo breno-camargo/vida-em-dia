@@ -31,3 +31,13 @@ test('avise estagnação somente com quatro semanas de sessões sem aumento', ()
   expect(estagnado([{ ...sessoes[0] }, { ...sessoes[1], carga: 25 }], Date.parse('2026-10-06T12:00:00Z'))).toBe(false)
   expect(estagnado(sessoes, Date.parse('2026-12-06T12:00:00Z'))).toBe(false)
 })
+
+test('reconheça recorde de repetições no peso corporal e preserve a referência inicial', () => {
+  const treinos = [treino('a', '2026-10-01T12:00:00Z'), treino('b', '2026-10-06T12:00:00Z')]
+  const series = [serie('a', 0, 10), { ...serie('b', 0, 23), modo_carga: 'peso_corporal' as const }]
+  const sessoes = sessoesExercicio(treinos, series, 'ex')
+  expect(sessoes[0].recordes).toEqual([])
+  expect(sessoes[1].recordes).toEqual(['reps'])
+  expect(sessoesExercicio(treinos, [series[0], { ...series[1], repeticoes: 10 }], 'ex')[1].recordes).toEqual([])
+  expect(sessoesExercicio(treinos, [series[0], { ...series[1], tipo: 'aquecimento' }], 'ex')[1].recordes).toEqual([])
+})

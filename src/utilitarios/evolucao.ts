@@ -1,16 +1,17 @@
 import type { SerieTreino, Treino } from '../dados/modelos'
 import { volumeSeries, cargaTotal } from './treino'
-export type Recordes = { carga: number; volume: number; rm: number }
+export type Recordes = { carga: number; volume: number; rm: number; reps: number; pesoCorporal?: boolean }
 export function epley(peso: number, reps: number) { return peso > 0 && reps > 0 ? peso * (1 + reps / 30) : 0 }
 export function efetivas(series: SerieTreino[]) { return series.filter(s => !s.apagado_em && s.concluida_em && s.tipo !== 'aquecimento') }
 export function desempenho(series: SerieTreino[]): Recordes {
   const validas = efetivas(series)
   const cargas = validas.flatMap(s => [{ peso: s.peso_total, reps: s.repeticoes }, ...(s.tipo === 'dropset' ? (s.reducoes ?? []).map(r => ({ peso: cargaTotal(r.peso_digitado, s.modo_carga, s.peso_barra), reps: r.repeticoes })) : [])])
-  return { carga: Math.max(0, ...cargas.map(s => s.peso)), volume: volumeSeries(validas), rm: Math.max(0, ...cargas.map(s => epley(s.peso, s.reps))) }
+  return { reps: Math.max(0, ...validas.map(s => s.repeticoes)), pesoCorporal: validas.length > 0 && validas.every(s => s.modo_carga === 'peso_corporal'), carga: Math.max(0, ...cargas.map(s => s.peso)), volume: volumeSeries(validas), rm: Math.max(0, ...cargas.map(s => epley(s.peso, s.reps))) }
 }
 export function superados(atual: Recordes, anteriores: Recordes[]) {
   if (!anteriores.length) return []
-  return (['carga', 'volume', 'rm'] as const).filter(chave => atual[chave] > Math.max(...anteriores.map(a => a[chave])))
+  const chaves: (keyof Pick<Recordes, 'carga' | 'volume' | 'rm' | 'reps'>)[] = atual.pesoCorporal ? ['reps'] : ['carga', 'volume', 'rm']
+  return chaves.filter(chave => atual[chave] > Math.max(...anteriores.map(a => a[chave])))
 }
 export function sessoesExercicio(treinos: Treino[], series: SerieTreino[], exercicioId: string) {
   const anteriores: Recordes[] = []
@@ -35,3 +36,4 @@ export function estagnado(sessoes: { treino: Treino; carga: number }[], agora = 
   const ultima = validas.at(-1)!
   return Date.parse(ultima.treino.inicio) - ultimaMelhora >= 28 * 86400000 && agora - Date.parse(ultima.treino.inicio) < 14 * 86400000
 }
+
