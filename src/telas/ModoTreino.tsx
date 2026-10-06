@@ -12,6 +12,8 @@ import { ResumoTreino } from '../componentes/ResumoTreino'
 import { AjudaExercicio } from '../componentes/AjudaExercicio'
 import { EditorExercicio } from '../componentes/EditorExercicio'
 import { useTelaLigada } from '../hooks/useTelaLigada'
+import { MiniaturaExercicio } from '../componentes/MiniaturaExercicio'
+import { ChevronDown } from 'lucide-react'
 
 export function ModoTreino({ id, online, fechar }: { id: string; online: boolean; fechar: () => void }) {
   const treino = useLiveQuery(() => tabela('treinos').get(id), [id])
@@ -65,9 +67,15 @@ export function ModoTreino({ id, online, fechar }: { id: string; online: boolean
     {itens.map((item, indice) => {
       const ex = exercicios.find(e => e.id === item.exercicio_id)
       const grupo = series.filter(s => s.exercicio_id === item.exercicio_id)
-      return <section className="exercicio-treino" key={item.id}><h2>{item.nome}</h2><Desempenho exercicioId={item.exercicio_id} />
+      const feitas = grupo.filter(s => s.concluida_em).length
+      const resumoReps = [...new Set(grupo.map(s => s.repeticoes))]
+      const resumoCargas = [...new Set(grupo.map(s => s.peso_total))]
+      return <details className="exercicio-treino exercicio-recolhivel" key={item.id}>
+        <summary className="cabecalho-exercicio"><MiniaturaExercicio id={item.exercicio_id} /><span className="resumo-exercicio"><strong>{item.nome}</strong><small>{grupo.length} séries · {resumoReps.length === 1 ? resumoReps[0] : 'várias'} reps · {resumoCargas.length === 1 ? `${resumoCargas[0]} kg` : 'cargas variadas'}</small><small>{feitas}/{grupo.length} concluídas{proxima?.exercicio_id === item.exercicio_id ? ' · Próximo exercício' : ''}</small></span><ChevronDown className="seta-exercicio" size={20} aria-hidden="true" /></summary>
+        <div className="conteudo-exercicio"><Desempenho exercicioId={item.exercicio_id} />
         {ex && <><p className="nota-fixa">{ex.nota_fixa || 'Adicione uma nota fixa na ajuda do exercício.'}</p><button className="botao-secundario" onClick={() => definirAjuda(ex)}>Como fazer ? · editar nota</button></>}
         <label className="formulario">Descanso deste exercício (s)<input type="number" inputMode="numeric" min="0" max="1800" value={item.descanso_segundos} onChange={e => { const valor = Number(e.target.value); if (Number.isFinite(valor) && valor >= 0 && valor <= 1800) void executar(async () => { await tabela('treino_exercicios').update(item.id, { descanso_segundos: valor, atualizado_em: new Date().toISOString() }) }) }} /></label>
+        <div className="cabecalho-series" aria-hidden="true"><span>SÉRIE</span><span>REPS</span><span>KG</span><span>FEITO</span></div>
         {grupo.map((s, i) => <Serie key={`${s.id}-${s.concluida_em ?? 'pendente'}`} serie={s} destaque={s.id === proxima?.id} anterior={grupo[i - 1]} salvar={salvarSerie} concluir={async dados => { void tela.manter(); await concluirSerie(dados) }} desfazer={async () => {
           await banco.transaction('rw', tabela('series_treino'), tabela('treinos'), async () => { await tabela('series_treino').update(s.id, { concluida_em: undefined, atualizado_em: new Date().toISOString() }); await atualizarDescanso(null) })
         }} />)}
@@ -94,7 +102,8 @@ export function ModoTreino({ id, online, fechar }: { id: string; online: boolean
             await tabela('treino_exercicios').put({ ...item, atualizado_em: new Date().toISOString() }); await tabela('series_treino').bulkPut(grupo.map(s => ({ ...s, atualizado_em: new Date().toISOString() })))
           }) } })
         })}>Remover do dia</button></div>
-      </section>
+        </div>
+      </details>
     })}
     <details className="painel"><summary>Adicionar exercício só neste treino</summary><div className="formulario"><label>Buscar<input type="search" value={busca} onChange={e => definirBusca(e.target.value)} /></label><div className="seletor-exercicios">{exercicios.filter(ex => ex.tipo === 'forca' && !itens.some(i => i.exercicio_id === ex.id) && ex.nome.toLocaleLowerCase('pt-BR').includes(busca.toLocaleLowerCase('pt-BR'))).map(ex => <button disabled={ocupado} key={ex.id} onClick={() => void executar(() => adicionarExercicio(treino, ex))}>{ex.nome}</button>)}</div></div></details>
     <label className="formulario">Observação do treino<textarea value={treino.observacao} onChange={e => { const observacao = e.target.value; void executar(async () => { await tabela('treinos').update(id, { observacao, atualizado_em: new Date().toISOString() }) }) }} /></label>
