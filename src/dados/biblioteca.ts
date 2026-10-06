@@ -8,7 +8,8 @@ const grupos: Record<string, string[]> = {
   Bíceps: ['Rosca direta com barra', 'Rosca alternada', 'Rosca martelo', 'Rosca Scott', 'Rosca concentrada', 'Rosca na polia', 'Rosca inclinada', 'Rosca inversa'],
   Tríceps: ['Tríceps na polia com corda', 'Tríceps na polia com barra', 'Tríceps francês', 'Tríceps testa', 'Tríceps coice', 'Mergulho na máquina', 'Supino fechado', 'Extensão unilateral na polia'],
   Pernas: ['Agachamento livre', 'Agachamento no Smith', 'Leg press', 'Cadeira extensora', 'Mesa flexora', 'Cadeira flexora', 'Stiff', 'Levantamento terra'],
-  'Glúteos e panturrilhas': ['Elevação pélvica', 'Passada com halteres', 'Agachamento búlgaro', 'Cadeira abdutora', 'Cadeira adutora', 'Glúteo na polia', 'Panturrilha em pé', 'Panturrilha sentado'],
+  Glúteos: ['Elevação pélvica', 'Passada com halteres', 'Agachamento búlgaro', 'Cadeira abdutora', 'Cadeira adutora', 'Glúteo na polia'],
+  Panturrilhas: ['Panturrilha em pé', 'Panturrilha sentado'],
   Abdômen: ['Abdominal no solo', 'Abdominal na máquina', 'Elevação de pernas', 'Prancha abdominal'],
   Cardio: ['Esteira', 'Bicicleta ergométrica', 'Elíptico', 'Escada'],
 }
