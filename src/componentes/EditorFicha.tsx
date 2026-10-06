@@ -1,3 +1,4 @@
+import { SelecionarSeries } from './SelecionarSeries'
 import { useState } from 'react'
 import { Painel } from './Painel'
 import { ListaExercicios } from './ListaExercicios'
@@ -27,7 +28,7 @@ export function EditorFicha({ ficha, iniciais, exercicios, fechar }: { ficha: Fi
   }}>
     <label>Nome da ficha<input required value={nome} onChange={e => definirNome(e.target.value)} placeholder="A · Peito e tríceps" /></label>
     {itens.map((item, indice) => <details className="item-ficha exercicio-recolhivel" key={item.id}><summary className="cabecalho-exercicio"><MiniaturaExercicio id={item.exercicio_id} nome={exercicios.find(ex => ex.id === item.exercicio_id)?.nome} abrir={() => definirAjuda(exercicios.find(ex => ex.id === item.exercicio_id) ?? null)} /><span className="resumo-exercicio"><strong>{indice + 1}. {exercicios.find(ex => ex.id === item.exercicio_id)?.nome ?? 'Exercício removido'}</strong><small>{item.series_planejadas} séries · {item.descanso_segundos ?? 90} s de descanso</small></span><ChevronDown className="seta-exercicio" size={20} aria-hidden="true" /></summary><div className="conteudo-exercicio">
-      <label>Séries planejadas<select value={item.series_planejadas} onChange={e => alterar(item.id, { series_planejadas: Number(e.target.value) })}>{Array.from({ length: 20 }, (_, i) => <option key={i} value={i + 1}>{i + 1} séries</option>)}</select></label>
+      <SelecionarSeries valor={item.series_planejadas} confirmar={series_planejadas => alterar(item.id, { series_planejadas })} />
       <SelecionarDescanso valor={item.descanso_segundos ?? 90} confirmar={async descanso_segundos => { alterar(item.id, { descanso_segundos }) }} />
       <div className="acoes"><button type="button" disabled={indice === 0} onClick={() => mover(indice, -1)} aria-label="Mover exercício para cima">Subir</button><button type="button" disabled={indice === itens.length - 1} onClick={() => mover(indice, 1)} aria-label="Mover exercício para baixo">Descer</button><button type="button" onClick={() => definirItens(itens.filter(i => i.id !== item.id))}>Retirar</button></div>
     </div></details>)}
@@ -40,4 +41,5 @@ export function EditorFicha({ ficha, iniciais, exercicios, fechar }: { ficha: Fi
     {edicao && <EditorExercicio exercicio={edicao} fechar={() => definirEdicao(null)} />}
   </Painel>
 }
+
 
