@@ -32,6 +32,7 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false }: { id: st
     return ultimo ? { volume: volumeSeries(await tabela('series_treino').where('treino_id').equals(ultimo.id).toArray()) } : undefined
   }, [treino?.ficha_id, id])
   const [resumo, definirResumo] = useState(abrirResumo)
+  const mostrarResumo = () => { definirResumo(true); window.scrollTo({ top: 0 }) }
   const [perguntarFinalizacao, definirPerguntarFinalizacao] = useState(false)
   const [ajuda, definirAjuda] = useState<Exercicio | null>(null)
   const [edicao, definirEdicao] = useState<Exercicio | null>(null)
@@ -139,8 +140,8 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false }: { id: st
       await salvarFicha(nova, itens.map((item, ordem) => ({ ...criarRegistro(treino.user_id), ficha_id: nova.id, exercicio_id: item.exercicio_id, ordem, series_planejadas: series.filter(s => s.exercicio_id === item.exercicio_id).length, descanso_segundos: item.descanso_segundos })))
       await tabela('treinos').update(id, { ficha_id: nova.id, atualizado_em: new Date().toISOString() })
     })}>Salvar ficha</button></div></details>}
-    <div className="finalizar-acoes"><button className="botao-principal" onClick={() => definirResumo(true)}>Ver resumo e finalizar</button><button className="botao-secundario" onClick={fechar}>Voltar · continuar depois</button></div>
-    {perguntarFinalizacao && <Painel centralizado titulo="Todas as séries concluídas!" fechar={() => definirPerguntarFinalizacao(false)}><p className="subtitulo-seletor">Você concluiu todos os exercícios. Quer finalizar o treino?</p><button type="button" className="botao-principal largura-total" onClick={() => { definirPerguntarFinalizacao(false); definirResumo(true) }}>Ver resumo e finalizar</button><button type="button" className="botao-secundario" onClick={() => definirPerguntarFinalizacao(false)}>Continuar treino</button></Painel>}
+    <div className="finalizar-acoes"><button className="botao-principal" onClick={mostrarResumo}>Ver resumo e finalizar</button><button className="botao-secundario" onClick={fechar}>Voltar · continuar depois</button></div>
+    {perguntarFinalizacao && <Painel centralizado titulo="Todas as séries concluídas!" fechar={() => definirPerguntarFinalizacao(false)}><p className="subtitulo-seletor">Você concluiu todos os exercícios. Quer finalizar o treino?</p><button type="button" className="botao-principal largura-total" onClick={() => { definirPerguntarFinalizacao(false); mostrarResumo() }}>Ver resumo e finalizar</button><button type="button" className="botao-secundario" onClick={() => definirPerguntarFinalizacao(false)}>Continuar treino</button></Painel>}
     {ajuda && <AjudaExercicio exercicio={ajuda} online={online} fechar={() => definirAjuda(null)} editar={() => { definirEdicao(ajuda); definirAjuda(null) }} />}
     {edicao && <EditorExercicio exercicio={edicao} fechar={() => definirEdicao(null)} />}
   </>
@@ -153,6 +154,7 @@ function Desempenho({ exercicioId }: { exercicioId: string }) {
   }, [exercicioId])
   return <small className="ultimo-desempenho">{dados?.ultimas.length ? `Último: ${dados.ultimas.map(s => `${s.repeticoes} reps @ ${s.peso_total} kg`).join(' · ')} | Melhor carga: ${dados.melhor} kg` : 'Primeira sessão · preencha peso e repetições'}</small>
 }
+
 
 
 

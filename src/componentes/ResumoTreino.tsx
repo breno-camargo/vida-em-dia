@@ -14,12 +14,13 @@ export function ResumoTreino({ treino, series, anterior, pesoInicial, finalizar,
 
   const volume = volumeSeries(series)
   const kcal = caloriasMusculacao(peso, minutos)
-  return <section className="formulario"><h2>{treino.fim ? 'Treino concluído' : 'Resumo do treino'}</h2>
-    <div className="painel"><h3>{treino.titulo ?? 'Treino'}</h3><p>{minutos} minutos · {volume.toLocaleString('pt-BR')} kg de volume</p><small>Aquecimentos ficam fora do volume.</small>
-      {anterior && <p>Comparação com o último treino: {volume - anterior.volume >= 0 ? '+' : ''}{(volume - anterior.volume).toLocaleString('pt-BR')} kg de volume.</p>}
-    </div>
-    {!treino.fim && <div className="painel"><h3>Calorias estimadas</h3><p>{peso > 0 ? `${kcal.toLocaleString('pt-BR')} kcal` : 'Estimativa indisponível: peso ainda não cadastrado.'}</p><small>Cálculo automático pela duração do treino e pelo último peso registrado no app.</small></div>}
-    {treino.fim && <p>{treino.peso_corporal ? `${treino.calorias ?? 0} kcal · estimativa automática.` : 'Calorias não estimadas: peso corporal não informado.'}</p>}
+  const concluidas = series.filter(s => s.concluida_em && !s.apagado_em)
+  const exerciciosFeitos = new Set(concluidas.map(s => s.exercicio_id)).size
+  return <section className="formulario resumo-treino"><div className="resumo-titulo"><span className="etiqueta">SEU TREINO</span><h2>{treino.fim ? 'Treino concluído' : 'Pronto para finalizar?'}</h2><p>{treino.titulo ?? 'Treino livre'}</p></div>
+    <div className="metricas-resumo"><div><span>Duração</span><strong>{minutos}<small> min</small></strong></div><div><span>Volume total</span><strong>{volume.toLocaleString('pt-BR')}<small> kg</small></strong></div><div><span>Exercícios realizados</span><strong>{exerciciosFeitos}</strong></div><div><span>Séries concluídas</span><strong>{concluidas.length}</strong></div></div>
+    <p className="nota-resumo">O volume considera as séries concluídas, sem aquecimentos.</p>
+    {anterior && <p className="comparacao-resumo">Última sessão: {volume - anterior.volume >= 0 ? '+' : ''}{(volume - anterior.volume).toLocaleString('pt-BR')} kg de volume.</p>}
+    <div className="calorias-resumo"><span>Calorias estimadas</span><strong>{peso > 0 ? `${(treino.fim ? treino.calorias ?? 0 : kcal).toLocaleString('pt-BR')} kcal` : '—'}</strong><small>{peso > 0 ? 'Estimativa automática pelo peso cadastrado e duração.' : 'Disponível quando você cadastrar seu peso na etapa 5.'}</small></div>
     <CardioDoDia data={treino.data} />
     {erro && <p role="alert" className="erro">{erro}</p>}
     {!treino.fim ? <><button className="botao-principal largura-total" disabled={ocupado} onClick={async () => {
@@ -36,4 +37,5 @@ function CardioDoDia({ data }: { data: string }) {
   if (!sessoes?.length) return null
   return <div className="painel"><h3>Cardio do dia</h3>{sessoes.map(s => <p key={s.id}>{s.tipo} · {s.duracao_minutos} min · {s.distancia_km ?? '—'} km</p>)}</div>
 }
+
 
