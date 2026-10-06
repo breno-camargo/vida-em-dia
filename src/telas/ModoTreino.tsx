@@ -14,7 +14,7 @@ import { AjudaExercicio } from '../componentes/AjudaExercicio'
 import { EditorExercicio } from '../componentes/EditorExercicio'
 import { useTelaLigada } from '../hooks/useTelaLigada'
 import { MiniaturaExercicio } from '../componentes/MiniaturaExercicio'
-import { ChevronDown, Plus, ClipboardPlus, MessageSquare, ArrowLeft, Smartphone, Check } from 'lucide-react'
+import { ChevronDown, Plus, ClipboardPlus, MessageSquare, ArrowLeft, Smartphone, Check, Trophy, X } from 'lucide-react'
 import { SelecionarDescanso } from '../componentes/SelecionarDescanso'
 import { Painel } from '../componentes/Painel'
 import { recordesDoTreino } from '../dados/historico'
@@ -73,7 +73,7 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
   return <>
     <div className="painel andamento-treino"><h2>{treino.titulo ?? 'Treino livre'}</h2><p>{series.filter(s => s.concluida_em).length} de {series.length} séries concluídas</p><button className="botao-secundario manter-tela" onClick={() => void tela.manter()}><Smartphone size={18} aria-hidden="true" /><span>{tela.estado}</span></button><small>Salvo neste aparelho. Você pode sair e continuar depois.</small></div>
     {erro && <p role="alert" className="erro">{erro}</p>}
-    {avisoRecorde && <div className="aviso-recorde" role="status"><strong>Novo recorde!</strong><p>{avisoRecorde}</p><button onClick={() => definirAvisoRecorde('')}>Entendi</button></div>}
+    {avisoRecorde && <div className="aviso-recorde" role="status"><Trophy className="icone-recorde" size={20} aria-hidden="true" /><div><strong>Novo recorde</strong><p>{avisoRecorde}</p></div><button aria-label="Fechar aviso de recorde" onClick={() => definirAvisoRecorde('')}><X size={16} aria-hidden="true" /></button></div>}
     {removido && <button className="botao-secundario" disabled={ocupado} onClick={() => void executar(async () => { await removido.desfazer(); definirRemovido(null) })}>Desfazer remoção</button>}
     <Descanso fim={treino.descanso_fim} alterar={fim => void executar(() => atualizarDescanso(fim))} />
     {itens.map((item, indice) => {
@@ -165,6 +165,7 @@ function Desempenho({ exercicioId, semPeso }: { exercicioId: string; semPeso: bo
   }, [exercicioId])
   return <div className="ultimo-desempenho">{dados?.ultimas.length ? <><span>Último treino</span><p>{dados.ultimas.length} séries: {dados.ultimas.map(s => `${s.repeticoes} repetições${s.modo_carga === 'peso_corporal' ? '' : ` com ${s.peso_total.toLocaleString('pt-BR')} kg`}`).join(' · ')}</p>{!semPeso && <small>Maior carga já registrada: {dados.melhor.toLocaleString('pt-BR')} kg</small>}</> : <p>{semPeso ? 'Primeiro treino: registre as repetições de cada série.' : 'Primeiro treino: registre a carga e as repetições de cada série.'}</p>}</div>
 }
+
 
 
 
