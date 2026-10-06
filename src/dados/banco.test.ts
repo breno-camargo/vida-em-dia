@@ -7,7 +7,7 @@ import { dataLocal } from '../utilitarios/data'
 
 beforeEach(async () => { await banco.delete(); await banco.open() })
 test('crie todas as tabelas e inicialize configurações uma única vez', async () => {
-  expect(banco.tables).toHaveLength(16)
+  expect(banco.tables).toHaveLength(17)
   await Promise.all([iniciarBanco(), iniciarBanco()])
   expect(await tabela('configuracoes').count()).toBe(1)
   expect((await tabela('configuracoes').toArray())[0].user_id).toBeNull()

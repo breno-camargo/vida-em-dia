@@ -26,3 +26,11 @@ banco.version(2).stores({
 export function tabela<K extends keyof Tabelas>(nome: K): Table<Tabelas[K], string> {
   return banco.table(nome)
 }
+banco.version(3).stores({
+  treino_exercicios: `${base}, treino_id, exercicio_id, [treino_id+ordem]`,
+}).upgrade(async transacao => {
+  await transacao.table('series_treino').toCollection().modify(item => {
+    if (item.modo_carga === undefined) item.modo_carga = 'total'
+    if (item.peso_barra === undefined) item.peso_barra = 0
+  })
+})
