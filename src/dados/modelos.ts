@@ -14,7 +14,7 @@ export interface Exercicio extends Registro {
 }
 export interface Ficha extends Registro { nome: string; ordem: number }
 export interface FichaExercicio extends Registro {
-  ficha_id: string; exercicio_id: string; ordem: number; series_planejadas: number
+  ficha_id: string; exercicio_id: string; ordem: number; series_planejadas: number; descanso_segundos?: number
 }
 export interface Treino extends Registro {
   ficha_id?: string; data: string; inicio: string; fim?: string
@@ -68,6 +68,7 @@ export interface Configuracao extends Registro {
   fator_calorias_cardio: number; modo_calorias_gastas: 'soma' | 'total_manual'
   prompt_ia_modelo: string; dia_lembrete_medidas: number; dias_lembrete_backup: number
   ultimo_backup?: string; ultima_sincronizacao?: string; sync_automatico: boolean
+  biblioteca_inicializada?: boolean
 }
 export interface Tabelas {
   exercicios: Exercicio; fichas: Ficha; ficha_exercicios: FichaExercicio
