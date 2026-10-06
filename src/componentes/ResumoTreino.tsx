@@ -23,12 +23,12 @@ export function ResumoTreino({ treino, series, anterior, pesoInicial, finalizar,
     <div className="calorias-resumo"><span>Calorias estimadas</span><strong>{peso > 0 ? `${(treino.fim ? treino.calorias ?? 0 : kcal).toLocaleString('pt-BR')} kcal` : '—'}</strong><small>{peso > 0 ? 'Estimativa automática pelo peso cadastrado e duração.' : 'Disponível quando você cadastrar seu peso na etapa 5.'}</small></div>
     <CardioDoDia data={treino.data} />
     {erro && <p role="alert" className="erro">{erro}</p>}
-    {!treino.fim ? <><button className="botao-principal largura-total" disabled={ocupado} onClick={async () => {
+    {!treino.fim ? <div className="acoes-resumo-fixas"><button className="botao-principal largura-total" disabled={ocupado} onClick={async () => {
       definirOcupado(true); definirErro('')
       try { if (!Number.isFinite(peso) || peso < 0 || peso > 500 || !Number.isFinite(kcal) || kcal < 0 || kcal > 10000) throw new Error('Confira peso e calorias.'); await finalizar(peso || undefined, kcal) }
       catch (error) { definirErro(error instanceof Error ? error.message : 'Não foi possível finalizar o treino.') }
       finally { definirOcupado(false) }
-    }}>Finalizar e salvar</button><button className="botao-secundario" disabled={ocupado} onClick={voltar}>Voltar ao treino</button></> : <button className="botao-principal largura-total" onClick={fechar}>Voltar às fichas</button>}
+    }}>Finalizar e salvar</button><button className="botao-secundario" disabled={ocupado} onClick={voltar}>Voltar ao treino</button></div> : <button className="botao-principal largura-total" onClick={fechar}>Voltar às fichas</button>}
   </section>
 }
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -37,5 +37,6 @@ function CardioDoDia({ data }: { data: string }) {
   if (!sessoes?.length) return null
   return <div className="painel"><h3>Cardio do dia</h3>{sessoes.map(s => <p key={s.id}>{s.tipo} · {s.duracao_minutos} min · {s.distancia_km ?? '—'} km</p>)}</div>
 }
+
 
 
