@@ -5,6 +5,8 @@ import { cargaTotal } from '../utilitarios/treino'
 import { liberarAudio } from '../utilitarios/alerta'
 import { Painel } from './Painel'
 import { SelecionarValores } from './SelecionarValores'
+import { Rolagem } from './Rolagem'
+const niveisEsforco = [0, ...Array.from({ length: 19 }, (_, i) => 1 + i / 2)]
 export function Serie({ serie, destaque, anterior, salvar, concluir, desfazer, aplicarProximas, remover }: {
   serie: SerieTreino; destaque: boolean; anterior?: SerieTreino
   salvar: (serie: SerieTreino) => Promise<void>; concluir: (serie: SerieTreino) => Promise<void>; desfazer: () => Promise<void>
@@ -16,6 +18,8 @@ export function Serie({ serie, destaque, anterior, salvar, concluir, desfazer, a
   const semPeso = dados.modo_carga === 'peso_corporal'
   const [erro, definirErro] = useState('')
   const [ocupado, definirOcupado] = useState(false)
+  const [esforcoAberto, definirEsforcoAberto] = useState(false)
+  const [esforco, definirEsforco] = useState(serie.rpe ?? 0)
   const [opcoesAbertas, definirOpcoesAbertas] = useState(false)
   const [tipoAberto, definirTipoAberto] = useState(false)
   const [valoresAbertos, definirValoresAbertos] = useState(false)
@@ -37,7 +41,7 @@ export function Serie({ serie, destaque, anterior, salvar, concluir, desfazer, a
     {dados.modo_carga === 'por_lado' && <label>Barra (kg, use 0 para não somar)<select value={dados.peso_barra ?? 20} onChange={e => alterar({ peso_barra: Number(e.target.value) })}>{Array.from({ length: 201 }, (_, i) => <option key={i} value={i / 2}>{i / 2} kg</option>)}</select></label>}
     {!semPeso && <small>Carga total: {cargaTotal(dados.peso_digitado, dados.modo_carga, dados.peso_barra)} kg</small>}
     {!semPeso && dados.tipo === 'dropset' && <div>{(dados.reducoes ?? []).map((reducao, i) => <div className="reducao" key={i}><span>Redução {i + 1}</span><button type="button" className="botao-descanso" onClick={() => definirReducaoAtiva(i)}>{reducao.repeticoes} reps · {reducao.peso_digitado.toLocaleString('pt-BR')} kg<span>Alterar</span></button><button type="button" className="botao-secundario" onClick={() => alterar({ reducoes: dados.reducoes!.filter((_, j) => j !== i) })}>Retirar redução</button></div>)}<button type="button" className="botao-secundario" onClick={() => alterar({ reducoes: [...(dados.reducoes ?? []), { peso_digitado: Math.max(0, dados.peso_digitado * 0.75), repeticoes: dados.repeticoes }] })}>Adicionar redução sem descanso</button></div>}
-    <details><summary>Esforço (opcional)</summary><label>RPE · 1 a 10<select value={dados.rpe ?? ''} onChange={e => alterar({ rpe: e.target.value === '' ? undefined : Number(e.target.value) })}><option value="">Sem RPE</option>{Array.from({ length: 19 }, (_, i) => <option key={i} value={1 + i / 2}>{1 + i / 2}</option>)}</select></label></details>
+    <button type="button" className="botao-descanso" onClick={() => { definirEsforco(dados.rpe ?? 0); definirEsforcoAberto(true) }}>Esforço (opcional)<strong>{dados.rpe ? `${dados.rpe.toLocaleString('pt-BR')} / 10` : 'Sem RPE'}</strong><span>Alterar</span></button>
     {anterior && <button className="botao-secundario" disabled={ocupado} onClick={() => { const copia = { ...dados, peso_digitado: anterior.peso_digitado, repeticoes: anterior.repeticoes, modo_carga: anterior.modo_carga, peso_barra: anterior.peso_barra }; definir(copia); void realizar(() => salvar(copia)) }}>Copiar série anterior</button>}
     {!serie.concluida_em && <button className="botao-secundario" disabled={ocupado} onClick={() => void realizar(() => salvar(dados))}>Salvar sem concluir</button>}
     </div></div>
@@ -51,6 +55,7 @@ export function Serie({ serie, destaque, anterior, salvar, concluir, desfazer, a
       const novos = { ...dados, reducoes: dados.reducoes!.map((r, i) => i === reducaoAtiva ? { peso_digitado, repeticoes } : r) }
       await salvar(novos); definir(novos)
     }} />}
+    {esforcoAberto && <Painel titulo="Esforço da série" fechar={() => definirEsforcoAberto(false)}><p className="subtitulo-seletor">Quanto esforço esta série exigiu? · 1 a 10</p><Rolagem valores={niveisEsforco} inicial={dados.rpe ?? 0} rotulo="RPE" escolher={definirEsforco} formatar={valor => valor === 0 ? 'Sem RPE' : valor.toLocaleString('pt-BR')} /><p className="valor-escolhido">{esforco === 0 ? 'Sem esforço registrado' : `${esforco.toLocaleString('pt-BR')} / 10`}</p>{erro && <p className="erro" role="alert">{erro}</p>}<button type="button" className="botao-principal largura-total" disabled={ocupado} onClick={() => void realizar(async () => { const novos = { ...dados, rpe: esforco || undefined }; await salvar(novos); definir(novos); definirEsforcoAberto(false) })}>Confirmar esforço</button></Painel>}
     {tipoAberto && <Painel titulo="Tipo de série" fechar={() => definirTipoAberto(false)}><div className="lista-tipos">{([
       ['normal', 'Série normal', 'Conta no volume do treino.'], ['aquecimento', 'Aquecimento', 'Descanso menor e fora do volume.'], ['falha', 'Até a falha', 'Marque quando terminar até a falha.'], ['dropset', 'Drop set', 'Reduções sem descanso entre elas.'],
     ] as const).map(([tipo, nome, texto]) => <button key={tipo} className={dados.tipo === tipo ? 'selecionado' : ''} onClick={async () => {
@@ -59,6 +64,7 @@ export function Serie({ serie, destaque, anterior, salvar, concluir, desfazer, a
     }} disabled={ocupado}><span className={`tipo-serie ${tipo}`}>{tipo === 'normal' ? serie.numero_serie : tipo === 'aquecimento' ? 'A' : tipo === 'dropset' ? 'D' : 'F'}</span><span><strong>{nome}</strong><small>{texto}</small></span></button>)}<button className="remover-serie" disabled={ocupado} onClick={() => void realizar(async () => { await remover(); definirTipoAberto(false) })}>Remover série</button></div></Painel>}
   </section>
 }
+
 
 
 
