@@ -63,6 +63,8 @@ export function ModoTreino({ id, online, fechar }: { id: string; online: boolean
     const fim = new Date().toISOString()
     await tabela('treinos').update(id, { fim, duracao_minutos: Math.round((Date.parse(fim) - Date.parse(treino.inicio)) / 60000), calorias, peso_corporal, descanso_fim: null, atualizado_em: fim })
     tela.parar()
+    fechar()
+    window.scrollTo({ top: 0 })
   }} />
   return <>
     <div className="painel"><h2>{treino.titulo ?? 'Treino livre'}</h2><p>{series.filter(s => s.concluida_em).length} de {series.length} séries concluídas</p><button className="botao-secundario" onClick={() => void tela.manter()}>{tela.estado}</button><small>Salvo neste aparelho. Você pode sair e continuar depois.</small></div>
