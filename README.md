@@ -161,3 +161,7 @@ O editor do exercício permite ajustar o alvo de reps (padrão 12). Se todas as 
 Após finalizar, a lista de fichas oferece Gerar card para compartilhar para o último treino. Qualquer treino do histórico também oferece Compartilhar. O card PNG vertical 1080 × 1920 inclui foto opcional, nome, data, duração, volume, exercícios, séries, recordes e grupos. Calorias aparecem como estimativa quando há peso registrado; caso contrário, aparece um traço. A foto fica apenas em memória para este card, sem cadastro permanente (galeria de progresso na etapa 11). A imagem é gerada no aparelho, sem serviço externo. Compartilhar usa o menu nativo quando suportado; Baixar imagem permite salvar e publicar manualmente. Não há publicação automática em redes sociais.
 
 Typecheck, lint, 25 testes e build passaram. Falta validar no iPhone: gráfico/toque, card com foto, download e compartilhamento, incluindo funcionamento offline. Main continua na versão aprovada v0.3.0; nenhuma tag v0.4.0 foi criada.
+
+### Tutorial de primeiro acesso — planejado para a etapa 13
+
+Solicitado em 06/10/2026: transformar a apresentação inicial em um tutorial curto, com opção de pular. Mostrar apenas no primeiro acesso da conta, guardar a conclusão ou o pulo por usuário e permitir rever pelas configurações. O vínculo por conta depende da autenticação da etapa 8. Nos acessos seguintes, a aba Hoje deve priorizar o resumo da rotina e as ações úteis, sem repetir a apresentação de como usar o app. Implementação adiada para a etapa 13, de experiência e acabamento.
