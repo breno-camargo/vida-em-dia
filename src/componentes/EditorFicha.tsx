@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Painel } from './Painel'
+import { ListaExercicios } from './ListaExercicios'
 import type { Exercicio, Ficha, FichaExercicio } from '../dados/modelos'
 import { criarRegistro } from '../dados/repositorio'
 import { salvarFicha } from '../dados/fichas'
@@ -31,7 +32,7 @@ export function EditorFicha({ ficha, iniciais, exercicios, fechar }: { ficha: Fi
       <div className="acoes"><button type="button" disabled={indice === 0} onClick={() => mover(indice, -1)} aria-label="Mover exercício para cima">Subir</button><button type="button" disabled={indice === itens.length - 1} onClick={() => mover(indice, 1)} aria-label="Mover exercício para baixo">Descer</button><button type="button" onClick={() => definirItens(itens.filter(i => i.id !== item.id))}>Retirar</button></div>
     </div></details>)}
     <label>Buscar para adicionar<input value={busca} onChange={e => definirBusca(e.target.value)} placeholder="Nome do exercício" /></label>
-    <div className="seletor-exercicios">{exercicios.filter(ex => !itens.some(item => item.exercicio_id === ex.id) && ex.nome.toLocaleLowerCase('pt-BR').includes(busca.toLocaleLowerCase('pt-BR'))).map(ex => <button type="button" key={ex.id} onClick={() => definirItens([...itens, { ...criarRegistro(ficha.user_id), ficha_id: ficha.id, exercicio_id: ex.id, ordem: itens.length, series_planejadas: 3, descanso_segundos: ex.descanso_padrao_segundos }])}>Adicionar · {ex.nome}</button>)}</div>
+    <ListaExercicios exercicios={exercicios.filter(ex => !itens.some(item => item.exercicio_id === ex.id))} busca={busca} adicionar={ex => definirItens([...itens, { ...criarRegistro(ficha.user_id), ficha_id: ficha.id, exercicio_id: ex.id, ordem: itens.length, series_planejadas: 3, descanso_segundos: ex.descanso_padrao_segundos }])} />
     {erro && <p className="erro" role="alert">{erro}</p>}<button disabled={salvando} className="botao-principal">{salvando ? 'Salvando…' : 'Salvar ficha'}</button>
     <small>Durante o treino, você poderá alterar o planejamento só daquele dia.</small>
   </form>
@@ -39,3 +40,4 @@ export function EditorFicha({ ficha, iniciais, exercicios, fechar }: { ficha: Fi
     {edicao && <EditorExercicio exercicio={edicao} fechar={() => definirEdicao(null)} />}
   </Painel>
 }
+
