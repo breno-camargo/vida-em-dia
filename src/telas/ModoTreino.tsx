@@ -22,7 +22,7 @@ import { recordesDoTreino } from '../dados/historico'
 export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido }: { id: string; online: boolean; fechar: () => void; abrirResumo?: boolean; concluido: (id: string) => void }) {
   const cards = useRef(new Map<string, HTMLDetailsElement>())
   const avisosRecordes = useRef(new Set<string>())
-  const [avisoRecorde, definirAvisoRecorde] = useState('')
+  const [avisoRecorde, definirAvisoRecorde] = useState<Record<string, { nome: string; marcas: string[] }>>({})
   const treino = useLiveQuery(() => tabela('treinos').get(id), [id])
   const itens = useLiveQuery(() => tabela('treino_exercicios').where('treino_id').equals(id).filter(e => !e.apagado_em).sortBy('ordem'), [id])
   const series = useLiveQuery(() => tabela('series_treino').where('treino_id').equals(id).filter(s => !s.apagado_em).sortBy('numero_serie'), [id])
@@ -73,7 +73,7 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
   return <>
     <div className="painel andamento-treino"><h2>{treino.titulo ?? 'Treino livre'}</h2><p>{series.filter(s => s.concluida_em).length} de {series.length} séries concluídas</p><button className="botao-secundario manter-tela" onClick={() => void tela.manter()}><Smartphone size={18} aria-hidden="true" /><span>{tela.estado}</span></button><small>Salvo neste aparelho. Você pode sair e continuar depois.</small></div>
     {erro && <p role="alert" className="erro">{erro}</p>}
-    {avisoRecorde && <div className="aviso-recorde" role="status"><Trophy className="icone-recorde" size={20} aria-hidden="true" /><div><strong>Novo recorde</strong><p>{avisoRecorde}</p></div><button aria-label="Fechar aviso de recorde" onClick={() => definirAvisoRecorde('')}><X size={16} aria-hidden="true" /></button></div>}
+    {Object.keys(avisoRecorde).length > 0 && <div className="aviso-recorde" role="status"><Trophy className="icone-recorde" size={20} aria-hidden="true" /><div><strong>{Object.keys(avisoRecorde).length > 1 ? 'Novos recordes' : 'Novo recorde'}</strong>{Object.entries(avisoRecorde).map(([exercicioId, aviso]) => <p key={exercicioId}><b>{aviso.nome}</b><br />{aviso.marcas.join(' · ')}</p>)}</div><button aria-label="Fechar aviso de recorde" onClick={() => definirAvisoRecorde({})}><X size={16} aria-hidden="true" /></button></div>}
     {removido && <button className="botao-secundario" disabled={ocupado} onClick={() => void executar(async () => { await removido.desfazer(); definirRemovido(null) })}>Desfazer remoção</button>}
     <Descanso fim={treino.descanso_fim} alterar={fim => void executar(() => atualizarDescanso(fim))} />
     {itens.map((item, indice) => {
@@ -95,7 +95,7 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
           const novos = recordes.filter(r => !avisosRecordes.current.has(`${item.exercicio_id}-${r}`))
           if (novos.length) {
             novos.forEach(r => avisosRecordes.current.add(`${item.exercicio_id}-${r}`))
-            definirAvisoRecorde(`${item.nome}: ${novos.map(r => r === 'rm' ? '1RM estimado' : r === 'carga' ? 'maior carga' : 'maior volume').join(', ')}`)
+            definirAvisoRecorde(anteriores => ({ ...anteriores, [item.exercicio_id]: { nome: item.nome, marcas: recordes.map(r => r === 'rm' ? '1RM estimado' : r === 'carga' ? 'Maior carga' : 'Maior volume') } }))
           }
           const pendentes = await tabela('series_treino').where('[treino_id+exercicio_id]').equals([id, item.exercicio_id]).filter(serie => !serie.apagado_em && !serie.concluida_em).count()
           const card = cards.current.get(item.id)
@@ -165,6 +165,7 @@ function Desempenho({ exercicioId, semPeso }: { exercicioId: string; semPeso: bo
   }, [exercicioId])
   return <div className="ultimo-desempenho">{dados?.ultimas.length ? <><span>Último treino</span><p>{dados.ultimas.length} séries: {dados.ultimas.map(s => `${s.repeticoes} repetições${s.modo_carga === 'peso_corporal' ? '' : ` com ${s.peso_total.toLocaleString('pt-BR')} kg`}`).join(' · ')}</p>{!semPeso && <small>Maior carga já registrada: {dados.melhor.toLocaleString('pt-BR')} kg</small>}</> : <p>{semPeso ? 'Primeiro treino: registre as repetições de cada série.' : 'Primeiro treino: registre a carga e as repetições de cada série.'}</p>}</div>
 }
+
 
 
 
