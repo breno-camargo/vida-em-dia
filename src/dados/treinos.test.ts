@@ -65,8 +65,8 @@ test('exclua aquecimento do volume e some reduções de drop set pela carga tota
   expect(volumeSeries(await tabela('series_treino').where('treino_id').equals(id).toArray())).toBe(1100)
 })
 test('mantenha o descanso entre exercícios enquanto houver séries pendentes', async () => {
-  const { ficha } = await preparar()
-  const outro = (await tabela('exercicios').toArray()).find(e => e.tipo === 'forca' && e.grupo_muscular === 'Costas')!
+  const { ficha, ex } = await preparar()
+  const outro = (await tabela('exercicios').toArray()).find(e => e.tipo === 'forca' && e.id !== ex.id)!
   await tabela('ficha_exercicios').add({ ...criarRegistro(), ficha_id: ficha.id, exercicio_id: outro.id, ordem: 1, series_planejadas: 1, descanso_segundos: 60 })
   const id = await iniciarTreino(ficha.id)
   const series = await tabela('series_treino').where('treino_id').equals(id).toArray()
@@ -143,3 +143,4 @@ test('separe os grupos antigos sem alterar ids, fichas ou instruções próprias
   expect((await tabela('exercicios').get(gluteo.id))?.musculos).toBe('Minha descrição personalizada')
   expect((await tabela('ficha_exercicios').get(item.id))?.exercicio_id).toBe(ex.id)
 })
+

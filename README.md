@@ -4,7 +4,7 @@ PWA pessoal de treino, cardio, medidas, alimentação e saúde. Interface em por
 
 ## Estado do projeto
 
-ETAPAS 1 e 2 aprovadas (v0.1.0 e v0.2.0), mantendo o verde original. ETAPA 3 implementada localmente e aguardando homologação e aprovação. As etapas 4 a 14 não foram implementadas.
+ETAPAS 1, 2 e 3 aprovadas (v0.1.0, v0.2.0 e v0.3.0), mantendo o verde original. O usuário validou a etapa 3 no iPhone e aprovou a conclusão em 06/10/2026. As etapas 4 a 14 não foram implementadas.
 
 Inclui React, TypeScript, Vite, Tailwind, Dexie, cinco abas, tema escuro, configurações informativas, ícones, manifest e service worker. Já há registro local de treinos. Login, sincronização e backup chegam nas próximas etapas. O modo claro chega na etapa 13.
 
@@ -55,7 +55,7 @@ Checklist da etapa 3 no iPhone instalado:
 - Inicie uma ficha de dois exercícios e confirme o planejamento sem modificar a ficha original.
 - Digite 30 kg por lado com barra de 20 kg; a carga total deve mostrar 80 kg.
 - Conclua uma série; ajuste +15 s/-15 s, bloqueie por um tempo e volte. O horário deve permanecer correto.
-- Confira som após Concluir, silêncio e alerta visual; a última série não inicia descanso.
+- Confira som após Concluir, silêncio e alerta visual; a última série do treino não inicia descanso.
 - Faça um aquecimento e um drop set; confira o volume no resumo.
 - Edite/desfaça uma série, adicione outra e copie a anterior. Reabra o app e use Continuar treino.
 - Adicione/remova/reordene exercícios do dia e abra a ajuda sem perder o andamento.
@@ -108,7 +108,7 @@ Nenhuma variável é necessária na etapa 1. `.env.example` reserva nomes públi
 
 ## Git e entrega
 
-- `main`: produção aprovada da ETAPA 1.
+- `main`: produção aprovada até a ETAPA 3.
 - `test`: homologação.
 - `etapa-1-base-pwa`: implementação da etapa 1.
 - `etapa-2-exercicios-fichas`: implementação da etapa 2, criada após atualizar `test`.
@@ -118,7 +118,7 @@ Como o projeto começou vazio, não existia remoto para executar `git pull`. Um 
 
 Commits pequenos em português, no formato `tipo: descrição no imperativo`, até 72 caracteres, sem assinaturas adicionais. Verifique `git log` antes de cada push. Não altere o autor configurado. O workflow de validação executa typecheck, lint, testes e build.
 
-Entregue a branch para `test`, publique o preview e espere aprovação explícita da etapa inteira. Somente depois de “aprovado”, integre `test` em `main` com `--no-ff`, adicione a linha da etapa aprovada ao CHANGELOG, crie `v0.1.0`, envie a produção e atualize `test` com `main`. Nunca use push forçado em `main`; desfazer com `git revert`.
+Entregue a branch para `test`, publique o preview e espere aprovação explícita da etapa inteira. Somente depois de “aprovado”, integre `test` em `main` com `--no-ff`, adicione a linha da etapa aprovada ao CHANGELOG, crie a tag da etapa aprovada, envie a produção e atualize `test` com `main`. Nunca use push forçado em `main`; desfazer com `git revert`.
 
 ## Publicar gratuitamente na Vercel
 
@@ -147,3 +147,4 @@ Em 06/10/2026, o usuário pediu e aprovou deixar para a etapa 4 um card de resul
 Descanso da etapa 3: painel central obrigatório entre séries e exercícios, mantido aberto após zerar até a ação Continuar. Oferece ±15 segundos, pular/continuar e silenciar; acrescentar tempo após o término começa a contar a partir de agora. Bipes nos últimos 10 segundos e alerta final de aproximadamente 3 segundos; silenciar ou continuar interrompe o som. A última série do treino não inicia descanso. Validar áudio no Safari/iPhone físico.
 
 A migração 4 separa Glúteos e Panturrilhas nos exercícios já cadastrados, preservando IDs e vínculos de fichas/treinos. Descrições próprias de músculos são mantidas. A biblioteca nova e o editor também usam os grupos separados.
+
