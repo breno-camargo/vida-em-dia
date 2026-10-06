@@ -8,7 +8,7 @@ export function Painel({ titulo, fechar, children, centralizado = false, acao, f
   }
   useEffect(() => { ref.current?.showModal(); const estilo = document.body.style.overflow; document.body.style.overflow = 'hidden'; return () => { document.body.style.overflow = estilo } }, [])
   return <dialog ref={ref} className={`painel-modal${centralizado ? ' painel-centralizado' : ''}`} aria-label={titulo} onCancel={e => { if (fechamentoLivre) fechar(); else e.preventDefault() }}>
-    {!centralizado && <button type="button" className="alca-painel" aria-label="Arraste para baixo para fechar o painel" onClick={e => { if (e.detail === 0) fechar() }}
+    <div className="topo-painel">{!centralizado && <button type="button" className="alca-painel" aria-label="Arraste para baixo para fechar o painel" onClick={e => { if (e.detail === 0) fechar() }}
       onPointerDown={e => {
         if (!e.isPrimary || e.button !== 0) return
         e.preventDefault()
@@ -27,7 +27,8 @@ export function Painel({ titulo, fechar, children, centralizado = false, acao, f
         restaurar()
         if (deveFechar) fechar()
       }} onPointerCancel={restaurar} onLostPointerCapture={restaurar}><span aria-hidden="true" /></button>}
-    <header><h2>{titulo}</h2>{acao}{fechamentoLivre && <button type="button" className="botao-icone" onClick={fechar} aria-label="Fechar painel">✕</button>}</header>
+    <header><h2>{titulo}</h2>{acao}{fechamentoLivre && <button type="button" className="botao-icone" onClick={fechar} aria-label="Fechar painel">✕</button>}</header></div>
     <div className="conteudo-modal">{children}</div>
   </dialog>
 }
+
