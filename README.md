@@ -139,3 +139,7 @@ Abra o endereço HTTPS no Safari → Compartilhar → Adicionar à Tela de Iníc
 
 O app solicita `navigator.storage.persist()` sem depender da concessão. A proteção real será instalar, sincronizar e fazer backups. Esta etapa não implementa notificações, timer, som ou Wake Lock; esses recursos pertencem ao modo treino.
 
+
+## Adição aprovada ao planejamento da etapa 4
+
+Em 06/10/2026, o usuário pediu e aprovou deixar para a etapa 4 um card de resultado do treino para compartilhar. Após finalizar uma sessão, oferecer a geração de uma imagem vertical para Stories, com a identidade verde do Vida em Dia e foto opcional. Usar dados reais do treino: nome da ficha, duração, exercícios concluídos, volume total, recordes e calorias estimadas somente quando houver peso cadastrado. Identificar as calorias como estimativa; sem peso, omitir essa informação. Oferecer baixar a imagem ou compartilhar pelo celular. Não publicar automaticamente em redes sociais. Esta adição não deve ser implementada durante a etapa 3. A imagem de referência enviada pelo usuário mostra foto opcional e métricas em um card de conclusão.
