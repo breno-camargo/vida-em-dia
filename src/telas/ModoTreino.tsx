@@ -79,15 +79,16 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
     {itens.map((item, indice) => {
       const ex = exercicios.find(e => e.id === item.exercicio_id)
       const grupo = series.filter(s => s.exercicio_id === item.exercicio_id)
+      const semPeso = grupo.length > 0 && grupo.every(s => s.modo_carga === 'peso_corporal')
       const feitas = grupo.filter(s => s.concluida_em).length
       const resumoReps = [...new Set(grupo.map(s => s.repeticoes))]
       const resumoCargas = [...new Set(grupo.map(s => s.peso_total))]
       return <details className="exercicio-treino exercicio-recolhivel" key={item.id} ref={elemento => { if (elemento) cards.current.set(item.id, elemento); else cards.current.delete(item.id) }}>
-        <summary className="cabecalho-exercicio"><MiniaturaExercicio id={item.exercicio_id} nome={item.nome} abrir={ex ? () => definirAjuda(ex) : undefined} /><span className="resumo-exercicio"><strong>{item.nome}</strong><small>{grupo.length} séries · {resumoReps.length === 1 ? resumoReps[0] : 'várias'} reps · {resumoCargas.length === 1 ? `${resumoCargas[0]} kg` : 'cargas variadas'}</small><small>{feitas}/{grupo.length} concluídas{proxima?.exercicio_id === item.exercicio_id ? ' · Próximo exercício' : ''}</small></span><ChevronDown className="seta-exercicio" size={20} aria-hidden="true" /></summary>
-        <div className="conteudo-exercicio"><Desempenho exercicioId={item.exercicio_id} />
+        <summary className="cabecalho-exercicio"><MiniaturaExercicio id={item.exercicio_id} nome={item.nome} abrir={ex ? () => definirAjuda(ex) : undefined} /><span className="resumo-exercicio"><strong>{item.nome}</strong><small>{grupo.length} séries · {resumoReps.length === 1 ? resumoReps[0] : 'várias'} reps · {semPeso ? 'Peso corporal' : resumoCargas.length === 1 ? `${resumoCargas[0]} kg` : 'cargas variadas'}</small><small>{feitas}/{grupo.length} concluídas{proxima?.exercicio_id === item.exercicio_id ? ' · Próximo exercício' : ''}</small></span><ChevronDown className="seta-exercicio" size={20} aria-hidden="true" /></summary>
+        <div className="conteudo-exercicio"><Desempenho exercicioId={item.exercicio_id} semPeso={semPeso} />
         {ex && <><p className="nota-fixa">{ex.nota_fixa || 'Adicione uma nota fixa na ajuda do exercício.'}</p><button className="botao-secundario" onClick={() => definirAjuda(ex)}>Como fazer ? · editar nota</button></>}
         <SelecionarDescanso valor={item.descanso_segundos} confirmar={async descanso_segundos => { await tabela('treino_exercicios').update(item.id, { descanso_segundos, atualizado_em: new Date().toISOString() }) }} />
-        <div className="cabecalho-series" aria-hidden="true"><span>SÉRIE</span><span>REPS</span><span>KG</span><span>FEITO</span></div>
+        <div className={`cabecalho-series${semPeso ? ' sem-peso' : ''}`} aria-hidden="true"><span>SÉRIE</span><span>REPS</span>{!semPeso && <span>KG</span>}<span>FEITO</span></div>
         {grupo.map((s, i) => <Serie key={`${s.id}-${s.concluida_em ?? 'pendente'}`} serie={s} destaque={s.id === proxima?.id} anterior={grupo[i - 1]} salvar={salvarSerie} concluir={async dados => {
           void tela.manter(); await concluirSerie(dados)
           const recordes = await recordesDoTreino(id, item.exercicio_id)
@@ -156,14 +157,15 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
     {edicao && <EditorExercicio exercicio={edicao} fechar={() => definirEdicao(null)} />}
   </>
 }
-function Desempenho({ exercicioId }: { exercicioId: string }) {
+function Desempenho({ exercicioId, semPeso }: { exercicioId: string; semPeso: boolean }) {
   const dados = useLiveQuery(async () => {
     const ultimas = await ultimasSeries(exercicioId)
     const todas = await tabela('series_treino').where('exercicio_id').equals(exercicioId).filter(s => Boolean(s.concluida_em) && !s.apagado_em && s.tipo !== 'aquecimento').toArray()
     return { ultimas, melhor: Math.max(0, ...todas.map(s => s.peso_total)) }
   }, [exercicioId])
-  return <small className="ultimo-desempenho">{dados?.ultimas.length ? `Último: ${dados.ultimas.map(s => `${s.repeticoes} reps @ ${s.peso_total} kg`).join(' · ')} | Melhor carga: ${dados.melhor} kg` : 'Primeira sessão · preencha peso e repetições'}</small>
+  return <div className="ultimo-desempenho">{dados?.ultimas.length ? <><span>Último treino</span><p>{dados.ultimas.length} séries: {dados.ultimas.map(s => `${s.repeticoes} repetições${s.modo_carga === 'peso_corporal' ? '' : ` com ${s.peso_total.toLocaleString('pt-BR')} kg`}`).join(' · ')}</p>{!semPeso && <small>Maior carga já registrada: {dados.melhor.toLocaleString('pt-BR')} kg</small>}</> : <p>{semPeso ? 'Primeiro treino: registre as repetições de cada série.' : 'Primeiro treino: registre a carga e as repetições de cada série.'}</p>}</div>
 }
+
 
 
 

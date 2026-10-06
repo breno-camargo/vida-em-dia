@@ -1,3 +1,4 @@
+import { exerciciosPesoCorporal } from './pesoCorporal'
 import { banco, tabela } from './banco'
 import { criarRegistro } from './repositorio'
 
@@ -22,7 +23,7 @@ export async function iniciarBiblioteca() {
       for (const nome of nomes) {
         await tabela('exercicios').add({ ...criarRegistro(config.user_id), nome,
           tipo: grupo === 'Cardio' ? 'cardio' : 'forca', grupo_muscular: grupo,
-          equipamento: '', descanso_padrao_segundos: 90, modo_carga: 'total', peso_barra: 20,
+          equipamento: '', descanso_padrao_segundos: 90, modo_carga: exerciciosPesoCorporal.has(nome) ? 'peso_corporal' : 'total', peso_barra: exerciciosPesoCorporal.has(nome) ? 0 : 20,
           nota_fixa: '', como_fazer: '', musculos: grupo, origem: 'manual',
         })
       }
@@ -30,3 +31,4 @@ export async function iniciarBiblioteca() {
     await tabela('configuracoes').put({ ...config, biblioteca_inicializada: true, atualizado_em: new Date().toISOString() })
   })
 }
+

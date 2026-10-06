@@ -1,3 +1,4 @@
+import { exerciciosPesoCorporal } from './pesoCorporal'
 import Dexie, { type Table } from 'dexie'
 import type { Tabelas } from './modelos'
 
@@ -41,5 +42,21 @@ banco.version(4).stores({}).upgrade(async transacao => {
     item.grupo_muscular = grupo
     if (item.musculos === 'Glúteos e panturrilhas') item.musculos = grupo
     item.atualizado_em = atualizado
+  })
+})
+
+banco.version(5).stores({}).upgrade(async transacao => {
+  const atualizado = new Date().toISOString()
+  const ids = new Set<string>()
+  await transacao.table('exercicios').toCollection().modify(item => {
+    if (exerciciosPesoCorporal.has(item.nome) && item.modo_carga === 'total') {
+      item.modo_carga = 'peso_corporal'; item.peso_barra = 0; item.atualizado_em = atualizado; ids.add(item.id)
+    }
+  })
+  const ativos = new Set((await transacao.table('treinos').toArray()).filter(t => !t.fim && !t.apagado_em).map(t => t.id))
+  await transacao.table('series_treino').toCollection().modify(item => {
+    if (ativos.has(item.treino_id) && ids.has(item.exercicio_id) && !item.concluida_em) {
+      item.modo_carga = 'peso_corporal'; item.peso_digitado = 0; item.peso_total = 0; item.peso_barra = 0; item.reducoes = []; item.atualizado_em = atualizado
+    }
   })
 })
