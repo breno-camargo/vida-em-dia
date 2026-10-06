@@ -1,5 +1,5 @@
 import { ListaExercicios } from '../componentes/ListaExercicios'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { banco, tabela } from '../dados/banco'
 import { criarRegistro, repositorio } from '../dados/repositorio'
@@ -16,8 +16,10 @@ import { useTelaLigada } from '../hooks/useTelaLigada'
 import { MiniaturaExercicio } from '../componentes/MiniaturaExercicio'
 import { ChevronDown } from 'lucide-react'
 import { SelecionarDescanso } from '../componentes/SelecionarDescanso'
+import { Painel } from '../componentes/Painel'
 
 export function ModoTreino({ id, online, fechar }: { id: string; online: boolean; fechar: () => void }) {
+  const cards = useRef(new Map<string, HTMLDetailsElement>())
   const treino = useLiveQuery(() => tabela('treinos').get(id), [id])
   const itens = useLiveQuery(() => tabela('treino_exercicios').where('treino_id').equals(id).filter(e => !e.apagado_em).sortBy('ordem'), [id])
   const series = useLiveQuery(() => tabela('series_treino').where('treino_id').equals(id).filter(s => !s.apagado_em).sortBy('numero_serie'), [id])
@@ -30,6 +32,7 @@ export function ModoTreino({ id, online, fechar }: { id: string; online: boolean
     return ultimo ? { volume: volumeSeries(await tabela('series_treino').where('treino_id').equals(ultimo.id).toArray()) } : undefined
   }, [treino?.ficha_id, id])
   const [resumo, definirResumo] = useState(false)
+  const [perguntarFinalizacao, definirPerguntarFinalizacao] = useState(false)
   const [ajuda, definirAjuda] = useState<Exercicio | null>(null)
   const [edicao, definirEdicao] = useState<Exercicio | null>(null)
   const [busca, definirBusca] = useState('')
@@ -72,13 +75,20 @@ export function ModoTreino({ id, online, fechar }: { id: string; online: boolean
       const feitas = grupo.filter(s => s.concluida_em).length
       const resumoReps = [...new Set(grupo.map(s => s.repeticoes))]
       const resumoCargas = [...new Set(grupo.map(s => s.peso_total))]
-      return <details className="exercicio-treino exercicio-recolhivel" key={item.id}>
+      return <details className="exercicio-treino exercicio-recolhivel" key={item.id} ref={elemento => { if (elemento) cards.current.set(item.id, elemento); else cards.current.delete(item.id) }}>
         <summary className="cabecalho-exercicio"><MiniaturaExercicio id={item.exercicio_id} nome={item.nome} abrir={ex ? () => definirAjuda(ex) : undefined} /><span className="resumo-exercicio"><strong>{item.nome}</strong><small>{grupo.length} séries · {resumoReps.length === 1 ? resumoReps[0] : 'várias'} reps · {resumoCargas.length === 1 ? `${resumoCargas[0]} kg` : 'cargas variadas'}</small><small>{feitas}/{grupo.length} concluídas{proxima?.exercicio_id === item.exercicio_id ? ' · Próximo exercício' : ''}</small></span><ChevronDown className="seta-exercicio" size={20} aria-hidden="true" /></summary>
         <div className="conteudo-exercicio"><Desempenho exercicioId={item.exercicio_id} />
         {ex && <><p className="nota-fixa">{ex.nota_fixa || 'Adicione uma nota fixa na ajuda do exercício.'}</p><button className="botao-secundario" onClick={() => definirAjuda(ex)}>Como fazer ? · editar nota</button></>}
         <SelecionarDescanso valor={item.descanso_segundos} confirmar={async descanso_segundos => { await tabela('treino_exercicios').update(item.id, { descanso_segundos, atualizado_em: new Date().toISOString() }) }} />
         <div className="cabecalho-series" aria-hidden="true"><span>SÉRIE</span><span>REPS</span><span>KG</span><span>FEITO</span></div>
-        {grupo.map((s, i) => <Serie key={`${s.id}-${s.concluida_em ?? 'pendente'}`} serie={s} destaque={s.id === proxima?.id} anterior={grupo[i - 1]} salvar={salvarSerie} concluir={async dados => { void tela.manter(); await concluirSerie(dados) }} desfazer={async () => {
+        {grupo.map((s, i) => <Serie key={`${s.id}-${s.concluida_em ?? 'pendente'}`} serie={s} destaque={s.id === proxima?.id} anterior={grupo[i - 1]} salvar={salvarSerie} concluir={async dados => {
+          void tela.manter(); await concluirSerie(dados)
+          const pendentes = await tabela('series_treino').where('[treino_id+exercicio_id]').equals([id, item.exercicio_id]).filter(serie => !serie.apagado_em && !serie.concluida_em).count()
+          const card = cards.current.get(item.id)
+          if (pendentes === 0 && card) card.open = false
+          const pendentesTreino = await tabela('series_treino').where('treino_id').equals(id).filter(serie => !serie.apagado_em && !serie.concluida_em).count()
+          if (pendentesTreino === 0) definirPerguntarFinalizacao(true)
+        }} desfazer={async () => {
           await banco.transaction('rw', tabela('series_treino'), tabela('treinos'), async () => { await tabela('series_treino').update(s.id, { concluida_em: undefined, atualizado_em: new Date().toISOString() }); await atualizarDescanso(null) })
         }} aplicarProximas={aplicarValoresProximas} remover={async () => {
           await banco.transaction('rw', tabela('series_treino'), tabela('treinos'), async () => { await repositorio('series_treino').apagar(s.id); await atualizarDescanso(null) })
@@ -119,6 +129,7 @@ export function ModoTreino({ id, online, fechar }: { id: string; online: boolean
       await tabela('treinos').update(id, { ficha_id: nova.id, atualizado_em: new Date().toISOString() })
     })}>Salvar ficha</button></div></details>}
     <button className="botao-principal largura-total" onClick={() => definirResumo(true)}>Ver resumo e finalizar</button><button className="botao-secundario" onClick={fechar}>Voltar · continuar depois</button>
+    {perguntarFinalizacao && <Painel titulo="Todas as séries concluídas!" fechar={() => definirPerguntarFinalizacao(false)}><p className="subtitulo-seletor">Você concluiu todos os exercícios. Quer finalizar o treino?</p><button type="button" className="botao-principal largura-total" onClick={() => { definirPerguntarFinalizacao(false); definirResumo(true) }}>Ver resumo e finalizar</button><button type="button" className="botao-secundario" onClick={() => definirPerguntarFinalizacao(false)}>Continuar treino</button></Painel>}
     {ajuda && <AjudaExercicio exercicio={ajuda} online={online} fechar={() => definirAjuda(null)} editar={() => { definirEdicao(ajuda); definirAjuda(null) }} />}
     {edicao && <EditorExercicio exercicio={edicao} fechar={() => definirEdicao(null)} />}
   </>
