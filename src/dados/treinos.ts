@@ -2,7 +2,7 @@ import { banco, tabela } from './banco'
 import { criarRegistro } from './repositorio'
 import type { Exercicio, SerieTreino, Treino, TreinoExercicio } from './modelos'
 import { dataLocal } from '../utilitarios/data'
-import { cargaTotal, validarSerie } from '../utilitarios/treino'
+import { cargaTotal, validarSerie, caloriasMusculacao } from '../utilitarios/treino'
 
 export async function treinoAtivo() { return tabela('treinos').filter(t => !t.fim && !t.apagado_em).first() }
 export async function ultimasSeries(exercicio_id: string) {
@@ -24,9 +24,26 @@ export async function montarExercicio(treino: Treino, ex: Exercicio, quantidade:
   })
   await tabela('series_treino').bulkAdd(series)
 }
-export async function iniciarTreino(ficha_id?: string) {
+export async function iniciarTreino(ficha_id?: string, encerrarAtual = false) {
   return banco.transaction('rw', banco.tables, async () => {
-    const ativo = await treinoAtivo(); if (ativo) return ativo.id
+    const ativo = await treinoAtivo()
+    if (ativo) {
+      if (ativo.ficha_id === ficha_id) return ativo.id
+      const itensAtivos = await tabela('treino_exercicios').where('treino_id').equals(ativo.id).filter(i => !i.apagado_em).count()
+      const seriesAtivas = await tabela('series_treino').where('treino_id').equals(ativo.id).filter(s => !s.apagado_em).count()
+      if (!ativo.ficha_id && itensAtivos === 0 && seriesAtivas === 0 && !ativo.observacao.trim()) {
+        const agora = new Date().toISOString()
+        await tabela('treinos').update(ativo.id, { apagado_em: agora, atualizado_em: agora })
+      } else if (encerrarAtual) {
+        const fim = new Date().toISOString()
+        const minutos = Math.max(0, Math.round((Date.parse(fim) - Date.parse(ativo.inicio)) / 60000))
+        const medidas = await tabela('medidas_corporais').filter(m => !m.apagado_em && Boolean(m.peso)).sortBy('data')
+        const peso = medidas.at(-1)?.peso
+        await tabela('treinos').update(ativo.id, { fim, duracao_minutos: minutos, peso_corporal: peso, calorias: peso ? caloriasMusculacao(peso, minutos) : 0, descanso_fim: null, atualizado_em: fim })
+      } else {
+        throw new Error(`Há um treino em andamento: ${ativo.titulo ?? 'Treino anterior'}. Use “Continuar treino” e finalize-o antes de iniciar outro.`)
+      }
+    }
     const ficha = ficha_id ? await tabela('fichas').get(ficha_id) : undefined
     if (ficha_id && (!ficha || ficha.apagado_em)) throw new Error('Esta ficha não está disponível.')
     const novo: Treino = { ...criarRegistro(ficha?.user_id), titulo: ficha?.nome ?? 'Treino livre', ficha_id, data: dataLocal(), inicio: new Date().toISOString(), observacao: '' }

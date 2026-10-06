@@ -18,7 +18,7 @@ import { ChevronDown, Plus, ClipboardPlus } from 'lucide-react'
 import { SelecionarDescanso } from '../componentes/SelecionarDescanso'
 import { Painel } from '../componentes/Painel'
 
-export function ModoTreino({ id, online, fechar }: { id: string; online: boolean; fechar: () => void }) {
+export function ModoTreino({ id, online, fechar, abrirResumo = false }: { id: string; online: boolean; fechar: () => void; abrirResumo?: boolean }) {
   const cards = useRef(new Map<string, HTMLDetailsElement>())
   const treino = useLiveQuery(() => tabela('treinos').get(id), [id])
   const itens = useLiveQuery(() => tabela('treino_exercicios').where('treino_id').equals(id).filter(e => !e.apagado_em).sortBy('ordem'), [id])
@@ -31,7 +31,7 @@ export function ModoTreino({ id, online, fechar }: { id: string; online: boolean
     const ultimo = anteriores.at(-1)
     return ultimo ? { volume: volumeSeries(await tabela('series_treino').where('treino_id').equals(ultimo.id).toArray()) } : undefined
   }, [treino?.ficha_id, id])
-  const [resumo, definirResumo] = useState(false)
+  const [resumo, definirResumo] = useState(abrirResumo)
   const [perguntarFinalizacao, definirPerguntarFinalizacao] = useState(false)
   const [ajuda, definirAjuda] = useState<Exercicio | null>(null)
   const [edicao, definirEdicao] = useState<Exercicio | null>(null)
