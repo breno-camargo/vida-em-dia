@@ -4,7 +4,7 @@ import { beforeEach, expect, test } from 'vitest'
 import { banco, tabela } from './banco'
 import { iniciarBanco } from './configuracoes'
 import { iniciarBiblioteca } from './biblioteca'
-import { iniciarTreino, treinoAtivo, concluirSerie } from './treinos'
+import { iniciarTreino, treinoAtivo, concluirSerie, aplicarValoresProximas } from './treinos'
 import { criarRegistro } from './repositorio'
 import { salvarFicha } from './fichas'
 import { cargaTotal, volumeSeries, segundosRestantes } from '../utilitarios/treino'
@@ -57,6 +57,18 @@ test('preencha a próxima sessão com o desempenho da última sessão finalizada
 test('calcule tempo pelo término mesmo após suspender a execução', () => {
   expect(segundosRestantes('2026-10-05T12:00:00Z', Date.parse('2026-10-05T12:00:20Z'))).toBe(-20)
   expect(cargaTotal(30, 'por_lado', 20)).toBe(80)
+})
+test('aplique valores às próximas séries pendentes sem alterar as concluídas', async () => {
+  const { ficha } = await preparar(); const id = await iniciarTreino(ficha.id)
+  const series = await tabela('series_treino').where('treino_id').equals(id).sortBy('numero_serie')
+  await concluirSerie({ ...series[1], peso_digitado: 10, repeticoes: 8 })
+  const extra = { ...series[0], ...criarRegistro(), numero_serie: 3 }
+  await tabela('series_treino').add(extra)
+  await aplicarValoresProximas({ ...series[0], peso_digitado: 25, repeticoes: 12, modo_carga: 'por_lado', peso_barra: 20 })
+  expect((await tabela('series_treino').get(extra.id))?.peso_total).toBe(70)
+  expect((await tabela('series_treino').get(extra.id))?.repeticoes).toBe(12)
+  expect((await tabela('series_treino').get(series[1].id))?.peso_total).toBe(10)
+  expect((await tabela('series_treino').get(series[1].id))?.repeticoes).toBe(8)
 })
 test('preserve sessões e cargas anteriores ao migrar a versão 2 para 3', async () => {
   const schema = Object.fromEntries(banco.tables.filter(t => t.name !== 'treino_exercicios').map(t => [t.name, [t.schema.primKey.src, ...t.schema.indexes.map(i => i.src)].join(', ')]))
