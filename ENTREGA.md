@@ -25,6 +25,7 @@ A Vercel acompanha main em produção. Não use --prod na homologação. Abra o 
 3. Conclua, ajuste descanso, bloqueie por 20 s e volte: o tempo deve estar correto.
 4. Confira áudio após o primeiro toque, silêncio e alerta visual. A última série não inicia descanso.
 5. Teste aquecimento (fora do volume), falha, drop set com reduções e RPE.
+   Toque no número da série para abrir os tipos e em reps/kg para selecionar por rolagem. Confirme os valores, aplique às próximas pendentes e confira que as concluídas não mudam. Teste o descanso por rolagem em 30, 45, 60, 90 e 120 s e confira remover série/Desfazer.
 6. Edite/desfaça uma conclusão, copie a anterior e acrescente série extra.
 7. Feche e reabra: Continuar treino deve preservar séries e descanso.
 8. Adicione/remova/reordene exercícios do dia e confirme que a ficha original não mudou.
