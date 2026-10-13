@@ -1,28 +1,19 @@
-# Etapa 5 — pronta para homologação
+# Entrega da etapa 5
 
-Etapas 1 a 4 aprovadas e produção verificada em v0.4.0. Etapa 5 implementada na branch etapa-5-medidas-peso e integrada em test. Aguarda validação no iPhone e aprovação do usuário antes de atualizar main e criar v0.5.0.
+Etapa 5 aprovada pelo usuário em 12/10/2026, após o checklist de homologação. Versão 0.5.0 preparada para produção.
 
-Para publicar a prévia no terminal autenticado:
+Peso e medidas em seletores de rolagem; registros parciais por data, edição e remoção reversível; comparação antes/depois; resumo de todas as medidas e gráfico recolhido com escolha por rolagem; lembrete semanal dentro do app, padrão sábado; cálculo de calorias dos próximos treinos com o último peso cadastrado e o tempo real.
+
+Para publicar no terminal autenticado do usuário, na branch main:
 
 ```cmd
-git push origin etapa-5-medidas-peso
+git push origin main
+git push origin v0.5.0
+npx vercel --prod
+git switch test
 git push origin test
-npx vercel
 ```
 
-Checklist:
+Próxima etapa: 6, cardio e atividade diária. Fotos de progresso ficam para a etapa 11; meta de peso e IMC para a etapa 12. Chat alimentar planejado para a etapa 9, com servidor/conta da etapa 8. Integração Saúde/Redmi Watch 5 Lite permanece como evolução futura separada.
 
-- Registrar apenas peso, salvar e reabrir; conferir persistência e ausência de zeros nos demais campos.
-- Registrar apenas uma medida em outra data; editar e remover um valor opcional.
-- Seletores de peso, medidas e data: confirmar salva no rascunho; fechar sem confirmar mantém anterior. Fechar formulário sem Salvar não cria registro.
-- Não permitir formulário vazio, data futura/impossível ou duplicidade na mesma data; editar o registro já existente.
-- Histórico: abrir/recolher, editar, excluir e desfazer.
-- Comparar duas datas: conferir antes/depois e diferenças; campo ausente vira traço, não zero.
-- Resumo com peso próprio e todas as medidas na grade, cada uma com último valor e data. Abrir o gráfico recolhido, selecionar qualquer medida por rolagem e conferir valores por sessão.
-- Configurar lembrete para hoje; sem registro nesta semana, Hoje mostra Registrar agora. Cadastrar peso ou medida nesta semana remove o aviso.
-- Finalizar um novo treino com peso cadastrado e conferir estimativa de calorias. Treinos antigos preservam estimativas já registradas.
-- Offline no iPhone: registrar, editar, consultar e comparar; testar rolagem, alça e botões.
-
-Fora desta etapa: fotos (11), meta de peso e IMC (12). Produção não alterada.
-`typecheck`, lint, 34 testes e build passaram. A validação visual e dos gestos no iPhone está pendente de homologação pelo usuário.
-
+Validação final: TypeScript, lint, 35 testes e build. Publicação remota pendente dos comandos acima.

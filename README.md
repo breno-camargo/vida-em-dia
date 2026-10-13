@@ -4,7 +4,7 @@ PWA pessoal de treino, cardio, medidas, alimentação e saúde. Interface em por
 
 ## Estado do projeto
 
-ETAPAS 1, 2 e 3 aprovadas (v0.1.0, v0.2.0 e v0.3.0), mantendo o verde original. O usuário validou a etapa 3 no iPhone e aprovou a conclusão em 06/10/2026. ETAPA 4 aprovada em 06/10/2026 (v0.4.0), após validação do checklist pelo usuário e correção final do vazamento no painel do card. ETAPA 5 implementada para homologação em test, aguardando aprovação. As etapas 6 a 14 não foram implementadas.
+ETAPAS 1, 2 e 3 aprovadas (v0.1.0, v0.2.0 e v0.3.0), mantendo o verde original. O usuário validou a etapa 3 no iPhone e aprovou a conclusão em 06/10/2026. ETAPA 4 aprovada em 06/10/2026 (v0.4.0), após validação do checklist pelo usuário e correção final do vazamento no painel do card. ETAPA 5 aprovada pelo usuário em 12/10/2026 (v0.5.0). As etapas 6 a 14 não foram implementadas.
 
 Inclui React, TypeScript, Vite, Tailwind, Dexie, cinco abas, tema escuro, configurações informativas, ícones, manifest e service worker. Já há registro local de treinos. Login, sincronização e backup chegam nas próximas etapas. O modo claro chega na etapa 13.
 
@@ -160,7 +160,7 @@ O editor do exercício permite ajustar o alvo de reps (padrão 12). Se todas as 
 
 Após finalizar, a lista de fichas oferece Gerar card para compartilhar para o último treino. Qualquer treino do histórico também oferece Compartilhar. O card PNG vertical 1080 × 1920 inclui foto opcional, nome, data, duração, volume, exercícios, séries, recordes e grupos. Calorias aparecem como estimativa quando há peso registrado; caso contrário, aparece um traço. A foto fica apenas em memória para este card, sem cadastro permanente (galeria de progresso na etapa 11). A imagem é gerada no aparelho, sem serviço externo. Compartilhar usa o menu nativo quando suportado; Baixar imagem permite salvar e publicar manualmente. Não há publicação automática em redes sociais.
 
-Typecheck, lint, 25 testes e build passaram. Falta validar no iPhone: gráfico/toque, card com foto, download e compartilhamento, incluindo funcionamento offline. Main continua na versão aprovada v0.3.0; nenhuma tag v0.4.0 foi criada.
+Etapa 4 aprovada pelo usuário em 06/10/2026, com checklist e correção do painel do card validados. v0.4.0 publicada e verificada em 12/10/2026.
 
 ### Tutorial de primeiro acesso — planejado para a etapa 13
 
@@ -174,7 +174,7 @@ Preferência definida em 06/10/2026: todos os seletores devem seguir o padrão v
 
 
 
-## Etapa 5 — medidas e peso (em homologação)
+## Etapa 5 — medidas e peso (aprovada em 12/10/2026)
 
 Registro parcial por data: peso (kg), bíceps direito/esquerdo, coxa direita/esquerda, cintura, abdômen, quadril e panturrilha direita/esquerda (cm). Todos os campos e a data usam seletores de rolagem com confirmação. Os valores entram num rascunho; apenas Salvar registra o formulário inteiro. Campos vazios permanecem ausentes. Precisão de 0,1; peso até 400 kg e medidas até 300 cm. Registro exige ao menos um valor e data real, até hoje; um registro ativo por data, com edição e exclusão reversível.
 
@@ -182,7 +182,7 @@ Histórico recolhido por data, comparação de duas datas com diferença neutra 
 
 Lembrete na tela Hoje, padrão sábado, configurável nas Configurações por rolagem. A semana vai de segunda a domingo; o aviso aparece a partir do dia escolhido e desaparece quando existe qualquer registro de medidas na semana. Sem push. Registrar agora abre diretamente o formulário. Dados locais em Dexie, inclusive gráficos e histórico offline. O schema existente já contém medidas e dia do lembrete; não há mudança de schema nesta etapa.
 
-Fotos de progresso ficam para a etapa 11; meta de peso e IMC para a etapa 12. Main/tag permanecem v0.4.0 até aprovação da etapa 5. A apresentação visual no iPhone deve ser validada pelo usuário.
+Fotos de progresso ficam para a etapa 11; meta de peso e IMC para a etapa 12. Checklist da etapa 5 aprovado pelo usuário em 12/10/2026. Versão 0.5.0 preparada para publicação. TypeScript, lint, 35 testes e build validados.
 
 
 ### Evoluções acordadas em 12/10/2026
@@ -190,4 +190,5 @@ Fotos de progresso ficam para a etapa 11; meta de peso e IMC para a etapa 12. Ma
 - Integração com Saúde do iPhone: manter como evolução futura separada, sem adicionar componentes nativos nesta etapa. Preparar futuramente uma versão iOS com Capacitor e ponte HealthKit, reutilizando a interface existente. Dispositivo do usuário: Redmi Watch 5 Lite, via Mi Fitness. Caminho a verificar no aparelho: relógio → Mi Fitness → Saúde → Vida em Dia, apenas para dados efetivamente disponibilizados e autorizados. O usuário tem Windows e pode ter acesso ao Mac do cunhado para compilar e testar com Xcode. A PWA segue funcionando como hoje; passos/calorias manuais permanecem no escopo da etapa 6.
 - Chat de alimentação: incluir no planejamento da etapa 9, quando o diário alimentar for implementado, dependendo da estrutura de conta/servidor da etapa 8. Conversa por texto para relatar refeições ao longo do dia, perguntar porções quando faltarem, estimar kcal e nutrientes e pedir confirmação antes de salvar. Cálculos devem ser identificados como estimativas. Chaves de API apenas no servidor; avaliar provedor, custo e limites antes de implementar. Chat exige internet; o diário e registros locais devem continuar disponíveis offline. Fotos/voz não estão automaticamente incluídas nessa autorização.
 
-Continuar o roteiro atual: etapa 5 em homologação, sem antecipar a implementação das evoluções acima.
+Continuar o roteiro atual: etapa 5 aprovada; etapa 6 é a próxima. As evoluções acima permanecem planejadas.
+
