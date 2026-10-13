@@ -7,7 +7,7 @@ import { caloriasCardio, novoCardio, salvarCardio, velocidadeCardio, ritmoCardio
 import { feriadosNacionais, iniciarFeriados, salvarAtividade, tipoDia } from './atividade'
 import { salvarMedida } from './medidas'
 import { iniciarBiblioteca } from './biblioteca'
-import { iniciarTreino, completarCardioDaFicha, concluirSerie } from './treinos'
+import { iniciarTreino, completarCardioDaFicha, concluirSerie, adicionarExercicio } from './treinos'
 import { salvarFicha } from './fichas'
 beforeEach(async()=>{await banco.delete();await banco.open();await iniciarBanco()})
 test('calcule velocidade e ritmo sem inventar distância ou passos',()=>{
@@ -115,3 +115,40 @@ test('inclua cardio da ficha ao retomar sem duplicar nem alterar séries já fei
  expect((await tabela('treino_exercicios').where('treino_id').equals(id).filter(i=>!i.apagado_em).toArray()).filter(i=>i.tipo==='cardio')).toHaveLength(0)
 })
 
+
+
+test('retire cardio não registrado removido da ficha e preserve adições só do dia',async()=>{
+ await iniciarBiblioteca()
+ const exercicios=await tabela('exercicios').toArray(),forca=exercicios.find(e=>e.tipo==='forca')!,escada=exercicios.find(e=>e.nome==='Escada')!,esteira=exercicios.find(e=>e.nome==='Esteira')!,bike=exercicios.find(e=>e.nome==='Bicicleta ergométrica')!
+ const ficha={...criarRegistro(),nome:'Atualizar cardio',ordem:0}
+ const item=(exercicio_id:string,ordem:number)=>({...criarRegistro(),ficha_id:ficha.id,exercicio_id,ordem,series_planejadas:3,descanso_segundos:90})
+ const f=item(forca.id,0),c=item(escada.id,1),e=item(esteira.id,2)
+ await salvarFicha(ficha,[f,c])
+ const id=await iniciarTreino(ficha.id),treino=(await tabela('treinos').get(id))!
+ await adicionarExercicio(treino,bike)
+ const antiga=(await tabela('treino_exercicios').where('treino_id').equals(id).filter(i=>i.exercicio_id===escada.id).first())!
+ await tabela('treino_exercicios').update(antiga.id,{origem_ficha:undefined})
+ await salvarFicha(ficha,[f,e])
+ await iniciarTreino(ficha.id)
+ const ativos=await tabela('treino_exercicios').where('treino_id').equals(id).filter(i=>!i.apagado_em).toArray()
+ expect(ativos.map(i=>i.exercicio_id)).toContain(esteira.id)
+ expect(ativos.map(i=>i.exercicio_id)).toContain(bike.id)
+ expect(ativos.map(i=>i.exercicio_id)).not.toContain(escada.id)
+ expect(await tabela('series_treino').where('treino_id').equals(id).count()).toBe(3)
+ await salvarFicha(ficha,[f,c,e]);await completarCardioDaFicha(id)
+ expect(await tabela('treino_exercicios').where('treino_id').equals(id).filter(i=>i.exercicio_id===escada.id&&!i.apagado_em).count()).toBe(1)
+})
+
+test('preserve cardio já registrado quando o planejamento da ficha mudar',async()=>{
+ await iniciarBiblioteca()
+ const exercicios=await tabela('exercicios').toArray(),forca=exercicios.find(e=>e.tipo==='forca')!,escada=exercicios.find(e=>e.nome==='Escada')!
+ const ficha={...criarRegistro(),nome:'Preservar cardio',ordem:0}
+ const f={...criarRegistro(),ficha_id:ficha.id,exercicio_id:forca.id,ordem:0,series_planejadas:3,descanso_segundos:90}
+ await salvarFicha(ficha,[f,{...criarRegistro(),ficha_id:ficha.id,exercicio_id:escada.id,ordem:1,series_planejadas:3,descanso_segundos:90}])
+ const id=await iniciarTreino(ficha.id),treino=(await tabela('treinos').get(id))!
+ const s={...novoCardio('escada',id,treino.data),exercicio_id:escada.id,duracao_minutos:15,calorias_informadas:100}
+ await salvarCardio(s)
+ await salvarFicha(ficha,[f]);await completarCardioDaFicha(id)
+ expect((await tabela('cardio_sessoes').get(s.id))?.calorias_informadas).toBe(100)
+ expect(await tabela('treino_exercicios').where('treino_id').equals(id).filter(i=>i.exercicio_id===escada.id&&!i.apagado_em).count()).toBe(1)
+})
