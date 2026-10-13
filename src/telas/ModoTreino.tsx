@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { banco, tabela } from '../dados/banco'
 import { criarRegistro, repositorio } from '../dados/repositorio'
-import { descartarTreinoLivreVazio, adicionarExercicio, concluirSerie, ultimasSeries, aplicarValoresProximas } from '../dados/treinos'
+import { completarCardioDaFicha, descartarTreinoLivreVazio, adicionarExercicio, concluirSerie, ultimasSeries, aplicarValoresProximas } from '../dados/treinos'
 import { salvarFicha } from '../dados/fichas'
 import type { Exercicio, SerieTreino } from '../dados/modelos'
 import { cargaTotal, validarSerie, volumeSeries } from '../utilitarios/treino'
@@ -52,6 +52,7 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
   const [edicao, definirEdicao] = useState<Exercicio | null>(null)
   const [busca, definirBusca] = useState('')
   const [erro, definirErro] = useState('')
+  useEffect(() => { let ativo = true; void completarCardioDaFicha(id).catch(() => { if (ativo) definirErro('Não foi possível carregar o cardio da ficha.') }); return () => { ativo = false } }, [id])
   const [ocupado, definirOcupado] = useState(false)
   const [removido, definirRemovido] = useState<{ desfazer: () => Promise<void> } | null>(null)
   const [nomeFicha, definirNomeFicha] = useState('')
@@ -182,6 +183,7 @@ function Desempenho({ exercicioId, semPeso }: { exercicioId: string; semPeso: bo
   }, [exercicioId])
   return <div className="ultimo-desempenho">{dados?.ultimas.length ? <><span>Último treino</span><p>{dados.ultimas.length} séries: {dados.ultimas.map(s => `${s.repeticoes} repetições${s.modo_carga === 'peso_corporal' ? '' : ` com ${s.peso_total.toLocaleString('pt-BR')} kg`}`).join(' · ')}</p>{!semPeso && <small>Maior carga já registrada: {dados.melhor.toLocaleString('pt-BR')} kg</small>}</> : <p>{semPeso ? 'Primeiro treino: registre as repetições de cada série.' : 'Primeiro treino: registre a carga e as repetições de cada série.'}</p>}</div>
 }
+
 
 
 

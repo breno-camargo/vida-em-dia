@@ -37,11 +37,28 @@ export async function montarExercicio(treino: Treino, ex: Exercicio, quantidade:
   })
   await tabela('series_treino').bulkAdd(series)
 }
+export async function completarCardioDaFicha(id: string) {
+  await banco.transaction('rw', banco.tables, async () => {
+    const treino = await tabela('treinos').get(id)
+    if (!treino?.ficha_id || treino.fim || treino.apagado_em) return
+    const ficha = await tabela('fichas').get(treino.ficha_id)
+    if (!ficha || ficha.apagado_em) return
+    const planejamento = await tabela('ficha_exercicios').where('ficha_id').equals(treino.ficha_id).filter(i => !i.apagado_em).sortBy('ordem')
+    // Inclua removidos na verificação para respeitar retiradas feitas só neste treino.
+    const existentes = await tabela('treino_exercicios').where('treino_id').equals(id).toArray()
+    let ordem = Math.max(-1, ...existentes.map(i => i.ordem)) + 1
+    for (const item of planejamento) {
+      if (existentes.some(i => i.exercicio_id === item.exercicio_id)) continue
+      const ex = await tabela('exercicios').get(item.exercicio_id)
+      if (ex?.tipo === 'cardio' && !ex.apagado_em) await montarExercicio(treino, ex, 0, ordem++, item.descanso_segundos)
+    }
+  })
+}
 export async function iniciarTreino(ficha_id?: string, encerrarAtual = false) {
   return banco.transaction('rw', banco.tables, async () => {
     const ativo = await treinoAtivo()
     if (ativo) {
-      if (ativo.ficha_id === ficha_id) return ativo.id
+      if (ativo.ficha_id === ficha_id) { await completarCardioDaFicha(ativo.id); return ativo.id }
       const itensAtivos = await tabela('treino_exercicios').where('treino_id').equals(ativo.id).filter(i => !i.apagado_em).count()
       const seriesAtivas = await tabela('series_treino').where('treino_id').equals(ativo.id).filter(s => !s.apagado_em).count()
       if (!ativo.ficha_id && itensAtivos === 0 && seriesAtivas === 0 && !ativo.observacao.trim()) {

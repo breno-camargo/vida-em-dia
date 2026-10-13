@@ -7,7 +7,7 @@ import { caloriasCardio, novoCardio, salvarCardio, velocidadeCardio, ritmoCardio
 import { feriadosNacionais, iniciarFeriados, salvarAtividade, tipoDia } from './atividade'
 import { salvarMedida } from './medidas'
 import { iniciarBiblioteca } from './biblioteca'
-import { iniciarTreino } from './treinos'
+import { iniciarTreino, completarCardioDaFicha, concluirSerie } from './treinos'
 import { salvarFicha } from './fichas'
 beforeEach(async()=>{await banco.delete();await banco.open();await iniciarBanco()})
 test('calcule velocidade e ritmo sem inventar distância ou passos',()=>{
@@ -93,3 +93,25 @@ test('abra ficha de cardio sem criar séries de força',async()=>{
  expect(await tabela('series_treino').where('treino_id').equals(id).count()).toBe(0)
  expect((await tabela('treino_exercicios').where('treino_id').equals(id).first())?.tipo).toBe('cardio')
 })
+
+
+test('inclua cardio da ficha ao retomar sem duplicar nem alterar séries já feitas',async()=>{
+ await iniciarBiblioteca()
+ const exercicios=await tabela('exercicios').toArray(),forca=exercicios.find(e=>e.tipo==='forca')!,cardio=exercicios.find(e=>e.nome==='Esteira')!
+ const ficha={...criarRegistro(),nome:'Retomar',ordem:0}
+ const item={...criarRegistro(),ficha_id:ficha.id,exercicio_id:forca.id,ordem:0,series_planejadas:3,descanso_segundos:90}
+ await salvarFicha(ficha,[item])
+ const id=await iniciarTreino(ficha.id),serie=(await tabela('series_treino').where('treino_id').equals(id).first())!
+ await concluirSerie({...serie,peso_digitado:5,repeticoes:12})
+ const antes=await tabela('series_treino').where('treino_id').equals(id).toArray()
+ await salvarFicha(ficha,[item,{...criarRegistro(),ficha_id:ficha.id,exercicio_id:cardio.id,ordem:1,series_planejadas:3,descanso_segundos:90}])
+ expect(await iniciarTreino(ficha.id)).toBe(id)
+ await Promise.all([completarCardioDaFicha(id),completarCardioDaFicha(id)])
+ const planos=await tabela('treino_exercicios').where('treino_id').equals(id).toArray()
+ expect(planos.filter(i=>i.tipo==='cardio')).toHaveLength(1)
+ expect(await tabela('series_treino').where('treino_id').equals(id).toArray()).toEqual(antes)
+ await repositorio('treino_exercicios').apagar(planos.find(i=>i.tipo==='cardio')!.id)
+ await completarCardioDaFicha(id)
+ expect((await tabela('treino_exercicios').where('treino_id').equals(id).filter(i=>!i.apagado_em).toArray()).filter(i=>i.tipo==='cardio')).toHaveLength(0)
+})
+
