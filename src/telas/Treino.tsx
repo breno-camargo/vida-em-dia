@@ -1,3 +1,4 @@
+import { Cardio } from './Cardio'
 import { MiniaturaExercicio } from '../componentes/MiniaturaExercicio'
 import { useId, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -25,7 +26,7 @@ export function Treino({ online }: { online: boolean }) {
   const [sessao, definirSessao] = useState<string | null>(null)
   const [abrirResumo, definirAbrirResumo] = useState(false)
   const [novoPedido, definirNovoPedido] = useState<{ fichaId?: string } | null>(null)
-  const [secao, definirSecao] = useState<'fichas' | 'biblioteca'>('fichas')
+  const [secao, definirSecao] = useState<'fichas' | 'biblioteca' | 'cardio'>('fichas')
   const [busca, definirBusca] = useState('')
   const acordeaoBiblioteca = useId()
   const [edicao, definirEdicao] = useState<Exercicio | null>(null)
@@ -70,7 +71,8 @@ export function Treino({ online }: { online: boolean }) {
   if (sessao) return <ModoTreino id={sessao} online={online} abrirResumo={abrirResumo} fechar={() => void executar(async () => { await descartarTreinoLivreVazio(sessao); definirSessao(null); definirAbrirResumo(false) })} concluido={id => { definirSessao(null); definirAbrirResumo(false); definirCardFinalizado(id) }} />
   return <>
     {ativo && <section className="retomar-treino"><span className="etiqueta">SEU TREINO ESTÁ SALVO</span><h2>{ativo.titulo ?? 'Treino livre'}</h2><button onClick={() => definirSessao(ativo.id)}>Continuar treino <ArrowRight size={20} /></button></section>}
-    <div className="abas-treino"><button aria-pressed={secao === 'fichas'} onClick={() => definirSecao('fichas')}>Minhas fichas</button><button aria-pressed={secao === 'biblioteca'} onClick={() => definirSecao('biblioteca')}>Exercícios ({exercicios.length})</button></div>
+    <div className="abas-treino tres-abas"><button aria-pressed={secao === 'fichas'} onClick={() => definirSecao('fichas')}>Minhas fichas</button><button aria-pressed={secao === 'biblioteca'} onClick={() => definirSecao('biblioteca')}>Exercícios ({exercicios.length})</button><button aria-pressed={secao === 'cardio'} onClick={() => definirSecao('cardio')}>Cardio</button></div>
+    {secao === 'cardio' && <Cardio />}
     {secao === 'fichas' && ultimoFinalizado && <section className="ultimo-concluido"><span>Último treino concluído</span><strong>{ultimoFinalizado.titulo ?? 'Treino livre'}</strong><button className="botao-secundario" onClick={() => definirCardFinalizado(ultimoFinalizado.id)}><Image size={18} aria-hidden="true" />Ver Card<ArrowRight size={16} aria-hidden="true" /></button></section>}
     {erro && <p role="alert" className="erro">{erro}</p>}
     {desfazer && <div className="desfazer" role="status">{desfazer.texto}<button disabled={ocupado} onClick={() => void executar(async () => { await desfazer.executar(); definirDesfazer(null) })}>Desfazer</button></div>}
@@ -84,7 +86,7 @@ export function Treino({ online }: { online: boolean }) {
         <button disabled={ocupado} onClick={() => void executar(() => removerFicha(item))}>Excluir</button>
       </div></details></div><button className="iniciar-ficha" disabled={ocupado} onClick={() => void executar(async () => { await iniciar(item.id) })}><Play size={16} />Iniciar treino <ArrowRight size={18} /></button></section>)}
       <button className="treino-livre" disabled={ocupado} onClick={() => void executar(async () => { await iniciar() })}><Plus size={20} /><span>Treino livre<small>Monte seu treino do dia</small></span><ArrowRight size={18} /></button>
-    </> : <>
+    </> : secao === 'biblioteca' ? <>
       <div className="formulario"><label>Buscar exercício<input type="search" value={busca} onChange={e => definirBusca(e.target.value)} placeholder="Nome ou equipamento" /></label>
       </div>
       <button className="botao-principal largura-total" onClick={() => definirEdicao({ ...criarRegistro(), nome: '', tipo: 'forca', grupo_muscular: '', equipamento: '', descanso_padrao_segundos: 90, modo_carga: 'total', peso_barra: 20, nota_fixa: '', como_fazer: '', musculos: '', origem: 'manual' })}>Adicionar exercício</button>
@@ -99,7 +101,7 @@ export function Treino({ online }: { online: boolean }) {
         })}>Excluir</button></div>
       </section>)}</div></details>)}</div>
       {filtrados.length === 0 && <p className="nota">Nenhum exercício encontrado. Tente outro nome ou adicione o seu.</p>}
-    </>}
+    </> : null}
     {novoPedido && <Painel centralizado titulo="Já existe um treino em andamento" fechar={() => definirNovoPedido(null)}><p className="subtitulo-seletor">Você pode concluir o atual ou salvar seu andamento e iniciar o treino escolhido. Séries pendentes não serão marcadas como feitas.</p><button type="button" className="botao-principal largura-total" disabled={ocupado} onClick={() => void executar(async () => { const atual = await treinoAtivo(); definirNovoPedido(null); if (atual) { definirAbrirResumo(true); definirSessao(atual.id) } })}>Concluir treino atual</button><button type="button" className="botao-secundario" disabled={ocupado} onClick={() => void executar(async () => { const id = await iniciarTreino(novoPedido.fichaId, true); definirNovoPedido(null); definirAbrirResumo(false); definirSessao(id) })}>Salvar atual e iniciar outro</button>{erro && <p className="erro" role="alert">{erro}</p>}</Painel>}
     {edicao && <EditorExercicio exercicio={edicao} fechar={() => definirEdicao(null)} />}
     {cardFinalizado && <CompartilharUltimo id={cardFinalizado} fechar={() => definirCardFinalizado(null)} />}
@@ -107,6 +109,8 @@ export function Treino({ online }: { online: boolean }) {
     {ajuda && <AjudaExercicio exercicio={ajuda} online={online} fechar={() => definirAjuda(null)} editar={() => { definirEdicao(ajuda); definirAjuda(null) }} />}
   </>
 }
+
+
 
 
 
