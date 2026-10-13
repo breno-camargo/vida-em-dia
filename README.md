@@ -184,3 +184,10 @@ Lembrete na tela Hoje, padrão sábado, configurável nas Configurações por ro
 
 Fotos de progresso ficam para a etapa 11; meta de peso e IMC para a etapa 12. Main/tag permanecem v0.4.0 até aprovação da etapa 5. A apresentação visual no iPhone deve ser validada pelo usuário.
 
+
+### Evoluções acordadas em 12/10/2026
+
+- Integração com Saúde do iPhone: manter como evolução futura separada, sem adicionar componentes nativos nesta etapa. Preparar futuramente uma versão iOS com Capacitor e ponte HealthKit, reutilizando a interface existente. Dispositivo do usuário: Redmi Watch 5 Lite, via Mi Fitness. Caminho a verificar no aparelho: relógio → Mi Fitness → Saúde → Vida em Dia, apenas para dados efetivamente disponibilizados e autorizados. O usuário tem Windows e pode ter acesso ao Mac do cunhado para compilar e testar com Xcode. A PWA segue funcionando como hoje; passos/calorias manuais permanecem no escopo da etapa 6.
+- Chat de alimentação: incluir no planejamento da etapa 9, quando o diário alimentar for implementado, dependendo da estrutura de conta/servidor da etapa 8. Conversa por texto para relatar refeições ao longo do dia, perguntar porções quando faltarem, estimar kcal e nutrientes e pedir confirmação antes de salvar. Cálculos devem ser identificados como estimativas. Chaves de API apenas no servidor; avaliar provedor, custo e limites antes de implementar. Chat exige internet; o diário e registros locais devem continuar disponíveis offline. Fotos/voz não estão automaticamente incluídas nessa autorização.
+
+Continuar o roteiro atual: etapa 5 em homologação, sem antecipar a implementação das evoluções acima.
