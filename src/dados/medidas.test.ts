@@ -72,3 +72,18 @@ test('use o último peso não excluído ao salvar um treino', async () => {
   expect(salvo.calorias).toBe(350)
 })
 
+
+test('calcule calorias pelo tempo real mesmo num treino com menos de um minuto', async () => {
+  const ex = { ...criarRegistro(), nome: 'Teste curto', tipo: 'forca' as const, grupo_muscular: 'Peito', equipamento: '', descanso_padrao_segundos: 90, modo_carga: 'total' as const, peso_barra: 0, nota_fixa: '', como_fazer: '', musculos: 'Peito', origem: 'manual' as const }
+  await tabela('exercicios').add(ex)
+  await salvarMedida(medida('2026-01-01', 70))
+  const id = await iniciarTreino()
+  await adicionarExercicio((await tabela('treinos').get(id))!, ex)
+  await tabela('treinos').update(id, { inicio: new Date(Date.now() - 20000).toISOString() })
+  const ficha = { ...criarRegistro(), nome: 'Outra curta', ordem: 0 }
+  await salvarFicha(ficha, [{ ...criarRegistro(), ficha_id: ficha.id, exercicio_id: ex.id, ordem: 0, series_planejadas: 1, descanso_segundos: 90 }])
+  await iniciarTreino(ficha.id, true)
+  const salvo = (await tabela('treinos').get(id))!
+  expect(salvo.duracao_minutos).toBe(0)
+  expect(salvo.calorias).toBeGreaterThan(0)
+})
