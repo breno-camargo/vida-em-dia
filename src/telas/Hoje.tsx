@@ -1,7 +1,8 @@
+import { LembreteMedidas } from '../componentes/LembreteMedidas'
 import { ArrowUpRight, Dumbbell, Footprints, Utensils, Droplets, Activity } from 'lucide-react'
 import type { Aba } from '../componentes/Navegacao'
-export function Hoje({ abrir }: { abrir: (aba: Aba) => void }) {
-  return <>
+export function Hoje({ abrir, registrarMedida }: { abrir: (aba: Aba) => void; registrarMedida: () => void }) {
+  return <><LembreteMedidas abrir={registrarMedida} />
     <section className="destaque"><span className="etiqueta">SEU RITMO. SUA EVOLUÇÃO.</span>
       <h2>Um dia de cada vez.</h2><p>Seu cuidado começa aqui.<br />Vamos construir uma rotina que faz sentido para você.</p>
       <button className="botao-principal" onClick={() => abrir('Treino')}>Conhecer meu espaço <ArrowUpRight size={19} /></button>
@@ -18,3 +19,5 @@ export function Hoje({ abrir }: { abrir: (aba: Aba) => void }) {
     <button className="botao-secundario" disabled>Sincronizar · disponível na etapa 8</button>
   </>
 }
+
+
