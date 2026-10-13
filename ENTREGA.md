@@ -18,10 +18,11 @@ Checklist:
 - Não permitir formulário vazio, data futura/impossível ou duplicidade na mesma data; editar o registro já existente.
 - Histórico: abrir/recolher, editar, excluir e desfazer.
 - Comparar duas datas: conferir antes/depois e diferenças; campo ausente vira traço, não zero.
-- Gráficos de peso e cintura e seus valores por sessão.
+- Resumo com peso próprio e todas as medidas na grade, cada uma com último valor e data. Abrir o gráfico recolhido, selecionar qualquer medida por rolagem e conferir valores por sessão.
 - Configurar lembrete para hoje; sem registro nesta semana, Hoje mostra Registrar agora. Cadastrar peso ou medida nesta semana remove o aviso.
 - Finalizar um novo treino com peso cadastrado e conferir estimativa de calorias. Treinos antigos preservam estimativas já registradas.
 - Offline no iPhone: registrar, editar, consultar e comparar; testar rolagem, alça e botões.
 
 Fora desta etapa: fotos (11), meta de peso e IMC (12). Produção não alterada.
 `typecheck`, lint, 34 testes e build passaram. A validação visual e dos gestos no iPhone está pendente de homologação pelo usuário.
+

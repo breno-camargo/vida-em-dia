@@ -178,8 +178,9 @@ Preferência definida em 06/10/2026: todos os seletores devem seguir o padrão v
 
 Registro parcial por data: peso (kg), bíceps direito/esquerdo, coxa direita/esquerda, cintura, abdômen, quadril e panturrilha direita/esquerda (cm). Todos os campos e a data usam seletores de rolagem com confirmação. Os valores entram num rascunho; apenas Salvar registra o formulário inteiro. Campos vazios permanecem ausentes. Precisão de 0,1; peso até 400 kg e medidas até 300 cm. Registro exige ao menos um valor e data real, até hoje; um registro ativo por data, com edição e exclusão reversível.
 
-Histórico recolhido por data, comparação de duas datas com diferença neutra (sem classificar aumento/redução como bom ou ruim), gráficos de peso e cintura. Valores ausentes aparecem como traço e não viram zero nos cálculos. O último peso não excluído alimenta as estimativas dos próximos treinos; os treinos já concluídos preservam os valores registrados.
+Histórico recolhido por data, comparação de duas datas com diferença neutra (sem classificar aumento/redução como bom ou ruim), gráfico recolhido por padrão, com escolha de qualquer medida por rolagem. Peso em card próprio e todas as medidas com o mesmo destaque numa grade compacta, mostrando o último valor e a data individual. Valores ausentes aparecem como traço e não viram zero nos cálculos. O último peso não excluído alimenta as estimativas dos próximos treinos; os treinos já concluídos preservam os valores registrados.
 
 Lembrete na tela Hoje, padrão sábado, configurável nas Configurações por rolagem. A semana vai de segunda a domingo; o aviso aparece a partir do dia escolhido e desaparece quando existe qualquer registro de medidas na semana. Sem push. Registrar agora abre diretamente o formulário. Dados locais em Dexie, inclusive gráficos e histórico offline. O schema existente já contém medidas e dia do lembrete; não há mudança de schema nesta etapa.
 
 Fotos de progresso ficam para a etapa 11; meta de peso e IMC para a etapa 12. Main/tag permanecem v0.4.0 até aprovação da etapa 5. A apresentação visual no iPhone deve ser validada pelo usuário.
+
