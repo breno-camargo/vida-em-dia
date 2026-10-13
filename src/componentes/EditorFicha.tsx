@@ -28,9 +28,9 @@ export function EditorFicha({ ficha, iniciais, exercicios, fechar }: { ficha: Fi
     finally { definirSalvando(false) }
   }}>
     <label>Nome da ficha<input required value={nome} onChange={e => definirNome(e.target.value)} placeholder="A · Peito e tríceps" /></label>
-    {itens.map((item, indice) => <details className="item-ficha exercicio-recolhivel" key={item.id}><summary className="cabecalho-exercicio"><MiniaturaExercicio id={item.exercicio_id} nome={exercicios.find(ex => ex.id === item.exercicio_id)?.nome} abrir={() => definirAjuda(exercicios.find(ex => ex.id === item.exercicio_id) ?? null)} /><span className="resumo-exercicio"><strong>{indice + 1}. {exercicios.find(ex => ex.id === item.exercicio_id)?.nome ?? 'Exercício removido'}</strong><small>{item.series_planejadas} séries · {item.descanso_segundos ?? 90} s de descanso</small></span><ChevronDown className="seta-exercicio" size={20} aria-hidden="true" /></summary><div className="conteudo-exercicio">
-      <SelecionarSeries valor={item.series_planejadas} confirmar={series_planejadas => alterar(item.id, { series_planejadas })} />
-      <SelecionarDescanso valor={item.descanso_segundos ?? 90} confirmar={async descanso_segundos => { alterar(item.id, { descanso_segundos }) }} />
+    {itens.map((item, indice) => <details className="item-ficha exercicio-recolhivel" key={item.id}><summary className="cabecalho-exercicio"><MiniaturaExercicio id={item.exercicio_id} nome={exercicios.find(ex => ex.id === item.exercicio_id)?.nome} abrir={() => definirAjuda(exercicios.find(ex => ex.id === item.exercicio_id) ?? null)} /><span className="resumo-exercicio"><strong>{indice + 1}. {exercicios.find(ex => ex.id === item.exercicio_id)?.nome ?? 'Exercício removido'}</strong><small>{exercicios.find(ex => ex.id === item.exercicio_id)?.tipo === 'cardio' ? 'Cardio · duração registrada durante o treino' : `${item.series_planejadas} séries · ${item.descanso_segundos ?? 90} s de descanso`}</small></span><ChevronDown className="seta-exercicio" size={20} aria-hidden="true" /></summary><div className="conteudo-exercicio">
+      {exercicios.find(ex => ex.id === item.exercicio_id)?.tipo !== 'cardio' && <><SelecionarSeries valor={item.series_planejadas} confirmar={series_planejadas => alterar(item.id, { series_planejadas })} />
+      <SelecionarDescanso valor={item.descanso_segundos ?? 90} confirmar={async descanso_segundos => { alterar(item.id, { descanso_segundos }) }} /></>}
       <div className="acoes"><button type="button" disabled={indice === 0} onClick={() => mover(indice, -1)} aria-label="Mover exercício para cima">Subir</button><button type="button" disabled={indice === itens.length - 1} onClick={() => mover(indice, 1)} aria-label="Mover exercício para baixo">Descer</button><button type="button" onClick={() => definirItens(itens.filter(i => i.id !== item.id))}>Retirar</button></div>
     </div></details>)}
     <label>Buscar para adicionar<input value={busca} onChange={e => definirBusca(e.target.value)} placeholder="Nome do exercício" /></label>
@@ -42,5 +42,6 @@ export function EditorFicha({ ficha, iniciais, exercicios, fechar }: { ficha: Fi
     {edicao && <EditorExercicio exercicio={edicao} fechar={() => definirEdicao(null)} />}
   </Painel>
 }
+
 
 

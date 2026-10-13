@@ -25,8 +25,9 @@ export async function ultimasSeries(exercicio_id: string) {
 }
 export async function montarExercicio(treino: Treino, ex: Exercicio, quantidade: number, ordem: number, descanso = ex.descanso_padrao_segundos) {
   const ultimas = await ultimasSeries(ex.id)
-  const item: TreinoExercicio = { ...criarRegistro(treino.user_id), treino_id: treino.id, exercicio_id: ex.id, nome: ex.nome, ordem, descanso_segundos: descanso }
+  const item: TreinoExercicio = { ...criarRegistro(treino.user_id), treino_id: treino.id, exercicio_id: ex.id, nome: ex.nome, ordem, descanso_segundos: descanso, tipo: ex.tipo }
   await tabela('treino_exercicios').add(item)
+  if (ex.tipo === 'cardio') return
   const series: SerieTreino[] = Array.from({ length: quantidade }, (_, indice) => {
     const anterior = ultimas[indice] ?? ultimas.at(-1)
     const modo = ex.modo_carga === 'peso_corporal' ? 'peso_corporal' : anterior?.modo_carga ?? ex.modo_carga
@@ -52,7 +53,8 @@ export async function iniciarTreino(ficha_id?: string, encerrarAtual = false) {
         const minutos = Math.round(minutosReais)
         const medidas = await tabela('medidas_corporais').filter(m => !m.apagado_em && Boolean(m.peso)).sortBy('data')
         const peso = medidas.at(-1)?.peso
-        await tabela('treinos').update(ativo.id, { fim, duracao_minutos: minutos, peso_corporal: peso, calorias: peso ? caloriasMusculacao(peso, minutosReais) : 0, descanso_fim: null, atualizado_em: fim })
+        const forca = await tabela('treino_exercicios').where('treino_id').equals(ativo.id).filter(i => !i.apagado_em && i.tipo !== 'cardio').count()
+        await tabela('treinos').update(ativo.id, { fim, duracao_minutos: minutos, peso_corporal: peso, calorias: peso && forca ? caloriasMusculacao(peso, minutosReais) : 0, descanso_fim: null, atualizado_em: fim })
       } else {
         throw new Error(`Há um treino em andamento: ${ativo.titulo ?? 'Treino anterior'}. Use “Continuar treino” e finalize-o antes de iniciar outro.`)
       }
@@ -66,9 +68,9 @@ export async function iniciarTreino(ficha_id?: string, encerrarAtual = false) {
       let ordem = 0
       for (const item of itens) {
         const ex = await tabela('exercicios').get(item.exercicio_id)
-        if (ex && !ex.apagado_em && ex.tipo === 'forca') await montarExercicio(novo, ex, item.series_planejadas, ordem++, item.descanso_segundos)
+        if (ex && !ex.apagado_em) await montarExercicio(novo, ex, item.series_planejadas, ordem++, item.descanso_segundos)
       }
-      if (ordem === 0) throw new Error('Adicione um exercício de força à ficha. O registro de cardio chega na etapa 6.')
+      if (ordem === 0) throw new Error('Adicione um exercício à ficha.')
     }
     return novo.id
   })
@@ -116,6 +118,8 @@ export async function aplicarValoresProximas(dados: SerieTreino) {
     await tabela('series_treino').bulkPut([{ ...dados, ...valores }, ...seguintes.map(s => ({ ...s, ...valores }))])
   })
 }
+
+
 
 
 
