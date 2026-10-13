@@ -23,7 +23,7 @@ export interface Treino extends Registro {
   titulo?: string; descanso_fim?: string | null; peso_corporal?: number
 }
 export interface TreinoExercicio extends Registro {
-  treino_id: string; exercicio_id: string; nome: string; ordem: number; descanso_segundos: number; tipo?: 'forca' | 'cardio'
+  treino_id: string; exercicio_id: string; nome: string; ordem: number; descanso_segundos: number; tipo?: 'forca' | 'cardio'; origem_ficha?: boolean; retirado_da_ficha?: boolean
 }
 export interface SerieTreino extends Registro {
   treino_id: string; exercicio_id: string; numero_serie: number
@@ -87,6 +87,8 @@ export interface Tabelas {
   refeicoes_dia: RefeicaoDia; alimentos_favoritos: AlimentoFavorito; combos_refeicao: ComboRefeicao
   agua_dia: AguaDia; consumo_diario_meta: ConsumoDiarioMeta; fotos: Foto; configuracoes: Configuracao
 }
+
+
 
 
 
