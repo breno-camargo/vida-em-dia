@@ -48,10 +48,11 @@ export async function iniciarTreino(ficha_id?: string, encerrarAtual = false) {
         await tabela('treinos').update(ativo.id, { apagado_em: agora, atualizado_em: agora })
       } else if (encerrarAtual) {
         const fim = new Date().toISOString()
-        const minutos = Math.max(0, Math.round((Date.parse(fim) - Date.parse(ativo.inicio)) / 60000))
+        const minutosReais = Math.max(0, (Date.parse(fim) - Date.parse(ativo.inicio)) / 60000)
+        const minutos = Math.round(minutosReais)
         const medidas = await tabela('medidas_corporais').filter(m => !m.apagado_em && Boolean(m.peso)).sortBy('data')
         const peso = medidas.at(-1)?.peso
-        await tabela('treinos').update(ativo.id, { fim, duracao_minutos: minutos, peso_corporal: peso, calorias: peso ? caloriasMusculacao(peso, minutos) : 0, descanso_fim: null, atualizado_em: fim })
+        await tabela('treinos').update(ativo.id, { fim, duracao_minutos: minutos, peso_corporal: peso, calorias: peso ? caloriasMusculacao(peso, minutosReais) : 0, descanso_fim: null, atualizado_em: fim })
       } else {
         throw new Error(`Há um treino em andamento: ${ativo.titulo ?? 'Treino anterior'}. Use “Continuar treino” e finalize-o antes de iniciar outro.`)
       }
@@ -115,5 +116,6 @@ export async function aplicarValoresProximas(dados: SerieTreino) {
     await tabela('series_treino').bulkPut([{ ...dados, ...valores }, ...seguintes.map(s => ({ ...s, ...valores }))])
   })
 }
+
 
 
