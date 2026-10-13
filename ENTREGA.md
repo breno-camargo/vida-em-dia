@@ -1,17 +1,19 @@
-# Entrega da etapa 4
+# Entrega da etapa 5
 
-Etapa 4 aprovada pelo usuário em 06/10/2026, após todos os itens do checklist passarem e reteste do painel do card. Versão 0.4.0 preparada para produção.
+Etapa 5 aprovada pelo usuário em 12/10/2026, após o checklist de homologação. Versão 0.5.0 preparada para produção.
 
-Histórico, busca, remoção e desfazer; evolução e gráficos; recordes de carga, volume, força estimada e repetições em peso corporal; card com foto opcional, download e compartilhamento; treino livre nomeável; seletores de rolagem e melhorias visuais.
+Peso e medidas em seletores de rolagem; registros parciais por data, edição e remoção reversível; comparação antes/depois; resumo de todas as medidas e gráfico recolhido com escolha por rolagem; lembrete semanal dentro do app, padrão sábado; cálculo de calorias dos próximos treinos com o último peso cadastrado e o tempo real.
 
-Publicação no terminal autenticado do usuário, na branch main:
+Para publicar no terminal autenticado do usuário, na branch main:
 
 ```cmd
 git push origin main
-git push origin v0.4.0
+git push origin v0.5.0
 npx vercel --prod
 git switch test
 git push origin test
 ```
 
-Próxima etapa: 5, medidas corporais. Tutorial de primeiro acesso planejado para 13, com vínculo por conta dependendo da autenticação da etapa 8.
+Próxima etapa: 6, cardio e atividade diária. Fotos de progresso ficam para a etapa 11; meta de peso e IMC para a etapa 12. Chat alimentar planejado para a etapa 9, com servidor/conta da etapa 8. Integração Saúde/Redmi Watch 5 Lite permanece como evolução futura separada.
+
+Validação final: TypeScript, lint, 35 testes e build. Publicação remota pendente dos comandos acima.
