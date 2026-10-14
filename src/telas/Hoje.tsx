@@ -1,9 +1,10 @@
+import { LembreteBackup } from '../componentes/LembreteBackup'
 import { AtividadeHoje } from '../componentes/AtividadeHoje'
 import { LembreteMedidas } from '../componentes/LembreteMedidas'
 import { ArrowUpRight, Dumbbell, Utensils, Droplets, Activity } from 'lucide-react'
 import type { Aba } from '../componentes/Navegacao'
-export function Hoje({ abrir, registrarMedida }: { abrir: (aba: Aba) => void; registrarMedida: () => void }) {
-  return <><LembreteMedidas abrir={registrarMedida} />
+export function Hoje({ abrir, registrarMedida, abrirBackup }: { abrirBackup: () => void; abrir: (aba: Aba) => void; registrarMedida: () => void }) {
+  return <><LembreteBackup abrir={abrirBackup} /><LembreteMedidas abrir={registrarMedida} />
     <section className="destaque"><span className="etiqueta">SEU RITMO. SUA EVOLUÇÃO.</span>
       <h2>Um dia de cada vez.</h2><p>Seu cuidado começa aqui.<br />Vamos construir uma rotina que faz sentido para você.</p>
       <button className="botao-principal" onClick={() => abrir('Treino')}>Conhecer meu espaço <ArrowUpRight size={19} /></button>
@@ -16,10 +17,11 @@ export function Hoje({ abrir, registrarMedida }: { abrir: (aba: Aba) => void; re
       <div className="cartao"><Droplets className="azul" /><span>Água</span><strong>— <small>ml</small></strong><small>Um hábito de cada vez</small></div>
     </div>
     <AtividadeHoje />
-    <section className="nota"><span className="ponto" /><div><h3>Um espaço só seu</h3><p>Os dados ficam primeiro neste aparelho. Sincronização e backup chegam nas próximas etapas.</p></div></section>
+    <section className="nota"><span className="ponto" /><div><h3>Um espaço só seu</h3><p>Os dados ficam primeiro neste aparelho. Faça backup nas Configurações. A sincronização chega na etapa 8.</p></div></section>
     <button className="botao-secundario" disabled>Sincronizar · disponível na etapa 8</button>
   </>
 }
+
 
 
 
