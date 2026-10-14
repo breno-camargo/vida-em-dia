@@ -4,7 +4,7 @@ PWA pessoal de treino, cardio, medidas, alimentação e saúde. Interface em por
 
 ## Estado do projeto
 
-ETAPAS 1, 2 e 3 aprovadas (v0.1.0, v0.2.0 e v0.3.0), mantendo o verde original. O usuário validou a etapa 3 no iPhone e aprovou a conclusão em 06/10/2026. ETAPA 4 aprovada em 06/10/2026 (v0.4.0), após validação do checklist pelo usuário e correção final do vazamento no painel do card. ETAPA 5 aprovada pelo usuário em 12/10/2026 (v0.5.0). ETAPA 6 aprovada pelo usuário em 14/10/2026 (v0.6.0). ETAPA 7 implementada para homologação em test, aguardando aprovação. As etapas 8 a 14 não foram implementadas.
+ETAPAS 1, 2 e 3 aprovadas (v0.1.0, v0.2.0 e v0.3.0), mantendo o verde original. O usuário validou a etapa 3 no iPhone e aprovou a conclusão em 06/10/2026. ETAPA 4 aprovada em 06/10/2026 (v0.4.0), após validação do checklist pelo usuário e correção final do vazamento no painel do card. ETAPA 5 aprovada pelo usuário em 12/10/2026 (v0.5.0). ETAPA 6 aprovada pelo usuário em 14/10/2026 (v0.6.0). ETAPA 7 aprovada pelo usuário em 14/10/2026 (v0.7.0). As etapas 8 a 14 não foram implementadas.
 
 Inclui React, TypeScript, Vite, Tailwind, Dexie, cinco abas, tema escuro, configurações informativas, ícones, manifest e service worker. Já há registro local de treinos. Login, sincronização e backup chegam nas próximas etapas. O modo claro chega na etapa 13.
 
@@ -213,7 +213,7 @@ Refinamentos de homologação da etapa 6 (13/10/2026): exercícios sem foto usam
 
 
 
-## Etapa 7 — backup e proteção (em homologação)
+## Etapa 7 — backup e proteção (aprovada)
 
 Configurações: preparar JSON de todas as 17 tabelas, incluindo exclusões lógicas e configurações; fotos opcionais, com imagem e miniatura convertidas de Blob para base64. O envelope identifica app, formato 1, schema Dexie, horário e inclusão de fotos. Compartilhamento nativo de arquivo, quando disponível, e download por link como alternativa. Último backup é marcado ao clicar no download JSON ou concluir compartilhamento; cancelar o compartilhamento não marca. Não é possível confirmar pelo navegador se o arquivo foi salvo na pasta de destino; o usuário deve guardá-lo em Arquivos/iCloud ou outro local fora do app. CSV por tabela, com BOM UTF-8, separador ponto e vírgula, aspas/quebras escapadas e proteção de fórmulas em texto; imagens não entram no CSV. CSV é exportação para consulta, não formato de restauração.
 
@@ -221,5 +221,5 @@ Importação JSON: validação do envelope, tabelas, IDs, duplicatas, tipos bás
 
 Lembrete em Hoje após o intervalo sem backup e sem sincronização, padrão 14 dias e configurável por rolagem. Usa a data mais recente entre criação do perfil, último backup e último sync; preparar um arquivo/CSV não limpa o lembrete. Configurações mostram datas reais do backup/sync e estado de instalação/persistência. A chamada navigator.storage.persist já existe; não se promete imunidade a limpeza do Safari ou remoção do app. Backup/sincronização fora do aparelho são a proteção. Não há sincronização em nuvem nesta etapa (8).
 
-55 testes, TypeScript, lint e build. Produção permanece v0.6.0 até aprovação. Validação de download/compartilhar/importar no iPhone pendente de homologação.
+Checklist da etapa 7 aprovado pelo usuário em 14/10/2026, incluindo rejeição de arquivo inválido sem modificar dados. 55 testes, TypeScript, lint e build validados. Versão 0.7.0 preparada para publicação; próxima etapa: 8, conta e sincronização.
 
