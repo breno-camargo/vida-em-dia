@@ -42,7 +42,7 @@ export interface CardioSessao extends Registro {
 }
 export interface MedidaCorporal extends Registro {
   data: string; peso?: number; biceps_d?: number; biceps_e?: number; cintura?: number
-  abdomen?: number; quadril?: number; coxa_d?: number; coxa_e?: number
+  busto?: number; abdomen?: number; quadril?: number; coxa_d?: number; coxa_e?: number
   panturrilha_d?: number; panturrilha_e?: number
 }
 export interface AtividadeDiaria extends Registro {
