@@ -14,7 +14,9 @@ Authentication → Sign In / Providers → desative `Allow new users to sign up`
 
 ## 3. Recuperação de senha dentro do app
 
-Em Authentication → Email Templates → Reset Password, use um código no lugar do link:
+O painel deste projeto exige SMTP próprio para editar modelos (aviso "Set up custom SMTP to edit templates"). Configure o provedor em Authentication → Emails → Set up SMTP antes de editar o modelo. As credenciais SMTP ficam apenas no Supabase; não colocar no app ou no Git. Login e sincronização podem ser testados antes, mas recuperação por código depende desta configuração e da entrega real do e-mail.
+
+Depois, em Authentication → Emails → Reset Password, use um código no lugar do link:
 
 ```html
 <h2>Recuperar acesso ao Vida em Dia</h2>

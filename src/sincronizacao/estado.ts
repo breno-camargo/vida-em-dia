@@ -6,21 +6,23 @@ import { contarPendencias, executarSync, prepararFila, prepararPrimeiroLogin, vi
 import { transporteSupabase } from './transporte'
 import { banco, tabela } from '../dados/banco'
 import { nomesSync } from './motor'
-interface Estado { usuario:User|null; carregando:boolean; vinculado:boolean; ocupado:boolean; mensagem:string; erro:string; pendentes:number }
-let estado:Estado={usuario:null,carregando:!!supabase,vinculado:false,ocupado:false,mensagem:'',erro:'',pendentes:0}
+interface Estado { usuario:User|null; carregando:boolean; vinculado:boolean; ocupado:boolean; mensagem:string; erro:string; pendentes:number; visitante:boolean; recuperando:boolean }
+let estado:Estado={usuario:null,carregando:!!supabase,vinculado:false,ocupado:false,mensagem:'',erro:'',pendentes:0,visitante:false,recuperando:false}
 const ouvintes=new Set<()=>void>()
 const alterar=(valor:Partial<Estado>)=>{estado={...estado,...valor};ouvintes.forEach(f=>f())}
 export function useConta(){return useSyncExternalStore(f=>{ouvintes.add(f);return()=>ouvintes.delete(f)},()=>estado)}
+export function continuarSemConta(){alterar({visitante:true})}
+export function definirRecuperacao(recuperando:boolean){alterar({recuperando})}
 let ativo=false
 export function iniciarConta(){
  if(ativo||!supabase)return
  ativo=true
  const atualizar=async(usuario:User|null)=>{
   alterar({usuario,carregando:false,vinculado:!!usuario&&await vinculoLocal()===usuario.id,mensagem:'',erro:''})
-  if(usuario&&await vinculoLocal()===usuario.id)void sincronizarAutomatico()
+  if(usuario&&!estado.recuperando&&await vinculoLocal()===usuario.id)void sincronizarAutomatico()
  }
  void supabase.auth.getSession().then(({data,error})=>{if(error)alterar({carregando:false,erro:'Entre novamente para sincronizar.'});else void atualizar(data.session?.user??null)})
- supabase.auth.onAuthStateChange((evento,sessao)=>{if(evento==='SIGNED_IN'||evento==='SIGNED_OUT'||evento==='INITIAL_SESSION')setTimeout(()=>void atualizar(sessao?.user??null),0)})
+ supabase.auth.onAuthStateChange((evento,sessao)=>{if(evento==='SIGNED_IN'||evento==='SIGNED_OUT'||evento==='INITIAL_SESSION'||evento==='PASSWORD_RECOVERY')setTimeout(()=>{if(evento==='SIGNED_OUT')alterar({visitante:false,recuperando:false});void atualizar(sessao?.user??null)},0)})
  window.addEventListener('online',()=>void sincronizarAutomatico())
  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void sincronizarAutomatico()})
  window.addEventListener('vida-em-dia:treino-finalizado',()=>void sincronizarAutomatico())
@@ -65,5 +67,5 @@ export async function sairConta(){
  if(estado.ocupado)throw new Error('Aguarde a sincronização terminar.')
  const {error}=await supabase!.auth.signOut({scope:'local'})
  if(error)throw new Error('Não foi possível sair. Tente novamente.')
- alterar({usuario:null,vinculado:false,mensagem:'Sessão encerrada. Os registros continuam neste aparelho.'})
+ alterar({usuario:null,vinculado:false,visitante:false,recuperando:false,mensagem:'Sessão encerrada. Os registros continuam neste aparelho.'})
 }

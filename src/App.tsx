@@ -1,5 +1,7 @@
 import { iniciarFeriados } from './dados/atividade'
-import { iniciarConta } from './sincronizacao/estado'
+import { continuarSemConta, iniciarConta, useConta } from './sincronizacao/estado'
+import { supabase } from './sincronizacao/cliente'
+import { ContaConfiguracoes } from './componentes/ContaConfiguracoes'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Settings, X, Utensils, Ruler, ChartNoAxesCombined, Leaf } from 'lucide-react'
 import { Navegacao, type Aba } from './componentes/Navegacao'
@@ -26,18 +28,20 @@ export default function App() {
   const [entradaTreino, definirEntradaTreino] = useState(0)
   const [erro, definirErro] = useState('')
   const ambiente = useAmbiente()
+  const conta = useConta()
+  const entrada = !!supabase && !conta.visitante && (!conta.usuario || conta.recuperando)
   useEffect(() => { void iniciarBanco().then(iniciarBiblioteca).then(() => iniciarFeriados()).then(iniciarConta).catch(() => definirErro('Não foi possível abrir o armazenamento local. Reabra o app e confira o espaço disponível no aparelho.')) }, [])
   const selecionar = (nova: Aba) => { definirRegistrarMedida(false); if (nova === 'Treino') definirEntradaTreino(v => v + 1); definirAba(nova); definirMenu(false); window.scrollTo({ top: 0 }) }
   return <div className={`app ${ambiente.instalado ? 'instalado' : 'nao-instalado'}`}>
     <header className="cabecalho"><div className="marca"><span><Leaf size={22} /></span><div>Vida em Dia<small>UM ESPAÇO PARA VOCÊ</small></div></div>
-      <button className="botao-icone" aria-label={menu ? 'Fechar configurações' : 'Abrir configurações'} aria-expanded={menu} onClick={() => definirMenu(!menu)}>{menu ? <X /> : <Settings size={22} />}</button>
+      {!entrada && <button className="botao-icone" aria-label={menu ? 'Fechar configurações' : 'Abrir configurações'} aria-expanded={menu} onClick={() => definirMenu(!menu)}>{menu ? <X /> : <Settings size={22} />}</button>}
     </header>
     <main id="conteudo"><div className="linha-data"><span>{new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}</span><span className="estado-rede"><i className={ambiente.online ? 'online' : ''} />{ambiente.online ? 'Online' : 'Offline'}</span></div>
-      <h1>{menu ? 'Configurações' : aba === 'Hoje' ? 'Olá, vamos cuidar de você?' : aba}</h1>
+      <h1>{entrada ? 'Bem-vindo ao Vida em Dia' : menu ? 'Configurações' : aba === 'Hoje' ? 'Olá, vamos cuidar de você?' : aba}</h1>
       {erro && <div role="alert" className="erro">{erro}</div>}
-      {menu ? <Configuracoes {...ambiente} /> : aba === 'Hoje' ? <Hoje abrirBackup={() => definirMenu(true)} abrir={selecionar} registrarMedida={() => { selecionar('Medidas'); definirRegistrarMedida(true) }} /> : aba === 'Treino' ? <Treino key={entradaTreino} online={ambiente.online} /> : aba === 'Evolução' ? <Suspense fallback={<p role="status">Carregando evolução…</p>}><Evolucao /></Suspense> : aba === 'Medidas' ? <Suspense fallback={<p role="status">Carregando medidas…</p>}><Medidas registrarInicial={registrarMedida} /></Suspense> : <EstadoVazio {...proximas[aba]} />}
+      {entrada ? <><p>Entre para sincronizar seus registros entre aparelhos.</p><ContaConfiguracoes /><button className="botao-secundario largura-total" onClick={continuarSemConta}>Continuar sem conta</button><p className="nota-resumo">Sem conta, seus registros ficam neste aparelho. Você pode entrar depois em Configurações.</p></> : menu ? <Configuracoes {...ambiente} /> : aba === 'Hoje' ? <Hoje abrirBackup={() => definirMenu(true)} abrir={selecionar} registrarMedida={() => { selecionar('Medidas'); definirRegistrarMedida(true) }} /> : aba === 'Treino' ? <Treino key={entradaTreino} online={ambiente.online} /> : aba === 'Evolução' ? <Suspense fallback={<p role="status">Carregando evolução…</p>}><Evolucao /></Suspense> : aba === 'Medidas' ? <Suspense fallback={<p role="status">Carregando medidas…</p>}><Medidas registrarInicial={registrarMedida} /></Suspense> : <EstadoVazio {...proximas[aba]} />}
     </main>
-    <AvisosPwa /><Navegacao atual={aba} selecionar={selecionar} />
+    <AvisosPwa />{!entrada && <Navegacao atual={aba} selecionar={selecionar} />}
   </div>
 }
 
