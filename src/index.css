@@ -55,3 +55,4 @@ details.painel.exercicio-historico-recolhivel>summary{display:flex;align-items:c
 .rolagem-opcoes .roda>button{font-size:17px;line-height:1.2;padding:4px 8px;white-space:normal}
 .cabecalho-cardio-planejado{display:flex;align-items:center;gap:12px}.cabecalho-cardio-planejado>div{flex:1;min-width:0}.cabecalho-cardio-planejado h2{margin:0 0 6px;font-size:16px;line-height:1.35}.cabecalho-cardio-planejado p{margin:0;font-size:11px;line-height:1.6}.cardio-planejado .acoes-medida{margin-top:4px}
 
+.rodas-numero.casas-numero{grid-template-columns:repeat(4,minmax(0,1fr));max-width:none;gap:8px}.casas-numero .coluna-roda>span{font-size:8px;letter-spacing:.5px}.casas-numero .roda>button{font-size:24px}
