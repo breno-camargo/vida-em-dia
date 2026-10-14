@@ -1,4 +1,5 @@
 import { iniciarFeriados } from './dados/atividade'
+import { iniciarConta } from './sincronizacao/estado'
 import { lazy, Suspense, useEffect, useState } from 'react'
 import { Settings, X, Utensils, Ruler, ChartNoAxesCombined, Leaf } from 'lucide-react'
 import { Navegacao, type Aba } from './componentes/Navegacao'
@@ -25,7 +26,7 @@ export default function App() {
   const [entradaTreino, definirEntradaTreino] = useState(0)
   const [erro, definirErro] = useState('')
   const ambiente = useAmbiente()
-  useEffect(() => { void iniciarBanco().then(iniciarBiblioteca).then(() => iniciarFeriados()).catch(() => definirErro('Não foi possível abrir o armazenamento local. Reabra o app e confira o espaço disponível no aparelho.')) }, [])
+  useEffect(() => { void iniciarBanco().then(iniciarBiblioteca).then(() => iniciarFeriados()).then(iniciarConta).catch(() => definirErro('Não foi possível abrir o armazenamento local. Reabra o app e confira o espaço disponível no aparelho.')) }, [])
   const selecionar = (nova: Aba) => { definirRegistrarMedida(false); if (nova === 'Treino') definirEntradaTreino(v => v + 1); definirAba(nova); definirMenu(false); window.scrollTo({ top: 0 }) }
   return <div className={`app ${ambiente.instalado ? 'instalado' : 'nao-instalado'}`}>
     <header className="cabecalho"><div className="marca"><span><Leaf size={22} /></span><div>Vida em Dia<small>UM ESPAÇO PARA VOCÊ</small></div></div>

@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
-export default defineConfig({ plugins: [react(), tailwindcss(), VitePWA({
+export default defineConfig({ build: { rolldownOptions: { output: { codeSplitting: { groups: [{ name: 'supabase', test: /node_modules[\\/]@supabase[\\/]/ }] } } } }, plugins: [react(), tailwindcss(), VitePWA({
   registerType: 'prompt', includeAssets: ['icons/*.png'],
   manifest: {
     name: 'Vida em Dia', short_name: 'Vida em Dia', lang: 'pt-BR',

@@ -1,4 +1,5 @@
 import { LembreteBackup } from '../componentes/LembreteBackup'
+import { BotaoSincronizar } from '../componentes/ContaConfiguracoes'
 import { AtividadeHoje } from '../componentes/AtividadeHoje'
 import { LembreteMedidas } from '../componentes/LembreteMedidas'
 import { ArrowUpRight, Dumbbell, Utensils, Droplets, Activity } from 'lucide-react'
@@ -17,8 +18,8 @@ export function Hoje({ abrir, registrarMedida, abrirBackup }: { abrirBackup: () 
       <div className="cartao"><Droplets className="azul" /><span>Água</span><strong>— <small>ml</small></strong><small>Um hábito de cada vez</small></div>
     </div>
     <AtividadeHoje />
-    <section className="nota"><span className="ponto" /><div><h3>Um espaço só seu</h3><p>Os dados ficam primeiro neste aparelho. Faça backup nas Configurações. A sincronização chega na etapa 8.</p></div></section>
-    <button className="botao-secundario" disabled>Sincronizar · disponível na etapa 8</button>
+    <section className="nota"><span className="ponto" /><div><h3>Um espaço só seu</h3><p>Os dados ficam primeiro neste aparelho. Conecte sua conta para sincronizar e guarde também um backup com fotos.</p></div></section>
+    <BotaoSincronizar abrirConta={abrirBackup} />
   </>
 }
 
