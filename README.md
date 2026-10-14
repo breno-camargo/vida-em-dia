@@ -4,7 +4,7 @@ PWA pessoal de treino, cardio, medidas, alimentação e saúde. Interface em por
 
 ## Estado do projeto
 
-ETAPAS 1, 2 e 3 aprovadas (v0.1.0, v0.2.0 e v0.3.0), mantendo o verde original. O usuário validou a etapa 3 no iPhone e aprovou a conclusão em 06/10/2026. ETAPA 4 aprovada em 06/10/2026 (v0.4.0), após validação do checklist pelo usuário e correção final do vazamento no painel do card. ETAPA 5 aprovada pelo usuário em 12/10/2026 (v0.5.0). ETAPA 6 implementada para homologação em test, aguardando aprovação. As etapas 7 a 14 não foram implementadas.
+ETAPAS 1, 2 e 3 aprovadas (v0.1.0, v0.2.0 e v0.3.0), mantendo o verde original. O usuário validou a etapa 3 no iPhone e aprovou a conclusão em 06/10/2026. ETAPA 4 aprovada em 06/10/2026 (v0.4.0), após validação do checklist pelo usuário e correção final do vazamento no painel do card. ETAPA 5 aprovada pelo usuário em 12/10/2026 (v0.5.0). ETAPA 6 aprovada pelo usuário em 14/10/2026 (v0.6.0). As etapas 7 a 14 não foram implementadas.
 
 Inclui React, TypeScript, Vite, Tailwind, Dexie, cinco abas, tema escuro, configurações informativas, ícones, manifest e service worker. Já há registro local de treinos. Login, sincronização e backup chegam nas próximas etapas. O modo claro chega na etapa 13.
 
@@ -194,7 +194,7 @@ Continuar o roteiro atual: etapa 5 aprovada; etapa 6 é a próxima. As evoluçõ
 
 
 
-## Etapa 6 — cardio e atividade diária (em homologação)
+## Etapa 6 — cardio e atividade diária (aprovada em 14/10/2026)
 
 Cardio na aba Treino: oito tipos, atalho Esteira, duração obrigatória; data, distância, velocidade, inclinação, calorias da máquina, passos da sessão, frequência média/máxima e observação. Campos opcionais recolhidos. Velocidade calculada se não informada e houver duração/distância; ritmo min/km calculado, sem deduzir passos. Precisão de 0,1 para duração, km, velocidade e inclinação. Vínculo opcional com treino na mesma data. Fichas podem incluir cardio e iniciar só com cardio: o planejamento não cria séries de força. Sessões vinculadas aparecem no resumo do dia/treino; cardio fica fora do volume e das séries de musculação.
 
@@ -206,7 +206,8 @@ Hoje: passos manuais, calorias gastas e barras das metas aplicáveis. Modo soma 
 
 Feriados nacionais do ano atual pré-cadastrados uma vez por ano, incluindo Paixão de Cristo calculada pela Páscoa; a remoção é respeitada e não reaparece ao reiniciar. Pontos facultativos não são adicionados. Datas e nomes editáveis, inclusão de feriados locais/descanso e atalho em Hoje. Metas já gravadas permanecem preservadas. Calendário 2026 conferido com a publicação do MGI: https://agenciagov.ebc.com.br/noticias/202512/confira-o-calendario-oficial-de-feriados-nacionais-e-pontos-facultativos-em-2026 .
 
-Os seletores continuam com rolagem e confirmação. Dados ficam em Dexie, gráficos incluídos no cache offline; sem acesso ao Saúde, relógio ou sensores. Novos campos opcionais de planejamento/configuração não alteram índices nem exigem mudança do schema. Produção permanece v0.5.0 até aprovação. TypeScript, lint, 44 testes e build; validação visual no iPhone pendente.
+Os seletores continuam com rolagem e confirmação. Dados ficam em Dexie, gráficos incluídos no cache offline; sem acesso ao Saúde, relógio ou sensores. Novos campos opcionais de planejamento/configuração não alteram índices nem exigem mudança do schema. Checklist da etapa 6 aprovado pelo usuário em 14/10/2026. Versão 0.6.0 preparada para publicação; TypeScript, lint, 48 testes e build validados.
 
 Refinamentos de homologação da etapa 6 (13/10/2026): exercícios sem foto usam ícones de traço por grupo/atividade, mantendo o padrão verde existente; cardio planejado tem miniatura e cabeçalho alinhado aos exercícios. Ao retomar, cardio pendente da ficha é incluído; cardio removido da ficha é retirado se ainda não foi registrado. Cardio já registrado e adições manuais do dia são preservados. Uma retirada feita apenas no treino não é desfeita automaticamente. Reintroduzir na ficha um cardio retirado por atualização da ficha restaura o planejamento correspondente sem duplicar. Campos opcionais de origem/retirada não alteram índices do banco. 47 testes passaram.
 `Busto` adicionado em 14/10/2026 como medida opcional em cm, incluindo formulário, resumo, histórico, comparação e gráfico. Registros antigos permanecem sem valor informado nesse campo; nenhuma alteração de índices ou migração é necessária.
+

@@ -1,27 +1,19 @@
-# Etapa 6 — pronta para homologação
+# Entrega da etapa 6
 
-Etapas 1 a 5 aprovadas; produção v0.5.0 verificada. Etapa 6 implementada na branch etapa-6-cardio-atividade e integrada em test. Produção permanece inalterada até aprovação.
+Etapa 6 aprovada pelo usuário em 14/10/2026, após todos os testes de homologação passarem. Versão 0.6.0 preparada para produção.
 
-Publicar a prévia no terminal autenticado:
+Cardio com estimativas, ajuste das kcal e histórico; passos e calorias com modo de total do relógio para evitar dupla contagem; metas por tipo de dia, feriados e descanso; gráficos e resumo semanal; cardio nas fichas; ícones por grupo/atividade; busto nas medidas e seletores por casas numéricas.
+
+Publicação no terminal autenticado do usuário, na branch main:
 
 ```cmd
-git push origin etapa-6-cardio-atividade
+git push origin main
+git push origin v0.6.0
+npx vercel --prod
+git switch test
 git push origin test
-npx vercel
 ```
 
-Checklist:
+Validação final: TypeScript, lint, 48 testes e build. Publicação remota pendente dos comandos acima.
 
-- Treino → Cardio → Esteira: salvar duração e distância, conferir velocidade/ritmo; testar kcal informadas e peso para estimativas sem kcal.
-- Tipo/data por rolagem; campos opcionais, frequência cardíaca e nota; fechar seletores sem confirmar preserva valores. Fechar o formulário sem Salvar não grava.
-- Vincular cardio a um treino da mesma data e conferir o resumo de cardio do dia/treino. Ficha só de cardio inicia sem séries de força.
-- Histórico de cardio: filtro por tipo, edição, excluir/desfazer; conferir recordes de distância/duração/ritmo entre sessões do mesmo tipo.
-- Ajuste de cardio: registrar 200 kcal e configurar 80%; original segue 200 e soma usa 160.
-- Hoje: registrar passos e kcal manualmente. No modo soma, conferir treino + cardio ajustado + extra. No modo total do relógio, somente o número manual, sem dupla contagem.
-- Metas úteis e fins de semana/feriados; ajustar metas depois de registrar e conferir que dias anteriores preservam as aplicadas.
-- Feriados/descanso: editar, adicionar e remover; testar atalho em Hoje. Datas futuras permitidas na lista de feriados; registros de atividade/cardio só até hoje.
-- Histórico da atividade: editar data antiga, gráficos 7/30 dias, metas por dia e dias que atingiram metas na semana.
-- Meta semanal de cardio, resumo de sessões, km, minutos e kcal. Sem peso nem kcal, estimativa indisponível e totais parciais sinalizados.
-- Offline no iPhone: registrar, editar, consultar gráficos/históricos e testar gestos/rolagem dos painéis.
-
-44 testes, TypeScript, lint e build. Saúde/Mi Fitness nativo permanece futuro; chat alimentar planejado para 9. Próxima etapa após aprovação: 7, backup.
+Próxima etapa: 7, backup JSON/CSV e proteção no iOS. Saúde/Mi Fitness nativo permanece como evolução futura; chat alimentar planejado para 9 após estrutura de conta/servidor da etapa 8.
