@@ -1,5 +1,6 @@
+import { AtividadeHoje } from '../componentes/AtividadeHoje'
 import { LembreteMedidas } from '../componentes/LembreteMedidas'
-import { ArrowUpRight, Dumbbell, Footprints, Utensils, Droplets, Activity } from 'lucide-react'
+import { ArrowUpRight, Dumbbell, Utensils, Droplets, Activity } from 'lucide-react'
 import type { Aba } from '../componentes/Navegacao'
 export function Hoje({ abrir, registrarMedida }: { abrir: (aba: Aba) => void; registrarMedida: () => void }) {
   return <><LembreteMedidas abrir={registrarMedida} />
@@ -11,13 +12,14 @@ export function Hoje({ abrir, registrarMedida }: { abrir: (aba: Aba) => void; re
     <div className="titulo-secao"><h2>Seu dia, em equilíbrio</h2><span>Hoje</span></div>
     <div className="grade-cartoes">
       <button className="cartao" onClick={() => abrir('Treino')}><Dumbbell className="verde" /><span>Treino e cardio</span><strong>Vamos começar</strong><small>Seu próximo movimento</small></button>
-      <div className="cartao"><Footprints className="amarelo" /><span>Passos</span><strong>— <small>passos</small></strong><small>Ainda sem registros</small></div>
       <button className="cartao" onClick={() => abrir('Comida')}><Utensils className="laranja" /><span>Alimentação</span><strong>— <small>kcal</small></strong><small>Seu diário em breve</small></button>
       <div className="cartao"><Droplets className="azul" /><span>Água</span><strong>— <small>ml</small></strong><small>Um hábito de cada vez</small></div>
     </div>
+    <AtividadeHoje />
     <section className="nota"><span className="ponto" /><div><h3>Um espaço só seu</h3><p>Os dados ficam primeiro neste aparelho. Sincronização e backup chegam nas próximas etapas.</p></div></section>
     <button className="botao-secundario" disabled>Sincronizar · disponível na etapa 8</button>
   </>
 }
+
 
 

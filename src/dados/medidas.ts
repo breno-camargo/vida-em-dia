@@ -2,7 +2,7 @@ import { banco, tabela } from './banco'
 import { criarRegistro } from './repositorio'
 import type { MedidaCorporal } from './modelos'
 export const camposMedidas = [
-  ['peso', 'Peso', 'kg'], ['cintura', 'Cintura', 'cm'], ['abdomen', 'Abdômen', 'cm'], ['quadril', 'Quadril', 'cm'],
+  ['peso', 'Peso', 'kg'], ['busto', 'Busto', 'cm'], ['cintura', 'Cintura', 'cm'], ['abdomen', 'Abdômen', 'cm'], ['quadril', 'Quadril', 'cm'],
   ['biceps_d', 'Bíceps direito', 'cm'], ['biceps_e', 'Bíceps esquerdo', 'cm'], ['coxa_d', 'Coxa direita', 'cm'], ['coxa_e', 'Coxa esquerda', 'cm'], ['panturrilha_d', 'Panturrilha direita', 'cm'], ['panturrilha_e', 'Panturrilha esquerda', 'cm'],
 ] as const
 export type CampoMedida = typeof camposMedidas[number][0]

@@ -23,10 +23,11 @@ export async function ultimasSeries(exercicio_id: string) {
   series.sort((a, b) => (b.concluida_em ?? '').localeCompare(a.concluida_em ?? ''))
   return series.filter(s => s.treino_id === series[0]?.treino_id).sort((a, b) => a.numero_serie - b.numero_serie)
 }
-export async function montarExercicio(treino: Treino, ex: Exercicio, quantidade: number, ordem: number, descanso = ex.descanso_padrao_segundos) {
+export async function montarExercicio(treino: Treino, ex: Exercicio, quantidade: number, ordem: number, descanso = ex.descanso_padrao_segundos, origem_ficha = false) {
   const ultimas = await ultimasSeries(ex.id)
-  const item: TreinoExercicio = { ...criarRegistro(treino.user_id), treino_id: treino.id, exercicio_id: ex.id, nome: ex.nome, ordem, descanso_segundos: descanso }
+  const item: TreinoExercicio = { ...criarRegistro(treino.user_id), treino_id: treino.id, exercicio_id: ex.id, nome: ex.nome, ordem, descanso_segundos: descanso, tipo: ex.tipo, origem_ficha }
   await tabela('treino_exercicios').add(item)
+  if (ex.tipo === 'cardio') return
   const series: SerieTreino[] = Array.from({ length: quantidade }, (_, indice) => {
     const anterior = ultimas[indice] ?? ultimas.at(-1)
     const modo = ex.modo_carga === 'peso_corporal' ? 'peso_corporal' : anterior?.modo_carga ?? ex.modo_carga
@@ -36,11 +37,41 @@ export async function montarExercicio(treino: Treino, ex: Exercicio, quantidade:
   })
   await tabela('series_treino').bulkAdd(series)
 }
+export async function completarCardioDaFicha(id: string) {
+  await banco.transaction('rw', banco.tables, async () => {
+    const treino = await tabela('treinos').get(id)
+    if (!treino?.ficha_id || treino.fim || treino.apagado_em) return
+    const ficha = await tabela('fichas').get(treino.ficha_id)
+    if (!ficha || ficha.apagado_em) return
+    const planoCompleto = await tabela('ficha_exercicios').where('ficha_id').equals(treino.ficha_id).sortBy('ordem')
+    const planejamento = planoCompleto.filter(i => !i.apagado_em)
+    // Inclua removidos na verificação para respeitar retiradas feitas só neste treino.
+    const existentes = await tabela('treino_exercicios').where('treino_id').equals(id).toArray()
+    const cardioRegistrado = await tabela('cardio_sessoes').where('treino_id').equals(id).filter(c => !c.apagado_em).toArray()
+    const agora = new Date().toISOString()
+    for (const item of existentes) {
+      const veioDaFicha = item.origem_ficha === true || (item.origem_ficha === undefined && planoCompleto.some(p => p.exercicio_id === item.exercicio_id))
+      if (item.tipo === 'cardio' && !item.apagado_em && veioDaFicha && !planejamento.some(p => p.exercicio_id === item.exercicio_id) && !cardioRegistrado.some(c => c.exercicio_id === item.exercicio_id)) {
+        await tabela('treino_exercicios').update(item.id, { apagado_em: agora, atualizado_em: agora, retirado_da_ficha: true })
+      }
+    }
+    let ordem = Math.max(-1, ...existentes.map(i => i.ordem)) + 1
+    for (const item of planejamento) {
+      const existente = existentes.find(i => i.exercicio_id === item.exercicio_id)
+      if (existente) {
+        if (existente.apagado_em && existente.retirado_da_ficha) await tabela('treino_exercicios').update(existente.id, { apagado_em: null, retirado_da_ficha: false, atualizado_em: agora })
+        continue
+      }
+      const ex = await tabela('exercicios').get(item.exercicio_id)
+      if (ex?.tipo === 'cardio' && !ex.apagado_em) await montarExercicio(treino, ex, 0, ordem++, item.descanso_segundos, true)
+    }
+  })
+}
 export async function iniciarTreino(ficha_id?: string, encerrarAtual = false) {
   return banco.transaction('rw', banco.tables, async () => {
     const ativo = await treinoAtivo()
     if (ativo) {
-      if (ativo.ficha_id === ficha_id) return ativo.id
+      if (ativo.ficha_id === ficha_id) { await completarCardioDaFicha(ativo.id); return ativo.id }
       const itensAtivos = await tabela('treino_exercicios').where('treino_id').equals(ativo.id).filter(i => !i.apagado_em).count()
       const seriesAtivas = await tabela('series_treino').where('treino_id').equals(ativo.id).filter(s => !s.apagado_em).count()
       if (!ativo.ficha_id && itensAtivos === 0 && seriesAtivas === 0 && !ativo.observacao.trim()) {
@@ -52,7 +83,8 @@ export async function iniciarTreino(ficha_id?: string, encerrarAtual = false) {
         const minutos = Math.round(minutosReais)
         const medidas = await tabela('medidas_corporais').filter(m => !m.apagado_em && Boolean(m.peso)).sortBy('data')
         const peso = medidas.at(-1)?.peso
-        await tabela('treinos').update(ativo.id, { fim, duracao_minutos: minutos, peso_corporal: peso, calorias: peso ? caloriasMusculacao(peso, minutosReais) : 0, descanso_fim: null, atualizado_em: fim })
+        const forca = await tabela('treino_exercicios').where('treino_id').equals(ativo.id).filter(i => !i.apagado_em && i.tipo !== 'cardio').count()
+        await tabela('treinos').update(ativo.id, { fim, duracao_minutos: minutos, peso_corporal: peso, calorias: peso && forca ? caloriasMusculacao(peso, minutosReais) : 0, descanso_fim: null, atualizado_em: fim })
       } else {
         throw new Error(`Há um treino em andamento: ${ativo.titulo ?? 'Treino anterior'}. Use “Continuar treino” e finalize-o antes de iniciar outro.`)
       }
@@ -66,9 +98,9 @@ export async function iniciarTreino(ficha_id?: string, encerrarAtual = false) {
       let ordem = 0
       for (const item of itens) {
         const ex = await tabela('exercicios').get(item.exercicio_id)
-        if (ex && !ex.apagado_em && ex.tipo === 'forca') await montarExercicio(novo, ex, item.series_planejadas, ordem++, item.descanso_segundos)
+        if (ex && !ex.apagado_em) await montarExercicio(novo, ex, item.series_planejadas, ordem++, item.descanso_segundos, true)
       }
-      if (ordem === 0) throw new Error('Adicione um exercício de força à ficha. O registro de cardio chega na etapa 6.')
+      if (ordem === 0) throw new Error('Adicione um exercício à ficha.')
     }
     return novo.id
   })
@@ -116,6 +148,10 @@ export async function aplicarValoresProximas(dados: SerieTreino) {
     await tabela('series_treino').bulkPut([{ ...dados, ...valores }, ...seguintes.map(s => ({ ...s, ...valores }))])
   })
 }
+
+
+
+
 
 
 

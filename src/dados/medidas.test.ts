@@ -87,3 +87,17 @@ test('calcule calorias pelo tempo real mesmo num treino com menos de um minuto',
   expect(salvo.duracao_minutos).toBe(0)
   expect(salvo.calorias).toBeGreaterThan(0)
 })
+
+test('salve busto isolado, compare duas datas e mantenha registros antigos sem busto', async () => {
+  const antes = { ...medida('2026-01-01'), busto: 92.5 }
+  const depois = { ...medida('2026-01-02'), busto: 93.1 }
+  await salvarMedida(antes)
+  await salvarMedida(depois)
+  banco.close(); await banco.open()
+  const salvo = (await tabela('medidas_corporais').get(antes.id))!
+  expect(salvo.busto).toBe(92.5)
+  expect(salvo.peso).toBeUndefined()
+  expect(diferencaMedida(salvo, depois, 'busto')).toBe(0.6)
+  expect(diferencaMedida(medida('2025-12-01', 70), depois, 'busto')).toBeNull()
+  await expect(salvarMedida({ ...medida('2026-01-03'), busto: 0 })).rejects.toThrow('busto')
+})

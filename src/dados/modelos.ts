@@ -23,7 +23,7 @@ export interface Treino extends Registro {
   titulo?: string; descanso_fim?: string | null; peso_corporal?: number
 }
 export interface TreinoExercicio extends Registro {
-  treino_id: string; exercicio_id: string; nome: string; ordem: number; descanso_segundos: number
+  treino_id: string; exercicio_id: string; nome: string; ordem: number; descanso_segundos: number; tipo?: 'forca' | 'cardio'; origem_ficha?: boolean; retirado_da_ficha?: boolean
 }
 export interface SerieTreino extends Registro {
   treino_id: string; exercicio_id: string; numero_serie: number
@@ -34,7 +34,7 @@ export interface SerieTreino extends Registro {
   reducoes?: { peso_digitado: number; repeticoes: number }[]
 }
 export interface CardioSessao extends Registro {
-  treino_id?: string; data: string
+  treino_id?: string; exercicio_id?: string; data: string
   tipo: 'esteira' | 'caminhada' | 'corrida' | 'bicicleta' | 'eliptico' | 'escada' | 'remo' | 'outro'
   duracao_minutos: number; distancia_km?: number; velocidade_media_kmh?: number
   inclinacao_pct?: number; passos?: number; calorias_informadas?: number
@@ -42,7 +42,7 @@ export interface CardioSessao extends Registro {
 }
 export interface MedidaCorporal extends Registro {
   data: string; peso?: number; biceps_d?: number; biceps_e?: number; cintura?: number
-  abdomen?: number; quadril?: number; coxa_d?: number; coxa_e?: number
+  busto?: number; abdomen?: number; quadril?: number; coxa_d?: number; coxa_e?: number
   panturrilha_d?: number; panturrilha_e?: number
 }
 export interface AtividadeDiaria extends Registro {
@@ -75,6 +75,8 @@ export interface Configuracao extends Registro {
   fator_calorias_cardio: number; modo_calorias_gastas: 'soma' | 'total_manual'
   prompt_ia_modelo: string; dia_lembrete_medidas: number; dias_lembrete_backup: number
   ultimo_backup?: string; ultima_sincronizacao?: string; sync_automatico: boolean
+  metas_calorias_separadas?: boolean
+  anos_feriados_inicializados?: number[]
   biblioteca_inicializada?: boolean
 }
 export interface Tabelas {
@@ -85,4 +87,9 @@ export interface Tabelas {
   refeicoes_dia: RefeicaoDia; alimentos_favoritos: AlimentoFavorito; combos_refeicao: ComboRefeicao
   agua_dia: AguaDia; consumo_diario_meta: ConsumoDiarioMeta; fotos: Foto; configuracoes: Configuracao
 }
+
+
+
+
+
 

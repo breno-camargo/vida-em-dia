@@ -7,7 +7,7 @@ import type { MedidaCorporal } from '../dados/modelos'
 import { camposMedidas, formatarDataMedida, salvarMedida, type CampoMedida } from '../dados/medidas'
 function ValorMedida({ campo, valor, fechar, confirmar }: { campo: CampoMedida; valor?: number; fechar: () => void; confirmar: (valor?: number) => void }) {
   const info = camposMedidas.find(c => c[0] === campo)!
-  const inicial = valor ?? (campo === 'peso' ? 70 : campo === 'cintura' || campo === 'abdomen' || campo === 'quadril' ? 80 : 35)
+  const inicial = valor ?? (campo === 'peso' ? 70 : campo === 'busto' || campo === 'cintura' || campo === 'abdomen' || campo === 'quadril' ? 80 : 35)
   const [inteiro, definirInteiro] = useState(Math.floor(inicial))
   const [decimal, definirDecimal] = useState(Math.round(inicial % 1 * 10))
   const inteiros = useMemo(() => Array.from({ length: campo === 'peso' ? 401 : 301 }, (_, i) => i), [campo])

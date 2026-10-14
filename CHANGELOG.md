@@ -5,3 +5,4 @@
 - v0.3.0 — ETAPA 3 aprovada em 06/10/2026: treino persistente, seletores de séries, descanso central com contagem sonora e fluxo de conclusão validado no iPhone.
 - v0.4.0 — ETAPA 4 aprovada em 06/10/2026: histórico com busca e desfazer, evolução por exercício, recordes de carga e repetições, gráficos e card compartilhável; refinamentos de treino e painéis validados pelo usuário.
 - v0.5.0 — ETAPA 5 aprovada em 12/10/2026: peso e medidas parciais, histórico com edição e desfazer exclusão, comparação entre datas, resumo de todas as medidas, gráficos por medida e lembrete semanal configurável. Calorias calculadas pelo tempo real do treino.
+- v0.6.0 — ETAPA 6 aprovada em 14/10/2026: cardio, histórico e recordes, passos e calorias do dia, metas e feriados editáveis, gráficos 7/30 dias e modo de total do relógio. Inclui busto nas medidas, ícones por exercício, sincronização de cardio planejado e rolagem por casas numéricas.
