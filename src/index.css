@@ -57,3 +57,5 @@ details.painel.exercicio-historico-recolhivel>summary{display:flex;align-items:c
 
 .rodas-numero.casas-numero{grid-template-columns:repeat(4,minmax(0,1fr));max-width:none;gap:8px}.casas-numero .coluna-roda>span{font-size:8px;letter-spacing:.5px}.casas-numero .roda>button{font-size:24px}
 .backup-config>.formulario{margin-top:16px}.incluir-fotos{display:flex;align-items:center;gap:10px;min-height:48px;font-size:13px;color:#b8cebc;line-height:1.6}.incluir-fotos input{width:22px;height:22px;accent-color:#bcec86;flex-shrink:0}.arquivo-backup{display:grid;gap:12px;padding:16px;border:1px solid #3c553b;border-radius:14px;background:#1d3022}.arquivo-backup>strong{font-size:14px}.arquivo-backup>small{font-size:11px;color:#98b39e;overflow-wrap:anywhere}.backup-config .largura-total{margin:0}
+
+.formulario-conta,.estado-sync,.conta{display:grid;gap:14px}.formulario-conta label{display:grid;gap:8px}.formulario-conta input{width:100%;min-height:48px;padding:12px;border:1px solid var(--borda);border-radius:12px;background:#0e1712;color:inherit;font:inherit}.estado-sync small{display:block}.conta p{overflow-wrap:anywhere}

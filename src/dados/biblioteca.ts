@@ -14,6 +14,7 @@ const grupos: Record<string, string[]> = {
   Abdômen: ['Abdominal no solo', 'Abdominal na máquina', 'Elevação de pernas', 'Prancha abdominal'],
   Cardio: ['Esteira', 'Bicicleta ergométrica', 'Elíptico', 'Escada'],
 }
+export const nomesBibliotecaInicial = Object.values(grupos).flat()
 
 export async function iniciarBiblioteca() {
   await banco.transaction('rw', tabela('exercicios'), tabela('configuracoes'), async () => {

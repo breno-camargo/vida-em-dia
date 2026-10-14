@@ -1,17 +1,17 @@
-# Etapa 7 — aprovada
+# Etapa 8 — configuração e homologação
 
-Checklist completo aprovado pelo usuário em 14/10/2026, incluindo arquivo inválido rejeitado sem alterar os dados. Versão 0.7.0 preparada para publicação.
+Etapas 1 a 7 aprovadas. Etapa 8 implementada em `etapa-8-conta-sincronizacao` e integrada em `test` para homologação; produção permanece 0.7.0.
 
-Validação: 55 testes, TypeScript, lint e build. Backup JSON com fotos opcionais, CSV, importação atômica para mesclar ou substituir e lembrete de backup.
-
-Publicar a partir da branch main:
+1. Seguir `supabase/CONFIGURAR.md`: aplicar SQL no projeto NOVO de teste, criar conta pessoal e fechar cadastro público; configurar template de recuperação por código.
+2. Configurar VITE_SUPABASE_URL e VITE_SUPABASE_PUBLISHABLE_KEY no Preview da Vercel (branch test). As variáveis locais já foram gravadas em .env.local, fora do Git.
+3. Publicar a prévia:
 
 ```cmd
-git push origin main
-git push origin v0.7.0
-npx vercel --prod
-git switch test
+git push origin etapa-8-conta-sincronizacao
 git push origin test
+npx vercel
 ```
 
-Próxima etapa: 8, conta e sincronização.
+4. Executar o checklist de `supabase/CONFIGURAR.md` em dois aparelhos/navegadores e no app instalado do iPhone. Fotos não sincronizam nesta etapa: fazer JSON com fotos.
+
+66 testes, TypeScript, lint e build. O SQL foi testado em Postgres embarcado; falta aplicação e teste no Supabase real, incluindo envio de e-mail. Não executar migração em banco com dados de produção sem revisão prévia.

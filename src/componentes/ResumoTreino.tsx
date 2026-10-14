@@ -28,7 +28,7 @@ export function ResumoTreino({ treino, series, anterior, pesoInicial, finalizar,
     {erro && <p role="alert" className="erro">{erro}</p>}
     {!treino.fim ? <div className="acoes-resumo-fixas"><button className="botao-principal largura-total" disabled={ocupado} onClick={async () => {
       definirOcupado(true); definirErro('')
-      try { if (!Number.isFinite(peso) || peso < 0 || peso > 500 || !Number.isFinite(kcal) || kcal < 0 || kcal > 10000) throw new Error('Confira peso e calorias.'); await finalizar(peso || undefined, series.length ? caloriasMusculacao(peso, Math.max(0, (Date.now() - Date.parse(treino.inicio)) / 60000)) : 0) }
+      try { if (!Number.isFinite(peso) || peso < 0 || peso > 500 || !Number.isFinite(kcal) || kcal < 0 || kcal > 10000) throw new Error('Confira peso e calorias.'); await finalizar(peso || undefined, series.length ? caloriasMusculacao(peso, Math.max(0, (Date.now() - Date.parse(treino.inicio)) / 60000)) : 0); window.dispatchEvent(new Event('vida-em-dia:treino-finalizado')) }
       catch (error) { definirErro(error instanceof Error ? error.message : 'Não foi possível finalizar o treino.') }
       finally { definirOcupado(false) }
     }}>Finalizar e salvar</button><button className="botao-secundario" disabled={ocupado} onClick={voltar}>Voltar ao treino</button></div> : <button className="botao-principal largura-total" onClick={fechar}>Voltar às fichas</button>}

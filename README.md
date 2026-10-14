@@ -4,7 +4,7 @@ PWA pessoal de treino, cardio, medidas, alimentação e saúde. Interface em por
 
 ## Estado do projeto
 
-ETAPAS 1, 2 e 3 aprovadas (v0.1.0, v0.2.0 e v0.3.0), mantendo o verde original. O usuário validou a etapa 3 no iPhone e aprovou a conclusão em 06/10/2026. ETAPA 4 aprovada em 06/10/2026 (v0.4.0), após validação do checklist pelo usuário e correção final do vazamento no painel do card. ETAPA 5 aprovada pelo usuário em 12/10/2026 (v0.5.0). ETAPA 6 aprovada pelo usuário em 14/10/2026 (v0.6.0). ETAPA 7 aprovada pelo usuário em 14/10/2026 (v0.7.0). As etapas 8 a 14 não foram implementadas.
+ETAPAS 1, 2 e 3 aprovadas (v0.1.0, v0.2.0 e v0.3.0), mantendo o verde original. O usuário validou a etapa 3 no iPhone e aprovou a conclusão em 06/10/2026. ETAPA 4 aprovada em 06/10/2026 (v0.4.0), após validação do checklist pelo usuário e correção final do vazamento no painel do card. ETAPA 5 aprovada pelo usuário em 12/10/2026 (v0.5.0). ETAPA 6 aprovada pelo usuário em 14/10/2026 (v0.6.0). ETAPA 7 aprovada pelo usuário em 14/10/2026 (v0.7.0). ETAPA 8 implementada para homologação, com configuração do Supabase pendente. As etapas 9 a 14 não foram implementadas.
 
 Inclui React, TypeScript, Vite, Tailwind, Dexie, cinco abas, tema escuro, configurações informativas, ícones, manifest e service worker. Já há registro local de treinos. Login, sincronização e backup chegam nas próximas etapas. O modo claro chega na etapa 13.
 
@@ -129,7 +129,7 @@ Entregue a branch para `test`, publique o preview e espere aprovação explícit
 5. Use o endereço da branch `test` para homologação, sempre o mesmo. A Vercel fornece HTTPS. Se houver proteção de preview, autentique-se no iPhone antes de instalar.
 6. Após aprovação e push de `main`, use o endereço de produção como endereço definitivo do app.
 
-Importante: os dados de cada endereço ficam separados. O preview e a produção não compartilham IndexedDB. O app ainda não possui exportação nem sincronização; não registre dados reais antes das etapas de proteção.
+Importante: os dados de cada endereço ficam separados. O preview e a produção não compartilham IndexedDB. Backup JSON/CSV disponível desde a etapa 7. A sincronização da etapa 8 exige configurar Supabase e entrar na mesma conta em cada endereço. Fotos continuam no backup JSON até a etapa 11.
 
 Referências: [Vite](https://vite.dev/guide/), [Tailwind com Vite](https://tailwindcss.com/docs/installation/using-vite), [PWA para React](https://vite-pwa-org.netlify.app/frameworks/react.html), [versionamento Dexie](https://dexie.org/docs/Version/Version), [deploys Git na Vercel](https://vercel.com/docs/git).
 
@@ -223,3 +223,13 @@ Lembrete em Hoje após o intervalo sem backup e sem sincronização, padrão 14 
 
 Checklist da etapa 7 aprovado pelo usuário em 14/10/2026, incluindo rejeição de arquivo inválido sem modificar dados. 55 testes, TypeScript, lint e build validados. Versão 0.7.0 preparada para publicação; próxima etapa: 8, conta e sincronização.
 
+
+## Etapa 8 — conta e sincronização (em homologação)
+
+Login com e-mail/senha, sessão persistente e recuperação com código digitado no próprio app. Dados sempre são gravados primeiro no Dexie. Botão Sincronizar em Hoje e Configurações; automático opcional ao abrir, voltar ao primeiro plano, reconectar e finalizar treino. Fila local e recibos persistentes em banco Dexie separado, reconstruídos por comparação de conteúdo dos registros; lotes de 100 para envio e páginas de 200 por ID para leitura completa. Não depende apenas de cursor por data, evitando perder alterações antigas recebidas fora de ordem. Conflitos por ID usam atualizado_em; empate preserva o servidor. Exclusões continuam como tombstones. Registros distintos com a mesma data exigem revisão, protegidos por índices únicos no servidor. Datas/calendário permanecem locais e timestamps ISO; relógios corretos são necessários para LWW.
+
+Primeira conexão pede confirmação de mesclagem. Aparelho sem registros pessoais e com biblioteca padrão intocada baixa a conta existente, sem duplicar o catálogo nem enviar configurações padrão por cima da nuvem. Dados já usados são mesclados por ID. Aparelho permanece vinculado à conta; sair mantém os dados locais e não permite enviá-los para outra conta. Não há alternância de perfis neste aparelho pessoal.
+
+Variáveis: `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY` (suporte legado a ANON_KEY). `.env.local` ignorado pelo Git; nunca colocar secret/service_role no frontend. Configurar Preview e Production separadamente. SQL versionado cria 17 tabelas com RLS por dono, índices, RPC com LWW atômico e bucket privado. Dados em JSONB com metadados indexados, para manter compatibilidade com os registros locais. Sincronização de imagens adiada para a etapa 11; fotos continuam protegidas pelo JSON com fotos.
+
+[Configuração e checklist completos](supabase/CONFIGURAR.md). 66 testes incluem execução real do SQL em Postgres embarcado (PGlite), acesso anônimo e entre duas contas negado, bucket privado, conflitos, retomada da fila após falha, paginação e primeiro aparelho. TypeScript, lint e build validados. Pendentes no ambiente real: aplicar SQL no projeto novo de teste, criar conta, configurar template do código/entrega de e-mail, variáveis Preview e homologação no iPhone. Não foi executado SQL remoto nem alterada a produção nesta etapa. Versão do app permanece 0.7.0 até aprovação.
