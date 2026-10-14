@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { supabase } from '../sincronizacao/cliente'
-import { confirmarVinculo, sairConta, sincronizar, useConta } from '../sincronizacao/estado'
+import { confirmarVinculo, definirRecuperacao, sairConta, sincronizar, useConta } from '../sincronizacao/estado'
 import { tabela } from '../dados/banco'
 import { Painel } from './Painel'
 export function ContaConfiguracoes(){
@@ -28,7 +28,7 @@ export function ContaConfiguracoes(){
   } else {
    const {error}=await supabase.auth.updateUser({password:senha})
    if(error)throw new Error('Não foi possível alterar a senha. Use pelo menos 8 caracteres e tente novamente.')
-   setSenha('');setModo('entrar');setAviso('Senha atualizada.')
+   setSenha('');setModo('entrar');definirRecuperacao(false);setAviso('Senha atualizada.')
   }
  })}
  return <section className="painel conta"><h2>Conta e sincronização</h2>
@@ -38,7 +38,7 @@ export function ContaConfiguracoes(){
  {(modo==='entrar'||modo==='nova')&&<label>{modo==='nova'?'Nova senha':'Senha'}<input type="password" autoComplete={modo==='nova'?'new-password':'current-password'} minLength={modo==='nova'?8:1} required value={senha} onChange={e=>setSenha(e.target.value)} disabled={ocupado}/></label>}
  {modo==='codigo'&&<label>Código recebido por e-mail<input inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6,10}" required value={codigo} onChange={e=>setCodigo(e.target.value.replace(/\D/g,''))}/></label>}
  <button className="botao-principal" disabled={ocupado}>{ocupado?'Aguarde…':modo==='entrar'?'Entrar':modo==='recuperar'?'Enviar código':modo==='codigo'?'Confirmar código':'Salvar nova senha'}</button>
- {modo==='entrar'?<button type="button" className="botao-secundario" onClick={()=>{setModo('recuperar');setSenha('');setErro('')}}>Esqueci minha senha</button>:<button type="button" className="botao-secundario" onClick={()=>{setModo('entrar');setSenha('');setErro('')}}>Voltar para entrar</button>}
+ {modo==='entrar'?<button type="button" className="botao-secundario" onClick={()=>{setModo('recuperar');definirRecuperacao(true);setSenha('');setErro('')}}>Esqueci minha senha</button>:<button type="button" className="botao-secundario" onClick={()=>{setModo('entrar');definirRecuperacao(false);setSenha('');setErro('')}}>Voltar para entrar</button>}
  <small>Sua conta é criada pelo administrador. O treino continua disponível sem login.</small>
  </form>:<>
  <p>{conta.usuario.email}</p>
