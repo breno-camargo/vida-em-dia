@@ -245,3 +245,5 @@ Configurações recolhidas por padrão: Conta e sincronização, Backup, Lembret
 Seção de conta compacta: e-mail aparece apenas no cabeçalho, conexão com texto curto e botão centralizado, saída como ação discreta com aviso sobre registros locais. Informações adicionais sobre vínculo e backup de fotos ficam em “Sobre seus dados”, recolhidas; confirmação de mesclagem continua no painel próprio.
 
 Ação Sair da conta movida para o fim da lista de configurações, fora das seções recolhidas e visível quando autenticado. Mantém bloqueio durante sync e mostra falha de saída junto ao botão. Card da conta com margens internas uniformes, cabeçalho alinhado, botão de conexão centralizado e e-mail apenas no cabeçalho.
+
+E-mail de recuperação refinado: fundo externo claro, card verde escuro mais estreito, tipografia com hierarquia, área do código escura com números verdes maiores e textos mais curtos. Mantém HTML em tabelas, estilos inline, sem imagens/scripts externos e um único placeholder Token. Alteração precisa ser reaplicada no Source do template Reset password no Supabase.
