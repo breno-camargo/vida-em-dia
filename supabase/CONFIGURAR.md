@@ -18,12 +18,7 @@ O painel deste projeto exige SMTP próprio para editar modelos (aviso "Set up cu
 
 Depois, em Authentication → Emails → Reset Password, use um código no lugar do link:
 
-```html
-<h2>Recuperar acesso ao Vida em Dia</h2>
-<p>Digite este código no app:</p>
-<p><strong>{{ .Token }}</strong></p>
-<p>Se você não solicitou a recuperação, ignore esta mensagem.</p>
-```
+Abra `supabase/templates/recuperar-senha.html` e copie o conteúdo completo para Source. No Subject, use `Seu código de recuperação — Vida em Dia`. O modelo usa tabelas e estilos inline para e-mail; mantenha `{{ .Token }}` exatamente como no arquivo.
 
 O app solicita a recuperação por e-mail, verifica o código como `recovery` e pede uma nova senha, sem abrir link no Safari. Testar entrega real do e-mail; o provedor padrão do Supabase tem limites de envio/destinatários. Se necessário, configurar SMTP próprio, sem colocar credenciais no app.
 
@@ -58,3 +53,7 @@ A fila e os recibos usam um segundo IndexedDB, versionado separadamente (`vida-e
 Sair não apaga o armazenamento local. Este app é para um aparelho pessoal, não há troca de perfis com armazenamento compartilhado nesta etapa.
 
 Fontes: [RLS](https://supabase.com/docs/guides/database/postgres/row-level-security), [recuperação de senha](https://supabase.com/docs/reference/javascript/auth-resetpasswordforemail), [verificar código](https://supabase.com/docs/reference/javascript/auth-verifyotp).
+
+## Remetente dedicado do Vida em Dia
+
+Ao criar o e-mail exclusivo do app, atualizar Sender email e Username para esse novo endereço. Se for Gmail, gerar a senha de app conectado à NOVA conta, com verificação em duas etapas ativada, e substituir Password no SMTP. Nome do remetente: Vida em Dia. Não reutilizar a senha de app da conta pessoal. Salvar e testar uma única recuperação com um código novo; nunca colocar senha SMTP no repositório ou enviar no chat.
