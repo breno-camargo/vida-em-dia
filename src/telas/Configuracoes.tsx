@@ -3,7 +3,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { ChevronDown, UserRound, DatabaseBackup, Ruler, Activity, Smartphone, Info, Download } from 'lucide-react'
 import { tabela } from '../dados/banco'
 import { BackupConfiguracoes } from '../componentes/BackupConfiguracoes'
-import { ContaConfiguracoes } from '../componentes/ContaConfiguracoes'
+import { BotaoSairDaConta, ContaConfiguracoes } from '../componentes/ContaConfiguracoes'
 import { ConfigurarAtividade } from '../componentes/ConfigurarAtividade'
 import { ConfigurarLembreteMedidas } from '../componentes/ConfigurarLembreteMedidas'
 import { useConta } from '../sincronizacao/estado'
@@ -35,5 +35,5 @@ export function Configuracoes({ instalado, persistente, inicial }: { instalado: 
       </button></h2>
       <div id={`conteudo-config-${secao.id}`} role="region" aria-labelledby={`titulo-config-${secao.id}`} hidden={!expandida} className="conteudo-config">{expandida&&secao.conteudo}</div>
     </section>
-  })}</div>
+  })}<BotaoSairDaConta/></div>
 }

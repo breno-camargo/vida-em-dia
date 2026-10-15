@@ -49,13 +49,25 @@ export function ContaConfiguracoes({entrada=false,resumida=false}:{entrada?:bool
  <BotaoSincronizar/>
  <label className="backup-checkbox"><input type="checkbox" checked={config?.sync_automatico??false} disabled={conta.ocupado} onChange={e=>{if(config)void tabela('configuracoes').update(config.id,{sync_automatico:e.target.checked})}}/>Sincronizar ao abrir, voltar ao app e finalizar treino</label>
  </>}
- <div className="conta-rodape"><button className="sair-conta" disabled={conta.ocupado||ocupado} onClick={()=>void executar(sairConta)}><LogOut size={16}/>Sair da conta</button><p>Seus registros continuam neste aparelho.</p></div>
  <details className="ajuda-conta"><summary>Sobre seus dados</summary><p>Use o app em um aparelho pessoal. Sair mantém os dados e o vínculo com esta conta. As fotos ficam no aparelho; inclua-as no backup JSON para guardá-las.</p></details>
  </div>}
  </>}
  {aviso&&<p role="status">{aviso}</p>}{erro&&<p role="alert" className="erro">{erro}</p>}
  {mesclar&&<Painel titulo="Conectar este aparelho" fechar={()=>{if(!ocupado)setMesclar(false)}}><p>Mesclar envia seus registros para {conta.usuario?.email} e baixa os dados dessa conta. Para registros com o mesmo identificador, vale a alteração mais recente. Registros diferentes na mesma data podem exigir revisão.</p><p>Guarde um backup JSON com fotos antes de continuar. Este aparelho ficará vinculado a esta conta.</p><button className="botao-principal" disabled={ocupado} onClick={()=>void executar(async()=>{await confirmarVinculo();setMesclar(false)})}>{ocupado?'Conectando…':'Confirmar e mesclar'}</button><button className="botao-secundario" disabled={ocupado} onClick={()=>setMesclar(false)}>Agora não</button>{erro&&<p role="alert" className="erro">{erro}</p>}</Painel>}
  </section>
+}
+export function BotaoSairDaConta(){
+ const conta=useConta()
+ const [ocupado,definirOcupado]=useState(false),[erro,definirErro]=useState('')
+ if(!conta.usuario)return null
+ return <div className="saida-config">
+  <button type="button" className="sair-conta" disabled={conta.ocupado||ocupado} onClick={async()=>{
+   definirOcupado(true);definirErro('')
+   try{await sairConta()}catch(e){definirErro(e instanceof Error?e.message:'Não foi possível sair. Tente novamente.')}finally{definirOcupado(false)}
+  }}><LogOut size={18}/>{ocupado?'Saindo…':'Sair da conta'}</button>
+  <p>Seus registros continuam neste aparelho.</p>
+  {erro&&<p role="alert" className="erro">{erro}</p>}
+ </div>
 }
 export function BotaoSincronizar({abrirConta}:{abrirConta?:()=>void}){
  const conta=useConta(),config=useLiveQuery(()=>tabela('configuracoes').where('chave').equals('principal').first())
