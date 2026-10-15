@@ -1,11 +1,11 @@
 import { useState, type FormEvent } from 'react'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, LogOut } from 'lucide-react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { supabase } from '../sincronizacao/cliente'
 import { confirmarVinculo, definirRecuperacao, sairConta, sincronizar, useConta } from '../sincronizacao/estado'
 import { tabela } from '../dados/banco'
 import { Painel } from './Painel'
-export function ContaConfiguracoes({entrada=false}:{entrada?:boolean}){
+export function ContaConfiguracoes({entrada=false,resumida=false}:{entrada?:boolean;resumida?:boolean}){
  const conta=useConta()
  const config=useLiveQuery(()=>tabela('configuracoes').where('chave').equals('principal').first())
  const [email,setEmail]=useState(''),[senha,setSenha]=useState(''),[codigo,setCodigo]=useState('')
@@ -34,7 +34,7 @@ export function ContaConfiguracoes({entrada=false}:{entrada?:boolean}){
    setSenha('');setModo('entrar');definirRecuperacao(false);setAviso('Senha atualizada.')
   }
  })}
- return <section className={entrada?'conta conta-entrada':'painel conta'} aria-label={entrada?'Acesso à conta':'Conta e sincronização'}>{!entrada&&<h2>Conta e sincronização</h2>}
+ return <section className={entrada?'conta conta-entrada':'painel conta'} aria-label={entrada?'Acesso à conta':'Conta e sincronização'}>{!entrada&&!resumida&&<h2>Conta e sincronização</h2>}
  {!supabase?<p>A conexão com a nuvem ainda não foi configurada. Seus dados continuam salvos neste aparelho.</p>:<>
  {conta.carregando?<p role="status">Abrindo sua sessão…</p>:(!conta.usuario||modo==='nova'||modo==='codigo')?<form onSubmit={enviar} className="formulario-conta">
  {modo!=='nova'&&<label>E-mail<input type="email" autoComplete="email" autoCapitalize="none" spellCheck={false} placeholder="voce@exemplo.com" required value={email} onChange={e=>setEmail(e.target.value)} disabled={ocupado}/></label>}
@@ -43,15 +43,15 @@ export function ContaConfiguracoes({entrada=false}:{entrada?:boolean}){
  <button className="botao-principal" disabled={ocupado}>{ocupado?'Aguarde…':modo==='entrar'?'Entrar':modo==='recuperar'?'Enviar código':modo==='codigo'?'Confirmar código':'Salvar nova senha'}</button>
  {modo==='entrar'?<button type="button" className="link-conta recuperar-senha" onClick={()=>{setModo('recuperar');definirRecuperacao(true);setSenha('');setErro('')}}>Esqueci minha senha</button>:<button type="button" className="link-conta" onClick={()=>{setModo('entrar');definirRecuperacao(false);setSenha('');setErro('')}}>Voltar para entrar</button>}
  {!entrada&&<small>Sua conta é criada pelo administrador. O treino continua disponível sem login.</small>}
- </form>:<>
- <p>{conta.usuario.email}</p>
- {!conta.vinculado?<><p>Antes da primeira sincronização, confirme se quer mesclar os dados deste aparelho com esta conta.</p><button className="botao-principal" onClick={()=>setMesclar(true)}>Conectar meus dados</button></>:<>
+ </form>:<div className="conta-sessao">
+ {!resumida&&<p>{conta.usuario.email}</p>}
+ {!conta.vinculado?<div className="conta-vinculo"><p>Conecte este aparelho para sincronizar seus registros.</p><button className="botao-principal" onClick={()=>setMesclar(true)}>Conectar meus dados</button></div>:<>
  <BotaoSincronizar/>
  <label className="backup-checkbox"><input type="checkbox" checked={config?.sync_automatico??false} disabled={conta.ocupado} onChange={e=>{if(config)void tabela('configuracoes').update(config.id,{sync_automatico:e.target.checked})}}/>Sincronizar ao abrir, voltar ao app e finalizar treino</label>
  </>}
- <button className="botao-secundario" disabled={conta.ocupado||ocupado} onClick={()=>void executar(sairConta)}>Sair da conta neste aparelho</button>
- <small>Sair mantém os registros locais e o vínculo com esta conta. Use apenas em um aparelho pessoal. As fotos continuam no backup JSON; sincronização de imagens na etapa 11.</small>
- </>}
+ <div className="conta-rodape"><button className="sair-conta" disabled={conta.ocupado||ocupado} onClick={()=>void executar(sairConta)}><LogOut size={16}/>Sair da conta</button><p>Seus registros continuam neste aparelho.</p></div>
+ <details className="ajuda-conta"><summary>Sobre seus dados</summary><p>Use o app em um aparelho pessoal. Sair mantém os dados e o vínculo com esta conta. As fotos ficam no aparelho; inclua-as no backup JSON para guardá-las.</p></details>
+ </div>}
  </>}
  {aviso&&<p role="status">{aviso}</p>}{erro&&<p role="alert" className="erro">{erro}</p>}
  {mesclar&&<Painel titulo="Conectar este aparelho" fechar={()=>{if(!ocupado)setMesclar(false)}}><p>Mesclar envia seus registros para {conta.usuario?.email} e baixa os dados dessa conta. Para registros com o mesmo identificador, vale a alteração mais recente. Registros diferentes na mesma data podem exigir revisão.</p><p>Guarde um backup JSON com fotos antes de continuar. Este aparelho ficará vinculado a esta conta.</p><button className="botao-principal" disabled={ocupado} onClick={()=>void executar(async()=>{await confirmarVinculo();setMesclar(false)})}>{ocupado?'Conectando…':'Confirmar e mesclar'}</button><button className="botao-secundario" disabled={ocupado} onClick={()=>setMesclar(false)}>Agora não</button>{erro&&<p role="alert" className="erro">{erro}</p>}</Painel>}
