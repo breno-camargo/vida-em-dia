@@ -243,3 +243,5 @@ Alinhamento de Hoje: cards de passos e calorias usam linhas iguais para ícone, 
 Configurações recolhidas por padrão: Conta e sincronização, Backup, Lembrete de medidas, Cardio e movimento, Seu aparelho, Instalar no iPhone e Sobre. Botões de cabeçalho com aria-expanded/aria-controls; só uma seção aberta por vez, sem títulos/cards internos duplicados. Atalhos de Hoje abrem diretamente conta ou backup. Tela de login inicial permanece independente. Conteúdo das configurações carregado sob demanda e incluído no cache offline.
 
 Seção de conta compacta: e-mail aparece apenas no cabeçalho, conexão com texto curto e botão centralizado, saída como ação discreta com aviso sobre registros locais. Informações adicionais sobre vínculo e backup de fotos ficam em “Sobre seus dados”, recolhidas; confirmação de mesclagem continua no painel próprio.
+
+Ação Sair da conta movida para o fim da lista de configurações, fora das seções recolhidas e visível quando autenticado. Mantém bloqueio durante sync e mostra falha de saída junto ao botão. Card da conta com margens internas uniformes, cabeçalho alinhado, botão de conexão centralizado e e-mail apenas no cabeçalho.
