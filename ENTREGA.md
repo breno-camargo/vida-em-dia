@@ -14,4 +14,7 @@ npx vercel
 
 4. Executar o checklist de `supabase/CONFIGURAR.md` em dois aparelhos/navegadores e no app instalado do iPhone. Fotos não sincronizam nesta etapa: fazer JSON com fotos.
 
-66 testes, TypeScript, lint e build. O SQL foi testado em Postgres embarcado; falta aplicação e teste no Supabase real, incluindo envio de e-mail. Não executar migração em banco com dados de produção sem revisão prévia.
+66 testes, TypeScript, lint e build. SQL aplicado pelo usuário no projeto novo; SMTP, recuperação por código, nova senha e login funcionaram no ambiente real. Sincronização dos registros entre aparelhos ainda precisa de homologação. Não executar migração em banco com dados de produção sem revisão prévia.
+
+
+Retomada detalhada de 14/10/2026: veja CONTINUAR-AMANHA.md. PRIORIDADE: comparar o e-mail recebido no celular e no PC, que o usuário relatou terem aparências diferentes. Etapa 8 segue sem aprovação.
