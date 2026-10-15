@@ -1,25 +1,28 @@
 import { useState, type FormEvent } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { supabase } from '../sincronizacao/cliente'
 import { confirmarVinculo, definirRecuperacao, sairConta, sincronizar, useConta } from '../sincronizacao/estado'
 import { tabela } from '../dados/banco'
 import { Painel } from './Painel'
-export function ContaConfiguracoes(){
+export function ContaConfiguracoes({entrada=false}:{entrada?:boolean}){
  const conta=useConta()
  const config=useLiveQuery(()=>tabela('configuracoes').where('chave').equals('principal').first())
  const [email,setEmail]=useState(''),[senha,setSenha]=useState(''),[codigo,setCodigo]=useState('')
  const [modo,setModo]=useState<'entrar'|'recuperar'|'codigo'|'nova'>('entrar')
+ const [mostrarSenha,setMostrarSenha]=useState(false)
  const [ocupado,setOcupado]=useState(false),[erro,setErro]=useState(''),[aviso,setAviso]=useState(''),[mesclar,setMesclar]=useState(false)
  const executar=async(acao:()=>Promise<void>)=>{setOcupado(true);setErro('');try{await acao()}catch(e){setErro(e instanceof Error?e.message:'Não foi possível concluir. Tente novamente.')}finally{setOcupado(false)}}
  async function enviar(e:FormEvent){e.preventDefault();await executar(async()=>{
   if(!supabase)return
+  if(!navigator.onLine)throw new Error('Você está offline. Conecte à internet para acessar sua conta ou continue sem conta.')
   if(modo==='entrar'){
    const {error}=await supabase.auth.signInWithPassword({email:email.trim(),password:senha})
    if(error)throw new Error('Não foi possível entrar. Confira e-mail, senha e conexão.')
    setSenha('')
   } else if(modo==='recuperar'){
    const {error}=await supabase.auth.resetPasswordForEmail(email.trim())
-   if(error)throw new Error('Não foi possível solicitar o código. Aguarde e tente novamente.')
+   if(error)throw new Error(error.code==='over_email_send_rate_limit'?'Muitas solicitações de código. Aguarde antes de tentar novamente.':(error.status??0)>=500?'Não foi possível enviar o e-mail de recuperação. O serviço de envio precisa ser verificado.':'Não foi possível solicitar o código. Confira a conexão e tente novamente.')
    setAviso('Se o e-mail estiver cadastrado, você receberá um código. Digite-o aqui no app.');setModo('codigo')
   } else if(modo==='codigo'){
    const {error}=await supabase.auth.verifyOtp({email:email.trim(),token:codigo.trim(),type:'recovery'})
@@ -31,15 +34,15 @@ export function ContaConfiguracoes(){
    setSenha('');setModo('entrar');definirRecuperacao(false);setAviso('Senha atualizada.')
   }
  })}
- return <section className="painel conta"><h2>Conta e sincronização</h2>
+ return <section className={entrada?'conta conta-entrada':'painel conta'} aria-label={entrada?'Acesso à conta':'Conta e sincronização'}>{!entrada&&<h2>Conta e sincronização</h2>}
  {!supabase?<p>A conexão com a nuvem ainda não foi configurada. Seus dados continuam salvos neste aparelho.</p>:<>
  {conta.carregando?<p role="status">Abrindo sua sessão…</p>:(!conta.usuario||modo==='nova'||modo==='codigo')?<form onSubmit={enviar} className="formulario-conta">
- {modo!=='nova'&&<label>E-mail<input type="email" autoComplete="email" required value={email} onChange={e=>setEmail(e.target.value)} disabled={ocupado}/></label>}
- {(modo==='entrar'||modo==='nova')&&<label>{modo==='nova'?'Nova senha':'Senha'}<input type="password" autoComplete={modo==='nova'?'new-password':'current-password'} minLength={modo==='nova'?8:1} required value={senha} onChange={e=>setSenha(e.target.value)} disabled={ocupado}/></label>}
+ {modo!=='nova'&&<label>E-mail<input type="email" autoComplete="email" autoCapitalize="none" spellCheck={false} placeholder="voce@exemplo.com" required value={email} onChange={e=>setEmail(e.target.value)} disabled={ocupado}/></label>}
+ {(modo==='entrar'||modo==='nova')&&<div className="campo-senha"><label htmlFor={entrada?'senha-entrada':'senha-conta'}>{modo==='nova'?'Nova senha':'Senha'}</label><div><input id={entrada?'senha-entrada':'senha-conta'} type={mostrarSenha?'text':'password'} placeholder={modo==='nova'?'Pelo menos 8 caracteres':'Sua senha'} autoComplete={modo==='nova'?'new-password':'current-password'} minLength={modo==='nova'?8:1} required value={senha} onChange={e=>setSenha(e.target.value)} disabled={ocupado}/><button type="button" aria-label={mostrarSenha?'Ocultar senha':'Mostrar senha'} aria-pressed={mostrarSenha} onClick={()=>setMostrarSenha(!mostrarSenha)}>{mostrarSenha?<EyeOff size={19}/>:<Eye size={19}/>}</button></div></div>}
  {modo==='codigo'&&<label>Código recebido por e-mail<input inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6,10}" required value={codigo} onChange={e=>setCodigo(e.target.value.replace(/\D/g,''))}/></label>}
  <button className="botao-principal" disabled={ocupado}>{ocupado?'Aguarde…':modo==='entrar'?'Entrar':modo==='recuperar'?'Enviar código':modo==='codigo'?'Confirmar código':'Salvar nova senha'}</button>
- {modo==='entrar'?<button type="button" className="botao-secundario" onClick={()=>{setModo('recuperar');definirRecuperacao(true);setSenha('');setErro('')}}>Esqueci minha senha</button>:<button type="button" className="botao-secundario" onClick={()=>{setModo('entrar');definirRecuperacao(false);setSenha('');setErro('')}}>Voltar para entrar</button>}
- <small>Sua conta é criada pelo administrador. O treino continua disponível sem login.</small>
+ {modo==='entrar'?<button type="button" className="link-conta recuperar-senha" onClick={()=>{setModo('recuperar');definirRecuperacao(true);setSenha('');setErro('')}}>Esqueci minha senha</button>:<button type="button" className="link-conta" onClick={()=>{setModo('entrar');definirRecuperacao(false);setSenha('');setErro('')}}>Voltar para entrar</button>}
+ {!entrada&&<small>Sua conta é criada pelo administrador. O treino continua disponível sem login.</small>}
  </form>:<>
  <p>{conta.usuario.email}</p>
  {!conta.vinculado?<><p>Antes da primeira sincronização, confirme se quer mesclar os dados deste aparelho com esta conta.</p><button className="botao-principal" onClick={()=>setMesclar(true)}>Conectar meus dados</button></>:<>
