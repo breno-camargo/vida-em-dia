@@ -4,7 +4,7 @@ import { AtividadeHoje } from '../componentes/AtividadeHoje'
 import { LembreteMedidas } from '../componentes/LembreteMedidas'
 import { ArrowUpRight, Dumbbell, Utensils, Droplets, Activity } from 'lucide-react'
 import type { Aba } from '../componentes/Navegacao'
-export function Hoje({ abrir, registrarMedida, abrirBackup }: { abrirBackup: () => void; abrir: (aba: Aba) => void; registrarMedida: () => void }) {
+export function Hoje({ abrir, registrarMedida, abrirBackup, abrirConta }: { abrirConta: () => void; abrirBackup: () => void; abrir: (aba: Aba) => void; registrarMedida: () => void }) {
   return <><LembreteBackup abrir={abrirBackup} /><LembreteMedidas abrir={registrarMedida} />
     <section className="destaque"><span className="etiqueta">SEU RITMO. SUA EVOLUÇÃO.</span>
       <h2>Um dia de cada vez.</h2><p>Seu cuidado começa aqui.<br />Vamos construir uma rotina que faz sentido para você.</p>
@@ -19,7 +19,7 @@ export function Hoje({ abrir, registrarMedida, abrirBackup }: { abrirBackup: () 
     </div>
     <AtividadeHoje />
     <section className="nota"><span className="ponto" /><div><h3>Um espaço só seu</h3><p>Os dados ficam primeiro neste aparelho. Conecte sua conta para sincronizar e guarde também um backup com fotos.</p></div></section>
-    <BotaoSincronizar abrirConta={abrirBackup} />
+    <BotaoSincronizar abrirConta={abrirConta} />
   </>
 }
 
