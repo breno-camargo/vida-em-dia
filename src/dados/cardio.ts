@@ -1,4 +1,5 @@
 import { banco, tabela } from './banco'
+import { validarDetalhesCardio } from './detalhesCardio'
 import { criarRegistro } from './repositorio'
 import type { CardioSessao, Configuracao, Treino, AtividadeDiaria } from './modelos'
 import { dataMedida } from './medidas'
@@ -12,6 +13,7 @@ export function ritmoCardio(s: CardioSessao) { if (!s.distancia_km || s.duracao_
 export function caloriasCardio(s: CardioSessao, fator = 100) { const kcal = s.calorias_informadas ?? s.calorias_estimadas; return kcal === undefined ? undefined : Math.round(kcal * fator / 100) }
 export function validarDataAtividade(data: string) { const d = new Date(`${data}T12:00:00`); if (!/^\d{4}-\d{2}-\d{2}$/.test(data) || dataMedida(d) !== data || data > dataMedida()) throw new Error('Escolha uma data válida, até hoje.') }
 export async function salvarCardio(s: CardioSessao) {
+  validarDetalhesCardio({ ...s })
   validarDataAtividade(s.data)
   if (!tiposCardio.some(([tipo]) => tipo === s.tipo) || !Number.isFinite(s.duracao_minutos) || s.duracao_minutos <= 0 || s.duracao_minutos > 1440) throw new Error('Informe o tipo e uma duração válida.')
   const limites = { distancia_km: 1000, velocidade_media_kmh: 150, inclinacao_pct: 50, passos: 200000, calorias_informadas: 20000, fc_media: 250, fc_max: 250 }

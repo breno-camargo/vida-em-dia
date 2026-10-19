@@ -22,6 +22,7 @@ export function validarDominioBackup(nome: string, r: LinhaBackup) {
   for (const campo of ['peso', 'peso_corporal']) numero(campo, Number.MIN_VALUE, 400)
   for (const campo of ['busto', 'cintura', 'abdomen', 'quadril', 'biceps_d', 'biceps_e', 'coxa_d', 'coxa_e', 'panturrilha_d', 'panturrilha_e']) numero(campo, Number.MIN_VALUE, 300)
   if (nome === 'cardio_sessoes') {
+    validarDetalhesCardio(r)
     numero('duracao_minutos', Number.MIN_VALUE, 1440)
     numero('distancia_km', 0, 1000)
     numero('velocidade_media_kmh', Number.MIN_VALUE, 150)
@@ -75,3 +76,4 @@ export function validarReferenciasBackup(tabelas: Record<string, LinhaBackup[]>)
     }
   }
 }
+import { validarDetalhesCardio } from './detalhesCardio'

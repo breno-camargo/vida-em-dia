@@ -35,6 +35,7 @@ export interface SerieTreino extends Registro {
   reducoes?: { peso_digitado: number; repeticoes: number }[]
 }
 export interface CardioSessao extends Registro {
+  cadencia_rpm?: number; potencia_watts?: number; comprimentos_piscina?: number; piscina_metros?: number
   treino_id?: string; exercicio_id?: string; data: string
   tipo: TipoCardio
   duracao_minutos: number; distancia_km?: number; velocidade_media_kmh?: number
