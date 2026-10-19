@@ -1,8 +1,9 @@
+import { ConcluirPerfilCadastro } from './componentes/ConcluirPerfilCadastro'
 import { iniciarFeriados } from './dados/atividade'
 import { continuarSemConta, iniciarConta, useConta } from './sincronizacao/estado'
 import { supabase } from './sincronizacao/cliente'
 import { ContaConfiguracoes } from './componentes/ContaConfiguracoes'
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useLayoutEffect, useState } from 'react'
 import { Settings, X, Utensils, Ruler, ChartNoAxesCombined, Leaf } from 'lucide-react'
 import { Navegacao, type Aba } from './componentes/Navegacao'
 import { EstadoVazio } from './componentes/EstadoVazio'
@@ -33,8 +34,9 @@ export default function App() {
   const conta = useConta()
   const entrada = !!supabase && !conta.visitante && (!conta.usuario || conta.recuperando)
   useEffect(() => { void iniciarBanco().then(iniciarBiblioteca).then(() => iniciarFeriados()).then(iniciarConta).catch(() => definirErro('Não foi possível abrir o armazenamento local. Reabra o app e confira o espaço disponível no aparelho.')) }, [])
-  const selecionar = (nova: Aba) => { definirRegistrarMedida(false); if (nova === 'Treino') definirEntradaTreino(v => v + 1); definirAba(nova); definirMenu(false); window.scrollTo({ top: 0 }) }
-  const abrirConfiguracoes = (secao?:SecaoConfiguracoes) => { definirSecaoConfiguracoes(secao); definirMenu(true); window.scrollTo({top:0}) }
+  useLayoutEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }) }, [aba, menu])
+  const selecionar = (nova: Aba) => { if (nova === aba && !menu) return; definirRegistrarMedida(false); if (nova === 'Treino') definirEntradaTreino(v => v + 1); definirAba(nova); definirMenu(false) }
+  const abrirConfiguracoes = (secao?:SecaoConfiguracoes) => { definirSecaoConfiguracoes(secao); definirMenu(true) }
   if (entrada) return <div className="app entrada-conta">
     <header className="marca-entrada"><span><Leaf size={25} strokeWidth={1.7} /></span><div>Vida em Dia<small>UM ESPAÇO PARA VOCÊ</small></div></header>
     <main id="conteudo" className="conteudo-entrada">
@@ -52,14 +54,9 @@ export default function App() {
     <main id="conteudo"><div className="linha-data"><span>{new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}</span><span className="estado-rede"><i className={ambiente.online ? 'online' : ''} />{ambiente.online ? 'Online' : 'Offline'}</span></div>
       <h1>{menu ? 'Configurações' : aba === 'Hoje' ? 'Olá, vamos cuidar de você?' : aba}</h1>
       {erro && <div role="alert" className="erro">{erro}</div>}
-      {menu ? <Suspense fallback={<p role="status">Carregando configurações…</p>}><Configuracoes {...ambiente} inicial={secaoConfiguracoes} /></Suspense> : aba === 'Hoje' ? <Hoje abrirBackup={() => abrirConfiguracoes('backup')} abrirConta={() => abrirConfiguracoes('conta')} abrir={selecionar} registrarMedida={() => { selecionar('Medidas'); definirRegistrarMedida(true) }} /> : aba === 'Treino' ? <Treino key={entradaTreino} online={ambiente.online} /> : aba === 'Evolução' ? <Suspense fallback={<p role="status">Carregando evolução…</p>}><Evolucao /></Suspense> : aba === 'Medidas' ? <Suspense fallback={<p role="status">Carregando medidas…</p>}><Medidas registrarInicial={registrarMedida} /></Suspense> : <EstadoVazio {...proximas[aba]} />}
+      <ConcluirPerfilCadastro abrirConta={() => abrirConfiguracoes('conta')} />
+      <div className="conteudo-pagina">{menu ? <Suspense fallback={<p role="status">Carregando configurações…</p>}><Configuracoes {...ambiente} inicial={secaoConfiguracoes} /></Suspense> : aba === 'Hoje' ? <Hoje abrirBackup={() => abrirConfiguracoes('backup')} abrirConta={() => abrirConfiguracoes('conta')} abrir={selecionar} registrarMedida={() => { selecionar('Medidas'); definirRegistrarMedida(true) }} /> : aba === 'Treino' ? <Treino key={entradaTreino} online={ambiente.online} /> : aba === 'Evolução' ? <Suspense fallback={<p role="status">Carregando evolução…</p>}><Evolucao /></Suspense> : aba === 'Medidas' ? <Suspense fallback={<p role="status">Carregando medidas…</p>}><Medidas registrarInicial={registrarMedida} /></Suspense> : <EstadoVazio {...proximas[aba]} />}</div>
     </main>
     <AvisosPwa /><Navegacao atual={aba} selecionar={selecionar} />
   </div>
 }
-
-
-
-
-
-

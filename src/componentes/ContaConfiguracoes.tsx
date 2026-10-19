@@ -1,23 +1,56 @@
 import { useState, type FormEvent } from 'react'
-import { Eye, EyeOff, LogOut } from 'lucide-react'
+import { Eye, EyeOff, LogOut, RefreshCw, CloudUpload } from 'lucide-react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { supabase } from '../sincronizacao/cliente'
 import { confirmarVinculo, definirRecuperacao, sairConta, sincronizar, useConta } from '../sincronizacao/estado'
 import { tabela } from '../dados/banco'
 import { Painel } from './Painel'
+import { RevisaoSincronizacao } from './RevisaoSincronizacao'
+import { cadastrarConta, confirmarCadastro, reenviarCadastro } from '../sincronizacao/cadastro'
+import { prepararPerfilCadastro } from '../dados/perfilCadastro'
+import type { MedidaCorporal } from '../dados/modelos'
+import { camposMedidas, dataMedida, formatarValorMedida } from '../dados/medidas'
+import { criarRegistro } from '../dados/repositorio'
+import { EditorMedida } from './EditorMedida'
 export function ContaConfiguracoes({entrada=false,resumida=false}:{entrada?:boolean;resumida?:boolean}){
  const conta=useConta()
  const config=useLiveQuery(()=>tabela('configuracoes').where('chave').equals('principal').first())
  const [email,setEmail]=useState(''),[senha,setSenha]=useState(''),[codigo,setCodigo]=useState('')
- const [modo,setModo]=useState<'entrar'|'recuperar'|'codigo'|'nova'>('entrar')
+ const [confirmacao,setConfirmacao]=useState('')
+ const [nome,setNome]=useState(''),[altura,setAltura]=useState('')
+ const [medidaCadastro,setMedidaCadastro]=useState<MedidaCorporal>()
+ const [editarMedidas,setEditarMedidas]=useState(false)
+ const [baseMedida]=useState(()=>({...criarRegistro(),data:dataMedida()}))
+ const [modo,setModo]=useState<'entrar'|'recuperar'|'codigo'|'nova'|'cadastro'|'confirmarCadastro'>('entrar')
  const [mostrarSenha,setMostrarSenha]=useState(false)
  const [ocupado,setOcupado]=useState(false),[erro,setErro]=useState(''),[aviso,setAviso]=useState(''),[mesclar,setMesclar]=useState(false)
  const executar=async(acao:()=>Promise<void>)=>{setOcupado(true);setErro('');try{await acao()}catch(e){setErro(e instanceof Error?e.message:'Não foi possível concluir. Tente novamente.')}finally{setOcupado(false)}}
  async function enviar(e:FormEvent){e.preventDefault();await executar(async()=>{
   if(!supabase)return
   if(!navigator.onLine)throw new Error('Você está offline. Conecte à internet para acessar sua conta ou continue sem conta.')
-  if(modo==='entrar'){
+  if(modo==='cadastro'){
+   const perfil={nome,altura_cm:altura.trim()?Number(altura.replace(',','.')):undefined,medida:medidaCadastro}
+   const resultado=await cadastrarConta(email,senha,confirmacao,perfil)
+   prepararPerfilCadastro(email,perfil)
+   setSenha('');setConfirmacao('');setCodigo('')
+   setModo(resultado==='confirmar'?'confirmarCadastro':'entrar')
+   setAviso(resultado==='confirmar'?'Confira seu e-mail para confirmar o cadastro. Se recebeu um link, abra-o e depois volte para Entrar. Se recebeu um código, digite abaixo.':'Conta criada. Seus dados continuam neste aparelho até você confirmar a conexão.')
+  } else if(modo==='confirmarCadastro'){
+   await confirmarCadastro(email,codigo);setCodigo('');setModo('entrar');setAviso('E-mail confirmado. A conexão dos dados será feita somente com sua confirmação.')
+  } else if(modo==='entrar'){
    const {error}=await supabase.auth.signInWithPassword({email:email.trim(),password:senha})
+   if(error?.code==='email_not_confirmed'){
+    setSenha('');setCodigo('');setModo('confirmarCadastro')
+    setAviso('Solicitando um novo e-mail de confirmação…')
+    try {
+     await reenviarCadastro(email)
+     setAviso('Solicitação de envio aceita. Confira seu e-mail e o spam. A mensagem pode levar alguns instantes para chegar.')
+    } catch(e) {
+     setAviso('Sua conta continua aguardando confirmação. Você pode tentar novamente em Reenviar confirmação.')
+     throw e
+    }
+    return
+   }
    if(error)throw new Error('Não foi possível entrar. Confira e-mail, senha e conexão.')
    setSenha('')
   } else if(modo==='recuperar'){
@@ -37,22 +70,30 @@ export function ContaConfiguracoes({entrada=false,resumida=false}:{entrada?:bool
  return <section className={entrada?'conta conta-entrada':'painel conta'} aria-label={entrada?'Acesso à conta':'Conta e sincronização'}>{!entrada&&!resumida&&<h2>Conta e sincronização</h2>}
  {!supabase?<p>A conexão com a nuvem ainda não foi configurada. Seus dados continuam salvos neste aparelho.</p>:<>
  {conta.carregando?<p role="status">Abrindo sua sessão…</p>:(!conta.usuario||modo==='nova'||modo==='codigo')?<form onSubmit={enviar} className="formulario-conta">
- {modo!=='nova'&&<label>E-mail<input type="email" autoComplete="email" autoCapitalize="none" spellCheck={false} placeholder="voce@exemplo.com" required value={email} onChange={e=>setEmail(e.target.value)} disabled={ocupado}/></label>}
- {(modo==='entrar'||modo==='nova')&&<div className="campo-senha"><label htmlFor={entrada?'senha-entrada':'senha-conta'}>{modo==='nova'?'Nova senha':'Senha'}</label><div><input id={entrada?'senha-entrada':'senha-conta'} type={mostrarSenha?'text':'password'} placeholder={modo==='nova'?'Pelo menos 8 caracteres':'Sua senha'} autoComplete={modo==='nova'?'new-password':'current-password'} minLength={modo==='nova'?8:1} required value={senha} onChange={e=>setSenha(e.target.value)} disabled={ocupado}/><button type="button" aria-label={mostrarSenha?'Ocultar senha':'Mostrar senha'} aria-pressed={mostrarSenha} onClick={()=>setMostrarSenha(!mostrarSenha)}>{mostrarSenha?<EyeOff size={19}/>:<Eye size={19}/>}</button></div></div>}
- {modo==='codigo'&&<label>Código recebido por e-mail<input inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6,10}" required value={codigo} onChange={e=>setCodigo(e.target.value.replace(/\D/g,''))}/></label>}
- <button className="botao-principal" disabled={ocupado}>{ocupado?'Aguarde…':modo==='entrar'?'Entrar':modo==='recuperar'?'Enviar código':modo==='codigo'?'Confirmar código':'Salvar nova senha'}</button>
- {modo==='entrar'?<button type="button" className="link-conta recuperar-senha" onClick={()=>{setModo('recuperar');definirRecuperacao(true);setSenha('');setErro('')}}>Esqueci minha senha</button>:<button type="button" className="link-conta" onClick={()=>{setModo('entrar');definirRecuperacao(false);setSenha('');setErro('')}}>Voltar para entrar</button>}
- {!entrada&&<small>Sua conta é criada pelo administrador. O treino continua disponível sem login.</small>}
+ {modo==='confirmarCadastro'&&<div className="aviso-confirmacao-conta" role="status"><strong>Confirme seu e-mail para liberar o acesso</strong><p>Sua conta foi criada, mas você precisa confirmar o e-mail antes de entrar.</p><p>Confira a caixa de entrada e o spam de <b>{email}</b>. Digite o código abaixo ou abra o link da confirmação.</p>{aviso&&<p>{aviso}</p>}</div>}
+ {modo==='cadastro'&&<p className="nota-resumo">Crie sua conta para acessar seus registros em outros aparelhos. Cadastrar não envia os dados deste aparelho automaticamente.</p>}
+ {modo==='cadastro'&&<label>Como você se chama?<input autoComplete="given-name" maxLength={80} required value={nome} onChange={e=>setNome(e.target.value)} disabled={ocupado}/></label>}
+ {modo!=='nova'&&<label>E-mail<input type="email" autoComplete="email" autoCapitalize="none" spellCheck={false} placeholder="voce@exemplo.com" required value={email} onChange={e=>setEmail(e.target.value)} disabled={ocupado||modo==='confirmarCadastro'}/></label>}
+ {(modo==='entrar'||modo==='nova'||modo==='cadastro')&&<div className="campo-senha"><label htmlFor={entrada?'senha-entrada':'senha-conta'}>{modo==='nova'?'Nova senha':'Senha'}</label><div><input id={entrada?'senha-entrada':'senha-conta'} type={mostrarSenha?'text':'password'} placeholder={modo==='nova'?'Pelo menos 8 caracteres':'Sua senha'} autoComplete={modo==='nova'||modo==='cadastro'?'new-password':'current-password'} minLength={modo==='nova'||modo==='cadastro'?8:1} required value={senha} onChange={e=>setSenha(e.target.value)} disabled={ocupado}/><button type="button" aria-label={mostrarSenha?'Ocultar senha':'Mostrar senha'} aria-pressed={mostrarSenha} onClick={()=>setMostrarSenha(!mostrarSenha)}>{mostrarSenha?<EyeOff size={19}/>:<Eye size={19}/>}</button></div></div>}
+ {(modo==='codigo'||modo==='confirmarCadastro')&&<label>Código recebido por e-mail<input inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6,10}" required value={codigo} onChange={e=>setCodigo(e.target.value.replace(/\D/g,''))}/></label>}
+ {modo==='cadastro'&&<><p className="nota-resumo">Use uma senha com pelo menos 8 caracteres.</p><label>Confirmar senha<input type={mostrarSenha?'text':'password'} autoComplete="new-password" minLength={8} required value={confirmacao} onChange={e=>setConfirmacao(e.target.value)} disabled={ocupado}/></label></>}
+ {modo==='cadastro'&&<details className="perfil-opcional-cadastro"><summary>Altura e medidas (opcional)</summary><div className="formulario"><p className="nota-resumo">Já tem suas medidas? Preencha apenas o que souber ou deixe para depois.</p><label>Altura em cm<input inputMode="decimal" placeholder="Ex.: 175" value={altura} onChange={e=>setAltura(e.target.value)} disabled={ocupado}/></label><button type="button" className="botao-secundario" disabled={ocupado} onClick={()=>setEditarMedidas(true)}>{medidaCadastro?'Editar medidas iniciais':'Adicionar peso e medidas'}</button>{medidaCadastro&&<><p className="nota-resumo">{camposMedidas.filter(([campo])=>medidaCadastro[campo]!==undefined).map(([campo,rotulo,unidade])=>`${rotulo}: ${formatarValorMedida(campo,medidaCadastro[campo]!)} ${unidade}`).join(' · ')}</p><button type="button" className="link-conta" disabled={ocupado} onClick={()=>setMedidaCadastro(undefined)}>Preencher medidas depois</button></>}<p className="nota-resumo">As medidas ficam como rascunho nesta aba. Após confirmar o e-mail e conectar o aparelho, você poderá salvá-las. Se fechar ou atualizar a página antes disso, preencha novamente na aba Medidas.</p></div></details>}
+ <button className="botao-principal" disabled={ocupado}>{ocupado?'Aguarde…':modo==='entrar'?'Entrar':modo==='cadastro'?'Criar conta':modo==='confirmarCadastro'?'Confirmar e-mail':modo==='recuperar'?'Enviar código':modo==='codigo'?'Confirmar código':'Salvar nova senha'}</button>
+ {modo==='entrar'&&<button type="button" className="botao-secundario" disabled={ocupado} onClick={()=>{setModo('cadastro');setSenha('');setConfirmacao('');setAviso('');setErro('')}}>Criar conta</button>}
+ {modo==='confirmarCadastro'&&<button type="button" className="botao-secundario" disabled={ocupado} onClick={()=>void executar(async()=>{if(!navigator.onLine)throw new Error('Conecte à internet para reenviar.');await reenviarCadastro(email);setAviso('Se houver cadastro pendente, uma nova confirmação será enviada ao e-mail informado.')})}>Reenviar confirmação</button>}
+ {modo==='entrar'?<button type="button" className="link-conta recuperar-senha" disabled={ocupado} onClick={()=>{setModo('recuperar');definirRecuperacao(true);setSenha('');setConfirmacao('');setCodigo('');setAviso('');setErro('')}}>Esqueci minha senha</button>:<button type="button" className="link-conta" disabled={ocupado} onClick={()=>{setModo('entrar');definirRecuperacao(false);setSenha('');setErro('')}}>Voltar para entrar</button>}
+
  </form>:<div className="conta-sessao">
  {!resumida&&<p>{conta.usuario.email}</p>}
  {!conta.vinculado?<div className="conta-vinculo"><p>Conecte este aparelho para sincronizar seus registros.</p><button className="botao-principal" onClick={()=>setMesclar(true)}>Conectar meus dados</button></div>:<>
  <BotaoSincronizar/>
- <label className="backup-checkbox"><input type="checkbox" checked={config?.sync_automatico??false} disabled={conta.ocupado} onChange={e=>{if(config)void tabela('configuracoes').update(config.id,{sync_automatico:e.target.checked})}}/>Sincronizar ao abrir, voltar ao app e finalizar treino</label>
+ <label className="opcao-sync-automatica"><span className="texto-sync-automatica"><strong>Sincronização automática</strong><span>Ao abrir, voltar ao app ou finalizar um treino.</span></span><input type="checkbox" role="switch" aria-label="Sincronização automática" checked={config?.sync_automatico??false} disabled={conta.ocupado||ocupado||!config} onChange={e=>{const ativar=e.target.checked;if(config)void executar(async()=>{await tabela('configuracoes').update(config.id,{sync_automatico:ativar})})}}/><span className="interruptor-sync" aria-hidden="true"/></label>
  </>}
  <details className="ajuda-conta"><summary>Sobre seus dados</summary><p>Use o app em um aparelho pessoal. Sair mantém os dados e o vínculo com esta conta. As fotos ficam no aparelho; inclua-as no backup JSON para guardá-las.</p></details>
  </div>}
  </>}
- {aviso&&<p role="status">{aviso}</p>}{erro&&<p role="alert" className="erro">{erro}</p>}
+ {aviso&&modo!=='confirmarCadastro'&&<p role="status">{aviso}</p>}{erro&&<p role="alert" className="erro">{erro}</p>}
+ {editarMedidas&&<EditorMedida medida={medidaCadastro??baseMedida} fechar={()=>setEditarMedidas(false)} aoConfirmar={medida=>setMedidaCadastro(medida)}/>}
  {mesclar&&<Painel titulo="Conectar este aparelho" fechar={()=>{if(!ocupado)setMesclar(false)}}><p>Mesclar envia seus registros para {conta.usuario?.email} e baixa os dados dessa conta. Para registros com o mesmo identificador, vale a alteração mais recente. Registros diferentes na mesma data podem exigir revisão.</p><p>Guarde um backup JSON com fotos antes de continuar. Este aparelho ficará vinculado a esta conta.</p><button className="botao-principal" disabled={ocupado} onClick={()=>void executar(async()=>{await confirmarVinculo();setMesclar(false)})}>{ocupado?'Conectando…':'Confirmar e mesclar'}</button><button className="botao-secundario" disabled={ocupado} onClick={()=>setMesclar(false)}>Agora não</button>{erro&&<p role="alert" className="erro">{erro}</p>}</Painel>}
  </section>
 }
@@ -70,6 +111,16 @@ export function BotaoSairDaConta(){
  </div>
 }
 export function BotaoSincronizar({abrirConta}:{abrirConta?:()=>void}){
+ const [pedidoRevisao,definirPedidoRevisao]=useState(0)
  const conta=useConta(),config=useLiveQuery(()=>tabela('configuracoes').where('chave').equals('principal').first())
- return <div className="estado-sync"><button className="botao-secundario" disabled={conta.ocupado||conta.carregando} onClick={()=>{if(!conta.usuario||!conta.vinculado)abrirConta?.();else void sincronizar()}}>{conta.ocupado?'Sincronizando…':!conta.usuario?'Entrar para sincronizar':!conta.vinculado?'Conectar meus dados':'Sincronizar agora'}</button><small>Última sincronização: {config?.ultima_sincronizacao?new Date(config.ultima_sincronizacao).toLocaleString('pt-BR'):'Nunca'}{conta.pendentes>0?` · ${conta.pendentes} pendências`:''}</small>{conta.mensagem&&<p role="status">{conta.mensagem}</p>}{conta.erro&&<p role="alert" className="erro">{conta.erro}</p>}</div>
+ const ultima=config?.ultima_sincronizacao?new Date(config.ultima_sincronizacao).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}):'Ainda não realizada'
+ const mensagem=conta.mensagem&&!conta.ocupado&&conta.mensagem!=='Dados sincronizados.'?conta.mensagem:''
+ return <div className="estado-sync">
+  <button className="botao-principal acao-sincronizar" disabled={conta.ocupado||conta.carregando} aria-busy={conta.ocupado} onClick={async()=>{if(!conta.usuario||!conta.vinculado)abrirConta?.();else if(await sincronizar()==='revisar')definirPedidoRevisao(v=>v+1)}}>
+   {conta.ocupado?<RefreshCw size={18} className="icone-sincronizando" aria-hidden="true"/>:<CloudUpload size={19} aria-hidden="true"/>}
+   <span>{conta.ocupado?'Sincronizando…':!conta.usuario?'Entrar para sincronizar':!conta.vinculado?'Conectar meus dados':'Sincronizar agora'}</span>
+  </button>
+  <div className="detalhes-sync"><span>Última sincronização</span><time dateTime={config?.ultima_sincronizacao}>{ultima}</time>{conta.pendentes>0&&<span className="pendencias-sync">{conta.pendentes} {conta.pendentes===1?'alteração pendente':'alterações pendentes'}</span>}</div>
+  {mensagem&&<p className="mensagem-sync" role="status">{mensagem}</p>}{conta.erro&&<p role="alert" className="erro">{conta.erro}</p>}<RevisaoSincronizacao pedido={pedidoRevisao}/>
+ </div>
 }

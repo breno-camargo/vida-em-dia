@@ -10,7 +10,11 @@ Abra `supabase/migrations/202610140001_conta_sincronizacao.sql`, copie todo o co
 
 Authentication → Users → Add user → Create new user. Informe seu e-mail e uma senha, mantendo a confirmação automática para essa conta criada pelo administrador. Guarde a senha; não envie no chat.
 
-Authentication → Sign In / Providers → desative `Allow new users to sign up` depois de criar a conta. A interface do app permite entrar, não cadastrar contas públicas.
+Para cadastrar pelo app, ative `Allow new users to sign up` em Authentication → Sign In / Providers e mantenha a confirmação de e-mail ativada.
+
+### E-mail de confirmação do cadastro
+
+Em Authentication → Emails → Confirm signup, use o assunto `Confirme sua conta — Vida em Dia`. Copie o conteúdo completo de `supabase/confirmar-cadastro.html` para Source e salve. Preserve `{{ .Token }}` e `{{ .ConfirmationURL }}` exatamente como estão. O modelo oferece código para digitar no app e botão alternativo de confirmação. A alteração local não atualiza o Supabase: a aplicação no painel é manual. Se o painel exigir SMTP próprio, configure-o mantendo as credenciais somente no Supabase.
 
 ## 3. Recuperação de senha dentro do app
 
@@ -47,6 +51,11 @@ Aplique inicialmente ao ambiente Preview/branch `test`. Faça novo deploy após 
 10. Sair: mantém dados locais, mas para de sincronizar. Login de outra conta não pode enviar esses dados.
 11. Conferir estado offline/erro/última sincronização e lembrete de backup. Falha não atualiza a data do último sync.
 12. Antes de liberar produção: testar RLS com duas contas de teste e sem sessão; cada uma vê somente seus dados. Cadastro público deve permanecer fechado.
+13. Em armazenamento isolado já vinculado, restaurar JSON por Substituir neste aparelho. Confirmar que o vínculo permanece e o envio fica pausado após reabrir. Revisar retomada e confirmar mesclagem apenas depois de ler que dados remotos ausentes do backup podem voltar. Não há exclusão da nuvem por essa restauração.
+14. Em dois aparelhos de teste, criar atividade/medida no mesmo dia com IDs diferentes; conferir Revisar registros, escolher deste aparelho ou da conta e verificar um único registro ativo. Os valores recusados ficam como exclusão lógica no JSON. A tabela conflitante aguarda a decisão, enquanto as outras podem avançar; último sync não avança integralmente com pendências de revisão.
+15. Alterar local/remoto durante a revisão e confirmar recusa da decisão antiga. Interromper o envio após a escolha e retomar sem duplicar a data. Conferir também duas abas com Web Locks; navegador sem essa proteção recusa sincronização/importação antes da escrita.
+
+As correções de 16/10 acrescentam a versão 2 do IndexedDB de sincronização, com diagnósticos de conflito e pausa de restauração. A migração é local e preserva vínculo/fila/recibos existentes; não exige reaplicar SQL no Supabase. [Detalhes, evidências e limites](../revisao/CORRECOES.md).
 
 A fila e os recibos usam um segundo IndexedDB, versionado separadamente (`vida-em-dia-sincronizacao`). O banco principal e backups antigos continuam compatíveis. Ao sincronizar, a fila é reconstruída a partir dos dados locais, portanto uma gravação local permanece recuperável mesmo se o app fechar antes de enfileirar. Envio em lotes de 100; leitura paginada de 200 por ID, completa em cada ciclo para não perder registros atrasados por relógio/cursor. Configurações de sync automático, último backup e último sync são do aparelho. Dados com IDs distintos na mesma data exigem revisão em vez de exclusão automática. Biblioteca já usada em dois aparelhos independentes pode conter exercícios com nomes iguais e IDs distintos; a mesclagem não os trata como o mesmo exercício.
 
@@ -57,3 +66,14 @@ Fontes: [RLS](https://supabase.com/docs/guides/database/postgres/row-level-secur
 ## Remetente dedicado do Vida em Dia
 
 Ao criar o e-mail exclusivo do app, atualizar Sender email e Username para esse novo endereço. Se for Gmail, gerar a senha de app conectado à NOVA conta, com verificação em duas etapas ativada, e substituir Password no SMTP. Nome do remetente: Vida em Dia. Não reutilizar a senha de app da conta pessoal. Salvar e testar uma única recuperação com um código novo; nunca colocar senha SMTP no repositório ou enviar no chat.
+## Cadastro pelo app — implementado localmente em 18/10/2026
+
+O app agora oferece Criar conta (e-mail, senha de ao menos 8 caracteres e confirmação). Usa signUp com senha e aguarda confirmação por e-mail quando habilitada no projeto. Se a configuração remota devolver sessão imediata, o app reconhece a sessão sem vincular os dados automaticamente. O vínculo e a mesclagem continuam dependendo de confirmação explícita do usuário.
+
+Antes da homologação real, conferir no projeto Supabase que novos cadastros por e-mail estão permitidos, confirmação de e-mail está habilitada e o serviço de envio/SMTP está funcionando. Estas configurações remotas não foram alteradas pelo Codex. Não desabilitar a confirmação só para contornar problemas de envio.
+
+O template de confirmação pronto para revisão está em `supabase/confirmar-cadastro.html`. Aplicá-lo manualmente ao e-mail de confirmação de cadastro permite digitar `{{ .Token }}` dentro do app (verifyOtp com type email). O template também inclui `{{ .ConfirmationURL }}`: após confirmar pelo link, voltar ao app e entrar com e-mail/senha. Como detectSessionInUrl está desligado, não se deve prometer login automático ao abrir o link. O template de recuperação de senha é independente e não deve ser substituído pelo de cadastro.
+
+Para homologação, usar a conta de teste autorizada pelo usuário, breteco@gmail.com, em perfil/janela sem os dados da conta principal. Senha deve ser definida pelo usuário no app, sem enviar no chat. Não cadastrar automaticamente, não apagar dados da conta principal e não mesclar seu armazenamento com a conta de teste.
+
+Fontes: https://supabase.com/docs/reference/javascript/auth-signup e https://supabase.com/docs/guides/auth/auth-email-templates . Envio real, confirmação, reenvio e recuperação ainda precisam de homologação no projeto configurado.
