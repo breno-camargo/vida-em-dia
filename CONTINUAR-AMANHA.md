@@ -1,3 +1,31 @@
+# Retomada prioritária — encerramento em 19/10/2026
+
+Usuário pediu parar por hoje, registrar pendências e commitar. Não continuar implementação até a retomada. Branch test; sem push, merge, deploy ou SQL remoto. Commits por mudança continuam sendo preferência explícita.
+
+## Primeira tarefa: isolamento completo entre contas
+
+Exigência do usuário: nenhuma conta pode ver nada de outra, incluindo fichas, treinos, fotos, medidas, alimentação e configurações. A proteção 46c7c33 é PARCIAL: impede montar telas locais para usuário autenticado sem vínculo, mas NÃO separa bancos por usuário. O IndexedDB e a fila ainda são por origem/perfil. Modo visitante continua acessando a base local do aparelho. Não declarar isolamento completo resolvido.
+
+Planejar e implementar armazenamento por usuário e visitante separado, com isolamento da fila/controle/recibos/conflitos/fotos, troca segura de sessão e abas, desmontagem de telas/rascunhos/consultas e inicialização do catálogo/configuração em cada espaço. Preservar base legada, identificar proprietário comprovado e não atribuir dados ambíguos automaticamente. Testar A → B → visitante → A, offline/reconexão, leitura e escrita, sync, backup/restauração e fotos. Não acessar ou alterar dados reais para teste.
+
+Esposa já usou uma conta no mesmo navegador e viu fichas. Não foi confirmado se houve mesclagem/envio para a conta dela: investigar sem apagar registros remotamente. Até isolamento completo, usar outro perfil de navegador/aparelho. Principal reservada breno.hsc75@gmail.com; conta de teste breteco@gmail.com. Nenhuma limpeza da principal autorizada.
+
+## Outras pendências
+
+- Duplicatas: usuário solicitou deixar uma de cada na conta de teste. Não executado por Codex (navegador indisponível). Dois grupos persistiam: Elíptico e Elevação de pernas. Lote agora mostra motivos de bloqueio; falta evidência da mensagem real. Não presumir causa. Sem alias durável, alterações antigas vindas de outro aparelho podem reintroduzir referências; homologação de união/sync pendente.
+- Catálogo inicial: IDs estáveis para instalações novas (ba75606); cadastros legados preservados. União explícita e em lote disponível.
+- Cardio: detalhes por modalidade (f7da915), bike sem passos, cadência/potência e piscina opcionais; conferir visual, edição, exportação/importação e sync reais.
+- Confirmações nativas substituídas por Painel/useConfirmacao (769e242); conferir foco, Escape, cancelamento e painéis sobrepostos no aparelho.
+- A03/A04/A05/A07/A09/A10 têm correções locais, mas testes reais de sincronização entre aparelhos/abas, isolamento, cards/clipboard Instagram, recuperação/SMTP e som após bloquear iPhone continuam pendentes. Etapa 8 não aprovada.
+
+## Cuidado com arquivos abertos no editor
+
+No encerramento, backup.ts e backup.test.ts tinham voltado à versão anterior ao A05. Restaurados a partir do HEAD validado, preservando cópias temporárias fora do repositório. Se editor continuar com conteúdo antigo, usar File: Revert File/reabrir, sem Overwrite. Não commitar regressão que usa ultima_sincronizacao no prazo do backup.
+
+Validação geral anterior: 222 testes. Após proteção parcial de conta: 20 testes direcionados, lint/build passaram. No encerramento, revalidar os testes de backup restaurados. Notas históricas abaixo não substituem esta seção.
+
+---
+
 Atualização de 19/10/2026: revisão explícita de cópias equivalentes disponível em Treino → Exercícios → Revisar duplicatas. Fotos/histórico remapeados em transação; colisões na mesma ficha/sessão bloqueadas. Homologação entre aparelhos pendente; ver revisao/CODEX-DUPLICATAS.md. Validação: 218 testes passaram, lint/build passaram.
 
 Atualização A10 em 18/10/2026: abertura usa estado neutro durante recuperação da sessão, sem apresentação prematura de login. Regressão estática passou; abertura fria no iPhone pendente. Ver revisao/CODEX-A10.md. Supera a pendência histórica A10 abaixo.
