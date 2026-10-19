@@ -1,3 +1,4 @@
+import { formatarNomeFicha } from '../dados/fichas'
 import { ResumoCardioDia } from './ResumoCardioDia'
 import { useEffect, useState } from 'react'
 import type { SerieTreino, Treino } from '../dados/modelos'
@@ -19,7 +20,7 @@ export function ResumoTreino({ treino, series, anterior, pesoInicial, finalizar,
   const kcal = series.length ? caloriasMusculacao(peso, minutosReais) : 0
   const concluidas = series.filter(s => s.concluida_em && !s.apagado_em)
   const exerciciosFeitos = new Set(concluidas.map(s => s.exercicio_id)).size
-  return <section className="formulario resumo-treino"><div className="resumo-titulo"><span className="etiqueta">SEU TREINO</span><h2>{treino.fim ? 'Treino concluído' : 'Pronto para finalizar?'}</h2><p>{treino.titulo ?? 'Treino livre'}</p></div>
+  return <section className="formulario resumo-treino"><div className="resumo-titulo"><span className="etiqueta">SEU TREINO</span><h2>{treino.fim ? 'Treino concluído' : 'Pronto para finalizar?'}</h2><p>{formatarNomeFicha(treino.titulo ?? 'Treino livre')}</p></div>
     <div className="metricas-resumo"><div><span>Duração</span><strong>{minutosReais > 0 && minutosReais < 1 ? <small>Menos de 1 min</small> : <>{minutos}<small> min</small></>}</strong></div><div><span>Volume total</span><strong>{volume.toLocaleString('pt-BR')}<small> kg</small></strong></div><div><span>Exercícios de força</span><strong>{exerciciosFeitos}</strong></div><div><span>Séries concluídas</span><strong>{concluidas.length}</strong></div></div>
     <p className="nota-resumo">O volume considera as séries concluídas, sem aquecimentos.</p>
     {anterior && <p className="comparacao-resumo">Última sessão: {volume - anterior.volume >= 0 ? '+' : ''}{(volume - anterior.volume).toLocaleString('pt-BR')} kg de volume.</p>}
@@ -34,5 +35,3 @@ export function ResumoTreino({ treino, series, anterior, pesoInicial, finalizar,
     }}>Finalizar e salvar</button><button className="botao-secundario" disabled={ocupado} onClick={voltar}>Voltar ao treino</button></div> : <button className="botao-principal largura-total" onClick={fechar}>Voltar às fichas</button>}
   </section>
 }
-
-

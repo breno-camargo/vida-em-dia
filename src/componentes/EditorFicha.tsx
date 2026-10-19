@@ -1,10 +1,11 @@
+import { exerciciosDisponiveis } from '../dados/duplicatasExercicios'
 import { SelecionarSeries } from './SelecionarSeries'
 import { useId, useState } from 'react'
 import { Painel } from './Painel'
 import { ListaExercicios } from './ListaExercicios'
 import type { Exercicio, Ficha, FichaExercicio } from '../dados/modelos'
 import { criarRegistro } from '../dados/repositorio'
-import { salvarFicha } from '../dados/fichas'
+import { formatarNomeFicha, salvarFicha } from '../dados/fichas'
 import { MiniaturaExercicio } from './MiniaturaExercicio'
 import { ChevronDown } from 'lucide-react'
 import { AjudaExercicio } from './AjudaExercicio'
@@ -27,14 +28,14 @@ export function EditorFicha({ ficha, iniciais, exercicios, fechar }: { ficha: Fi
     catch (error) { definirErro(error instanceof Error ? error.message : 'Não foi possível salvar a ficha.') }
     finally { definirSalvando(false) }
   }}>
-    <label>Nome da ficha<input required value={nome} onChange={e => definirNome(e.target.value)} placeholder="A · Peito e tríceps" /></label>
+    <label>Nome da ficha<input required autoCapitalize="sentences" value={nome} onChange={e => definirNome(e.target.value)} onBlur={() => definirNome(formatarNomeFicha(nome))} placeholder="A · Peito e tríceps" /></label>
     {itens.map((item, indice) => <details className="item-ficha exercicio-recolhivel" key={item.id}><summary className="cabecalho-exercicio"><MiniaturaExercicio id={item.exercicio_id} nome={exercicios.find(ex => ex.id === item.exercicio_id)?.nome} abrir={() => definirAjuda(exercicios.find(ex => ex.id === item.exercicio_id) ?? null)} /><span className="resumo-exercicio"><strong>{indice + 1}. {exercicios.find(ex => ex.id === item.exercicio_id)?.nome ?? 'Exercício removido'}</strong><small>{exercicios.find(ex => ex.id === item.exercicio_id)?.tipo === 'cardio' ? 'Cardio · duração registrada durante o treino' : `${item.series_planejadas} séries · ${item.descanso_segundos ?? 90} s de descanso`}</small></span><ChevronDown className="seta-exercicio" size={20} aria-hidden="true" /></summary><div className="conteudo-exercicio">
       {exercicios.find(ex => ex.id === item.exercicio_id)?.tipo !== 'cardio' && <><SelecionarSeries valor={item.series_planejadas} confirmar={series_planejadas => alterar(item.id, { series_planejadas })} />
       <SelecionarDescanso valor={item.descanso_segundos ?? 90} confirmar={async descanso_segundos => { alterar(item.id, { descanso_segundos }) }} /></>}
       <div className="acoes"><button type="button" disabled={indice === 0} onClick={() => mover(indice, -1)} aria-label="Mover exercício para cima">Subir</button><button type="button" disabled={indice === itens.length - 1} onClick={() => mover(indice, 1)} aria-label="Mover exercício para baixo">Descer</button><button type="button" onClick={() => definirItens(itens.filter(i => i.id !== item.id))}>Retirar</button></div>
     </div></details>)}
     <label>Buscar para adicionar<input value={busca} onChange={e => definirBusca(e.target.value)} placeholder="Nome do exercício" /></label>
-    <ListaExercicios exercicios={exercicios.filter(ex => !itens.some(item => item.exercicio_id === ex.id))} busca={busca} adicionar={ex => definirItens([...itens, { ...criarRegistro(ficha.user_id), ficha_id: ficha.id, exercicio_id: ex.id, ordem: itens.length, series_planejadas: 3, descanso_segundos: ex.descanso_padrao_segundos }])} />
+    <ListaExercicios exercicios={exerciciosDisponiveis(exercicios, itens.map(i => i.exercicio_id))} busca={busca} adicionarVarios={novos => definirItens(atuais => [...atuais, ...novos.filter(ex => !atuais.some(i => i.exercicio_id === ex.id)).map((ex, indice) => ({ ...criarRegistro(ficha.user_id), ficha_id: ficha.id, exercicio_id: ex.id, ordem: atuais.length + indice, series_planejadas: 3, descanso_segundos: ex.descanso_padrao_segundos }))])} adicionar={ex => definirItens([...itens, { ...criarRegistro(ficha.user_id), ficha_id: ficha.id, exercicio_id: ex.id, ordem: itens.length, series_planejadas: 3, descanso_segundos: ex.descanso_padrao_segundos }])} />
     {erro && <p className="erro" role="alert">{erro}</p>}
     <small>Durante o treino, você poderá alterar o planejamento só daquele dia.</small>
   </form>
@@ -42,6 +43,3 @@ export function EditorFicha({ ficha, iniciais, exercicios, fechar }: { ficha: Fi
     {edicao && <EditorExercicio exercicio={edicao} fechar={() => definirEdicao(null)} />}
   </Painel>
 }
-
-
-

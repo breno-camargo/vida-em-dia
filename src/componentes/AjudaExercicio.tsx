@@ -1,3 +1,4 @@
+import { useEstadoTemporario } from '../hooks/useEstadoTemporario'
 import { useEffect, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Painel } from './Painel'
@@ -24,7 +25,7 @@ export function AjudaExercicio({ exercicio, online, fechar, editar }: { exercici
   const fotos = useLiveQuery(() => tabela('fotos').where('exercicio_id').equals(exercicio.id).filter(f => !f.apagado_em).toArray(), [exercicio.id])
   const [erro, definirErro] = useState('')
   const [ocupado, definirOcupado] = useState(false)
-  const [apagada, definirApagada] = useState<Foto | null>(null)
+  const [apagada, definirApagada] = useEstadoTemporario<Foto | null>(null)
   const [aba, definirAba] = useState('Músculos')
   const video = exercicio.video_url || `https://www.youtube.com/results?search_query=${encodeURIComponent(`${exercicio.nome} execução correta`)}`
   return <Painel titulo={exercicio.nome} fechar={fechar}>
