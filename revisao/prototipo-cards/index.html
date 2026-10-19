@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vida em Dia — Protótipo de Cards para Stories</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ivory: #f0ece4;
+  --ink: #1a2e1c;
+  --accent: #a3d94e;
+  --accent-dark: #82b03e;
+  --bg: #111;
+  --surface: #1a1a1a;
+  --border: #333;
+  --text: #e8e8e8;
+  --text-dim: #999;
+}
+html { font-size: 16px; }
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* PAGE */
+.page-header { padding: 24px 32px 16px; border-bottom: 1px solid var(--border); }
+.page-header h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.04em; }
+.page-header p { font-size: 13px; color: var(--text-dim); margin-top: 6px; }
+
+/* CONTROLS */
+.controls-bar {
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+  padding: 16px 32px; background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 100;
+}
+.controls-bar label { font-size: 12px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+.controls-bar select, .controls-bar button {
+  font-family: inherit; font-size: 13px; padding: 8px 14px;
+  border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg); color: var(--text); cursor: pointer;
+}
+.controls-bar select:hover, .controls-bar button:hover { border-color: var(--accent); }
+.controls-bar button.active { background: var(--accent); color: var(--ink); border-color: var(--accent); font-weight: 600; }
+.control-group { display: flex; align-items: center; gap: 6px; }
+.file-label {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border: 1px solid var(--border); border-radius: 8px;
+  background: var(--bg); color: var(--text); font-size: 13px; cursor: pointer;
+}
+.file-label:hover { border-color: var(--accent); }
+.file-label input { display: none; }
+.btn-clear-photo { font-size: 11px; padding: 4px 10px !important; color: #e88 !important; border-color: #e8888844 !important; }
+
+/* CARDS GRID */
+.cards-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+  padding: 32px; max-width: 1400px; margin: 0 auto;
+}
+@media (max-width: 1100px) { .cards-grid { grid-template-columns: 1fr; max-width: 440px; gap: 40px; } }
+
+.card-column { display: flex; flex-direction: column; gap: 12px; }
+.card-column-label {
+  font-size: 12px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text-dim);
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+
+/* Canvas preview wrapper — aspect 9:16, canvas scales to fill */
+.card-wrapper {
+  position: relative; width: 100%; aspect-ratio: 9 / 16;
+  border-radius: 16px; overflow: hidden; cursor: pointer;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.card-wrapper:hover { transform: scale(1.01); }
+.card-wrapper canvas { width: 100%; height: 100%; display: block; }
+
+/* Export buttons */
+.card-actions { display: flex; gap: 8px; }
+.card-actions button {
+  flex: 1; padding: 10px 8px; font-size: 12px; font-weight: 600;
+  border: 1px solid var(--border); border-radius: 8px;
+  background: var(--surface); color: var(--text); cursor: pointer; font-family: inherit;
+}
+.card-actions button:hover { border-color: var(--accent); color: var(--accent); }
+
+/* MODAL */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.92); z-index: 1000;
+  justify-content: center; align-items: center; padding: 24px;
+}
+.modal-overlay.open { display: flex; }
+.modal-overlay canvas { max-height: 95vh; max-width: 95vw; }
+.modal-overlay .close-btn {
+  position: fixed; top: 16px; right: 20px; font-size: 28px;
+  color: #fff; background: none; border: none; cursor: pointer;
+  z-index: 1001; width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.page-footer { padding: 24px 32px; border-top: 1px solid var(--border); text-align: center; font-size: 12px; color: var(--text-dim); }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <h1>Vida em Dia — Protótipo de Cards para Stories</h1>
+  <p>Dados de demonstração sintéticos · Data: 16/10/2026 · Nenhum dado real é utilizado</p>
+</header>
+
+<nav class="controls-bar">
+  <div class="control-group">
+    <label>Cenário</label>
+    <select id="scenario-select">
+      <option value="sessao-curta">Sessão curta corporal (00:51)</option>
+      <option value="musculacao" selected>Musculação completa (48:37)</option>
+      <option value="cardio">Cardio (44:47)</option>
+      <option value="poucos-dados">Poucos dados (12:09)</option>
+    </select>
+  </div>
+  <div class="control-group">
+    <label>Texto</label>
+    <button type="button" id="btn-text-light" class="active">Claro</button>
+    <button type="button" id="btn-text-dark">Escuro</button>
+  </div>
+  <div class="control-group">
+    <label>Foto</label>
+    <label class="file-label">
+      📷 Adicionar foto
+      <input type="file" id="photo-input" accept="image/*">
+    </label>
+    <button type="button" class="btn-clear-photo" id="btn-clear-photo" style="display:none">✕ Remover</button>
+  </div>
+</nav>
+
+<main class="cards-grid" id="cards-grid">
+  <div class="card-column">
+    <div class="card-column-label">01 / TIPOGRÁFICO</div>
+    <div class="card-wrapper" id="wrap-tipografico"><canvas id="cv-tipografico" width="1080" height="1920"></canvas></div>
+    <div class="card-actions">
+      <button type="button" onclick="exportPNG('tipografico', true)">Baixar adesivo transparente</button>
+      <button type="button" onclick="exportPNG('tipografico', false)">Baixar adesivo preto</button>
+    </div>
+  </div>
+  <div class="card-column">
+    <div class="card-column-label" id="label-col-foto">02 / FOTO (ou Editorial sem foto)</div>
+    <div class="card-wrapper" id="wrap-foto"><canvas id="cv-foto" width="1080" height="1920"></canvas></div>
+    <div class="card-actions">
+      <button type="button" onclick="exportPNG('foto', false)">Baixar PNG</button>
+    </div>
+  </div>
+  <div class="card-column">
+    <div class="card-column-label">03 / EDITORIAL</div>
+    <div class="card-wrapper" id="wrap-editorial"><canvas id="cv-editorial" width="1080" height="1920"></canvas></div>
+    <div class="card-actions">
+      <button type="button" onclick="exportPNG('editorial', false)">Baixar PNG</button>
+    </div>
+  </div>
+</main>
+
+<div class="modal-overlay" id="modal">
+  <button class="close-btn" id="modal-close">✕</button>
+  <canvas id="cv-modal" width="1080" height="1920"></canvas>
+</div>
+
+<footer class="page-footer">
+  Protótipo isolado para aprovação visual · Não integrado ao app · Vida em Dia · 18/10/2026
+</footer>
+
+<script>
+// ============================================================
+// HELPERS
+// ============================================================
+function derivarRitmo(duracaoMin, duracaoSeg, distanciaKm) {
+  // Convenção declarada: arredondamento ao segundo mais próximo (Math.round)
+  // Exemplo: 44:47 (2687s) / 6,07 km = 442,67 s/km -> 7 min 23 s/km (7'23"/km)
+  if (!distanciaKm || distanciaKm <= 0) return null;
+  const totalSeg = duracaoMin * 60 + duracaoSeg;
+  const segPorKm = totalSeg / distanciaKm;
+  const min = Math.floor(segPorKm / 60);
+  const seg = Math.round(segPorKm % 60);
+  const finalMin = seg >= 60 ? min + 1 : min;
+  const finalSeg = seg >= 60 ? 0 : seg;
+  return `${finalMin}'${String(finalSeg).padStart(2, '0')}"/km`;
+}
+
+// ============================================================
+// DATA — ritmo derivado explicitamente de duração/distância
+// ============================================================
+const SCENARIOS = {
+  'sessao-curta': {
+    tipo: 'musculacao',
+    nome: 'Flexões e abdominais',
+    data: '16/10/2026',
+    duracaoMin: 0, duracaoSeg: 51,
+    duracaoLabel: '00:51',
+    repeticoes: 42, series: 3, exercicios: 1,
+    volume: null, calorias: 5,
+    nota: 'Peso corporal',
+  },
+  'musculacao': {
+    tipo: 'musculacao',
+    nome: 'Treino A — Peito e Tríceps',
+    data: '16/10/2026',
+    duracaoMin: 48, duracaoSeg: 37,
+    duracaoLabel: '48:37',
+    repeticoes: null, series: 18, exercicios: 6,
+    volume: 4250, calorias: null,
+    nota: null,
+  },
+  'cardio': {
+    tipo: 'cardio',
+    nome: 'Corrida na esteira',
+    data: '16/10/2026',
+    duracaoMin: 44, duracaoSeg: 47,
+    duracaoLabel: '44:47',
+    distancia: 6.07,
+    calorias: 609, passos: 6728,
+    nota: null,
+  },
+  'poucos-dados': {
+    tipo: 'musculacao',
+    nome: 'Supino reto com barra',
+    data: '16/10/2026',
+    duracaoMin: 12, duracaoSeg: 9,
+    duracaoLabel: '12:09',
+    repeticoes: null, series: 2, exercicios: 1,
+    volume: null, calorias: null,
+    nota: null,
+  },
+};
+for (const k in SCENARIOS) {
+  const s = SCENARIOS[k];
+  if (s.tipo === 'cardio' && s.distancia) {
+    s.ritmo = derivarRitmo(s.duracaoMin, s.duracaoSeg, s.distancia);
+  }
+}
+
+// ============================================================
+// STATE
+// ============================================================
+let currentScenario = 'musculacao';
+let textMode = 'light';
+let userPhoto = null;     // data URL
+let userPhotoImg = null;  // HTMLImageElement
+
+function getScenario() { return SCENARIOS[currentScenario]; }
+
+// ============================================================
+// FONT HELPERS — use system fonts with good fallbacks
+// ============================================================
+const SANS = '"Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif';
+const SERIF = 'Georgia, "Times New Roman", "Noto Serif", serif';
+
+// ============================================================
+// DRAWING — single canvas renderer for preview AND export
+// ============================================================
+
+// ---------- TIPOGRÁFICO ----------
+function drawTipografico(ctx, s, W, H, opts) {
+  // opts: { transparent, showPhoto, checkerboard }
+  ctx.clearRect(0, 0, W, H);
+
+  // Background
+  if (opts.showPhoto && userPhotoImg) {
+    drawCover(ctx, userPhotoImg, W, H);
+    // Leve escurecimento para contraste
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.fillRect(0, 0, W, H);
+  } else if (!opts.transparent) {
+    if (opts.checkerboard) {
+      drawCheckerboard(ctx, W, H);
+    } else {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, W, H);
+    }
+  }
+
+  const color = textMode === 'light' ? '#ffffff' : '#1a2e1c';
+  const PAD = W * 0.08;
+
+  // Build metrics
+  const metrics = [];
+  if (s.tipo === 'musculacao') {
+    metrics.push({ label: 'Tempo', value: s.duracaoLabel, unit: '' });
+    if (s.volume) metrics.push({ label: 'Volume total', value: s.volume.toLocaleString('pt-BR'), unit: 'kg' });
+    if (s.exercicios) metrics.push({ label: 'Exercícios', value: String(s.exercicios), unit: '' });
+    if (s.series) metrics.push({ label: 'Séries', value: String(s.series), unit: '' });
+    if (s.repeticoes) metrics.push({ label: 'Repetições', value: String(s.repeticoes), unit: '' });
+    if (s.calorias) metrics.push({ label: 'Calorias est.', value: '~' + String(s.calorias), unit: 'kcal' });
+  } else {
+    metrics.push({ label: 'Distância', value: s.distancia.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), unit: 'km' });
+    metrics.push({ label: 'Duração', value: s.duracaoLabel, unit: '' });
+    if (s.ritmo) metrics.push({ label: 'Ritmo', value: s.ritmo, unit: '' });
+    if (s.calorias) metrics.push({ label: 'Calorias', value: String(s.calorias), unit: 'kcal' });
+    if (s.passos) metrics.push({ label: 'Passos', value: s.passos.toLocaleString('pt-BR'), unit: '' });
+  }
+
+  const fontSize = W * 0.078;
+  const labelSize = W * 0.024;
+  const unitSize = W * 0.032;
+
+  // Medir marca
+  ctx.font = `700 ${W * 0.026}px ${SANS}`;
+  ctx.letterSpacing = '5px';
+  const brandMetrics = ctx.measureText('VIDA EM DIA');
+  const brandW = brandMetrics.width;
+  const brandAscent = brandMetrics.actualBoundingBoxAscent || 24;
+  const brandDescent = brandMetrics.actualBoundingBoxDescent || 6;
+  ctx.letterSpacing = '0px';
+
+  // Pré-medir métricas com caixa delimitadora precisa (Ponto 1 da revisão Codex)
+  const metricLayouts = [];
+  let maxContentWidth = Math.max(brandW, 100);
+
+  for (const m of metrics) {
+    ctx.font = `500 ${labelSize}px ${SANS}`;
+    const lMet = ctx.measureText(m.label);
+    const lAscent = lMet.actualBoundingBoxAscent || (labelSize * 0.75);
+    const lDescent = lMet.actualBoundingBoxDescent || (labelSize * 0.2);
+    const lWidth = lMet.width;
+
+    ctx.font = `800 ${fontSize}px ${SANS}`;
+    const vMet = ctx.measureText(m.value);
+    const vAscent = vMet.actualBoundingBoxAscent || (fontSize * 0.75);
+    const vDescent = vMet.actualBoundingBoxDescent || (fontSize * 0.18);
+    const vWidth = vMet.width;
+
+    let uWidth = 0;
+    if (m.unit) {
+      ctx.font = `500 ${unitSize}px ${SANS}`;
+      const uMet = ctx.measureText(m.unit);
+      uWidth = uMet.width + 8;
+    }
+
+    const totalValWidth = vWidth + uWidth;
+    maxContentWidth = Math.max(maxContentWidth, lWidth, totalValWidth);
+
+    metricLayouts.push({
+      metric: m,
+      lAscent,
+      lDescent,
+      lWidth,
+      vAscent,
+      vDescent,
+      vWidth,
+      uWidth
+    });
+  }
+
+  // Altura dos blocos com respiro explícito (Ponto 1 Codex):
+  // Rótulos nunca encostam no número anterior!
+  const gapLabelToValue = 10;
+  const gapBetweenMetrics = 34; // intervalo explícito entre número e próximo rótulo
+  const brandBlockH = brandAscent + brandDescent + 14 + 4 + 36;
+
+  let totalMetricsH = 0;
+  for (let i = 0; i < metricLayouts.length; i++) {
+    const ml = metricLayouts[i];
+    const itemH = ml.lAscent + ml.lDescent + gapLabelToValue + ml.vAscent + ml.vDescent;
+    totalMetricsH += itemH;
+    if (i < metricLayouts.length - 1) {
+      totalMetricsH += gapBetweenMetrics;
+    }
+  }
+
+  const totalContentH = brandBlockH + totalMetricsH;
+
+  // Distribuição vertical dinâmica no story (Ponto 1 Codex):
+  // Âncora confortável no terço inferior (~88% da altura), sem forçar H*0.46 estático
+  const targetBottom = H * 0.88;
+  const startY = Math.max(H * 0.28, targetBottom - totalContentH);
+
+  let curY = startY + brandAscent;
+
+  // Marca
+  ctx.fillStyle = color;
+  ctx.textAlign = 'start';
+  ctx.font = `700 ${W * 0.026}px ${SANS}`;
+  ctx.letterSpacing = '5px';
+  ctx.fillText('VIDA EM DIA', PAD, curY);
+  ctx.letterSpacing = '0px';
+
+  curY += brandDescent + 14;
+
+  // Barra de acento
+  ctx.fillStyle = '#a3d94e';
+  ctx.fillRect(PAD, curY, 24, 4);
+  curY += 4 + 36;
+
+  // Métricas
+  let lastMetricBottomY = curY;
+  for (let i = 0; i < metricLayouts.length; i++) {
+    const ml = metricLayouts[i];
+    const m = ml.metric;
+
+    const labelY = curY + ml.lAscent;
+    ctx.fillStyle = color;
+    ctx.globalAlpha = 0.85;
+    ctx.font = `500 ${labelSize}px ${SANS}`;
+    ctx.fillText(m.label, PAD, labelY);
+    ctx.globalAlpha = 1;
+
+    const valY = labelY + ml.lDescent + gapLabelToValue + ml.vAscent;
+    ctx.font = `800 ${fontSize}px ${SANS}`;
+    ctx.fillText(m.value, PAD, valY);
+
+    if (m.unit) {
+      ctx.font = `500 ${unitSize}px ${SANS}`;
+      ctx.globalAlpha = 0.8;
+      ctx.fillText(m.unit, PAD + ml.vWidth + 8, valY);
+      ctx.globalAlpha = 1;
+    }
+
+    lastMetricBottomY = valY + ml.vDescent;
+    curY = lastMetricBottomY + gapBetweenMetrics;
+  }
+
+  return {
+    minX: PAD,
+    maxX: PAD + maxContentWidth,
+    minY: startY,
+    maxY: lastMetricBottomY
+  };
+}
+
+// ---------- FOTO ----------
+function drawFoto(ctx, s, W, H) {
+  // Ponto 4 Codex: Sem foto, oferecer Editorial em vez de área marfim vazia
+  if (!userPhotoImg) {
+    drawEditorial(ctx, s, W, H);
+    return;
+  }
+
+  ctx.clearRect(0, 0, W, H);
+  drawCover(ctx, userPhotoImg, W, H);
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0.3, 'transparent');
+  grad.addColorStop(0.55, 'rgba(0,0,0,0.35)');
+  grad.addColorStop(1, 'rgba(0,0,0,0.8)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  const textColor = '#ffffff';
+  const accentColor = '#a3d94e';
+  const PAD = W * 0.08;
+
+  // Brand top center
+  ctx.fillStyle = textColor;
+  ctx.textAlign = 'center';
+  ctx.font = `700 ${W * 0.024}px ${SANS}`;
+  ctx.letterSpacing = '5px';
+  ctx.fillText('VIDA EM DIA', W / 2, H * 0.07);
+  ctx.letterSpacing = '0px';
+
+  ctx.fillStyle = accentColor;
+  ctx.fillRect(W / 2 - 12, H * 0.07 + 8, 24, 4);
+
+  // Status label
+  const statusLabel = s.tipo === 'musculacao' ? 'TREINO CONCLUÍDO' : 'CARDIO CONCLUÍDO';
+  ctx.fillStyle = accentColor;
+  ctx.font = `700 ${W * 0.02}px ${SANS}`;
+  ctx.letterSpacing = '5px';
+  ctx.fillText(statusLabel, W / 2, H * 0.72);
+  ctx.letterSpacing = '0px';
+
+  // Tempo exato MM:SS
+  let mainVal, mainUnit;
+  if (s.tipo === 'musculacao') {
+    mainVal = s.duracaoLabel;
+    mainUnit = '';
+  } else {
+    mainVal = s.distancia.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+    mainUnit = 'km';
+  }
+
+  // Medição precisa do número e unidade agrupados
+  ctx.fillStyle = textColor;
+  const mainFontSize = W * 0.14;
+  ctx.font = `800 ${mainFontSize}px ${SANS}`;
+  const mainNumW = ctx.measureText(mainVal).width;
+
+  const unitFontSize = W * 0.05;
+  ctx.font = `500 ${unitFontSize}px ${SANS}`;
+  const mainUnitW = mainUnit ? ctx.measureText(mainUnit).width : 0;
+  const unitGap = mainUnit ? 8 : 0;
+
+  const totalW = mainNumW + unitGap + mainUnitW;
+  const startX = (W - totalW) / 2;
+
+  ctx.font = `800 ${mainFontSize}px ${SANS}`;
+  ctx.textAlign = 'left';
+  ctx.fillText(mainVal, startX, H * 0.80);
+
+  if (mainUnit) {
+    ctx.font = `500 ${unitFontSize}px ${SANS}`;
+    ctx.globalAlpha = 0.9;
+    ctx.fillText(mainUnit, startX + mainNumW + unitGap, H * 0.80);
+    ctx.globalAlpha = 1;
+  }
+
+  // Bottom stats
+  const bottomParts = [];
+  if (s.tipo === 'musculacao') {
+    if (s.volume) bottomParts.push({ value: s.volume.toLocaleString('pt-BR'), unit: 'kg', label: 'Volume total' });
+    if (s.series) bottomParts.push({ value: String(s.series), unit: '', label: 'séries' });
+    if (s.repeticoes) bottomParts.push({ value: String(s.repeticoes), unit: '', label: 'repetições' });
+    if (!s.volume && !s.series && s.exercicios) bottomParts.push({ value: String(s.exercicios), unit: '', label: s.exercicios > 1 ? 'exercícios' : 'exercício' });
+  } else {
+    bottomParts.push({ value: s.duracaoLabel, unit: '', label: 'duração' });
+    if (s.ritmo) bottomParts.push({ value: s.ritmo, unit: '', label: 'ritmo' });
+  }
+
+  const bottomY = H * 0.88;
+  const totalBottomW = W * 0.7;
+  const segW = totalBottomW / bottomParts.length;
+  const bStartX = (W - totalBottomW) / 2;
+
+  ctx.textAlign = 'center';
+  bottomParts.forEach((bp, i) => {
+    const cx = bStartX + segW * i + segW / 2;
+    ctx.fillStyle = textColor;
+    ctx.font = `700 ${W * 0.04}px ${SANS}`;
+    const displayVal = bp.unit ? bp.value + ' ' + bp.unit : bp.value;
+    ctx.fillText(displayVal, cx, bottomY);
+
+    ctx.font = `500 ${W * 0.018}px ${SANS}`;
+    ctx.globalAlpha = 0.65;
+    ctx.fillText(bp.label, cx, bottomY + W * 0.03);
+    ctx.globalAlpha = 1;
+
+    if (i > 0) {
+      const dx = bStartX + segW * i;
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(dx, bottomY - W * 0.04);
+      ctx.lineTo(dx, bottomY + W * 0.03);
+      ctx.stroke();
+    }
+  });
+
+  ctx.textAlign = 'start';
+}
+
+// ---------- EDITORIAL ----------
+function drawEditorial(ctx, s, W, H) {
+  ctx.clearRect(0, 0, W, H);
+  const PAD = W * 0.08;
+  const ink = '#1a2e1c';
+
+  ctx.fillStyle = '#f0ece4';
+  ctx.fillRect(0, 0, W, H);
+
+  // Brand top left
+  ctx.fillStyle = ink;
+  ctx.textAlign = 'start';
+  ctx.font = `700 ${W * 0.024}px ${SANS}`;
+  ctx.letterSpacing = '5px';
+  ctx.fillText('VIDA EM DIA', PAD, H * 0.06);
+  ctx.letterSpacing = '0px';
+
+  ctx.fillStyle = '#a3d94e';
+  ctx.fillRect(PAD, H * 0.065, 24, 4);
+
+  // Session type top right
+  ctx.fillStyle = ink;
+  ctx.globalAlpha = 0.65;
+  ctx.font = `600 ${W * 0.022}px ${SANS}`;
+  ctx.textAlign = 'right';
+  const typeLines = s.tipo === 'musculacao' ? ['TREINO', 'CONCLUÍDO'] : ['CARDIO', 'CONCLUÍDO'];
+  typeLines.forEach((line, i) => {
+    ctx.fillText(line, W - PAD, H * 0.055 + i * W * 0.03);
+  });
+  ctx.textAlign = 'start';
+  ctx.globalAlpha = 1;
+
+  // Hero number & unit
+  let heroNumber, heroUnit;
+  if (s.tipo === 'musculacao') {
+    heroNumber = s.duracaoLabel;  // exact MM:SS always (00:51, 48:37, 12:09)
+    heroUnit = '';
+  } else {
+    heroNumber = s.distancia.toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+    heroUnit = 'QUILÔMETROS';
+  }
+
+  // Medição dinâmica precisa de descendentes (Ponto 2 Codex):
+  // Não invade a faixa visual dos descendentes de 6,07 (vírgula)
+  const heroFontSize = W * 0.22;
+  ctx.font = `700 ${heroFontSize}px ${SERIF}`;
+  const heroMetrics = ctx.measureText(heroNumber);
+  const heroAscent = heroMetrics.actualBoundingBoxAscent || (heroFontSize * 0.75);
+  const heroDescent = heroMetrics.actualBoundingBoxDescent || (heroFontSize * 0.16);
+
+  const heroY = H * 0.33;
+  ctx.fillStyle = ink;
+  ctx.textAlign = 'center';
+  ctx.fillText(heroNumber, W / 2, heroY);
+
+  let bottomOfHeroBlock = heroY + heroDescent;
+
+  if (heroUnit) {
+    const unitFontSize = W * 0.028;
+    ctx.font = `600 ${unitFontSize}px ${SANS}`;
+    const unitMetrics = ctx.measureText(heroUnit);
+    const unitAscent = unitMetrics.actualBoundingBoxAscent || (unitFontSize * 0.75);
+    const unitDescent = unitMetrics.actualBoundingBoxDescent || (unitFontSize * 0.15);
+
+    // Intervalo explícito de 26px entre o ponto mais baixo do número (vírgula/descendente) e o topo da legenda
+    const gapHeroToUnit = 26;
+    const unitBaselineY = heroY + heroDescent + gapHeroToUnit + unitAscent;
+
+    ctx.letterSpacing = '6px';
+    ctx.globalAlpha = 0.8;
+    ctx.fillText(heroUnit, W / 2, unitBaselineY);
+    ctx.letterSpacing = '0px';
+    ctx.globalAlpha = 1;
+
+    bottomOfHeroBlock = unitBaselineY + unitDescent;
+  }
+
+  // Linha divisória com ponto verde: intervalo explícito de 44px
+  const divY = bottomOfHeroBlock + 44;
+  ctx.strokeStyle = 'rgba(26,46,28,0.2)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(PAD, divY);
+  ctx.lineTo(W - PAD, divY);
+  ctx.stroke();
+
+  ctx.fillStyle = '#a3d94e';
+  ctx.fillRect(W - PAD - 10, divY - 2, 10, 5);
+
+  // Secondary stat
+  const secY = divY + 84;
+  ctx.fillStyle = ink;
+
+  const secNumSize = W * 0.09;
+  const secUnitSize = W * 0.028;
+  const secLabelSize = W * 0.022;
+
+  if (s.tipo === 'musculacao' && s.volume) {
+    drawNumberWithUnit(ctx, s.volume.toLocaleString('pt-BR'), 'kg', 'Volume total', secNumSize, secUnitSize, secLabelSize, W / 2, secY, ink);
+  } else if (s.tipo === 'cardio') {
+    drawNumberWithUnit(ctx, s.duracaoLabel, '', 'Duração', secNumSize, secUnitSize, secLabelSize, W / 2, secY, ink);
+  } else if (s.tipo === 'musculacao' && s.repeticoes) {
+    drawNumberWithUnit(ctx, String(s.repeticoes), '', 'Repetições', secNumSize, secUnitSize, secLabelSize, W / 2, secY, ink);
+  } else if (s.tipo === 'musculacao' && s.calorias) {
+    drawNumberWithUnit(ctx, '~' + String(s.calorias), 'kcal', 'Calorias est.', secNumSize, secUnitSize, secLabelSize, W / 2, secY, ink);
+  }
+
+  // Pair stats
+  const pairY = secY + 114;
+  const pairNumSize = W * 0.08;
+  const pairSubSize = W * 0.018;
+
+  if (s.tipo === 'musculacao') {
+    const left = s.exercicios ? { v: String(s.exercicios), l: s.exercicios > 1 ? 'exercícios' : 'exercício' } : null;
+    const right = s.series ? { v: String(s.series), l: 'séries' } : null;
+    drawPairStats(ctx, left, right, pairNumSize, pairSubSize, pairY, W, ink);
+  } else {
+    const pairs = [];
+    if (s.calorias) pairs.push({ v: String(s.calorias), l: 'kcal' });
+    if (s.passos) pairs.push({ v: s.passos.toLocaleString('pt-BR'), l: 'passos' });
+    drawPairStats(ctx, pairs[0] || null, pairs[1] || null, pairNumSize, pairSubSize, pairY, W, ink);
+  }
+
+  // Date footer
+  ctx.fillStyle = ink;
+  ctx.globalAlpha = 0.4;
+  ctx.textAlign = 'center';
+  ctx.font = `400 ${W * 0.018}px ${SANS}`;
+  ctx.fillText(s.data, W / 2, H * 0.95);
+  ctx.globalAlpha = 1;
+  ctx.textAlign = 'start';
+}
+
+// ---------- Shared helpers ----------
+function drawCover(ctx, img, W, H) {
+  const iw = img.naturalWidth || img.width;
+  const ih = img.naturalHeight || img.height;
+  const scale = Math.max(W / iw, H / ih);
+  const dx = (W - iw * scale) / 2;
+  const dy = (H - ih * scale) / 2;
+  ctx.drawImage(img, dx, dy, iw * scale, ih * scale);
+}
+
+function drawCheckerboard(ctx, W, H) {
+  const sz = 30;
+  for (let y = 0; y < H; y += sz) {
+    for (let x = 0; x < W; x += sz) {
+      ctx.fillStyle = ((x / sz + y / sz) % 2 === 0) ? '#3a3a3a' : '#2a2a2a';
+      ctx.fillRect(x, y, sz, sz);
+    }
+  }
+}
+
+function drawNumberWithUnit(ctx, numStr, unitStr, labelStr, numSize, unitSize, labelSize, cx, cy, ink) {
+  ctx.font = `700 ${numSize}px ${SERIF}`;
+  const numW = ctx.measureText(numStr).width;
+
+  let unitW = 0, unitGap = 0;
+  if (unitStr) {
+    ctx.font = `500 ${unitSize}px ${SANS}`;
+    unitW = ctx.measureText(unitStr).width;
+    unitGap = 8;
+  }
+
+  const totalW = numW + unitGap + unitW;
+  const startX = cx - totalW / 2;
+
+  ctx.fillStyle = ink;
+  ctx.textAlign = 'left';
+  ctx.font = `700 ${numSize}px ${SERIF}`;
+  ctx.fillText(numStr, startX, cy);
+
+  if (unitStr) {
+    ctx.font = `500 ${unitSize}px ${SANS}`;
+    ctx.globalAlpha = 0.7;
+    ctx.fillText(unitStr, startX + numW + unitGap, cy);
+    ctx.globalAlpha = 1;
+  }
+
+  ctx.textAlign = 'center';
+  ctx.globalAlpha = 0.6;
+  ctx.font = `500 ${labelSize}px ${SANS}`;
+  ctx.fillText(labelStr, cx, cy + numSize * 0.45);
+  ctx.globalAlpha = 1;
+}
+
+function drawPairStats(ctx, left, right, numSize, subSize, pairY, W, ink) {
+  if (!left && !right) return;
+
+  const leftX = (left && right) ? W * 0.3 : W / 2;
+  const rightX = W * 0.7;
+
+  if (left) {
+    ctx.fillStyle = ink;
+    ctx.textAlign = 'center';
+    ctx.font = `700 ${numSize}px ${SERIF}`;
+    ctx.fillText(left.v, leftX, pairY);
+    ctx.globalAlpha = 0.6;
+    ctx.font = `500 ${subSize}px ${SANS}`;
+    ctx.letterSpacing = '2px';
+    ctx.fillText(left.l, leftX, pairY + numSize * 0.42);
+    ctx.letterSpacing = '0px';
+    ctx.globalAlpha = 1;
+  }
+
+  if (left && right) {
+    ctx.strokeStyle = 'rgba(26,46,28,0.2)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(W / 2, pairY - numSize * 0.7);
+    ctx.lineTo(W / 2, pairY + numSize * 0.5);
+    ctx.stroke();
+  }
+
+  if (right) {
+    ctx.fillStyle = ink;
+    ctx.textAlign = 'center';
+    ctx.font = `700 ${numSize}px ${SERIF}`;
+    ctx.fillText(right.v, rightX, pairY);
+    ctx.globalAlpha = 0.6;
+    ctx.font = `500 ${subSize}px ${SANS}`;
+    ctx.letterSpacing = '2px';
+    ctx.fillText(right.l, rightX, pairY + numSize * 0.42);
+    ctx.letterSpacing = '0px';
+    ctx.globalAlpha = 1;
+  }
+
+  ctx.textAlign = 'start';
+}
+
+// ============================================================
+// RENDER — draws to the 3 preview canvases
+// ============================================================
+function renderAll() {
+  const s = getScenario();
+
+  // Atualizar rótulo da coluna Foto quando sem foto
+  const labelColFoto = document.getElementById('label-col-foto');
+  if (labelColFoto) {
+    labelColFoto.textContent = userPhotoImg ? '02 / FOTO' : '02 / FOTO (Editorial sem foto)';
+  }
+
+  // Tipográfico preview
+  const cvTipo = document.getElementById('cv-tipografico');
+  const ctxTipo = cvTipo.getContext('2d');
+  drawTipografico(ctxTipo, s, 1080, 1920, {
+    transparent: false,
+    showPhoto: !!userPhotoImg,
+    checkerboard: !userPhotoImg,
+  });
+
+  // Foto preview
+  const cvFoto = document.getElementById('cv-foto');
+  const ctxFoto = cvFoto.getContext('2d');
+  drawFoto(ctxFoto, s, 1080, 1920);
+
+  // Editorial preview
+  const cvEdit = document.getElementById('cv-editorial');
+  const ctxEdit = cvEdit.getContext('2d');
+  drawEditorial(ctxEdit, s, 1080, 1920);
+}
+
+// ============================================================
+// MODAL — reuses the same draw functions on a modal canvas
+// ============================================================
+document.getElementById('wrap-tipografico').addEventListener('click', () => openModal('tipografico'));
+document.getElementById('wrap-foto').addEventListener('click', () => openModal('foto'));
+document.getElementById('wrap-editorial').addEventListener('click', () => openModal('editorial'));
+
+function openModal(type) {
+  const s = getScenario();
+  const cv = document.getElementById('cv-modal');
+  const ctx = cv.getContext('2d');
+
+  if (type === 'tipografico') {
+    drawTipografico(ctx, s, 1080, 1920, { transparent: false, showPhoto: !!userPhotoImg, checkerboard: !userPhotoImg });
+  } else if (type === 'foto') {
+    drawFoto(ctx, s, 1080, 1920);
+  } else {
+    drawEditorial(ctx, s, 1080, 1920);
+  }
+
+  document.getElementById('modal').classList.add('open');
+}
+
+document.getElementById('modal-close').addEventListener('click', () => {
+  document.getElementById('modal').classList.remove('open');
+});
+document.getElementById('modal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) document.getElementById('modal').classList.remove('open');
+});
+
+// ============================================================
+// PNG EXPORT — reuses the exact same draw functions
+// ============================================================
+function gerarPNGDataURL(type, transparent, scenarioName, tightBounds = (type === 'tipografico')) {
+  if (scenarioName && SCENARIOS[scenarioName]) {
+    currentScenario = scenarioName;
+  }
+  const W = 1080, H = 1920;
+  const cv = document.createElement('canvas');
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+  const s = getScenario();
+
+  let bounds = null;
+  if (type === 'tipografico') {
+    bounds = drawTipografico(ctx, s, W, H, { transparent: !!transparent, showPhoto: false, checkerboard: false });
+  } else if (type === 'foto') {
+    drawFoto(ctx, s, W, H);
+  } else {
+    drawEditorial(ctx, s, W, H);
+  }
+
+  // Exportar com limites justos para o adesivo tipográfico (Ponto 1 Codex)
+  if (type === 'tipografico' && tightBounds && bounds) {
+    const pad = 36;
+    const cropX = Math.max(0, Math.floor(bounds.minX - pad));
+    const cropY = Math.max(0, Math.floor(bounds.minY - pad));
+    const cropW = Math.min(W - cropX, Math.ceil((bounds.maxX - bounds.minX) + pad * 2));
+    const cropH = Math.min(H - cropY, Math.ceil((bounds.maxY - bounds.minY) + pad * 2));
+
+    const croppedCv = document.createElement('canvas');
+    croppedCv.width = cropW;
+    croppedCv.height = cropH;
+    const cctx = croppedCv.getContext('2d');
+    cctx.drawImage(cv, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+    return croppedCv.toDataURL('image/png');
+  }
+
+  return cv.toDataURL('image/png');
+}
+window.gerarPNGDataURL = gerarPNGDataURL;
+
+function exportPNG(type, transparent) {
+  const dataUrl = gerarPNGDataURL(type, transparent);
+  const link = document.createElement('a');
+  link.download = `vida-em-dia-${type}-${currentScenario}.png`;
+  link.href = dataUrl;
+  link.click();
+}
+
+// ============================================================
+// CONTROLS
+// ============================================================
+document.getElementById('scenario-select').addEventListener('change', (e) => {
+  currentScenario = e.target.value;
+  renderAll();
+});
+
+document.getElementById('btn-text-light').addEventListener('click', () => {
+  textMode = 'light';
+  document.getElementById('btn-text-light').classList.add('active');
+  document.getElementById('btn-text-dark').classList.remove('active');
+  renderAll();
+});
+document.getElementById('btn-text-dark').addEventListener('click', () => {
+  textMode = 'dark';
+  document.getElementById('btn-text-dark').classList.add('active');
+  document.getElementById('btn-text-light').classList.remove('active');
+  renderAll();
+});
+
+document.getElementById('photo-input').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    userPhoto = reader.result;
+    const img = new Image();
+    img.onload = () => {
+      userPhotoImg = img;
+      document.getElementById('btn-clear-photo').style.display = 'inline-flex';
+      renderAll();
+    };
+    img.src = userPhoto;
+  };
+  reader.readAsDataURL(file);
+});
+document.getElementById('btn-clear-photo').addEventListener('click', () => {
+  userPhoto = null;
+  userPhotoImg = null;
+  document.getElementById('photo-input').value = '';
+  document.getElementById('btn-clear-photo').style.display = 'none';
+  renderAll();
+});
+
+// ============================================================
+// INIT
+// ============================================================
+renderAll();
+</script>
+</body>
+</html>
