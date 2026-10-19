@@ -1,3 +1,4 @@
+import { useConfirmacao } from '../hooks/useConfirmacao'
 import { useEstadoTemporario } from '../hooks/useEstadoTemporario'
 import { exerciciosDisponiveis } from '../dados/duplicatasExercicios'
 import { CardioNoTreino } from '../componentes/CardioNoTreino'
@@ -26,6 +27,7 @@ import { Painel } from '../componentes/Painel'
 import { recordesDoTreino } from '../dados/historico'
 
 export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido }: { id: string; online: boolean; fechar: () => void; abrirResumo?: boolean; concluido: (id: string) => void }) {
+ const { confirmar, dialogo } = useConfirmacao()
   const descarte = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   useEffect(() => {
     clearTimeout(descarte.current)
@@ -77,15 +79,15 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
   if (!treino || !itens || !series || !exercicios) return <p role="status">Carregando treino salvo…</p>
   const proxima = itens.flatMap(item => series.filter(s => s.exercicio_id === item.exercicio_id)).find(s => !s.concluida_em)
   const atualizarDescanso = async (fim: string | null) => { await tabela('treinos').update(id, { descanso_fim: fim, atualizado_em: new Date().toISOString() }) }
-  if (resumo || treino.fim) return <ResumoTreino treino={treino} series={series} anterior={comparacao} pesoInicial={peso} fechar={fechar} voltar={() => definirResumo(false)} finalizar={async (peso_corporal, calorias) => {
-    if (proxima && !window.confirm('Ainda existem séries pendentes. Finalizar somente com as séries concluídas?')) return
+  if (resumo || treino.fim) return <>{dialogo}<ResumoTreino treino={treino} series={series} anterior={comparacao} pesoInicial={peso} fechar={fechar} voltar={() => definirResumo(false)} finalizar={async (peso_corporal, calorias) => {
+    if (proxima && !await confirmar('Ainda existem séries pendentes. Finalizar somente com as séries concluídas?', "Finalizar treino")) return
     const fim = new Date().toISOString()
     await tabela('treinos').update(id, { fim, duracao_minutos: Math.round((Date.parse(fim) - Date.parse(treino.inicio)) / 60000), calorias, peso_corporal, descanso_fim: null, atualizado_em: fim })
     tela.parar()
     concluido(id)
     window.scrollTo({ top: 0 })
-  }} />
-  return <section className="treino-em-andamento">
+  }} /></>
+  return <section className="treino-em-andamento">{dialogo}
     <div className="painel andamento-treino"><div className="titulo-andamento"><h2>{formatarNomeFicha(treino.titulo ?? 'Treino livre')}</h2>{!treino.ficha_id && <button type="button" aria-label="Dar um nome ao treino livre" onClick={() => { definirNomeTreino(treino.titulo === 'Treino livre' ? '' : treino.titulo ?? ''); definirNomeAberto(true) }}><Pencil size={16} aria-hidden="true" />Nomear</button>}</div><div className="progresso-sessao"><span>Seu progresso</span><strong>{series.filter(s => s.concluida_em).length}<small> / {series.length} séries</small></strong></div><progress className="barra-sessao" aria-label="Séries concluídas" max={Math.max(1, series.length)} value={series.filter(s => s.concluida_em).length} /><button className="botao-secundario manter-tela" onClick={() => void tela.manter()}><Smartphone size={18} aria-hidden="true" /><span>{tela.estado}</span></button></div>
     {erro && <p role="alert" className="erro">{erro}</p>}
     {Object.keys(avisoRecorde).length > 0 && <div className="aviso-recorde" role="status"><Trophy className="icone-recorde" size={20} aria-hidden="true" /><div><strong>{Object.keys(avisoRecorde).length > 1 ? 'Novos recordes' : 'Novo recorde'}</strong>{Object.entries(avisoRecorde).map(([exercicioId, aviso]) => <p key={exercicioId}><b>{aviso.nome}</b><br />{aviso.marcas.join(' · ')}</p>)}</div><button aria-label="Fechar aviso de recorde" onClick={() => definirAvisoRecorde({})}><X size={16} aria-hidden="true" /></button></div>}
@@ -175,7 +177,7 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
       })
     })}><Check size={16} aria-hidden="true" />Salvar ficha</button></div></details>}
     <div className="finalizar-acoes"><button className="botao-principal" onClick={mostrarResumo}>Ver resumo e finalizar</button><button className="botao-secundario continuar-depois" onClick={fechar}><ArrowLeft size={18} aria-hidden="true" /><span>Continuar depois</span></button></div>
-    <button type="button" className="cancelar-sessao" disabled={ocupado} onClick={() => { if (!window.confirm('Cancelar este treino? Ele, suas séries e o cardio vinculado ficarão fora do histórico e das estatísticas.')) return; void executar(async () => { await cancelarTreino(id); tela.parar(); fechar() }) }}>Cancelar treino</button>
+    <button type="button" className="cancelar-sessao" disabled={ocupado} onClick={async () => { if (!await confirmar('Cancelar este treino? Ele, suas séries e o cardio vinculado ficarão fora do histórico e das estatísticas.', "Cancelar treino")) return; void executar(async () => { await cancelarTreino(id); tela.parar(); fechar() }) }}>Cancelar treino</button>
     {perguntarFinalizacao && <Painel centralizado titulo="Todas as séries concluídas!" fechar={() => definirPerguntarFinalizacao(false)}><p className="subtitulo-seletor">Você concluiu todos os exercícios. Quer finalizar o treino?</p><button type="button" className="botao-principal largura-total" onClick={() => { definirPerguntarFinalizacao(false); mostrarResumo() }}>Ver resumo e finalizar</button><button type="button" className="botao-secundario" onClick={() => definirPerguntarFinalizacao(false)}>Continuar treino</button></Painel>}
     {ajuda && <AjudaExercicio exercicio={ajuda} online={online} fechar={() => definirAjuda(null)} editar={() => { definirEdicao(ajuda); definirAjuda(null) }} />}
     {edicao && <EditorExercicio exercicio={edicao} fechar={() => definirEdicao(null)} />}

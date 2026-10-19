@@ -1,4 +1,7 @@
 /* Contrato visual compartilhado. Importado após os estilos específicos. */
+.confirmacao-app { display: grid; gap: 12px; }
+.confirmacao-app > p { margin: 0 0 8px; color: #bacabd; font-size: 14px; line-height: 1.7; }
+.app .confirmacao-app > button { width: 100%; margin: 0; justify-content: center; }
 .aviso-backup { display: grid; gap: 12px; padding: 18px; margin-bottom: 20px; border: 1px solid #3a5039; border-radius: 18px; background: #19271d; }
 .aviso-backup-titulo { display: flex; align-items: center; gap: 10px; }
 .aviso-backup-titulo > svg { color: #bcec86; }

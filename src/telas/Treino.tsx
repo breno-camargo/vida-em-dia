@@ -1,3 +1,4 @@
+import { useConfirmacao } from '../hooks/useConfirmacao'
 import { TransicaoConteudo } from '../componentes/TransicaoConteudo'
 import { RevisarDuplicatas } from '../componentes/RevisarDuplicatas'
 import { useEstadoTemporario } from '../hooks/useEstadoTemporario'
@@ -23,6 +24,7 @@ import { CompartilharUltimo } from '../componentes/CompartilharUltimo'
 
 
 export function Treino({ online }: { online: boolean }) {
+ const { confirmar, dialogo } = useConfirmacao()
   const exercicios = useLiveQuery(() => repositorio('exercicios').listar().then(itens => itens.sort((a, b) => a.nome.localeCompare(b.nome, 'pt-BR'))))
   const fichas = useLiveQuery(() => repositorio('fichas').listar().then(itens => itens.sort((a, b) => a.ordem - b.ordem)))
   const ativo = useLiveQuery(treinoAtivo)
@@ -84,7 +86,7 @@ export function Treino({ online }: { online: boolean }) {
   const { filtrados, visiveis, filtros, mais } = useFiltroExercicios(exercicios ?? [], busca)
   if (!exercicios || !fichas) return <p role="status">Carregando seu espaço…</p>
   if (sessao) return <ModoTreino id={sessao} online={online} abrirResumo={abrirResumo} fechar={() => void executar(async () => { await descartarTreinoLivreVazio(sessao); definirSessao(null); definirAbrirResumo(false) })} concluido={id => { definirSessao(null); definirAbrirResumo(false); definirCardFinalizado(id) }} />
-  return <>
+  return <>{dialogo}
     {ativo && <section className="retomar-treino retomar-compacto">
       <div className="retomar-identidade"><span className="sinal-treino" aria-hidden="true" /><span>Em andamento</span><small>{ativo.data.split('-').reverse().slice(0, 2).join('/')}</small></div>
       <h2>{formatarNomeFicha(ativo.titulo ?? 'Treino livre')}</h2>
@@ -134,7 +136,7 @@ export function Treino({ online }: { online: boolean }) {
       {filtrados.length === 0 && <p className="nota">Nenhum exercício encontrado. Tente outro nome ou adicione o seu.</p>}
     </> : null}
     </TransicaoConteudo>
-    {novoPedido && <Painel centralizado titulo="Já existe um treino em andamento" fechar={() => definirNovoPedido(null)}><div className="troca-treino-dialogo"><p className="subtitulo-seletor">Começou a ficha errada? Cancele o atual para ele não entrar no histórico. Se já treinou e quer registrar, finalize o atual.</p><button type="button" className="botao-principal largura-total" disabled={ocupado} onClick={() => void executar(async () => { const atual = await treinoAtivo(); definirNovoPedido(null); if (atual) { definirAbrirResumo(true); definirSessao(atual.id) } })}>Concluir treino atual</button><button type="button" className="botao-secundario" disabled={ocupado} onClick={() => void executar(async () => { const id = await iniciarTreino(novoPedido.fichaId, true); definirNovoPedido(null); definirAbrirResumo(false); definirSessao(id) })}>Finalizar atual e iniciar outro</button><button type="button" className="botao-secundario" disabled={ocupado} onClick={() => { if (!window.confirm('Cancelar o treino atual e iniciar o escolhido? O atual, suas séries e o cardio vinculado ficarão fora do histórico e das estatísticas.')) return; void executar(async () => { const id = await iniciarTreino(novoPedido.fichaId, 'cancelar'); definirNovoPedido(null); definirAbrirResumo(false); definirSessao(id) }) }}>Cancelar atual e iniciar outro</button>{erro && <p className="erro" role="alert">{erro}</p>}</div></Painel>}
+    {novoPedido && <Painel centralizado titulo="Já existe um treino em andamento" fechar={() => definirNovoPedido(null)}><div className="troca-treino-dialogo"><p className="subtitulo-seletor">Começou a ficha errada? Cancele o atual para ele não entrar no histórico. Se já treinou e quer registrar, finalize o atual.</p><button type="button" className="botao-principal largura-total" disabled={ocupado} onClick={() => void executar(async () => { const atual = await treinoAtivo(); definirNovoPedido(null); if (atual) { definirAbrirResumo(true); definirSessao(atual.id) } })}>Concluir treino atual</button><button type="button" className="botao-secundario" disabled={ocupado} onClick={() => void executar(async () => { const id = await iniciarTreino(novoPedido.fichaId, true); definirNovoPedido(null); definirAbrirResumo(false); definirSessao(id) })}>Finalizar atual e iniciar outro</button><button type="button" className="botao-secundario" disabled={ocupado} onClick={async () => { if (!await confirmar('Cancelar o treino atual e iniciar o escolhido? O atual, suas séries e o cardio vinculado ficarão fora do histórico e das estatísticas.', "Cancelar e iniciar outro")) return; void executar(async () => { const id = await iniciarTreino(novoPedido.fichaId, 'cancelar'); definirNovoPedido(null); definirAbrirResumo(false); definirSessao(id) }) }}>Cancelar atual e iniciar outro</button>{erro && <p className="erro" role="alert">{erro}</p>}</div></Painel>}
     {edicao && <EditorExercicio exercicio={edicao} fechar={() => definirEdicao(null)} />}
     {cardFinalizado && <CompartilharUltimo id={cardFinalizado} fechar={() => definirCardFinalizado(null)} />}
     {ficha && <EditorFicha ficha={ficha.dados} iniciais={ficha.itens} exercicios={exercicios} fechar={() => definirFicha(null)} />}
