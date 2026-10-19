@@ -24,7 +24,10 @@ export function iniciarConta(){
   if(usuario&&!estado.recuperando&&await vinculoLocal()===usuario.id)void sincronizarAutomatico()
  }
  void supabase.auth.getSession().then(({data,error})=>{if(error)alterar({carregando:false,erro:'Entre novamente para sincronizar.'});else void atualizar(data.session?.user??null)})
- supabase.auth.onAuthStateChange((evento,sessao)=>{if(evento==='SIGNED_IN'||evento==='SIGNED_OUT'||evento==='INITIAL_SESSION'||evento==='PASSWORD_RECOVERY')setTimeout(()=>{if(evento==='SIGNED_OUT')alterar({visitante:false,recuperando:false});void atualizar(sessao?.user??null)},0)})
+ supabase.auth.onAuthStateChange((evento,sessao)=>{if(evento==='SIGNED_IN'||evento==='SIGNED_OUT'||evento==='INITIAL_SESSION'||evento==='PASSWORD_RECOVERY'){
+  if(evento==='SIGNED_OUT'||sessao?.user.id!==estado.usuario?.id)alterar({carregando:true,vinculado:false,visitante:false})
+  setTimeout(()=>{if(evento==='SIGNED_OUT')alterar({visitante:false,recuperando:false});void atualizar(sessao?.user??null)},0)
+ }})
  window.addEventListener('online',()=>void sincronizarAutomatico())
  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void sincronizarAutomatico()})
  window.addEventListener('vida-em-dia:treino-finalizado',()=>void sincronizarAutomatico())

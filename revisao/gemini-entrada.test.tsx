@@ -21,6 +21,10 @@ test('A10 regressão: restauração mostra estado neutro antes de decidir a tela
   expect(inicial).not.toContain('Continuar sem conta')
   expect(inicial).not.toContain('type="password"')
   conta.usuario = {id:'usuario-sintetico'}; conta.carregando = false
+  const semVinculo = renderToStaticMarkup(<App />)
+  expect(semVinculo).toContain('Vamos separar seus dados.')
+  expect(semVinculo).not.toContain('Olá, vamos cuidar de você?')
+  conta.vinculado = true
   const recuperada = renderToStaticMarkup(<App />)
   expect(recuperada).toContain('Olá, vamos cuidar de você?')
   expect(recuperada).not.toContain('Abrindo sua sessão…')
@@ -32,5 +36,5 @@ test('A10 regressão: restauração mostra estado neutro antes de decidir a tela
   const visitante = renderToStaticMarkup(<App />)
   expect(visitante).toContain('Olá, vamos cuidar de você?')
   expect(visitante).not.toContain('Abrindo seu espaço…')
-  conta.visitante = false; conta.carregando = true
+  conta.visitante = false; conta.carregando = true; conta.vinculado = false
 })

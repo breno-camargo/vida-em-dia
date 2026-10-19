@@ -2,7 +2,7 @@ import { ConcluirPerfilCadastro } from './componentes/ConcluirPerfilCadastro'
 import { iniciarFeriados } from './dados/atividade'
 import { continuarSemConta, iniciarConta, useConta } from './sincronizacao/estado'
 import { supabase } from './sincronizacao/cliente'
-import { ContaConfiguracoes } from './componentes/ContaConfiguracoes'
+import { ContaConfiguracoes, BotaoSairDaConta } from './componentes/ContaConfiguracoes'
 import { lazy, Suspense, useEffect, useLayoutEffect, useState } from 'react'
 import { Settings, X, Utensils, Ruler, ChartNoAxesCombined, Leaf } from 'lucide-react'
 import { Navegacao, type Aba } from './componentes/Navegacao'
@@ -41,6 +41,15 @@ export default function App() {
     <header className="marca-entrada"><span><Leaf size={25} strokeWidth={1.7} /></span><div>Vida em Dia<small>UM ESPAÇO PARA VOCÊ</small></div></header>
     <main id="conteudo" className="conteudo-entrada" aria-busy={!erro}>
       {erro ? <p role="alert" className="erro">{erro}</p> : <p role="status">Abrindo seu espaço…</p>}
+    </main>
+  </div>
+  if (supabase && conta.usuario && !conta.vinculado && !conta.recuperando) return <div className="app entrada-conta">
+    <header className="marca-entrada"><span><Leaf size={25} strokeWidth={1.7} /></span><div>Vida em Dia<small>UM ESPAÇO PARA VOCÊ</small></div></header>
+    <main id="conteudo" className="conteudo-entrada">
+      <div className="apresentacao-entrada"><h1>Vamos separar seus dados.</h1><p>Entrar em outra conta não transfere os registros deste navegador.</p></div>
+      <p className="nota-resumo">Se este navegador já foi usado por outra pessoa, use um perfil separado do navegador ou outro aparelho para sua conta. Os registros locais ficam protegidos até a validação do vínculo.</p>
+      <ContaConfiguracoes entrada />
+      <BotaoSairDaConta />
     </main>
   </div>
   if (entrada) return <div className="app entrada-conta">
