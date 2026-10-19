@@ -6,10 +6,31 @@ import { beforeEach, expect, test } from 'vitest'
 import { banco, tabela } from './banco'
 import { criarRegistro } from './repositorio'
 import { iniciarBanco } from './configuracoes'
-import { camposMedidas, diferencaMedida, lembreteMedidas, salvarMedida } from './medidas'
+import { camposMedidas, diferencaMedida, lembreteMedidas, salvarMedida, formatarValorMedida, lerValorMedida } from './medidas'
 import { repositorio } from './repositorio'
 beforeEach(async () => { await banco.delete(); await banco.open(); await iniciarBanco() })
 const medida = (data: string, peso?: number) => ({ ...criarRegistro(), data, peso })
+test('peso mantém gramas no parsing, salvamento e comparação', async () => {
+  const peso = lerValorMedida('peso', '77,830')
+  expect(peso).toBe(77.83)
+  expect(formatarValorMedida('peso', peso)).toBe('77,830')
+  const antes = medida('2026-01-01', 77.8), depois = medida('2026-01-02', peso)
+  await salvarMedida(depois)
+  expect((await tabela('medidas_corporais').get(depois.id))?.peso).toBe(77.83)
+  expect(diferencaMedida(antes, depois, 'peso')).toBe(0.03)
+  expect(formatarValorMedida('peso', diferencaMedida(antes, depois, 'peso')!)).toBe('0,030')
+})
+test('todas as circunferências aceitam centésimos de cm e não transformam ausência em zero', () => {
+  for (const [campo] of camposMedidas.filter(([c]) => c !== 'peso')) {
+    expect(lerValorMedida(campo, '82,5')).toBe(82.5)
+    expect(formatarValorMedida(campo, 82.5)).toBe('82,50')
+    expect(lerValorMedida(campo, '83,75')).toBe(83.75)
+    expect(lerValorMedida(campo, '83')).toBe(83)
+    expect(() => lerValorMedida(campo, '82,555')).toThrow()
+  }
+  for (const texto of ['', '-77', '0', '400,001', '77,8301', '1e2']) expect(() => lerValorMedida('peso', texto)).toThrow()
+  expect(lerValorMedida('peso', '77.830')).toBe(77.83)
+})
 test('salve registros parciais sem transformar campos ausentes em zero', async () => {
   const m = { ...medida('2026-01-01'), cintura: 82.5 }
   await salvarMedida(m)
@@ -100,4 +121,13 @@ test('salve busto isolado, compare duas datas e mantenha registros antigos sem b
   expect(diferencaMedida(salvo, depois, 'busto')).toBe(0.6)
   expect(diferencaMedida(medida('2025-12-01', 70), depois, 'busto')).toBeNull()
   await expect(salvarMedida({ ...medida('2026-01-03'), busto: 0 })).rejects.toThrow('busto')
+})
+
+test('salve centésimos de cm e preserve pequenas diferenças na comparação', async () => {
+ const antes={...medida('2026-01-01'),cintura:83.70}
+ const depois={...medida('2026-01-02'),cintura:lerValorMedida('cintura','83.75')}
+ await salvarMedida(depois)
+ expect((await tabela('medidas_corporais').get(depois.id))?.cintura).toBe(83.75)
+ expect(diferencaMedida(antes,depois,'cintura')).toBe(0.05)
+ expect(formatarValorMedida('cintura',diferencaMedida(antes,depois,'cintura')!)).toBe('0,05')
 })

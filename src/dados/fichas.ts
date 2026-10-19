@@ -2,6 +2,10 @@ import { banco, tabela } from './banco'
 import { criarRegistro } from './repositorio'
 import type { Ficha, FichaExercicio } from './modelos'
 
+export function formatarNomeFicha(nome: string) {
+  return nome.trim().replace(/\p{L}/u, letra => letra.toLocaleUpperCase('pt-BR'))
+}
+
 export async function salvarFicha(ficha: Ficha, itens: FichaExercicio[]) {
   if (!ficha.nome.trim()) throw new Error('Dê um nome à ficha.')
   if (!itens.length) throw new Error('Adicione pelo menos um exercício.')
@@ -16,7 +20,7 @@ export async function salvarFicha(ficha: Ficha, itens: FichaExercicio[]) {
     for (const item of antigos.filter(item => !itens.some(novo => novo.id === item.id))) {
       await tabela('ficha_exercicios').put({ ...item, apagado_em: agora, atualizado_em: agora })
     }
-    await tabela('fichas').put({ ...ficha, nome: ficha.nome.trim(), atualizado_em: agora })
+    await tabela('fichas').put({ ...ficha, nome: formatarNomeFicha(ficha.nome), atualizado_em: agora })
     await tabela('ficha_exercicios').bulkPut(itens.map((item, ordem) => ({ ...item, ordem, atualizado_em: agora, apagado_em: null })))
   })
 }

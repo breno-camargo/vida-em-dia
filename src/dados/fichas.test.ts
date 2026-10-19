@@ -5,7 +5,20 @@ import { banco, tabela } from './banco'
 import { iniciarBanco } from './configuracoes'
 import { iniciarBiblioteca } from './biblioteca'
 import { criarRegistro } from './repositorio'
-import { apagarFicha, duplicarFicha, salvarFicha } from './fichas'
+import { apagarFicha, duplicarFicha, salvarFicha, formatarNomeFicha } from './fichas'
+
+test('capitalize a primeira letra do nome sem modificar as demais', async () => {
+  expect(formatarNomeFicha('  ficha a  ')).toBe('Ficha a')
+  expect(formatarNomeFicha('ênfase em PERNAS')).toBe('Ênfase em PERNAS')
+  expect(formatarNomeFicha('1 · peito')).toBe('1 · Peito')
+  const ex = (await tabela('exercicios').toArray())[0]
+  const ficha = { ...criarRegistro(), nome: 'ficha a', ordem: 0 }
+  const item = { ...criarRegistro(), ficha_id: ficha.id, exercicio_id: ex.id, ordem: 0, series_planejadas: 3, descanso_segundos: 90 }
+  await salvarFicha(ficha, [item])
+  expect((await tabela('fichas').get(ficha.id))?.nome).toBe('Ficha a')
+  await salvarFicha({ ...ficha, nome: 'ênfase em PERNAS' }, [item])
+  expect((await tabela('fichas').get(ficha.id))?.nome).toBe('Ênfase em PERNAS')
+})
 
 beforeEach(async () => { await banco.delete(); await banco.open(); await iniciarBanco(); await iniciarBiblioteca() })
 test('inicialize 64 exercícios sem duplicar nem recriar os excluídos', async () => {

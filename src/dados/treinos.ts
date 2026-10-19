@@ -1,3 +1,4 @@
+import { formatarNomeFicha } from './fichas'
 import { banco, tabela } from './banco'
 import { criarRegistro } from './repositorio'
 import type { Exercicio, SerieTreino, Treino, TreinoExercicio } from './modelos'
@@ -6,6 +7,19 @@ import { cargaTotal, validarSerie, caloriasMusculacao } from '../utilitarios/tre
 import { desempenho, efetivas } from '../utilitarios/evolucao'
 
 export async function treinoAtivo() { return tabela('treinos').filter(t => !t.fim && !t.apagado_em).first() }
+export async function cancelarTreino(id: string) {
+  return banco.transaction('rw', tabela('treinos'), tabela('treino_exercicios'), tabela('series_treino'), tabela('cardio_sessoes'), async () => {
+    const treino = await tabela('treinos').get(id)
+    if (!treino || treino.apagado_em) return
+    if (treino.fim) throw new Error('Este treino já foi finalizado. Remova-o pelo histórico.')
+    const agora = new Date().toISOString()
+    const exclusao = { apagado_em: agora, atualizado_em: agora }
+    await tabela('treinos').update(id, { ...exclusao, descanso_fim: null })
+    await tabela('treino_exercicios').where('treino_id').equals(id).filter(i => !i.apagado_em).modify(exclusao)
+    await tabela('series_treino').where('treino_id').equals(id).filter(s => !s.apagado_em).modify(exclusao)
+    await tabela('cardio_sessoes').where('treino_id').equals(id).filter(c => !c.apagado_em).modify(exclusao)
+  })
+}
 export async function descartarTreinoLivreVazio(id: string) {
   return banco.transaction('rw', tabela('treinos'), tabela('treino_exercicios'), tabela('series_treino'), async () => {
     const treino = await tabela('treinos').get(id)
@@ -22,6 +36,12 @@ export async function ultimasSeries(exercicio_id: string) {
   const series = await tabela('series_treino').where('exercicio_id').equals(exercicio_id).filter(s => Boolean(s.concluida_em) && !s.apagado_em && treinos.some(t => t.id === s.treino_id)).toArray()
   series.sort((a, b) => (b.concluida_em ?? '').localeCompare(a.concluida_em ?? ''))
   return series.filter(s => s.treino_id === series[0]?.treino_id).sort((a, b) => a.numero_serie - b.numero_serie)
+}
+export async function maiorCarga(exercicio_id: string) {
+  const treinos = await tabela('treinos').filter(t => !t.apagado_em).toArray()
+  const treinosAtivos = new Set(treinos.map(t => t.id))
+  const todas = await tabela('series_treino').where('exercicio_id').equals(exercicio_id).filter(s => Boolean(s.concluida_em) && !s.apagado_em && s.tipo !== 'aquecimento' && treinosAtivos.has(s.treino_id)).toArray()
+  return Math.max(0, ...todas.map(s => s.peso_total))
 }
 export async function montarExercicio(treino: Treino, ex: Exercicio, quantidade: number, ordem: number, descanso = ex.descanso_padrao_segundos, origem_ficha = false) {
   const ultimas = await ultimasSeries(ex.id)
@@ -67,7 +87,7 @@ export async function completarCardioDaFicha(id: string) {
     }
   })
 }
-export async function iniciarTreino(ficha_id?: string, encerrarAtual = false) {
+export async function iniciarTreino(ficha_id?: string, encerrarAtual: boolean | 'cancelar' = false) {
   return banco.transaction('rw', banco.tables, async () => {
     const ativo = await treinoAtivo()
     if (ativo) {
@@ -77,6 +97,8 @@ export async function iniciarTreino(ficha_id?: string, encerrarAtual = false) {
       if (!ativo.ficha_id && itensAtivos === 0 && seriesAtivas === 0 && !ativo.observacao.trim()) {
         const agora = new Date().toISOString()
         await tabela('treinos').update(ativo.id, { apagado_em: agora, atualizado_em: agora })
+      } else if (encerrarAtual === 'cancelar') {
+        await cancelarTreino(ativo.id)
       } else if (encerrarAtual) {
         const fim = new Date().toISOString()
         const minutosReais = Math.max(0, (Date.parse(fim) - Date.parse(ativo.inicio)) / 60000)
@@ -91,7 +113,7 @@ export async function iniciarTreino(ficha_id?: string, encerrarAtual = false) {
     }
     const ficha = ficha_id ? await tabela('fichas').get(ficha_id) : undefined
     if (ficha_id && (!ficha || ficha.apagado_em)) throw new Error('Esta ficha não está disponível.')
-    const novo: Treino = { ...criarRegistro(ficha?.user_id), titulo: ficha?.nome ?? 'Treino livre', ficha_id, data: dataLocal(), inicio: new Date().toISOString(), observacao: '' }
+    const novo: Treino = { ...criarRegistro(ficha?.user_id), titulo: formatarNomeFicha(ficha?.nome ?? 'Treino livre'), ficha_id, data: dataLocal(), inicio: new Date().toISOString(), observacao: '' }
     await tabela('treinos').add(novo)
     if (ficha_id) {
       const itens = await tabela('ficha_exercicios').where('ficha_id').equals(ficha_id).filter(i => !i.apagado_em).sortBy('ordem')
@@ -148,10 +170,3 @@ export async function aplicarValoresProximas(dados: SerieTreino) {
     await tabela('series_treino').bulkPut([{ ...dados, ...valores }, ...seguintes.map(s => ({ ...s, ...valores }))])
   })
 }
-
-
-
-
-
-
-

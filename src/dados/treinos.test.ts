@@ -4,7 +4,8 @@ import { beforeEach, expect, test } from 'vitest'
 import { banco, tabela } from './banco'
 import { iniciarBanco } from './configuracoes'
 import { iniciarBiblioteca } from './biblioteca'
-import { descartarTreinoLivreVazio, adicionarExercicio, iniciarTreino, treinoAtivo, concluirSerie, aplicarValoresProximas } from './treinos'
+import { cancelarTreino, descartarTreinoLivreVazio, adicionarExercicio, iniciarTreino, treinoAtivo, concluirSerie, aplicarValoresProximas, maiorCarga } from './treinos'
+import { removerTreino, restaurarTreino } from './historico'
 import { criarRegistro } from './repositorio'
 import { salvarFicha } from './fichas'
 import { cargaTotal, volumeSeries, segundosRestantes } from '../utilitarios/treino'
@@ -204,3 +205,81 @@ test('descarte o treino livre vazio ao sair e preserve um treino com exercício'
 })
 
 
+
+test('cancele a ficha iniciada por engano ao trocar sem criar histórico', async () => {
+  const { ficha } = await preparar()
+  const antigo = await iniciarTreino(ficha.id)
+  const novo = await iniciarTreino(undefined, 'cancelar')
+  expect((await treinoAtivo())?.id).toBe(novo)
+  const cancelado = (await tabela('treinos').get(antigo))!
+  expect(cancelado.apagado_em).toBeTruthy()
+  expect(cancelado.fim).toBeUndefined()
+  expect(cancelado.descanso_fim).toBeNull()
+  expect((await tabela('series_treino').where('treino_id').equals(antigo).toArray()).every(s => s.apagado_em)).toBe(true)
+  expect((await tabela('treino_exercicios').where('treino_id').equals(antigo).toArray()).every(i => i.apagado_em)).toBe(true)
+  expect(await tabela('treinos').filter(t => !!t.fim && !t.apagado_em).count()).toBe(0)
+  expect((await tabela('fichas').get(ficha.id))?.apagado_em).toBeFalsy()
+})
+
+test('reverta o cancelamento se a nova ficha não puder iniciar', async () => {
+  const { ficha } = await preparar()
+  const antigo = await iniciarTreino(ficha.id)
+  await expect(iniciarTreino('ficha-inexistente', 'cancelar')).rejects.toThrow('não está disponível')
+  expect((await treinoAtivo())?.id).toBe(antigo)
+  expect((await tabela('series_treino').where('treino_id').equals(antigo).toArray()).every(s => !s.apagado_em)).toBe(true)
+})
+
+test('cancelar não modifica um treino já finalizado', async () => {
+  const { ficha } = await preparar()
+  const id = await iniciarTreino(ficha.id)
+  await tabela('treinos').update(id, { fim: new Date().toISOString() })
+  await expect(cancelarTreino(id)).rejects.toThrow('já foi finalizado')
+  expect((await tabela('treinos').get(id))?.apagado_em).toBeFalsy()
+})
+
+test('consulta de maior carga ignora séries de treinos removidos e restaura no desfazer (A07)', async () => {
+  const { ficha, ex } = await preparar()
+  const treino1 = await iniciarTreino(ficha.id)
+  const series1 = await tabela('series_treino').where('treino_id').equals(treino1).sortBy('numero_serie')
+  await concluirSerie({ ...series1[0], peso_digitado: 80, repeticoes: 10 })
+  await tabela('treinos').update(treino1, { fim: new Date().toISOString() })
+
+  const treino2 = await iniciarTreino()
+  await adicionarExercicio((await tabela('treinos').get(treino2))!, ex)
+  const series2 = await tabela('series_treino').where('treino_id').equals(treino2).sortBy('numero_serie')
+  await concluirSerie({ ...series2[0], peso_digitado: 40, repeticoes: 10 })
+  await tabela('treinos').update(treino2, { fim: new Date().toISOString() })
+
+  expect(await maiorCarga(ex.id)).toBe(80)
+
+  // Remover treino1 deve fazer a maior carga refletir apenas o treino ativo (40 kg)
+  await removerTreino(treino1)
+  expect(await maiorCarga(ex.id)).toBe(40)
+
+  // Desfazer (restaurar treino1) restaura a maior carga (80 kg)
+  await restaurarTreino(treino1)
+  expect(await maiorCarga(ex.id)).toBe(80)
+})
+
+test('maior carga desconsidera aquecimento, séries pendentes e séries apagadas', async () => {
+  const { ficha, ex } = await preparar()
+  const treino = await iniciarTreino(ficha.id)
+  const series = await tabela('series_treino').where('treino_id').equals(treino).sortBy('numero_serie')
+
+  // Uma carga alta digitada, mas ainda não concluída, não é uma marca registrada.
+  await tabela('series_treino').update(series[1].id, { peso_digitado: 250, peso_total: 250 })
+
+  // Série de aquecimento com carga maior (100 kg)
+  await concluirSerie({ ...series[0], tipo: 'aquecimento', peso_digitado: 100, repeticoes: 10 })
+  expect(await maiorCarga(ex.id)).toBe(0)
+
+  // Série normal com 60 kg
+  await concluirSerie({ ...series[1], tipo: 'normal', peso_digitado: 60, repeticoes: 10 })
+
+  // Deve ignorar o aquecimento e considerar apenas a série normal concluída (60 kg)
+  expect(await maiorCarga(ex.id)).toBe(60)
+
+  // Ao marcar a série normal como apagada, ela deixa de ser contabilizada
+  await tabela('series_treino').update(series[1].id, { apagado_em: new Date().toISOString() })
+  expect(await maiorCarga(ex.id)).toBe(0)
+})
