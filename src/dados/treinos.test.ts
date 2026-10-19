@@ -160,6 +160,19 @@ test('marque recorde real ao superar carga anterior e exclua aquecimentos', asyn
   expect((await tabela('series_treino').get(series[1].id))?.recorde).toBe(true)
 })
 
+test('aquecimento de sessão anterior não serve como referência de recorde', async () => {
+  const { ficha } = await preparar()
+  const anterior = await iniciarTreino(ficha.id)
+  const antigas = await tabela('series_treino').where('treino_id').equals(anterior).toArray()
+  await concluirSerie({ ...antigas[0], tipo: 'aquecimento', peso_digitado: 10 })
+  await tabela('treinos').update(anterior, { fim: new Date().toISOString() })
+  const atual = await iniciarTreino(ficha.id)
+  const series = await tabela('series_treino').where('treino_id').equals(atual).sortBy('numero_serie')
+  await concluirSerie({ ...series[0], peso_digitado: 20 })
+  await concluirSerie({ ...series[1], peso_digitado: 30 })
+  expect((await tabela('series_treino').get(series[1].id))?.recorde).toBe(false)
+})
+
 test('remova e restaure um treino no histórico sem apagar suas séries', async () => {
   const { removerTreino, restaurarTreino } = await import('./historico')
   const { ficha } = await preparar()

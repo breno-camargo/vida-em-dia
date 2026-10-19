@@ -140,7 +140,8 @@ export async function concluirSerie(dados: SerieTreino) {
     const serie = { ...dados, peso_total: cargaTotal(dados.peso_digitado, dados.modo_carga, dados.peso_barra), concluida_em: agora, atualizado_em: agora }
     const melhor = desempenho(anterioresSeries)
     const atual = desempenho([serie])
-    serie.recorde = dados.tipo !== 'aquecimento' && efetivas(anterioresSeries).length > 0 && (atual.pesoCorporal ? atual.reps > melhor.reps : atual.carga > melhor.carga || atual.rm > melhor.rm)
+    const temHistorico = efetivas(anterioresSeries.filter(s => s.treino_id !== treino.id)).length > 0
+    serie.recorde = dados.tipo !== 'aquecimento' && temHistorico && (atual.pesoCorporal ? atual.reps > melhor.reps : atual.carga > melhor.carga || atual.rm > melhor.rm)
     await tabela('series_treino').put(serie)
     const pendentes = await tabela('series_treino').where('[treino_id+exercicio_id]').equals([dados.treino_id, dados.exercicio_id]).filter(s => !s.concluida_em && !s.apagado_em).count()
     const pendentesTreino = pendentes || await tabela('series_treino').where('treino_id').equals(dados.treino_id).filter(s => !s.concluida_em && !s.apagado_em).count()

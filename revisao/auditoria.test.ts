@@ -123,7 +123,7 @@ test('C07 regressão: apenas um vínculo concorrente é aceito sob o lock compar
   expect(resultados.map(r => r.status)).toEqual(['fulfilled','rejected'])
 })
 
-test('C08 GEM-06: segunda série da primeira sessão grava recorde sem conquista no histórico', async () => {
+test('C08 regressão A09: primeira sessão estabelece referência sem marcar recordes', async () => {
   const ex = (await tabela('exercicios').toArray()).find(e => e.tipo === 'forca' && e.modo_carga === 'total')!
   const id = await iniciarTreino()
   await adicionarExercicio((await tabela('treinos').get(id))!,ex)
@@ -131,7 +131,7 @@ test('C08 GEM-06: segunda série da primeira sessão grava recorde sem conquista
   await concluirSerie({ ...series[0], peso_digitado:50, repeticoes:10 })
   await concluirSerie({ ...series[1], peso_digitado:60, repeticoes:10 })
   expect((await tabela('series_treino').get(series[0].id))?.recorde).toBe(false)
-  expect((await tabela('series_treino').get(series[1].id))?.recorde).toBe(true)
+  expect((await tabela('series_treino').get(series[1].id))?.recorde).toBe(false)
   expect(await recordesDoTreino(id,ex.id)).toEqual([])
   await tabela('treinos').update(id,{fim:new Date().toISOString()})
   const sessoes = sessoesExercicio(await tabela('treinos').toArray(),await tabela('series_treino').toArray(),ex.id)
