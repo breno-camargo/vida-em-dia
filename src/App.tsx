@@ -37,6 +37,12 @@ export default function App() {
   useLayoutEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }) }, [aba, menu])
   const selecionar = (nova: Aba) => { if (nova === aba && !menu) return; definirRegistrarMedida(false); if (nova === 'Treino') definirEntradaTreino(v => v + 1); definirAba(nova); definirMenu(false) }
   const abrirConfiguracoes = (secao?:SecaoConfiguracoes) => { definirSecaoConfiguracoes(secao); definirMenu(true) }
+  if (supabase && conta.carregando && !conta.visitante) return <div className="app entrada-conta">
+    <header className="marca-entrada"><span><Leaf size={25} strokeWidth={1.7} /></span><div>Vida em Dia<small>UM ESPAÇO PARA VOCÊ</small></div></header>
+    <main id="conteudo" className="conteudo-entrada" aria-busy={!erro}>
+      {erro ? <p role="alert" className="erro">{erro}</p> : <p role="status">Abrindo seu espaço…</p>}
+    </main>
+  </div>
   if (entrada) return <div className="app entrada-conta">
     <header className="marca-entrada"><span><Leaf size={25} strokeWidth={1.7} /></span><div>Vida em Dia<small>UM ESPAÇO PARA VOCÊ</small></div></header>
     <main id="conteudo" className="conteudo-entrada">

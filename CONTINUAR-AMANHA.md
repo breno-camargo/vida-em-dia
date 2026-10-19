@@ -1,3 +1,5 @@
+Atualização A10 em 18/10/2026: abertura usa estado neutro durante recuperação da sessão, sem apresentação prematura de login. Regressão estática passou; abertura fria no iPhone pendente. Ver revisao/CODEX-A10.md. Supera a pendência histórica A10 abaixo.
+
 Atualização A09 em 18/10/2026: primeira sessão não marca recordes; histórico válido anterior passa a ser obrigatório. Ver revisao/CODEX-A09.md. Flags antigas não foram reescritas. Esta nota supera a pendência histórica A09 abaixo.
 
 Atualização de 18/10/2026: A03 corrigido (treino livre para ficha; limite de planejamento explicado, sessão preservada). A05 entregue pelo Gemini e revisado pelo Codex: sync não reinicia lembrete de backup. Ver revisao/CODEX-A03.md e revisao/CODEX-A05.md. Validação atual: 213 testes em 29 arquivos, lint/build passaram. Etapa 8 continua em homologação; sem push/deploy. Notas históricas abaixo não substituem este estado.

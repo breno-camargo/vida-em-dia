@@ -14,13 +14,23 @@ vi.mock('../src/telas/Hoje',() => ({Hoje:() => null}))
 vi.mock('../src/telas/Treino',() => ({Treino:() => null}))
 import App from '../src/App'
 
-test('GEM-08: abertura monta apresentação de entrada durante carga, sem mostrar formulário de senha',() => {
+test('A10 regressão: restauração mostra estado neutro antes de decidir a tela',() => {
   const inicial = renderToStaticMarkup(<App />)
-  expect(inicial).toContain('Bom ter você aqui.')
-  expect(inicial).toContain('Abrindo sua sessão…')
+  expect(inicial).not.toContain('Bom ter você aqui.')
+  expect(inicial).toContain('Abrindo seu espaço…')
+  expect(inicial).not.toContain('Continuar sem conta')
   expect(inicial).not.toContain('type="password"')
   conta.usuario = {id:'usuario-sintetico'}; conta.carregando = false
   const recuperada = renderToStaticMarkup(<App />)
   expect(recuperada).toContain('Olá, vamos cuidar de você?')
   expect(recuperada).not.toContain('Abrindo sua sessão…')
+  conta.usuario = null
+  const semSessao = renderToStaticMarkup(<App />)
+  expect(semSessao).toContain('Bom ter você aqui.')
+  expect(semSessao).toContain('type="password"')
+  conta.visitante = true; conta.carregando = true
+  const visitante = renderToStaticMarkup(<App />)
+  expect(visitante).toContain('Olá, vamos cuidar de você?')
+  expect(visitante).not.toContain('Abrindo seu espaço…')
+  conta.visitante = false; conta.carregando = true
 })
