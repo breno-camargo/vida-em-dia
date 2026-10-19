@@ -1,4 +1,5 @@
 import { TransicaoConteudo } from '../componentes/TransicaoConteudo'
+import { RevisarDuplicatas } from '../componentes/RevisarDuplicatas'
 import { useEstadoTemporario } from '../hooks/useEstadoTemporario'
 import { exerciciosUnicos } from '../dados/duplicatasExercicios'
 import { Cardio } from './Cardio'
@@ -113,6 +114,7 @@ export function Treino({ online }: { online: boolean }) {
       </div></details></div><button className={`iniciar-ficha ${ativo?.ficha_id === item.id ? 'botao-secundario' : 'botao-principal'}`} disabled={ocupado} onClick={() => void executar(async () => { await iniciar(item.id) })}><Play size={16} aria-hidden="true" />{ativo?.ficha_id === item.id ? 'Continuar treino' : 'Iniciar treino'}<ArrowRight size={18} aria-hidden="true" /></button></section>)}
       <button className="treino-livre" disabled={ocupado} onClick={() => void executar(async () => { await iniciar() })}>{ativo && !ativo.ficha_id ? <Play size={20} aria-hidden="true" /> : <Plus size={20} aria-hidden="true" />}<span>{ativo && !ativo.ficha_id ? 'Continuar treino livre' : 'Treino livre'}<small>{ativo && !ativo.ficha_id ? 'Retome de onde parou' : 'Monte seu treino do dia'}</small></span><ArrowRight size={18} aria-hidden="true" /></button>
     </> : secao === 'biblioteca' ? <>
+      <RevisarDuplicatas />
       <div className="formulario"><label>Buscar exercício<input type="search" value={busca} onChange={e => definirBusca(e.target.value)} placeholder="Nome ou equipamento" /></label>
       </div>
       <button className="botao-principal largura-total" onClick={() => definirEdicao({ ...criarRegistro(), nome: '', tipo: 'forca', grupo_muscular: '', equipamento: '', descanso_padrao_segundos: 90, modo_carga: 'total', peso_barra: 20, nota_fixa: '', como_fazer: '', musculos: '', origem: 'manual' })}>Adicionar exercício</button>

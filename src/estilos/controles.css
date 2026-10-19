@@ -1,4 +1,6 @@
 /* Contrato visual compartilhado. Importado após os estilos específicos. */
+.formulario .opcao-copia-exercicio { display: flex; align-items: center; gap: 12px; min-height: 48px; overflow-wrap: anywhere; }
+.formulario .opcao-copia-exercicio > input { width: 18px; min-height: 18px; height: 18px; flex: 0 0 18px; accent-color: #bcec86; }
 :root {
   --controle-altura: 48px;
   --controle-raio: 12px;

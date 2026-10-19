@@ -1,3 +1,5 @@
+Atualização de 19/10/2026: revisão explícita de cópias equivalentes disponível em Treino → Exercícios → Revisar duplicatas. Fotos/histórico remapeados em transação; colisões na mesma ficha/sessão bloqueadas. Homologação entre aparelhos pendente; ver revisao/CODEX-DUPLICATAS.md. Validação: 218 testes passaram, lint/build passaram.
+
 Atualização A10 em 18/10/2026: abertura usa estado neutro durante recuperação da sessão, sem apresentação prematura de login. Regressão estática passou; abertura fria no iPhone pendente. Ver revisao/CODEX-A10.md. Supera a pendência histórica A10 abaixo.
 
 Atualização A09 em 18/10/2026: primeira sessão não marca recordes; histórico válido anterior passa a ser obrigatório. Ver revisao/CODEX-A09.md. Flags antigas não foram reescritas. Esta nota supera a pendência histórica A09 abaixo.
