@@ -2,9 +2,11 @@ import { banco, tabela } from './banco'
 import { criarRegistro } from './repositorio'
 import type { CardioSessao, Configuracao, Treino, AtividadeDiaria } from './modelos'
 import { dataMedida } from './medidas'
-export const tiposCardio = [['esteira','Esteira'],['caminhada','Caminhada'],['corrida','Corrida'],['bicicleta','Bicicleta'],['eliptico','Elíptico'],['escada','Escada'],['remo','Remo'],['outro','Outro']] as const
+import { tiposCardio, type TipoCardio } from './tiposCardio'
+export { tiposCardio } from './tiposCardio'
 // Referências gerais do Compendium 2024; intensidade não medida pelo app.
-const mets = { esteira: 3.8, caminhada: 3.8, corrida: 7.5, bicicleta: 5, eliptico: 5, escada: 9.3, remo: 5, outro: 5 }
+const mets: Partial<Record<TipoCardio, number>> = { esteira: 3.8, caminhada: 3.8, corrida: 7.5, bicicleta: 5, eliptico: 5, escada: 9.3, remo: 5, outro: 5, caminhada_esteira: 3.8, corrida_esteira: 7.5 }
+export function possuiEstimativaCardio(tipo: TipoCardio) { return mets[tipo] !== undefined }
 export function velocidadeCardio(s: CardioSessao) { return s.velocidade_media_kmh ?? (s.distancia_km && s.duracao_minutos > 0 ? s.distancia_km / s.duracao_minutos * 60 : undefined) }
 export function ritmoCardio(s: CardioSessao) { if (!s.distancia_km || s.duracao_minutos <= 0) return undefined; const segundos = Math.round(s.duracao_minutos / s.distancia_km * 60); return `${Math.floor(segundos / 60)}:${String(segundos % 60).padStart(2,'0')} min/km` }
 export function caloriasCardio(s: CardioSessao, fator = 100) { const kcal = s.calorias_informadas ?? s.calorias_estimadas; return kcal === undefined ? undefined : Math.round(kcal * fator / 100) }
@@ -19,7 +21,8 @@ export async function salvarCardio(s: CardioSessao) {
     if (s.treino_id) { const t = await tabela('treinos').get(s.treino_id); if (!t || t.apagado_em || t.data !== s.data) throw new Error('Escolha um treino disponível na mesma data.') }
     const pesos = await tabela('medidas_corporais').filter(m => !m.apagado_em && !!m.peso && m.data <= s.data).sortBy('data')
     const peso = pesos.at(-1)?.peso
-    const calorias_estimadas = s.calorias_informadas !== undefined ? undefined : peso ? Math.round(mets[s.tipo] * peso * s.duracao_minutos / 60) : undefined
+    const met = mets[s.tipo]
+    const calorias_estimadas = s.calorias_informadas !== undefined ? undefined : peso && met !== undefined ? Math.round(met * peso * s.duracao_minutos / 60) : undefined
     await tabela('cardio_sessoes').put({ ...s, calorias_estimadas, atualizado_em: new Date().toISOString() })
   })
 }

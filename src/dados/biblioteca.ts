@@ -1,6 +1,40 @@
 import { exerciciosPesoCorporal } from './pesoCorporal'
 import { banco, tabela } from './banco'
 import { criarRegistro } from './repositorio'
+import { aliasesCatalogo, catalogoAmpliado } from './catalogoAmpliado'
+
+const normalizar = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR').trim()
+const aliases = new Map(Object.entries(aliasesCatalogo).map(([a, b]) => [normalizar(a), normalizar(b)]))
+const chaveNome = (nome: string) => aliases.get(normalizar(nome)) ?? normalizar(nome)
+
+export async function ampliarBiblioteca() {
+  // IDs estáveis entre aparelhos evitam duplicações na sincronização do catálogo.
+  const catalogo = await Promise.all(Object.entries(catalogoAmpliado).flatMap(([grupo, texto]) => texto.split('|').map(async nome => {
+    const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`vida-em-dia:catalogo:1:${chaveNome(nome)}`))
+    const bytes = new Uint8Array(digest).slice(0, 16)
+    bytes[6] = (bytes[6] & 15) | 80; bytes[8] = (bytes[8] & 63) | 128
+    const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('')
+    return { nome, grupo, id: `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}` }
+  })))
+  return banco.transaction('rw', tabela('exercicios'), tabela('configuracoes'), async () => {
+    const config = await tabela('configuracoes').where('chave').equals('principal').first()
+    if (!config) throw new Error('Aguarde a inicialização do app.')
+    const existentes = await tabela('exercicios').toArray()
+    const nomes = new Set(existentes.map(e => chaveNome(e.nome)))
+    const ids = new Set(existentes.map(e => e.id))
+    let adicionados = 0
+    for (const { nome, grupo, id } of catalogo) {
+      if (nomes.has(chaveNome(nome)) || ids.has(id)) continue
+      const equipamento = /halter/i.test(nome) ? 'Halteres' : /kettlebell/i.test(nome) ? 'Kettlebell' : /smith/i.test(nome) ? 'Smith' : /polia|cabo|pull-through/i.test(nome) ? 'Polia' : /elástico|mini band/i.test(nome) ? 'Elástico' : /barra|clean|arranco|snatch/i.test(nome) ? 'Barra' : /máquina|graviton|leg press|hack/i.test(nome) ? 'Máquina' : ''
+      const corporal = grupo === 'Mobilidade' ? !equipamento : !equipamento && /^(Abdominal|Prancha|Flexão de braços|Barra fixa|Superman|Perdigueiro|Montanhista|Escalador|Mergulho|Paralelas|Muscle-up|Agachamento com peso corporal|Recuo|Avanço$|Cadeira chinesa|Burpee|Salto|Polichinelo|Skipping|Calcanhar)/i.test(nome)
+      await tabela('exercicios').add({ ...criarRegistro(config.user_id), id, nome, tipo: grupo === 'Cardio' ? 'cardio' : 'forca', grupo_muscular: grupo, equipamento,
+        descanso_padrao_segundos: 90, modo_carga: corporal ? 'peso_corporal' : 'total', peso_barra: 0,
+        nota_fixa: '', como_fazer: '', musculos: grupo, origem: 'manual' })
+      nomes.add(chaveNome(nome)); ids.add(id); adicionados++
+    }
+    return adicionados
+  })
+}
 
 const grupos: Record<string, string[]> = {
   Peito: ['Supino reto com barra', 'Supino inclinado com halteres', 'Supino reto com halteres', 'Supino na máquina', 'Crucifixo com halteres', 'Crucifixo na máquina', 'Crossover na polia', 'Flexão de braços'],

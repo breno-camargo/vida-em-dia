@@ -1,3 +1,4 @@
+import type { TipoCardio } from './tiposCardio'
 export interface Registro {
   id: string
   user_id: string | null
@@ -35,7 +36,7 @@ export interface SerieTreino extends Registro {
 }
 export interface CardioSessao extends Registro {
   treino_id?: string; exercicio_id?: string; data: string
-  tipo: 'esteira' | 'caminhada' | 'corrida' | 'bicicleta' | 'eliptico' | 'escada' | 'remo' | 'outro'
+  tipo: TipoCardio
   duracao_minutos: number; distancia_km?: number; velocidade_media_kmh?: number
   inclinacao_pct?: number; passos?: number; calorias_informadas?: number
   calorias_estimadas?: number; fc_media?: number; fc_max?: number; observacao: string
