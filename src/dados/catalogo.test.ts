@@ -8,6 +8,19 @@ import { buscarExercicios } from '../componentes/FiltrosExercicios'
 
 beforeEach(async () => { await banco.delete(); await banco.open(); await iniciarBanco(); await iniciarBiblioteca() })
 
+test('catálogo inicial tem os mesmos IDs em instalações novas e preserva cadastro existente', async () => {
+ const antes = (await tabela('exercicios').toArray()).map(e => [e.nome,e.id]).sort()
+ await banco.delete(); await banco.open(); await iniciarBanco(); await iniciarBiblioteca()
+ expect((await tabela('exercicios').toArray()).map(e => [e.nome,e.id]).sort()).toEqual(antes)
+ const ex = (await tabela('exercicios').toArray())[0]
+ await tabela('exercicios').update(ex.id,{nome:'Meu exercício',apagado_em:new Date().toISOString()})
+ const config = (await tabela('configuracoes').toArray())[0]
+ await tabela('configuracoes').update(config.id,{biblioteca_inicializada:false})
+ await iniciarBiblioteca()
+ expect((await tabela('exercicios').get(ex.id))?.nome).toBe('Meu exercício')
+ expect(await tabela('exercicios').count()).toBe(antes.length)
+})
+
 test('amplie sem duplicar, sobrescrever edições ou ressuscitar exclusões', async () => {
   const criado = { ...(await tabela('exercicios').toArray())[0], ...criarRegistro(), nome: 'SUPINO INCLINADO COM BARRA', nota_fixa: 'Minha nota', apagado_em: new Date().toISOString() }
   await tabela('exercicios').add(criado)

@@ -7,6 +7,14 @@ const normalizar = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g,
 const aliases = new Map(Object.entries(aliasesCatalogo).map(([a, b]) => [normalizar(a), normalizar(b)]))
 const chaveNome = (nome: string) => aliases.get(normalizar(nome)) ?? normalizar(nome)
 
+async function idCatalogo(nome: string) {
+ const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`vida-em-dia:catalogo:1:${chaveNome(nome)}`))
+ const bytes = new Uint8Array(digest).slice(0, 16)
+ bytes[6] = (bytes[6] & 15) | 80; bytes[8] = (bytes[8] & 63) | 128
+ const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('')
+ return `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}`
+}
+
 export async function ampliarBiblioteca() {
   // IDs estáveis entre aparelhos evitam duplicações na sincronização do catálogo.
   const catalogo = await Promise.all(Object.entries(catalogoAmpliado).flatMap(([grupo, texto]) => texto.split('|').map(async nome => {
@@ -51,12 +59,17 @@ const grupos: Record<string, string[]> = {
 export const nomesBibliotecaInicial = Object.values(grupos).flat()
 
 export async function iniciarBiblioteca() {
+  // Calcular antes da transação evita que o IndexedDB a encerre durante o hash.
+  const ids = new Map(await Promise.all(nomesBibliotecaInicial.map(async nome => [nome, await idCatalogo(nome)] as const)))
   await banco.transaction('rw', tabela('exercicios'), tabela('configuracoes'), async () => {
     const config = await tabela('configuracoes').where('chave').equals('principal').first()
     if (!config || config.biblioteca_inicializada) return
     for (const [grupo, nomes] of Object.entries(grupos)) {
       for (const nome of nomes) {
-        await tabela('exercicios').add({ ...criarRegistro(config.user_id), nome,
+        const id = ids.get(nome)!
+        // Preservar cadastros existentes, inclusive renomeados ou removidos.
+        if (await tabela('exercicios').get(id) || await tabela('exercicios').where('nome').equals(nome).count()) continue
+        await tabela('exercicios').add({ ...criarRegistro(config.user_id), id, nome,
           tipo: grupo === 'Cardio' ? 'cardio' : 'forca', grupo_muscular: grupo,
           equipamento: '', descanso_padrao_segundos: 90, modo_carga: exerciciosPesoCorporal.has(nome) ? 'peso_corporal' : 'total', peso_barra: exerciciosPesoCorporal.has(nome) ? 0 : 20,
           nota_fixa: '', como_fazer: '', musculos: grupo, origem: 'manual',
