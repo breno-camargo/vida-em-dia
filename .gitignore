@@ -13,3 +13,4 @@ Desktop.ini
 .vercel/
 coverage/
 *.tsbuildinfo
+.vercel
