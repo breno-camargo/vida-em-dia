@@ -4,6 +4,8 @@ PWA pessoal de treino, cardio, medidas, alimentação e saúde. Interface em por
 
 ## Estado do projeto
 
+Correções locais após auditoria de 16/10/2026 (ainda sem publicação): restaurar por **Substituir neste aparelho** pausa a sincronização em armazenamento vinculado e exige confirmação antes de uma nova mesclagem com a conta. A restauração não apaga a nuvem; ao confirmar a retomada, registros remotos ausentes do arquivo podem voltar. Conflitos por data mostram os valores deste aparelho e da conta para escolha, mantendo os valores recusados como exclusão lógica no JSON. As outras tabelas podem avançar enquanto a tabela conflitante aguarda revisão. Operações de sincronização/importação exigem navegador com Web Locks para coordenar abas. Validação local: 95 testes, lint e build passaram; homologação real continua pendente. [Registro e checklist das correções](revisao/CORRECOES.md).
+
 ETAPAS 1, 2 e 3 aprovadas (v0.1.0, v0.2.0 e v0.3.0), mantendo o verde original. O usuário validou a etapa 3 no iPhone e aprovou a conclusão em 06/10/2026. ETAPA 4 aprovada em 06/10/2026 (v0.4.0), após validação do checklist pelo usuário e correção final do vazamento no painel do card. ETAPA 5 aprovada pelo usuário em 12/10/2026 (v0.5.0). ETAPA 6 aprovada pelo usuário em 14/10/2026 (v0.6.0). ETAPA 7 aprovada pelo usuário em 14/10/2026 (v0.7.0). ETAPA 8 implementada para homologação, com configuração do Supabase pendente. As etapas 9 a 14 não foram implementadas.
 
 Inclui React, TypeScript, Vite, Tailwind, Dexie, cinco abas, tema escuro, configurações informativas, ícones, manifest e service worker. Já há registro local de treinos. Login, sincronização e backup chegam nas próximas etapas. O modo claro chega na etapa 13.
@@ -247,3 +249,11 @@ Seção de conta compacta: e-mail aparece apenas no cabeçalho, conexão com tex
 Ação Sair da conta movida para o fim da lista de configurações, fora das seções recolhidas e visível quando autenticado. Mantém bloqueio durante sync e mostra falha de saída junto ao botão. Card da conta com margens internas uniformes, cabeçalho alinhado, botão de conexão centralizado e e-mail apenas no cabeçalho.
 
 E-mail de recuperação refinado: fundo externo claro, card verde escuro mais estreito, tipografia com hierarquia, área do código escura com números verdes maiores e textos mais curtos. Mantém HTML em tabelas, estilos inline, sem imagens/scripts externos e um único placeholder Token. Alteração precisa ser reaplicada no Source do template Reset password no Supabase.
+
+### Biblioteca ampliada (ajuste local de 16/10/2026)
+
+Em Treino → Exercícios, filtros Todos/Por músculo/Cardio, busca por nome/grupo/equipamento e lista com miniaturas. Ampliar catálogo acrescenta as variações disponíveis sem substituir edições nem recriar itens excluídos; a contagem depende da biblioteca existente. Na edição da ficha, selecione vários exercícios, toque em Adicionar e depois em Salvar. Animações continuam previstas para a etapa 14. Validação: 110 testes, lint e build; visual no aparelho pendente.
+
+### Cards para stories (ajuste local de 16/10/2026)
+
+Compartilhar treino oferece Completo, Foto inteira, Minimalista e Adesivo transparente (PNG com texto claro/escuro). Copiar imagem depende de ClipboardItem; Copiar texto, Baixar PNG e compartilhamento de arquivo são alternativas. A colagem no editor de stories precisa de teste no aparelho. Fotos permanecem apenas na memória do card.
