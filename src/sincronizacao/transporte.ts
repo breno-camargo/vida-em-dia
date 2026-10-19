@@ -1,10 +1,12 @@
 import { supabase } from './cliente'
 import type { Transporte } from './motor'
+import { ColisaoData } from './motor'
 export const transporteSupabase:Transporte={
  async enviar(nome,registros){
   if(!supabase)throw new Error('Configure o Supabase para sincronizar.')
   const {error}=await supabase.rpc('vida_em_dia_enviar',{tabela_nome:nome,registros})
-  if(error)throw new Error(error.code==='23505'?'Há registros diferentes para a mesma data na conta. Faça backup e revise os registros antes de tentar novamente.':error.code==='PGRST202'?'O banco ainda não foi configurado. Aplique a migração da etapa 8 no projeto correto.':'Não foi possível enviar os dados. Confira a conexão, a sessão e a configuração do Supabase.')
+  if(error?.code==='23505')throw new ColisaoData('Há registros diferentes para a mesma data na conta. Sincronize para revisar os registros.')
+  if(error)throw new Error(error.code==='PGRST202'?'O banco ainda não foi configurado. Aplique a migração da etapa 8 no projeto correto.':'Não foi possível enviar os dados. Confira a conexão, a sessão e a configuração do Supabase.')
  },
  async baixar(nome,depois){
   if(!supabase)throw new Error('Configure o Supabase para sincronizar.')

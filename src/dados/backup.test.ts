@@ -53,13 +53,14 @@ test('omita fotos do JSON e preserve imagens locais na mesclagem',async()=>{
  await importarBackup(b,'mesclar')
  expect(await (await tabela('fotos').get(foto.id))!.imagem_local!.text()).toBe('abc')
 })
-test('escape CSV e lembre somente depois do intervalo sem backup e sem sync',()=>{
+test('escape CSV e lembre somente depois do intervalo sem backup (sync não reinicia prazo)',()=>{
  const csv=csvTabela([{...criarRegistro(),nome:'=SUM(A1)',nota:'linha;"aspas"\ntexto'}])
  expect(csv).toContain("'=SUM(A1)");expect(csv).toContain('""aspas""')
  const c={criado_em:'2026-01-01T00:00:00Z',dias_lembrete_backup:14}
  expect(lembreteBackup(c,Date.parse('2026-01-14T00:00:00Z'))).toBe(false)
  expect(lembreteBackup(c,Date.parse('2026-01-15T00:00:00Z'))).toBe(true)
- expect(lembreteBackup({...c,ultima_sincronizacao:'2026-01-10T00:00:00Z'},Date.parse('2026-01-15T00:00:00Z'))).toBe(false)
+ expect(lembreteBackup({...c,ultimo_backup:'2026-01-10T00:00:00Z'},Date.parse('2026-01-15T00:00:00Z'))).toBe(false)
+ expect(lembreteBackup({...c,ultima_sincronizacao:'2026-01-10T00:00:00Z'},Date.parse('2026-01-15T00:00:00Z'))).toBe(true)
 })
 
 test('recupere fotos ausentes com a mesma versão sem sobrescrever alterações recentes',async()=>{

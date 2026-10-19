@@ -1,4 +1,7 @@
+import { tiposCardio } from './tiposCardio'
+import { validarDominioBackup, validarReferenciasBackup } from './validacaoBackup'
 import { banco, tabela } from './banco'
+import { comExclusaoSync, controle, filaBanco, pendencias, recibos, conflitos } from '../sincronizacao/armazenamento'
 export type LinhaBackup = Record<string, unknown> & { id:string; atualizado_em:string }
 export interface Backup { app:'vida-em-dia'; versao:1; schema:number; criado_em:string; fotos_incluidas:boolean; tabelas:Record<string,LinhaBackup[]> }
 const blobParaJson = async (blob:Blob) => {
@@ -13,7 +16,7 @@ export async function exportarBackup(fotos=true):Promise<Backup>{
 export function validarBackup(valor:unknown):Backup{
  if(!valor||typeof valor!=='object')throw new Error('Arquivo de backup inválido.')
  const b=valor as Backup
- if(b.app!=='vida-em-dia'||b.versao!==1||!Number.isFinite(b.schema)||b.schema>banco.verno||!Number.isFinite(Date.parse(b.criado_em))||typeof b.fotos_incluidas!=='boolean'||!b.tabelas||typeof b.tabelas!=='object')throw new Error('Formato ou versão de backup incompatível.')
+ if(b.app!=='vida-em-dia'||b.versao!==1||!Number.isSafeInteger(b.schema)||b.schema<1||b.schema>banco.verno||!Number.isFinite(Date.parse(b.criado_em))||typeof b.fotos_incluidas!=='boolean'||!b.tabelas||typeof b.tabelas!=='object')throw new Error('Formato ou versão de backup incompatível.')
  const nomes=banco.tables.map(t=>t.name)
  if(Object.keys(b.tabelas).some(n=>!nomes.includes(n))||nomes.some(n=>!Array.isArray(b.tabelas[n])))throw new Error('O backup não contém as tabelas esperadas.')
  for(const [nome,linhas]of Object.entries(b.tabelas)){
@@ -26,6 +29,7 @@ export function validarBackup(valor:unknown):Backup{
   if(['medidas_corporais','atividade_diaria','agua_dia','configuracoes'].includes(nome)){const chaves=new Set();for(const r of linhas.filter(r=>!r.apagado_em)){const chave=nome==='configuracoes'?r.chave:r.data;if(typeof chave!=='string'||chaves.has(chave))throw new Error(`Registros duplicados ou sem data em ${nome}.`);chaves.add(chave)}}
  }
  if(b.tabelas.configuracoes.filter(r=>r.chave==='principal'&&!r.apagado_em).length!==1)throw new Error('Configuração principal ausente ou duplicada.')
+ validarReferenciasBackup(b.tabelas)
  return b
 }
 function validarLinha(nome:string,r:LinhaBackup){
@@ -41,18 +45,32 @@ function validarLinha(nome:string,r:LinhaBackup){
  if(r.itens!==undefined&&!Array.isArray(r.itens))throw new Error('Itens inválidos no backup.')
  if(r.anos_feriados_inicializados!==undefined&&(!Array.isArray(r.anos_feriados_inicializados)||r.anos_feriados_inicializados.some(v=>!Number.isInteger(v))))throw new Error('Anos inválidos no backup.')
  if(nome==='configuracoes'&&(r.chave!=='principal'||!Number.isInteger(r.dias_lembrete_backup)||Number(r.dias_lembrete_backup)<1||Number(r.dia_lembrete_medidas)<0||Number(r.dia_lembrete_medidas)>6))throw new Error('Configuração inválida no backup.')
- const tipos:Record<string,string[]>={exercicios:['forca','cardio'],series_treino:['normal','aquecimento','falha','dropset'],cardio_sessoes:['esteira','caminhada','corrida','bicicleta','eliptico','escada','remo','outro'],fotos:['maquina','refeicao','progresso'],treino_exercicios:['forca','cardio']}
+ const tipos:Record<string,string[]>={exercicios:['forca','cardio'],series_treino:['normal','aquecimento','falha','dropset'],cardio_sessoes:tiposCardio.map(([tipo])=>tipo),fotos:['maquina','refeicao','progresso'],treino_exercicios:['forca','cardio']}
  if(r.tipo!==undefined&&tipos[nome]&&!tipos[nome].includes(String(r.tipo)))throw new Error(`Tipo inválido em ${nome}.`)
  if(r.modo_carga!==undefined&&!['total','por_lado','peso_corporal'].includes(String(r.modo_carga)))throw new Error('Modo de carga inválido.')
  if(r.tipo_dia!==undefined&&!['util','fds_feriado'].includes(String(r.tipo_dia)))throw new Error('Tipo de dia inválido.')
  if(nome==='configuracoes'&&(!['escuro','claro'].includes(String(r.tema))||r.unidade!=='kg'||!['soma','total_manual'].includes(String(r.modo_calorias_gastas))))throw new Error('Configuração incompatível.')
  for(const c of ['inicio','fim','concluida_em','descanso_fim','ultimo_backup','ultima_sincronizacao'])if(r[c]!==undefined&&r[c]!==null&&!Number.isFinite(Date.parse(String(r[c]))))throw new Error(`Horário inválido em ${nome}.`)
+ validarDominioBackup(nome,r)
 }
 function decodificar(b:Backup){const tabelas:Record<string,LinhaBackup[]>={};for(const[nome,linhas]of Object.entries(b.tabelas)){tabelas[nome]=linhas.map(r=>({...r}));if(nome==='fotos')for(const r of tabelas[nome])for(const campo of ['imagem_local','miniatura_local']){const f=r[campo] as {mime:string;base64:string}|undefined;if(f){const s=atob(f.base64),bytes=Uint8Array.from(s,c=>c.charCodeAt(0));r[campo]=new Blob([bytes],{type:f.mime})}}}return tabelas}
-export async function importarBackup(arquivo:unknown,modo:'mesclar'|'substituir'){
+export async function importarBackup(arquivo:unknown,modo:'mesclar'|'substituir',verificarAntes?:()=>Promise<void>){
  const b=validarBackup(arquivo),dados=decodificar(b)
  if(modo!=='mesclar'&&modo!=='substituir')throw new Error('Escolha como importar.')
+ return comExclusaoSync(async()=>{
+ const usuario=(await controle.get('usuario'))?.valor
+ if(verificarAntes&&usuario)throw new Error('O vínculo local mudou durante a conexão. Confirme a mesclagem novamente.')
+ if(usuario&&Object.values(dados).some(linhas=>linhas.some(r=>r.user_id&&r.user_id!==usuario)))throw new Error('Este backup contém dados de outra conta. Os dados atuais foram preservados.')
+ if(modo==='substituir'){
+  // A pausa é durável ANTES de substituir a base. Se o app fechar, nenhum
+  // envio pode consumir a fila anterior ou desfazer silenciosamente a restauração.
+  await filaBanco.transaction('rw',controle,pendencias,recibos,conflitos,async()=>{
+   if(usuario)await controle.put({chave:'restauracao',valor:b.criado_em})
+   await pendencias.clear();await recibos.clear();await conflitos.clear()
+  })
+ }
  await banco.transaction('rw',banco.tables,async()=>{
+  if(verificarAntes)await verificarAntes()
   if(modo==='substituir'){for(const t of banco.tables)await t.clear();for(const t of banco.tables)await t.bulkPut(dados[t.name]);return}
   for(const t of banco.tables){for(const recebido of dados[t.name]){
    let r={...recebido},local=await t.get(r.id)
@@ -68,14 +86,34 @@ export async function importarBackup(arquivo:unknown,modo:'mesclar'|'substituir'
    }
   }}
  })
+ })
 }
 export function csvTabela(linhas:LinhaBackup[]){
  const campos=[...new Set(linhas.flatMap(r=>Object.keys(r)))].filter(c=>!['imagem_local','miniatura_local'].includes(c)).sort()
  const escapar=(v:unknown)=>{let s=v===null||v===undefined?'':typeof v==='object'?JSON.stringify(v):String(v);if(/^[=+\-@\t\r]/.test(s))s=`'${s}`;return `"${s.replace(/"/g,'""')}"`}
  return '\ufeff'+[campos.map(escapar).join(';'),...linhas.map(r=>campos.map(c=>escapar(r[c])).join(';'))].join('\r\n')
 }
-export function lembreteBackup(config:{ultimo_backup?:string;ultima_sincronizacao?:string;criado_em:string;dias_lembrete_backup:number},agora=Date.now()){
- const datas=[config.ultimo_backup,config.ultima_sincronizacao,config.criado_em].map(d=>Date.parse(d??'')).filter(Number.isFinite)
- return agora-Math.max(...datas)>=Math.max(1,config.dias_lembrete_backup)*86400000
+export function lembreteBackup(
+  config: { ultimo_backup?: string | null; ultima_sincronizacao?: string | null; criado_em?: string; dias_lembrete_backup?: number },
+  agora: number | Date | string = Date.now()
+): boolean {
+  if (!config || typeof config.dias_lembrete_backup !== 'number' || !Number.isFinite(config.dias_lembrete_backup) || config.dias_lembrete_backup <= 0) {
+    return false
+  }
+  const tempoAgora = typeof agora === 'number' ? agora : (agora instanceof Date ? agora.getTime() : Date.parse(String(agora)))
+  if (!Number.isFinite(tempoAgora)) return false
+
+  let baseTime: number | null = null
+  if (typeof config.ultimo_backup === 'string') {
+    const parseBackup = Date.parse(config.ultimo_backup)
+    if (Number.isFinite(parseBackup)) baseTime = parseBackup
+  }
+  if (baseTime === null && typeof config.criado_em === 'string') {
+    const parseCriado = Date.parse(config.criado_em)
+    if (Number.isFinite(parseCriado)) baseTime = parseCriado
+  }
+  if (baseTime === null) return false
+
+  return (tempoAgora - baseTime) >= config.dias_lembrete_backup * 86400000
 }
 export async function marcarBackup(){const c=await tabela('configuracoes').where('chave').equals('principal').first();if(c)await tabela('configuracoes').update(c.id,{ultimo_backup:new Date().toISOString(),atualizado_em:new Date().toISOString()})}
