@@ -8,5 +8,5 @@ export function LembreteBackup({abrir}:{abrir:()=>void}){
  const [agora,definir]=useState(Date.now)
  useEffect(()=>{const atualizar=()=>definir(Date.now());const timer=setInterval(atualizar,60000);document.addEventListener('visibilitychange',atualizar);return()=>{clearInterval(timer);document.removeEventListener('visibilitychange',atualizar)}},[])
  if(!config||!lembreteBackup(config,agora))return null
- return <section className="lembrete-medidas"><ShieldCheck size={22}/><div><h2>Hora de proteger seus dados</h2><p>Já faz {config.dias_lembrete_backup} dias sem backup ou sincronização.</p><button onClick={abrir}>Fazer backup</button></div></section>
+ return <section className="aviso-backup"><div className="aviso-backup-titulo"><ShieldCheck size={22} aria-hidden="true"/><h2>Guarde uma cópia da sua evolução</h2></div><p>Salve seus registros e fotos em um arquivo de backup. A sincronização não inclui suas fotos.</p><button type="button" className="botao-principal" onClick={abrir}>Criar backup</button></section>
 }

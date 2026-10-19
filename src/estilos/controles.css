@@ -1,4 +1,10 @@
 /* Contrato visual compartilhado. Importado após os estilos específicos. */
+.aviso-backup { display: grid; gap: 12px; padding: 18px; margin-bottom: 20px; border: 1px solid #3a5039; border-radius: 18px; background: #19271d; }
+.aviso-backup-titulo { display: flex; align-items: center; gap: 10px; }
+.aviso-backup-titulo > svg { color: #bcec86; }
+.aviso-backup-titulo > h2 { margin: 0; font-size: 14px; line-height: 1.4; font-weight: 600; }
+.aviso-backup > p { margin: 0; font-size: 12px; line-height: 1.7; color: #a9bcae; }
+.app .aviso-backup > .botao-principal { margin: 2px 0 0; width: 100%; justify-content: center; }
 .formulario .opcao-copia-exercicio { display: flex; align-items: center; gap: 12px; min-height: 48px; overflow-wrap: anywhere; }
 .formulario .opcao-copia-exercicio > input { width: 18px; min-height: 18px; height: 18px; flex: 0 0 18px; accent-color: #bcec86; }
 :root {
