@@ -1,9 +1,14 @@
 import { useSyncExternalStore } from 'react'
 import { liveQuery } from 'dexie'
 import type { User } from '@supabase/supabase-js'
-import { supabase } from './cliente'
+import { supabase, sessaoLocal } from './cliente'
+import { abrirIdentidade, identidadeAtual } from '../dados/banco'
+import { iniciarBanco } from '../dados/configuracoes'
+import { iniciarBiblioteca } from '../dados/biblioteca'
+import { iniciarFeriados } from '../dados/atividade'
+import { reiniciarIdentidade } from './trocaIdentidade'
 import { contarPendencias, executarSync, prepararFila, prepararPrimeiroLogin, resolverConflito, retomarRestauracao, vincular, vinculoLocal, RevisaoPendente } from './motor'
-import { mensagemPausa, pausaRestauracao, type ConflitoData } from './armazenamento'
+import { controle, mensagemPausa, pausaRestauracao, type ConflitoData } from './armazenamento'
 import { transporteSupabase } from './transporte'
 import { banco, tabela } from '../dados/banco'
 import { nomesSync } from './motor'
@@ -13,21 +18,34 @@ const ouvintes=new Set<()=>void>()
 const alterar=(valor:Partial<Estado>)=>{estado={...estado,...valor};ouvintes.forEach(f=>f())}
 export function useConta(){return useSyncExternalStore(f=>{ouvintes.add(f);return()=>ouvintes.delete(f)},()=>estado)}
 export function usuarioAtual(){return estado.usuario}
-export function continuarSemConta(){alterar({visitante:true})}
+export function continuarSemConta(){localStorage.setItem('vida-em-dia:visitante-ativo','sim');reiniciarIdentidade()}
 export function definirRecuperacao(recuperando:boolean){alterar({recuperando})}
 let ativo=false
-export function iniciarConta(){
- if(ativo||!supabase)return
+export async function iniciarConta(){
+ if(ativo)return
  ativo=true
+ const usuario = sessaoLocal()?.user ?? null
+ const visitante = !usuario && (!supabase || localStorage.getItem('vida-em-dia:visitante-ativo') === 'sim')
+ await abrirIdentidade(usuario?.id ?? null)
+ await iniciarBanco(); await iniciarBiblioteca(); await iniciarFeriados()
+ if(usuario)await controle.put({chave:'usuario',valor:usuario.id})
+ alterar({usuario,visitante,carregando:false,vinculado:!!usuario})
+ if(!supabase)return
  const atualizar=async(usuario:User|null)=>{
   alterar({usuario,carregando:false,vinculado:!!usuario&&await vinculoLocal()===usuario.id,mensagem:'',erro:''})
   if(usuario&&!estado.recuperando&&await vinculoLocal()===usuario.id)void sincronizarAutomatico()
  }
- void supabase.auth.getSession().then(({data,error})=>{if(error)alterar({carregando:false,erro:'Entre novamente para sincronizar.'});else void atualizar(data.session?.user??null)})
- supabase.auth.onAuthStateChange((evento,sessao)=>{if(evento==='SIGNED_IN'||evento==='SIGNED_OUT'||evento==='INITIAL_SESSION'||evento==='PASSWORD_RECOVERY'){
-  if(evento==='SIGNED_OUT'||sessao?.user.id!==estado.usuario?.id)alterar({carregando:true,vinculado:false,visitante:false})
-  setTimeout(()=>{if(evento==='SIGNED_OUT')alterar({visitante:false,recuperando:false});void atualizar(sessao?.user??null)},0)
- }})
+ // Sess?o inicial j? resolvida do armazenamento local, inclusive expirada offline.
+ supabase.auth.onAuthStateChange((evento,sessao)=>{
+  if(evento==='SIGNED_OUT'&&!navigator.onLine&&estado.usuario)return
+  if(['SIGNED_IN','SIGNED_OUT','INITIAL_SESSION','PASSWORD_RECOVERY'].includes(evento)){
+   const usuarioEvento=sessao?.user??null
+   if((usuarioEvento?.id??null)!==identidadeAtual()){
+    localStorage.removeItem('vida-em-dia:visitante-ativo')
+    setTimeout(()=>reiniciarIdentidade(),0)
+   }else setTimeout(()=>void atualizar(usuarioEvento),0)
+  }
+ })
  window.addEventListener('online',()=>void sincronizarAutomatico())
  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void sincronizarAutomatico()})
  window.addEventListener('vida-em-dia:treino-finalizado',()=>void sincronizarAutomatico())

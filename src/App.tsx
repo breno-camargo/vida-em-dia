@@ -1,9 +1,8 @@
 import { ConcluirPerfilCadastro } from './componentes/ConcluirPerfilCadastro'
-import { iniciarFeriados } from './dados/atividade'
-import { continuarSemConta, iniciarConta, useConta } from './sincronizacao/estado'
+import { continuarSemConta, useConta } from './sincronizacao/estado'
 import { supabase } from './sincronizacao/cliente'
 import { ContaConfiguracoes, BotaoSairDaConta } from './componentes/ContaConfiguracoes'
-import { lazy, Suspense, useEffect, useLayoutEffect, useState } from 'react'
+import { lazy, Suspense, useLayoutEffect, useState } from 'react'
 import { Settings, X, Utensils, Ruler, ChartNoAxesCombined, Leaf } from 'lucide-react'
 import { Navegacao, type Aba } from './componentes/Navegacao'
 import { EstadoVazio } from './componentes/EstadoVazio'
@@ -11,8 +10,6 @@ import { AvisosPwa } from './componentes/AvisosPwa'
 import { Hoje } from './telas/Hoje'
 import type { SecaoConfiguracoes } from './telas/Configuracoes'
 import { useAmbiente } from './hooks/useAmbiente'
-import { iniciarBanco } from './dados/configuracoes'
-import { iniciarBiblioteca } from './dados/biblioteca'
 import { Treino } from './telas/Treino'
 const Configuracoes = lazy(() => import('./telas/Configuracoes').then(m => ({ default: m.Configuracoes })))
 const Medidas = lazy(() => import('./telas/Medidas'))
@@ -29,11 +26,10 @@ export default function App() {
   const [secaoConfiguracoes, definirSecaoConfiguracoes] = useState<SecaoConfiguracoes>()
   const [registrarMedida, definirRegistrarMedida] = useState(false)
   const [entradaTreino, definirEntradaTreino] = useState(0)
-  const [erro, definirErro] = useState('')
+  const [erro] = useState('')
   const ambiente = useAmbiente()
   const conta = useConta()
   const entrada = !!supabase && !conta.visitante && (!conta.usuario || conta.recuperando)
-  useEffect(() => { void iniciarBanco().then(iniciarBiblioteca).then(() => iniciarFeriados()).then(iniciarConta).catch(() => definirErro('Não foi possível abrir o armazenamento local. Reabra o app e confira o espaço disponível no aparelho.')) }, [])
   useLayoutEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }) }, [aba, menu])
   const selecionar = (nova: Aba) => { if (nova === aba && !menu) return; definirRegistrarMedida(false); if (nova === 'Treino') definirEntradaTreino(v => v + 1); definirAba(nova); definirMenu(false) }
   const abrirConfiguracoes = (secao?:SecaoConfiguracoes) => { definirSecaoConfiguracoes(secao); definirMenu(true) }
@@ -58,7 +54,7 @@ export default function App() {
       <div className="apresentacao-entrada"><h1>{conta.recuperando ? 'Vamos recuperar seu acesso.' : 'Bom ter você aqui.'}</h1><p>{conta.recuperando ? 'Receba um código e crie uma nova senha.' : 'Seu treino, sua rotina e sua evolução, juntos.'}</p></div>
       {erro && <p role="alert" className="erro">{erro}</p>}
       <ContaConfiguracoes entrada />
-      <div className="alternativa-entrada"><span>ou</span><button className="link-conta" onClick={continuarSemConta}>Continuar sem conta</button><p>Você pode entrar depois. Seus registros ficam neste aparelho.</p></div>
+      <div className="alternativa-entrada"><span>ou</span><button className="link-conta" onClick={continuarSemConta}>Continuar sem conta</button><p>Você pode entrar depois. Seus registros de visitante ficam vis?veis a quem usar este perfil do navegador.</p></div>
     </main>
     <AvisosPwa />
   </div>

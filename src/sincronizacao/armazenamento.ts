@@ -1,5 +1,5 @@
 import { type Table } from 'dexie'
-import { banco, observarBanco } from '../dados/banco'
+import { banco, observarBanco, geracaoAtual } from '../dados/banco'
 export { banco as filaBanco } from '../dados/banco'
 import type { NomeSync, Remoto } from './motor'
 
@@ -23,10 +23,12 @@ export const mensagemPausa = 'Sincronização pausada após restaurar o backup. 
 // O mesmo lock cobre importação, fila, envio, vínculo e resolução entre abas.
 let sequencia:Promise<unknown> = Promise.resolve()
 export function comExclusaoSync<T>(acao:()=>Promise<T>):Promise<T> {
-  if(typeof navigator !== 'undefined' && navigator.locks) return navigator.locks.request('vida-em-dia-sincronizar',acao)
+  const geracao = geracaoAtual(), origem = banco
+  const executar = () => { if (geracao !== geracaoAtual() || origem !== banco || !origem.isOpen()) throw new Error('A identidade mudou. Operação cancelada.'); return acao() }
+  if(typeof navigator !== 'undefined' && navigator.locks) return navigator.locks.request('vida-em-dia-sincronizar',executar)
   // Na interface, falhe sem alterar dados quando não houver proteção entre abas.
   if(typeof window !== 'undefined') return Promise.reject(new Error('Este navegador não oferece proteção para sincronizar ou importar entre abas. Atualize-o e tente novamente.'))
-  const resultado = sequencia.then(acao)
+  const resultado = sequencia.then(executar)
   sequencia = resultado.catch(()=>undefined)
   return resultado
 }
