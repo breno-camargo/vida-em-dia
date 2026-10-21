@@ -1,0 +1,26 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    target-branch: test
+    schedule:
+      interval: weekly
+    # Cooldown vale só para version updates; security updates não esperam 7 dias.
+    cooldown:
+      default-days: 7
+    groups:
+      npm-menores:
+        applies-to: version-updates
+        patterns: ['*']
+        update-types: [minor, patch]
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: test
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    groups:
+      actions-versoes:
+        applies-to: version-updates
+        patterns: ['*']
