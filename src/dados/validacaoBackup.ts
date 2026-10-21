@@ -69,6 +69,7 @@ export function validarReferenciasBackup(tabelas: Record<string, LinhaBackup[]>)
     refeicoes_dia: [['foto_id', 'fotos', false], ['alimento_id', 'alimentos_favoritos', false]],
   }
   for (const [nome, referencias] of Object.entries(vinculos)) for (const r of tabelas[nome] ?? []) {
+    if(r.eliminado_em)continue
     for (const [campo, destino, obrigatorio] of referencias) {
       const valor = r[campo]
       if (valor === undefined && !obrigatorio) continue

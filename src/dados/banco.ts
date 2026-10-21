@@ -63,10 +63,12 @@ banco.version(5).stores({}).upgrade(async transacao => {
 banco.version(6).stores({
  pendencias: 'chave, usuario, tabela', recibos: 'chave', controle: 'chave', conflitos: 'chave, usuario, tabela, data'
 })
+banco.version(7).stores({remocoes_storage:'caminho, usuario'})
+for(const t of banco.tables.filter(t=>!['pendencias','recibos','controle','conflitos','remocoes_storage'].includes(t.name)))t.hook('updating',(_mudancas,_id,anterior)=>{if(anterior.eliminado_em)throw new Error('Registro eliminado definitivamente. Não pode ser alterado.')})
 return banco
 }
 
-export const tabelasInternas = new Set(['pendencias','recibos','controle','conflitos'])
+export const tabelasInternas = new Set(['pendencias','recibos','controle','conflitos','remocoes_storage'])
 export type Identidade = string | null
 let identidade: Identidade = null
 let geracao = 0
@@ -92,6 +94,7 @@ export function abrirIdentidade(usuario: Identidade) {
   ouvintes.forEach(f => f())
   await banco.open()
   if(geracaoAbrindo!==geracao || abrindo!==banco){abrindo.close();throw new Error('Abertura cancelada por troca de identidade.')}
+  await (await import('./eliminacao')).purgarRemovidos()
  }
  const resultado = troca.then(abrir)
  troca = resultado.catch(() => undefined)

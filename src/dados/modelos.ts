@@ -1,5 +1,6 @@
 import type { TipoCardio } from './tiposCardio'
 export interface Registro {
+  eliminado_em?: string
   id: string
   user_id: string | null
   criado_em: string

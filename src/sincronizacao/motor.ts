@@ -4,10 +4,12 @@ export { filaBanco } from './armazenamento'
 import type { LinhaBackup } from '../dados/backup'
 import { importarBackup } from '../dados/backup'
 import { nomesBibliotecaInicial } from '../dados/biblioteca'
+import { eliminado, tombstone } from '../dados/retencao'
+import { eliminarNaTransacao } from '../dados/eliminacao'
 
 export const nomesSync = ['exercicios','fichas','ficha_exercicios','treinos','treino_exercicios','series_treino','cardio_sessoes','medidas_corporais','atividade_diaria','feriados','refeicoes_dia','alimentos_favoritos','combos_refeicao','agua_dia','consumo_diario_meta','configuracoes'] as const
 export type NomeSync = typeof nomesSync[number]
-export interface Remoto { id:string; user_id:string; criado_em:string; atualizado_em:string; apagado_em:string|null; dados:LinhaBackup }
+export interface Remoto { id:string; user_id:string; criado_em:string; atualizado_em:string; apagado_em:string|null; eliminado_em?:string|null; dados:LinhaBackup }
 export interface Transporte {
   enviar(nome:NomeSync, registros:Remoto[]):Promise<void>
   baixar(nome:NomeSync, depois:string):Promise<Remoto[]>
@@ -55,6 +57,7 @@ function assinatura(valor:unknown):string{
   return JSON.stringify(valor)
 }
 function serializar(nome:NomeSync,r:LinhaBackup,usuario:string):Remoto{
+  if(eliminado(r))return {id:r.id,user_id:usuario,criado_em:r.eliminado_em,atualizado_em:r.eliminado_em,apagado_em:r.apagado_em,eliminado_em:r.eliminado_em,dados:{...tombstone({id:r.id,user_id:usuario,apagado_em:r.apagado_em},r.eliminado_em)} as unknown as LinhaBackup}
   const dados:LinhaBackup={...r,user_id:usuario,criado_em:new Date(String(r.criado_em)).toISOString(),atualizado_em:new Date(r.atualizado_em).toISOString(),apagado_em:r.apagado_em?new Date(String(r.apagado_em)).toISOString():null}
   if(nome==='configuracoes'){
     dados.id='principal'
@@ -85,6 +88,7 @@ export async function contarPendencias(usuario:string){return pendencias.where('
 export async function listarConflitos(usuario:string){return conflitos.where('usuario').equals(usuario).toArray()}
 const tabelasPorData:readonly NomeSync[]=['medidas_corporais','atividade_diaria','agua_dia','consumo_diario_meta']
 export class ColisaoData extends Error {}
+export class EliminadoRemoto extends Error {}
 export class RevisaoPendente extends Error {
   constructor(){super('Há registros da mesma data para revisar. As outras tabelas foram sincronizadas; escolha qual registro manter.')}
 }
@@ -148,7 +152,7 @@ export async function resolverConflito(usuario:string,chave:string,escolha:'loca
     if(!remoto||assinatura(remoto)!==assinatura(previsto))throw new Error('O registro da conta mudou. Sincronize para atualizar a revisão antes de escolher novamente.')
     await banco.transaction('rw',banco.table(nome),banco.table('fotos'),async()=>{
       const t=banco.table(nome),local=await t.get(anterior.id)
-      if(!local||assinatura(serializar(nome,local,usuario))!==assinatura(anterior))throw new Error('O registro deste aparelho mudou. Sincronize para atualizar a revisão antes de escolher novamente.')
+      if(!local||eliminado(local)||eliminado(remoto.dados)||assinatura(serializar(nome,local,usuario))!==assinatura(anterior))throw new Error('O registro deste aparelho mudou ou foi eliminado. Sincronize antes de continuar.')
       const canonico=await t.get(remoto.id)
       if(canonico&&Date.parse(canonico.atualizado_em)>Date.parse(remoto.atualizado_em))throw new Error('Há outra alteração local para esse registro. Atualize a revisão antes de continuar.')
       const agora=new Date(Math.max(Date.now(),Date.parse(local.atualizado_em)+1,Date.parse(remoto.atualizado_em)+1)).toISOString()
@@ -165,11 +169,17 @@ export async function resolverConflito(usuario:string,chave:string,escolha:'loca
 }
 async function receber(usuario:string,nome:NomeSync,linhas:Remoto[]){
   // Um lote é aplicado inteiro; conflito por data deixa os dados locais intactos.
-  await banco.transaction('rw',banco.table(nome),async()=>{
+  await banco.transaction('rw',banco.tables,async()=>{
     const t=banco.table(nome)
     for(const remoto of linhas){
       if(remoto.user_id!==usuario||remoto.dados.id!==remoto.id||remoto.dados.user_id!==usuario||!Number.isFinite(Date.parse(remoto.atualizado_em)))throw new Error('Resposta de sincronização inválida.')
       let local=await t.get(remoto.id)
+      if(eliminado(remoto.dados)){
+        if(local&&!eliminado(local))await eliminarNaTransacao(nome,local.id,remoto.dados.eliminado_em)
+        else if(!local)await t.put(remoto.dados)
+        continue
+      }
+      if(eliminado(local))continue
       let r:LinhaBackup={...remoto.dados,criado_em:new Date(remoto.criado_em).toISOString(),atualizado_em:new Date(remoto.atualizado_em).toISOString(),apagado_em:remoto.apagado_em?new Date(remoto.apagado_em).toISOString():null}
       if(nome==='configuracoes'){
         local=await t.where('chave').equals('principal').first()
@@ -187,13 +197,16 @@ async function receber(usuario:string,nome:NomeSync,linhas:Remoto[]){
   // Recibo só quando o conteúdo local coincide com o remoto confirmado.
   for(const remoto of linhas){
     const t=banco.table(nome),local=nome==='configuracoes'?await t.where('chave').equals('principal').first():await t.get(remoto.id)
-    if(local){const atual=serializar(nome,local,usuario),normalizado=serializar(nome,remoto.dados,usuario);if(assinatura(atual)===assinatura(normalizado))await recibos.put({chave:chaveFila(usuario,nome,remoto.id),assinatura:assinatura(atual)})}
+    if(local){const atual=serializar(nome,local,usuario),normalizado=serializar(nome,remoto.dados,usuario);if((eliminado(local)&&eliminado(remoto.dados))||assinatura(atual)===assinatura(normalizado))await recibos.put({chave:chaveFila(usuario,nome,remoto.id),assinatura:assinatura(atual)})}
   }
 }
 export async function executarSync(usuario:string,transporte:Transporte){
  return comExclusaoSync(async()=>{
   await prepararFilaInterna(usuario)
   for(const nome of nomesSync){
+    // Eliminação remota sempre vence, antes de enviar uma edição offline antiga.
+    const eliminados=(await baixarTabela(usuario,nome,transporte)).filter(r=>eliminado(r.dados))
+    if(eliminados.length){await receber(usuario,nome,eliminados);await prepararFilaInterna(usuario)}
     if(tabelasPorData.includes(nome)&&await conferirDatas(usuario,nome,transporte))continue
     const fila=await pendencias.where('usuario').equals(usuario).filter(p=>p.tabela===nome).toArray()
     // Exclusões liberam a data antes da gravação do registro escolhido.
@@ -206,9 +219,17 @@ export async function executarSync(usuario:string,transporte:Transporte){
     for(const lote of lotes){
       try{await transporte.enviar(nome,lote.map(p=>p.registro))}
       catch(e){
+        if(e instanceof EliminadoRemoto){
+          await receber(usuario,nome,(await baixarTabela(usuario,nome,transporte)).filter(r=>eliminado(r.dados)))
+          await prepararFilaInterna(usuario)
+          const restantes=[]
+          for(const p of lote){const atual=await pendencias.get(p.chave);if(atual&&!eliminado(atual.registro.dados))restantes.push(atual.registro)}
+          if(restantes.length)await transporte.enviar(nome,restantes)
+        }else{
         // Outro aparelho pode criar a data depois da nossa conferência inicial.
         if(e instanceof ColisaoData&&tabelasPorData.includes(nome)&&await conferirDatas(usuario,nome,transporte)){colisao=true;break}
         throw e
+        }
       }
       // Mesmo se o processo fechar aqui, reenviar o lote é seguro (LWW no servidor).
       for(const p of lote){await recibos.put({chave:p.chave,assinatura:p.assinatura});await pendencias.delete(p.chave)}

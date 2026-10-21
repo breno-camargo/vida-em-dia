@@ -1,4 +1,5 @@
 import { tiposCardio } from './tiposCardio'
+import { eliminado } from './retencao'
 import { validarDominioBackup, validarReferenciasBackup } from './validacaoBackup'
 import { banco, tabela, tabelasDados, identidadeAtual, geracaoAtual } from './banco'
 import { comExclusaoSync, controle, filaBanco, pendencias, recibos, conflitos } from '../sincronizacao/armazenamento'
@@ -29,7 +30,12 @@ export function validarBackup(valor:unknown):Backup{
  if(Object.keys(b.tabelas).some(n=>!nomes.includes(n))||nomes.some(n=>!Array.isArray(b.tabelas[n])))throw new Error('O backup não contém as tabelas esperadas.')
  for(const [nome,linhas]of Object.entries(b.tabelas)){
   const ids=new Set<string>()
-  for(const r of linhas){if(!r||typeof r!=='object'||typeof r.id!=='string'||!r.id||ids.has(r.id)||!Number.isFinite(Date.parse(r.atualizado_em))||!Number.isFinite(Date.parse(String(r.criado_em)))||(r.apagado_em!==null&&!Number.isFinite(Date.parse(String(r.apagado_em))))||!(r.user_id===null||typeof r.user_id==='string'))throw new Error(`Registro inválido em ${nome}.`);ids.add(r.id)
+  for(const r of linhas){
+   if(eliminado(r)){
+    if(nome==='configuracoes'||typeof r.id!=='string'||!r.id||ids.has(r.id)||!(r.user_id===null||typeof r.user_id==='string')||!Number.isFinite(Date.parse(r.eliminado_em))||!Number.isFinite(Date.parse(r.apagado_em))||Object.keys(r).some(k=>!['id','user_id','apagado_em','eliminado_em'].includes(k)))throw new Error('Tombstone inválido.')
+    ids.add(r.id);continue
+   }
+   if(!r||typeof r!=='object'||typeof r.id!=='string'||!r.id||ids.has(r.id)||!Number.isFinite(Date.parse(r.atualizado_em))||!Number.isFinite(Date.parse(String(r.criado_em)))||(r.apagado_em!==null&&!Number.isFinite(Date.parse(String(r.apagado_em))))||!(r.user_id===null||typeof r.user_id==='string'))throw new Error(`Registro inválido em ${nome}.`);ids.add(r.id)
    if(Object.keys(r).some(k=>['__proto__','constructor','prototype'].includes(k)))throw new Error('Campo inválido no backup.')
    validarLinha(nome,r)
    if(nome==='fotos')for(const campo of ['imagem_local','miniatura_local']){const v=r[campo];if(v!==undefined){const f=v as {tipo:string;mime:string;base64:string};if(!f||f.tipo!=='blob'||typeof f.mime!=='string'||typeof f.base64!=='string'||!/^image\/(jpeg|png|webp|gif)$/.test(f.mime)||!/^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(f.base64))throw new Error('Foto inválida no backup.')}}
@@ -84,7 +90,7 @@ export async function importarBackup(arquivo:unknown,modo:'mesclar'|'substituir'
    for(const t of tabelasDados()){
     const removidos=await t.filter(r=>r.user_id===dono&&r.apagado_em!==null).toArray()
     const preservados=new Map(removidos.map(r=>[r.id,r]))
-    const restaurados=dados[t.name].map(r=>{const local=preservados.get(r.id);return local&&Date.parse(local.atualizado_em)>=Date.parse(r.atualizado_em)?local:r})
+    const restaurados=dados[t.name].map(r=>{const local=preservados.get(r.id);return local&&(eliminado(local)||(!eliminado(r)&&Date.parse(local.atualizado_em)>=Date.parse(r.atualizado_em)))?local:r})
     await t.clear();await t.bulkPut(restaurados)
     await t.bulkPut(removidos.filter(r=>!restaurados.some(s=>s.id===r.id)))
    }
@@ -92,6 +98,8 @@ export async function importarBackup(arquivo:unknown,modo:'mesclar'|'substituir'
   }
   for(const t of tabelasDados()){for(const recebido of dados[t.name]){
    let r={...recebido},local=await t.get(r.id)
+   if(eliminado(local))continue
+   if(eliminado(r)){await t.put(r);continue}
    if(t.name==='configuracoes'){const principal=await t.where('chave').equals(String(r.chave)).first();if(principal){local=principal;r={...r,id:principal.id}}}
    if(['medidas_corporais','atividade_diaria','agua_dia'].includes(t.name)&&!r.apagado_em){const conflito=await t.where('data').equals(String(r.data)).filter(l=>!l.apagado_em&&l.id!==r.id).first();if(conflito)throw new Error(`Já existe outro registro em ${String(r.data)} (${t.name}). Mesclagem cancelada; revise os registros antes de importar.`)}
    if(!local||Date.parse(r.atualizado_em)>Date.parse(local.atualizado_em)){
