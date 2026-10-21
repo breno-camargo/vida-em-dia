@@ -9,7 +9,7 @@ import { iniciarFeriados } from '../dados/atividade'
 import { reiniciarIdentidade } from './trocaIdentidade'
 import { contarPendencias, executarSync, prepararFila, prepararPrimeiroLogin, resolverConflito, retomarRestauracao, vincular, vinculoLocal, RevisaoPendente } from './motor'
 import { mensagemPausa, pausaRestauracao, type ConflitoData } from './armazenamento'
-import { transporteSupabase } from './transporte'
+import { transporteSupabase, sincronizarEliminacaoFotos } from './transporte'
 import { banco, tabela } from '../dados/banco'
 import { nomesSync } from './motor'
 interface Estado { usuario:User|null; carregando:boolean; vinculado:boolean; ocupado:boolean; mensagem:string; erro:string; pendentes:number; visitante:boolean; recuperando:boolean }
@@ -75,6 +75,7 @@ export async function sincronizar(){
  alterar({ocupado:true,erro:'',mensagem:'Sincronizando…'})
  try{
   await executarSync(usuario,transporteSupabase)
+  await sincronizarEliminacaoFotos(usuario)
   const pendentes=await contarPendencias(usuario)
   alterar({mensagem:pendentes?'Sincronização concluída. Novas alterações aguardam envio.':'Dados sincronizados.',pendentes})
  }
