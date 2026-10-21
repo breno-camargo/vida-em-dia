@@ -1,5 +1,7 @@
 # APP-03 — eliminação definitiva
 
+Atualização posterior de preparação: o runtime passou a exigir EXPECTED_PROJECT_REF para conferir a URL injetada pelo Supabase em staging ou produção, sem default. As referências a STAGING_PROJECT_REF/guard exclusivo de staging abaixo são histórico da entrega APP-03. Para provisionamento atual, prevalece [RUNBOOK-PRODUCAO.md](RUNBOOK-PRODUCAO.md); nada foi aplicado remotamente nesta preparação.
+
 Implementação local na branch `test`, em 21/10/2026. **Nenhuma migração aplicada remotamente, nenhum deploy, merge ou push. Produção não foi acessada.** Arquivos preparados exclusivamente para STAGING; a aplicação remota depende de revisão e autorização posteriores.
 
 ## Comportamento implementado

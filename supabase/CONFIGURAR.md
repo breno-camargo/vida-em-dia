@@ -1,5 +1,7 @@
 # Configurar a etapa 8 no Supabase
 
+Para preparar o segundo projeto de produção, seguir [RUNBOOK-PRODUCAO.md](../revisao/RUNBOOK-PRODUCAO.md). Este guia histórico é de staging e não autoriza aplicação remota. O runtime atual exige o secret EXPECTED_PROJECT_REF por projeto; o antigo STAGING_PROJECT_REF não é utilizado.
+
 Use primeiro o projeto novo do Vida em Dia para TESTES. O selo `main / PRODUCTION` do Supabase identifica a branch do banco; não significa que o app publicado já esteja conectado. Não aplicar SQL a um banco com dados de produção sem revisar antes.
 
 ## 1. Criar o banco

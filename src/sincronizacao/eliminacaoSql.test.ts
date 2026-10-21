@@ -3,6 +3,7 @@ import { PGlite } from '@electric-sql/pglite'
 import { afterAll, beforeAll, expect, test } from 'vitest'
 import base from '../../supabase/migrations/202610140001_conta_sincronizacao.sql?raw'
 import sql from '../../supabase/migrations/202610210001_eliminacao.sql?raw'
+import verificacao from '../../supabase/verificacao/checagem_seguranca.sql?raw'
 import { RETENCAO_REMOVIDOS_DIAS } from '../dados/retencao'
 import { abrirIdentidade, banco, tabela } from '../dados/banco'
 import { iniciarBanco } from '../dados/configuracoes'
@@ -83,4 +84,21 @@ test('backup antigo em banco limpo + sync real com Postgres simulado termina eli
  expect(rejeitados).toBe(1)
  const r=await banco.table('fichas').get('restaurado');expect(r.eliminado_em).toBeTruthy();expect(r.nome).toBeUndefined();expect(Object.keys(r)).toHaveLength(4)
  expect(await banco.table('pendencias').filter(p=>p.registro.id==='restaurado').count()).toBe(0)
+})
+test('checagem de segurança só usa SELECT e detecta RLS/política/privilégio perigosos em fixture',async()=>{
+ await pg.exec('reset role')
+ const consultas=verificacao.replace(/^--.*$/gm,'').split(';').map(s=>s.trim()).filter(Boolean)
+ expect(consultas).toHaveLength(12)
+ for(const consulta of consultas){expect(consulta).toMatch(/^SELECT\b/i);await pg.query(consulta)}
+ expect((await pg.query(consultas[0])).rows).toHaveLength(0)
+ expect((await pg.query(consultas[1])).rows).toHaveLength(20)
+ expect((await pg.query(consultas[3])).rows).toHaveLength(0)
+ expect((await pg.query<{habilitado:boolean;before_update:boolean}>(consultas[5])).rows.every(r=>r.habilitado&&r.before_update)).toBe(true)
+ expect((await pg.query<{validada:boolean}>(consultas[6])).rows.every(r=>r.validada)).toBe(true)
+ try{
+  await pg.exec('alter table public.fichas disable row level security;create policy fixture_aberta on public.fichas to public using(true);grant delete,truncate on public.fichas to authenticated;')
+  expect((await pg.query<{tabela:string}>(consultas[0])).rows.some(r=>r.tabela==='fichas')).toBe(true)
+  expect((await pg.query<{policyname:string;para_public:boolean;using_true:boolean}>(consultas[3])).rows.some(r=>r.policyname==='fixture_aberta'&&r.para_public&&r.using_true)).toBe(true)
+  expect((await pg.query<{tabela:string;papel:string;revisar_exclusao_cliente:boolean}>(consultas[4])).rows.some(r=>r.tabela==='fichas'&&r.papel==='authenticated'&&r.revisar_exclusao_cliente)).toBe(true)
+ }finally{await pg.exec('drop policy fixture_aberta on public.fichas;alter table public.fichas enable row level security;revoke delete,truncate on public.fichas from authenticated;')}
 })
