@@ -3,7 +3,7 @@ import Dexie from 'dexie'
 import { PGlite } from '@electric-sql/pglite'
 import sql from '../../supabase/migrations/202610140001_conta_sincronizacao.sql?raw'
 import { afterEach, beforeEach, expect, test, vi } from 'vitest'
-import { banco, tabela } from '../dados/banco'
+import { banco, tabela, abrirIdentidade } from '../dados/banco'
 import { exportarBackup, importarBackup } from '../dados/backup'
 import { iniciarBanco } from '../dados/configuracoes'
 import { iniciarBiblioteca } from '../dados/biblioteca'
@@ -30,7 +30,7 @@ function nuvem(){
   }
   return {tabelas,transporte}
 }
-beforeEach(async()=>{await banco.delete();await banco.open();;await iniciarBanco()})
+beforeEach(async()=>{await abrirIdentidade(null);await banco.delete();await banco.open();await iniciarBanco()})
 afterEach(()=>{vi.restoreAllMocks();vi.unstubAllGlobals()})
 
 async function doisAparelhos(){
@@ -56,13 +56,14 @@ test('mantenha pausa após reabrir, preserve vínculo e exija a conta correta pa
   expect(await pausaRestauracao()).toBeUndefined()
 })
 
-test('restaure sem pausa no aparelho sem vínculo e recuse backup de outra conta no vinculado',async()=>{
+test('restauração explícita ignora proprietário do arquivo e mantém pausa se vinculado',async()=>{
   const b=await exportarBackup(false)
   await importarBackup(b,'substituir');expect(await pausaRestauracao()).toBeUndefined()
   await vincular(usuario)
   b.tabelas.fichas.push({...criarRegistro('outra-conta'),nome:'Outro dono',ordem:1})
-  await expect(importarBackup(b,'substituir')).rejects.toThrow('outra conta')
-  expect(await pausaRestauracao()).toBeUndefined();expect(await tabela('fichas').count()).toBe(0)
+  await importarBackup(b,'substituir')
+  expect(await pausaRestauracao()).toBe(b.criado_em)
+  expect((await tabela('fichas').toArray())[0].user_id).toBeNull()
 })
 
 test('se a escrita da restauração falhar, faça rollback local e mantenha a pausa durável',async()=>{
@@ -107,6 +108,7 @@ test('sincronize correção de data pelo mesmo ID sem deixar atividade ativa na 
 })
 
 test.each(['local','remoto'] as const)('resolva com escolha %s, preserve o conteúdo recusado e envie outras tabelas durante conflito',async escolha=>{
+  await abrirIdentidade(usuario);await banco.delete();await banco.open();await iniciarBanco()
   const n=await doisAparelhos()
   const config=(await tabela('configuracoes').toArray())[0]
   await tabela('configuracoes').update(config.id,{meta_passos_util:5432,atualizado_em:new Date(Date.now()+2000).toISOString()})

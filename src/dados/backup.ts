@@ -1,16 +1,18 @@
 import { tiposCardio } from './tiposCardio'
 import { validarDominioBackup, validarReferenciasBackup } from './validacaoBackup'
-import { banco, tabela, tabelasDados } from './banco'
+import { banco, tabela, tabelasDados, identidadeAtual, geracaoAtual } from './banco'
 import { comExclusaoSync, controle, filaBanco, pendencias, recibos, conflitos } from '../sincronizacao/armazenamento'
 export type LinhaBackup = Record<string, unknown> & { id:string; atualizado_em:string }
 export interface Backup { app:'vida-em-dia'; versao:1; schema:number; criado_em:string; fotos_incluidas:boolean; tabelas:Record<string,LinhaBackup[]> }
-const blobParaJson = async (blob:Blob) => {
+export const blobParaJson = async (blob:Blob) => {
  const bytes=new Uint8Array(await blob.arrayBuffer());let texto='';for(let i=0;i<bytes.length;i+=8192)texto+=String.fromCharCode(...bytes.subarray(i,i+8192));return {tipo:'blob',mime:blob.type,base64:btoa(texto)}
 }
 export async function exportarBackup(fotos=true):Promise<Backup>{
  const linhas:Record<string,LinhaBackup[]>={}
- await banco.transaction('r',tabelasDados(),async()=>{for(const t of tabelasDados())linhas[t.name]=await t.toArray()})
+ const dono = identidadeAtual(), geracao = geracaoAtual()
+ await banco.transaction('r',tabelasDados(),async()=>{for(const t of tabelasDados())linhas[t.name]=await t.filter(r=>r.user_id===dono).toArray()})
  for(const foto of linhas.fotos??[]){for(const campo of ['imagem_local','miniatura_local']){const valor=foto[campo];if(valor instanceof Blob){if(fotos)foto[campo]=await blobParaJson(valor);else delete foto[campo]}}}
+ if(geracao!==geracaoAtual())throw new Error('A identidade mudou. Exportação cancelada.')
  return {app:'vida-em-dia',versao:1,schema:banco.verno,criado_em:new Date().toISOString(),fotos_incluidas:fotos,tabelas:linhas}
 }
 export function validarBackup(valor:unknown):Backup{
@@ -56,11 +58,12 @@ function validarLinha(nome:string,r:LinhaBackup){
 function decodificar(b:Backup){const tabelas:Record<string,LinhaBackup[]>={};for(const[nome,linhas]of Object.entries(b.tabelas)){tabelas[nome]=linhas.map(r=>({...r}));if(nome==='fotos')for(const r of tabelas[nome])for(const campo of ['imagem_local','miniatura_local']){const f=r[campo] as {mime:string;base64:string}|undefined;if(f){const s=atob(f.base64),bytes=Uint8Array.from(s,c=>c.charCodeAt(0));r[campo]=new Blob([bytes],{type:f.mime})}}}return tabelas}
 export async function importarBackup(arquivo:unknown,modo:'mesclar'|'substituir',verificarAntes?:()=>Promise<void>){
  const b=validarBackup(arquivo),dados=decodificar(b)
+ const dono=identidadeAtual()
+ for(const linhas of Object.values(dados))for(const r of linhas)r.user_id=dono
  if(modo!=='mesclar'&&modo!=='substituir')throw new Error('Escolha como importar.')
  return comExclusaoSync(async()=>{
  const usuario=(await controle.get('usuario'))?.valor
  if(verificarAntes&&usuario)throw new Error('O vínculo local mudou durante a conexão. Confirme a mesclagem novamente.')
- if(usuario&&Object.values(dados).some(linhas=>linhas.some(r=>r.user_id&&r.user_id!==usuario)))throw new Error('Este backup contém dados de outra conta. Os dados atuais foram preservados.')
  if(modo==='substituir'){
   // A pausa é durável ANTES de substituir a base. Se o app fechar, nenhum
   // envio pode consumir a fila anterior ou desfazer silenciosamente a restauração.

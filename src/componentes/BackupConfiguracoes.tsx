@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { ImportarLegado } from './ImportarLegado'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { Download, Share2, FileCheck2, FileSpreadsheet, Upload, ChevronRight, Bell, ShieldCheck } from 'lucide-react'
 import { tabela } from '../dados/banco'
@@ -15,7 +16,7 @@ export function BackupConfiguracoes(){
  useEffect(()=>()=>{if(arquivo)URL.revokeObjectURL(arquivo.url)},[arquivo])
  const executar=async(acao:()=>Promise<void>)=>{definirOcupado(true);definirErro('');definirAviso('');try{await acao()}catch(e){definirErro(e instanceof Error?e.message:'Não foi possível concluir.')}finally{definirOcupado(false)}}
  const preparar=async(tabelaCsv?:string)=>{const b=await exportarBackup(fotos),texto=tabelaCsv?csvTabela(b.tabelas[tabelaCsv]):JSON.stringify(b),file=new File([texto],`vida-em-dia-${tabelaCsv??'backup'}-${new Date().toISOString().slice(0,10)}.${tabelaCsv?'csv':'json'}`,{type:tabelaCsv?'text/csv;charset=utf-8':'application/json'});definirArquivo({file,url:URL.createObjectURL(file),json:!tabelaCsv,fotos});}
- return <section className="painel backup-config"><h2>Backup dos seus dados</h2>
+  return <section className="painel backup-config"><h2>Backup dos seus dados</h2><ImportarLegado/>
   <p className="introducao-backup">Guarde uma cópia fora do app para recuperar seus dados quando precisar.</p>
   <div className="formulario">
    <label className="opcao-sync-automatica opcao-fotos-backup"><span className="texto-sync-automatica"><strong>Incluir fotos</strong><span>Guarda também as imagens deste aparelho.</span></span><input type="checkbox" role="switch" aria-label="Incluir fotos no backup" checked={fotos} disabled={ocupado} onChange={e=>definirFotos(e.target.checked)}/><span className="interruptor-sync" aria-hidden="true"/></label>
