@@ -22,8 +22,8 @@ test('A10 regressão: restauração mostra estado neutro antes de decidir a tela
   expect(inicial).not.toContain('type="password"')
   conta.usuario = {id:'usuario-sintetico'}; conta.carregando = false
   const semVinculo = renderToStaticMarkup(<App />)
-  expect(semVinculo).toContain('Vamos separar seus dados.')
-  expect(semVinculo).not.toContain('Olá, vamos cuidar de você?')
+  // Bootstrap só monta App depois de abrir a identidade, mesmo sem conexão remota.
+  expect(semVinculo).toContain('Olá, vamos cuidar de você?')
   conta.vinculado = true
   const recuperada = renderToStaticMarkup(<App />)
   expect(recuperada).toContain('Olá, vamos cuidar de você?')

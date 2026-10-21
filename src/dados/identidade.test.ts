@@ -1,6 +1,6 @@
 import 'fake-indexeddb/auto'
 import { expect, test } from 'vitest'
-import { abrirIdentidade, banco, identidadeAtual, tabela } from './banco'
+import { abrirIdentidade, banco, identidadeAtual, tabela, observarBanco } from './banco'
 import { criarRegistro, repositorio } from './repositorio'
 import { pendencias, controle } from '../sincronizacao/armazenamento'
 
@@ -8,7 +8,9 @@ test('A → B → visitante → A isola registros, fila e fotos e fecha instânc
  const a='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',b='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb'
  for (const dono of [a,b,null]) {
   const anterior=banco
+  const parar=observarBanco(()=>{expect(anterior.isOpen()).toBe(false);expect(banco.isOpen()).toBe(false)})
   await abrirIdentidade(dono)
+  parar()
   expect(anterior.isOpen()).toBe(false)
   await banco.delete(); await banco.open()
   expect(identidadeAtual()).toBe(dono)

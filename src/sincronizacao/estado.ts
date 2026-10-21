@@ -8,7 +8,7 @@ import { iniciarBiblioteca } from '../dados/biblioteca'
 import { iniciarFeriados } from '../dados/atividade'
 import { reiniciarIdentidade } from './trocaIdentidade'
 import { contarPendencias, executarSync, prepararFila, prepararPrimeiroLogin, resolverConflito, retomarRestauracao, vincular, vinculoLocal, RevisaoPendente } from './motor'
-import { controle, mensagemPausa, pausaRestauracao, type ConflitoData } from './armazenamento'
+import { mensagemPausa, pausaRestauracao, type ConflitoData } from './armazenamento'
 import { transporteSupabase } from './transporte'
 import { banco, tabela } from '../dados/banco'
 import { nomesSync } from './motor'
@@ -28,21 +28,20 @@ export async function iniciarConta(){
  const visitante = !usuario && (!supabase || localStorage.getItem('vida-em-dia:visitante-ativo') === 'sim')
  await abrirIdentidade(usuario?.id ?? null)
  await iniciarBanco(); await iniciarBiblioteca(); await iniciarFeriados()
- if(usuario)await controle.put({chave:'usuario',valor:usuario.id})
- alterar({usuario,visitante,carregando:false,vinculado:!!usuario})
+ alterar({usuario,visitante,carregando:false,vinculado:!!usuario&&await vinculoLocal()===usuario.id})
  if(!supabase)return
  const atualizar=async(usuario:User|null)=>{
   alterar({usuario,carregando:false,vinculado:!!usuario&&await vinculoLocal()===usuario.id,mensagem:'',erro:''})
   if(usuario&&!estado.recuperando&&await vinculoLocal()===usuario.id)void sincronizarAutomatico()
  }
- // Sess?o inicial j? resolvida do armazenamento local, inclusive expirada offline.
+ // Sessão inicial resolvida localmente, inclusive expirada offline.
  supabase.auth.onAuthStateChange((evento,sessao)=>{
-  if(evento==='SIGNED_OUT'&&!navigator.onLine&&estado.usuario)return
+  if(!navigator.onLine&&!sessao?.user&&estado.usuario)return
   if(['SIGNED_IN','SIGNED_OUT','INITIAL_SESSION','PASSWORD_RECOVERY'].includes(evento)){
    const usuarioEvento=sessao?.user??null
    if((usuarioEvento?.id??null)!==identidadeAtual()){
     localStorage.removeItem('vida-em-dia:visitante-ativo')
-    setTimeout(()=>reiniciarIdentidade(),0)
+    reiniciarIdentidade()
    }else setTimeout(()=>void atualizar(usuarioEvento),0)
   }
  })

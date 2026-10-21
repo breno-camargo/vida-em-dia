@@ -12,7 +12,7 @@ export function repositorio<K extends keyof Tabelas>(nome: K) {
   return {
     listar: async () => { conferir(); const itens = await dados.filter(item => item.apagado_em === null && item.user_id === dono).toArray(); conferir(); return itens },
     obter: async (id: string) => { conferir(); const item = await dados.get(id); conferir(); return item?.user_id === dono ? item : undefined },
-    salvar: async (registro: Tabelas[K]) => { conferir(); if (registro.user_id !== dono) throw new Error('Registro de outro proprietário.'); return dados.put({ ...registro, atualizado_em: new Date().toISOString() }) },
+    salvar: async (registro: Tabelas[K]) => { conferir(); const existente=await dados.get(registro.id); conferir(); if (registro.user_id !== dono || (existente && existente.user_id !== dono)) throw new Error('Registro de outro proprietário.'); return dados.put({ ...registro, atualizado_em: new Date().toISOString() }) },
     apagar: async (id: string) => {
       conferir()
       const registro = await dados.get(id)

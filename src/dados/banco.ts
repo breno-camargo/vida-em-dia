@@ -80,16 +80,18 @@ export function tabelasDados() { return banco.tables.filter(t => !tabelasInterna
 export function tabela<K extends keyof Tabelas>(nome: K): Table<Tabelas[K], string> { return banco.table(nome) }
 export function fecharIdentidade() { banco.close(); geracao++; ouvintes.forEach(f => f()) }
 export function abrirIdentidade(usuario: Identidade) {
- if (usuario !== null && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(usuario)) return Promise.reject(new Error('Identidade local inv?lida.'))
+ if (usuario !== null && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(usuario)) return Promise.reject(new Error('Identidade local inválida.'))
  const abrir = async () => {
   if (identidade === usuario && banco.isOpen()) return
   const anterior = banco
   anterior.close(); geracao++
-  if (anterior.isOpen()) throw new Error('O espa?o anterior n?o foi fechado.')
+  if (anterior.isOpen()) throw new Error('O espaço anterior não foi fechado.')
   identidade = usuario
   banco = criarBancoIdentidade('vida-em-dia:' + (usuario ?? 'visitante'))
+  const geracaoAbrindo = geracao, abrindo = banco
   ouvintes.forEach(f => f())
   await banco.open()
+  if(geracaoAbrindo!==geracao || abrindo!==banco){abrindo.close();throw new Error('Abertura cancelada por troca de identidade.')}
  }
  const resultado = troca.then(abrir)
  troca = resultado.catch(() => undefined)

@@ -1,7 +1,7 @@
 import { ConcluirPerfilCadastro } from './componentes/ConcluirPerfilCadastro'
 import { continuarSemConta, useConta } from './sincronizacao/estado'
 import { supabase } from './sincronizacao/cliente'
-import { ContaConfiguracoes, BotaoSairDaConta } from './componentes/ContaConfiguracoes'
+import { ContaConfiguracoes } from './componentes/ContaConfiguracoes'
 import { lazy, Suspense, useLayoutEffect, useState } from 'react'
 import { Settings, X, Utensils, Ruler, ChartNoAxesCombined, Leaf } from 'lucide-react'
 import { Navegacao, type Aba } from './componentes/Navegacao'
@@ -39,15 +39,6 @@ export default function App() {
       {erro ? <p role="alert" className="erro">{erro}</p> : <p role="status">Abrindo seu espaço…</p>}
     </main>
   </div>
-  if (supabase && conta.usuario && !conta.vinculado && !conta.recuperando) return <div className="app entrada-conta">
-    <header className="marca-entrada"><span><Leaf size={25} strokeWidth={1.7} /></span><div>Vida em Dia<small>UM ESPAÇO PARA VOCÊ</small></div></header>
-    <main id="conteudo" className="conteudo-entrada">
-      <div className="apresentacao-entrada"><h1>Vamos separar seus dados.</h1><p>Entrar em outra conta não transfere os registros deste navegador.</p></div>
-      <p className="nota-resumo">Se este navegador já foi usado por outra pessoa, use um perfil separado do navegador ou outro aparelho para sua conta. Os registros locais ficam protegidos até a validação do vínculo.</p>
-      <ContaConfiguracoes entrada />
-      <BotaoSairDaConta />
-    </main>
-  </div>
   if (entrada) return <div className="app entrada-conta">
     <header className="marca-entrada"><span><Leaf size={25} strokeWidth={1.7} /></span><div>Vida em Dia<small>UM ESPAÇO PARA VOCÊ</small></div></header>
     <main id="conteudo" className="conteudo-entrada">
@@ -66,6 +57,7 @@ export default function App() {
       <h1>{menu ? 'Configurações' : aba === 'Hoje' ? 'Olá, vamos cuidar de você?' : aba}</h1>
       {erro && <div role="alert" className="erro">{erro}</div>}
       <ConcluirPerfilCadastro abrirConta={() => abrirConfiguracoes('conta')} />
+      {conta.visitante && <p className="nota-resumo">Modo visitante: estes registros ficam visíveis a quem usar este perfil do navegador. Eles não são transferidos ao criar ou acessar uma conta.</p>}
       <div className="conteudo-pagina">{menu ? <Suspense fallback={<p role="status">Carregando configurações…</p>}><Configuracoes {...ambiente} inicial={secaoConfiguracoes} /></Suspense> : aba === 'Hoje' ? <Hoje abrirBackup={() => abrirConfiguracoes('backup')} abrirConta={() => abrirConfiguracoes('conta')} abrir={selecionar} registrarMedida={() => { selecionar('Medidas'); definirRegistrarMedida(true) }} /> : aba === 'Treino' ? <Treino key={entradaTreino} online={ambiente.online} /> : aba === 'Evolução' ? <Suspense fallback={<p role="status">Carregando evolução…</p>}><Evolucao /></Suspense> : aba === 'Medidas' ? <Suspense fallback={<p role="status">Carregando medidas…</p>}><Medidas registrarInicial={registrarMedida} /></Suspense> : <EstadoVazio {...proximas[aba]} />}</div>
     </main>
     <AvisosPwa /><Navegacao atual={aba} selecionar={selecionar} />

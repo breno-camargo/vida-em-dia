@@ -1,4 +1,4 @@
-import { banco } from '../dados/banco'
+import { banco, identidadeAtual } from '../dados/banco'
 import { comExclusaoSync, controle, conflitos, filaBanco, mensagemPausa, pausaRestauracao, pendencias, recibos, type ConflitoData } from './armazenamento'
 export { filaBanco } from './armazenamento'
 import type { LinhaBackup } from '../dados/backup'
@@ -19,7 +19,7 @@ export async function aparelhoSemRegistros(){
   const exercicios=await banco.table('exercicios').toArray()
   if(exercicios.length!==nomesBibliotecaInicial.length||exercicios.some(r=>!nomesBibliotecaInicial.includes(r.nome)||r.nota_fixa||r.como_fazer||r.equipamento||r.apagado_em||r.atualizado_em!==r.criado_em))return false
   const config=await banco.table('configuracoes').where('chave').equals('principal').first()
-  return !!config&&!config.user_id&&!config.ultimo_backup&&Date.parse(config.atualizado_em)-Date.parse(config.criado_em)<10000
+  return !!config&&(!config.user_id||config.user_id===identidadeAtual())&&!config.ultimo_backup&&Date.parse(config.atualizado_em)-Date.parse(config.criado_em)<10000
 }
 export async function prepararPrimeiroLogin(usuario:string,transporte:Transporte){
   if(await vinculoLocal())return

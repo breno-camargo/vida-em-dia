@@ -11,7 +11,14 @@ export function sessaoLocal(): { user: User } | null {
  if (!url || typeof localStorage === 'undefined') return null
  try {
   const chaveSessao = `sb-${new URL(url).hostname.split('.')[0]}-auth-token`
-  const sessao = JSON.parse(localStorage.getItem(chaveSessao) ?? 'null')
-  return sessao?.user && /^[0-9a-f-]{36}$/i.test(sessao.user.id) ? { user: sessao.user } : null
+  return interpretarSessaoLocal(localStorage.getItem(chaveSessao))
  } catch { return null }
+}
+
+export function interpretarSessaoLocal(serializada: string | null): { user: User } | null {
+ try {
+  const sessao=JSON.parse(serializada ?? 'null')
+  // Expiração não elimina acesso aos dados offline; o servidor decide a autorização de rede.
+  return sessao?.user && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(sessao.user.id) ? {user:sessao.user} : null
+ }catch{return null}
 }

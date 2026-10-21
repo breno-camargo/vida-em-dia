@@ -1,3 +1,11 @@
+# APP-01 implementado localmente — 21/10/2026
+
+Ver revisao/APP-01-ISOLAMENTO.md. Bancos separados por UUID/visitante, fila incorporada por identidade, bootstrap local/offline, troca com fechamento e aviso entre abas, filtro no repositório e importação legada explícita filtrada. Legado real preservado; nada importado automaticamente. Backup JSON força proprietário da identidade atual. Visitante não migra para conta.
+
+Verificação final: tipos, lint, 229 testes em 36 arquivos e build passaram; reprodução A → B → visitante → A retornou somente o proprietário de cada espaço, inclusive com registro estranho injetado. Sem merge/push/deploy. Homologação visual e troca em duas janelas do navegador real ainda pendentes; testes automatizados usam Dexie/fake-indexeddb e BroadcastChannel real em Node. Não confundir com garantia contra acesso via DevTools do próprio perfil. Somente APP-01 aplicado nesta sequência, sem correções dos outros achados.
+
+---
+
 # Retomada prioritária — encerramento em 19/10/2026
 
 Usuário pediu parar por hoje, registrar pendências e commitar. Não continuar implementação até a retomada. Branch test; sem push, merge, deploy ou SQL remoto. Commits por mudança continuam sendo preferência explícita.
