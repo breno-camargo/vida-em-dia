@@ -16,7 +16,7 @@ import { iniciarTreino, adicionarExercicio, concluirSerie, maiorCarga } from '..
 import { recordesDoTreino, removerTreino, restaurarTreino } from '../src/dados/historico'
 import { sessoesExercicio } from '../src/utilitarios/evolucao'
 import { salvarAtividade } from '../src/dados/atividade'
-import { executarSync, filaBanco, nomesSync, vincular, listarConflitos, resolverConflito, retomarRestauracao, type NomeSync, type Remoto, type Transporte } from '../src/sincronizacao/motor'
+import { executarSync, nomesSync, vincular, listarConflitos, resolverConflito, retomarRestauracao, type NomeSync, type Remoto, type Transporte } from '../src/sincronizacao/motor'
 import { pausaRestauracao } from '../src/sincronizacao/armazenamento'
 
 const usuario = '11111111-1111-4111-8111-111111111111'
@@ -35,7 +35,7 @@ function nuvem() {
   return { dados, transporte }
 }
 beforeEach(async () => {
-  await banco.delete(); await banco.open(); await filaBanco.delete(); await filaBanco.open()
+  await banco.delete(); await banco.open(); 
   await iniciarBanco(); await iniciarBiblioteca()
 })
 
@@ -72,7 +72,7 @@ test('C03 regressão: colisão por data permite escolha e retomada sem duplicar 
   const n = nuvem()
   await salvarAtividade('2026-01-01',100,20); await vincular(usuario); await executarSync(usuario,n.transporte)
   // Outro aparelho: IndexedDB separado simulado pela recriação apenas da base em memória.
-  await banco.delete(); await banco.open(); await filaBanco.delete(); await filaBanco.open(); await iniciarBanco()
+  await banco.delete(); await banco.open(); ; await iniciarBanco()
   await salvarAtividade('2026-01-01',200,30); await vincular(usuario)
   await expect(executarSync(usuario,n.transporte)).rejects.toThrow('revisar')
   expect(await tabela('atividade_diaria').count()).toBe(1)

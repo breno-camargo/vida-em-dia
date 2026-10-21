@@ -30,13 +30,13 @@ function nuvem(){
   }
   return {tabelas,transporte}
 }
-beforeEach(async()=>{await banco.delete();await banco.open();await filaBanco.delete();await filaBanco.open();await iniciarBanco()})
+beforeEach(async()=>{await banco.delete();await banco.open();;await iniciarBanco()})
 afterEach(()=>{vi.restoreAllMocks();vi.unstubAllGlobals()})
 
 async function doisAparelhos(){
   const n=nuvem()
   await salvarAtividade('2026-01-01',100,20);await vincular(usuario);await executarSync(usuario,n.transporte)
-  await banco.delete();await banco.open();await filaBanco.delete();await filaBanco.open();await iniciarBanco()
+  await banco.delete();await banco.open();;await iniciarBanco()
   await salvarAtividade('2026-01-01',200,30);await vincular(usuario)
   return n
 }
@@ -101,7 +101,7 @@ test('sincronize correção de data pelo mesmo ID sem deixar atividade ativa na 
   await salvarAtividade('2026-01-03',1000,123,{...original,moverData:true});await executarSync(usuario,n.transporte)
   expect(n.tabelas.atividade_diaria.size).toBe(1)
   expect(n.tabelas.atividade_diaria.get(original.id)?.dados).toMatchObject({data:'2026-01-03',passos:1000,calorias_gastas:123})
-  await banco.delete();await banco.open();await filaBanco.delete();await filaBanco.open();await iniciarBanco();await vincular(usuario);await executarSync(usuario,n.transporte)
+  await banco.delete();await banco.open();;await iniciarBanco();await vincular(usuario);await executarSync(usuario,n.transporte)
   const recebidos=await tabela('atividade_diaria').toArray()
   expect(recebidos).toHaveLength(1);expect(recebidos[0]).toMatchObject({id:original.id,data:'2026-01-03',passos:1000,calorias_gastas:123})
 })
@@ -164,7 +164,7 @@ test('retome envio interrompido depois da escolha sem ressuscitar o registro rec
   expect(await contarPendencias(usuario)).toBe(0)
 })
 
-test('migração da fila 1 para 2 preserva vínculo, recibos e pendências',async()=>{
+test('fila legada permanece separada e não atribui vínculo ou pendências ao novo banco',async()=>{
   await filaBanco.delete()
   const antigo=new Dexie('vida-em-dia-sincronizacao')
   antigo.version(1).stores({pendencias:'chave, usuario, tabela',recibos:'chave',controle:'chave'})
@@ -172,9 +172,12 @@ test('migração da fila 1 para 2 preserva vínculo, recibos e pendências',asyn
   await antigo.table('recibos').put({chave:'r',assinatura:'assinatura'})
   await antigo.table('pendencias').put({chave:'p',usuario,tabela:'fichas'})
   antigo.close();await filaBanco.open()
-  expect((await controle.get('usuario'))?.valor).toBe(usuario)
-  expect((await recibos.get('r'))?.assinatura).toBe('assinatura')
-  expect(await pendencias.get('p')).toBeDefined();expect(await listarConflitos(usuario)).toEqual([])
+  expect(await controle.get('usuario')).toBeUndefined()
+  expect(await recibos.get('r')).toBeUndefined()
+  expect(await pendencias.get('p')).toBeUndefined();expect(await listarConflitos(usuario)).toEqual([])
+  const leitura = new Dexie('vida-em-dia-sincronizacao', { autoOpen:false }); await leitura.open()
+  expect((await leitura.table('controle').get('usuario'))?.valor).toBe(usuario)
+  leitura.close()
 })
 
 test('em navegador sem Web Locks, preserve dados e recuse a operação protegida',async()=>{
@@ -186,7 +189,7 @@ test('em navegador sem Web Locks, preserve dados e recuse a operação protegida
 
 test('não substitua a base inicial se o vínculo mudar durante o download da primeira conexão',async()=>{
   const n=nuvem();await iniciarBiblioteca();await vincular(usuario);await executarSync(usuario,n.transporte)
-  await banco.delete();await banco.open();await filaBanco.delete();await filaBanco.open();await iniciarBanco();await iniciarBiblioteca()
+  await banco.delete();await banco.open();;await iniciarBanco();await iniciarBiblioteca()
   const ids=(await tabela('exercicios').toArray()).map(r=>r.id).sort()
   let liberar!:()=>void,entrou!:()=>void
   const barreira=new Promise<void>(r=>{liberar=r}),baixando=new Promise<void>(r=>{entrou=r})
@@ -200,7 +203,7 @@ test('não substitua a base inicial se o vínculo mudar durante o download da pr
 test('transfira fotos da medida escolhida e preserve os valores recusados no tombstone',async()=>{
   const n=nuvem(),medida={...criarRegistro(),data:'2026-01-01',peso:70}
   await tabela('medidas_corporais').add(medida);await vincular(usuario);await executarSync(usuario,n.transporte)
-  await banco.delete();await banco.open();await filaBanco.delete();await filaBanco.open();await iniciarBanco()
+  await banco.delete();await banco.open();;await iniciarBanco()
   const local={...criarRegistro(),data:'2026-01-01',peso:80}
   await tabela('medidas_corporais').add(local)
   const foto={...criarRegistro(),tipo:'progresso' as const,data:local.data,angulo:'frente' as const,medida_id:local.id,tamanho_bytes:3,imagem_local:new Blob(['abc'],{type:'image/jpeg'})}
@@ -229,7 +232,7 @@ test.each(['local','remoto'] as const)('RPC SQL real: resolva pela escolha %s e 
       async baixar(nome,depois){const r=await pg.query<Remoto>(`select id,user_id,criado_em::text,atualizado_em::text,apagado_em::text,dados from public.${nome} where id>$1 order by id limit 200`,[depois]);return r.rows},
     }
     await salvarAtividade('2026-01-01',100,20);await vincular(usuario);await executarSync(usuario,transporte)
-    await banco.delete();await banco.open();await filaBanco.delete();await filaBanco.open();await iniciarBanco()
+    await banco.delete();await banco.open();;await iniciarBanco()
     await salvarAtividade('2026-01-01',200,30);await vincular(usuario)
     await expect(executarSync(usuario,transporte)).rejects.toThrow('revisar')
     const [c]=await listarConflitos(usuario)

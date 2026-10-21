@@ -2,7 +2,8 @@ import { exerciciosPesoCorporal } from './pesoCorporal'
 import Dexie, { type Table } from 'dexie'
 import type { Tabelas } from './modelos'
 
-export const banco = new Dexie('vida-em-dia')
+export function criarBancoIdentidade(nome: string) {
+const banco = new Dexie(nome, { autoOpen: false })
 const base = 'id, user_id, atualizado_em, apagado_em'
 // Preserve esta versão; alterações futuras entram em uma nova migração.
 banco.version(1).stores({
@@ -24,9 +25,7 @@ banco.version(2).stores({
     if (item.descanso_segundos === undefined) item.descanso_segundos = 90
   })
 })
-export function tabela<K extends keyof Tabelas>(nome: K): Table<Tabelas[K], string> {
-  return banco.table(nome)
-}
+
 banco.version(3).stores({
   treino_exercicios: `${base}, treino_id, exercicio_id, [treino_id+ordem]`,
 }).upgrade(async transacao => {
@@ -60,3 +59,39 @@ banco.version(5).stores({}).upgrade(async transacao => {
     }
   })
 })
+
+banco.version(6).stores({
+ pendencias: 'chave, usuario, tabela', recibos: 'chave', controle: 'chave', conflitos: 'chave, usuario, tabela, data'
+})
+return banco
+}
+
+export const tabelasInternas = new Set(['pendencias','recibos','controle','conflitos'])
+export type Identidade = string | null
+let identidade: Identidade = null
+let geracao = 0
+export let banco = criarBancoIdentidade('vida-em-dia:visitante')
+const ouvintes = new Set<() => void>()
+let troca: Promise<unknown> = Promise.resolve()
+export function identidadeAtual() { return identidade }
+export function geracaoAtual() { return geracao }
+export function observarBanco(ouvinte: () => void) { ouvintes.add(ouvinte); return () => { ouvintes.delete(ouvinte) } }
+export function tabelasDados() { return banco.tables.filter(t => !tabelasInternas.has(t.name)) }
+export function tabela<K extends keyof Tabelas>(nome: K): Table<Tabelas[K], string> { return banco.table(nome) }
+export function fecharIdentidade() { banco.close(); geracao++; ouvintes.forEach(f => f()) }
+export function abrirIdentidade(usuario: Identidade) {
+ if (usuario !== null && !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(usuario)) return Promise.reject(new Error('Identidade local inv?lida.'))
+ const abrir = async () => {
+  if (identidade === usuario && banco.isOpen()) return
+  const anterior = banco
+  anterior.close(); geracao++
+  if (anterior.isOpen()) throw new Error('O espa?o anterior n?o foi fechado.')
+  identidade = usuario
+  banco = criarBancoIdentidade('vida-em-dia:' + (usuario ?? 'visitante'))
+  ouvintes.forEach(f => f())
+  await banco.open()
+ }
+ const resultado = troca.then(abrir)
+ troca = resultado.catch(() => undefined)
+ return resultado
+}

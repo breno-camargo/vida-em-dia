@@ -1,6 +1,6 @@
 import { tiposCardio } from './tiposCardio'
 import { validarDominioBackup, validarReferenciasBackup } from './validacaoBackup'
-import { banco, tabela } from './banco'
+import { banco, tabela, tabelasDados } from './banco'
 import { comExclusaoSync, controle, filaBanco, pendencias, recibos, conflitos } from '../sincronizacao/armazenamento'
 export type LinhaBackup = Record<string, unknown> & { id:string; atualizado_em:string }
 export interface Backup { app:'vida-em-dia'; versao:1; schema:number; criado_em:string; fotos_incluidas:boolean; tabelas:Record<string,LinhaBackup[]> }
@@ -9,7 +9,7 @@ const blobParaJson = async (blob:Blob) => {
 }
 export async function exportarBackup(fotos=true):Promise<Backup>{
  const linhas:Record<string,LinhaBackup[]>={}
- await banco.transaction('r',banco.tables,async()=>{for(const t of banco.tables)linhas[t.name]=await t.toArray()})
+ await banco.transaction('r',tabelasDados(),async()=>{for(const t of tabelasDados())linhas[t.name]=await t.toArray()})
  for(const foto of linhas.fotos??[]){for(const campo of ['imagem_local','miniatura_local']){const valor=foto[campo];if(valor instanceof Blob){if(fotos)foto[campo]=await blobParaJson(valor);else delete foto[campo]}}}
  return {app:'vida-em-dia',versao:1,schema:banco.verno,criado_em:new Date().toISOString(),fotos_incluidas:fotos,tabelas:linhas}
 }
@@ -17,7 +17,7 @@ export function validarBackup(valor:unknown):Backup{
  if(!valor||typeof valor!=='object')throw new Error('Arquivo de backup inválido.')
  const b=valor as Backup
  if(b.app!=='vida-em-dia'||b.versao!==1||!Number.isSafeInteger(b.schema)||b.schema<1||b.schema>banco.verno||!Number.isFinite(Date.parse(b.criado_em))||typeof b.fotos_incluidas!=='boolean'||!b.tabelas||typeof b.tabelas!=='object')throw new Error('Formato ou versão de backup incompatível.')
- const nomes=banco.tables.map(t=>t.name)
+ const nomes=tabelasDados().map(t=>t.name)
  if(Object.keys(b.tabelas).some(n=>!nomes.includes(n))||nomes.some(n=>!Array.isArray(b.tabelas[n])))throw new Error('O backup não contém as tabelas esperadas.')
  for(const [nome,linhas]of Object.entries(b.tabelas)){
   const ids=new Set<string>()
@@ -69,10 +69,10 @@ export async function importarBackup(arquivo:unknown,modo:'mesclar'|'substituir'
    await pendencias.clear();await recibos.clear();await conflitos.clear()
   })
  }
- await banco.transaction('rw',banco.tables,async()=>{
+ await banco.transaction('rw',tabelasDados(),async()=>{
   if(verificarAntes)await verificarAntes()
-  if(modo==='substituir'){for(const t of banco.tables)await t.clear();for(const t of banco.tables)await t.bulkPut(dados[t.name]);return}
-  for(const t of banco.tables){for(const recebido of dados[t.name]){
+  if(modo==='substituir'){for(const t of tabelasDados())await t.clear();for(const t of tabelasDados())await t.bulkPut(dados[t.name]);return}
+  for(const t of tabelasDados()){for(const recebido of dados[t.name]){
    let r={...recebido},local=await t.get(r.id)
    if(t.name==='configuracoes'){const principal=await t.where('chave').equals(String(r.chave)).first();if(principal){local=principal;r={...r,id:principal.id}}}
    if(['medidas_corporais','atividade_diaria','agua_dia'].includes(t.name)&&!r.apagado_em){const conflito=await t.where('data').equals(String(r.data)).filter(l=>!l.apagado_em&&l.id!==r.id).first();if(conflito)throw new Error(`Já existe outro registro em ${String(r.data)} (${t.name}). Mesclagem cancelada; revise os registros antes de importar.`)}

@@ -17,7 +17,7 @@ function nuvem(){
  return{tabelas,chamadas,transporte}
 }
 function remoto(r:ReturnType<typeof ficha>):Remoto{const dados={...r,user_id:usuario};return {id:r.id,user_id:usuario,criado_em:r.criado_em,atualizado_em:r.atualizado_em,apagado_em:null,dados}}
-beforeEach(async()=>{await banco.delete();await banco.open();await filaBanco.delete();await filaBanco.open();await iniciarBanco()})
+beforeEach(async()=>{await banco.delete();await banco.open();;await iniciarBanco()})
 test('envie somente alterações, normalize ordem das chaves e preserve fotos fora do sync',async()=>{
  const n=nuvem();await tabela('fichas').add(ficha());await vincular(usuario);await executarSync(usuario,n.transporte)
  expect(await contarPendencias(usuario)).toBe(0)
@@ -53,7 +53,7 @@ test('bloqueie outra conta e dados importados de usuário diferente',async()=>{
 test('baixe conta em aparelho novo sem duplicar biblioteca e sem sobrescrever as metas remotas',async()=>{
  await iniciarBiblioteca();const n=nuvem();await vincular(usuario);await executarSync(usuario,n.transporte)
  const ids=[...n.tabelas.exercicios.keys()]
- await banco.delete();await banco.open();await filaBanco.delete();await filaBanco.open();await iniciarBanco();await iniciarBiblioteca()
+ await banco.delete();await banco.open();;await iniciarBanco();await iniciarBiblioteca()
  expect(await aparelhoSemRegistros()).toBe(true)
  await prepararPrimeiroLogin(usuario,n.transporte);await vincular(usuario);await executarSync(usuario,n.transporte)
  expect(await tabela('exercicios').count()).toBe(64)

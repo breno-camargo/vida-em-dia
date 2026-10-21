@@ -53,7 +53,7 @@ test('rejeite uma ficha inválida sem salvar parcialmente', async () => {
 test('migre registros da versão 1 preservando os dados e acrescentando descanso', async () => {
   const schema = Object.fromEntries(banco.tables.map(t => [t.name, [t.schema.primKey.src, ...t.schema.indexes.map(i => i.src)].join(', ')]))
   await banco.delete()
-  const antigo = new Dexie('vida-em-dia')
+  const antigo = new Dexie(banco.name)
   antigo.version(1).stores(schema)
   const ficha = { ...criarRegistro(), nome: 'Ficha anterior', ordem: 0 }
   const item = { ...criarRegistro(), ficha_id: ficha.id, exercicio_id: crypto.randomUUID(), ordem: 0, series_planejadas: 5 }

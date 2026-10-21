@@ -2,6 +2,7 @@ import { banco, tabela } from './banco'
 import { criarRegistro } from './repositorio'
 
 export async function iniciarBanco() {
+  if (!banco.isOpen()) await banco.open()
   await banco.transaction('rw', tabela('configuracoes'), async () => {
     if (await tabela('configuracoes').where('chave').equals('principal').first()) return
     await tabela('configuracoes').add({

@@ -104,7 +104,7 @@ test('aplique valores às próximas séries pendentes sem alterar as concluídas
 test('preserve sessões e cargas anteriores ao migrar a versão 2 para 3', async () => {
   const schema = Object.fromEntries(banco.tables.filter(t => t.name !== 'treino_exercicios').map(t => [t.name, [t.schema.primKey.src, ...t.schema.indexes.map(i => i.src)].join(', ')]))
   await banco.delete()
-  const antigo = new Dexie('vida-em-dia'); antigo.version(2).stores(schema)
+  const antigo = new Dexie(banco.name); antigo.version(2).stores(schema)
   const treino = { ...criarRegistro(), data: '2026-10-05', inicio: new Date().toISOString(), observacao: 'Registro antigo' }
   const serie = { ...criarRegistro(), treino_id: treino.id, exercicio_id: crypto.randomUUID(), numero_serie: 1, tipo: 'normal', peso_digitado: 30, peso_total: 30, repeticoes: 10, recorde: false }
   await antigo.table('treinos').add(treino); await antigo.table('series_treino').add(serie)
@@ -132,7 +132,7 @@ test('separe os grupos antigos sem alterar ids, fichas ou instruções próprias
   const schema = Object.fromEntries(banco.tables.map(t => [t.name, [t.schema.primKey.src, ...t.schema.indexes.map(i => i.src)].join(', ')]))
   const ex = (await tabela('exercicios').toArray()).find(e => e.nome === 'Panturrilha em pé')!
   await banco.delete()
-  const antigo = new Dexie('vida-em-dia'); antigo.version(3).stores(schema)
+  const antigo = new Dexie(banco.name); antigo.version(3).stores(schema)
   const gluteo = { ...ex, ...criarRegistro(), nome: 'Elevação pélvica', grupo_muscular: 'Glúteos e panturrilhas', musculos: 'Minha descrição personalizada' }
   await antigo.table('exercicios').bulkAdd([{ ...ex, grupo_muscular: 'Glúteos e panturrilhas', musculos: 'Glúteos e panturrilhas' }, gluteo])
   const item = { ...criarRegistro(), ficha_id: crypto.randomUUID(), exercicio_id: ex.id, ordem: 0, series_planejadas: 3 }

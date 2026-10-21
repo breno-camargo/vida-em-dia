@@ -1,12 +1,11 @@
 import 'fake-indexeddb/auto'
 import { beforeEach, expect, test } from 'vitest'
 import { banco, tabela } from './banco'
-import { filaBanco } from '../sincronizacao/armazenamento'
 import { criarRegistro } from './repositorio'
 import { gruposDuplicados, unirExercicios } from './unirExercicios'
 import type { Exercicio } from './modelos'
 
-beforeEach(async () => { await banco.delete(); await banco.open(); await filaBanco.delete(); await filaBanco.open() })
+beforeEach(async () => { await banco.delete(); await banco.open();  })
 async function preparar() {
  const a:Exercicio={...criarRegistro(),nome:'Supino',tipo:'forca',grupo_muscular:'Peito',equipamento:'Barra',descanso_padrao_segundos:90,modo_carga:'total',peso_barra:20,nota_fixa:'',como_fazer:'',musculos:'Peito',origem:'manual'}
  const b={...a,id:crypto.randomUUID()}

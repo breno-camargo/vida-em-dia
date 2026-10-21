@@ -4,14 +4,14 @@ import { banco, tabela } from './banco'
 import { iniciarBanco } from './configuracoes'
 import { criarRegistro } from './repositorio'
 import { dataMedida } from './medidas'
-import { controle, filaBanco } from '../sincronizacao/armazenamento'
+import { controle } from '../sincronizacao/armazenamento'
 import { prepararPerfilCadastro, salvarPerfilCadastro, validarPerfilCadastro, descartarPerfilCadastro } from './perfilCadastro'
 
 const usuario = { id: 'teste', email: 'teste@example.com' }
 const perfil = () => ({ email: usuario.email, nome: 'Breno', altura_cm: 175, medida: { ...criarRegistro(), data: dataMedida(), peso: 77.83, cintura: 83.75 } })
 beforeEach(async () => {
   descartarPerfilCadastro(); await banco.delete(); await banco.open(); await iniciarBanco()
-  await filaBanco.delete(); await filaBanco.open()
+  
 })
 async function conectar() {
   await controle.put({ chave: 'usuario', valor: usuario.id })

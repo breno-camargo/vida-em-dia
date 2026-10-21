@@ -1,4 +1,6 @@
-import Dexie, { type Table } from 'dexie'
+import { type Table } from 'dexie'
+import { banco, observarBanco } from '../dados/banco'
+export { banco as filaBanco } from '../dados/banco'
 import type { NomeSync, Remoto } from './motor'
 
 export interface Pendente { chave:string; usuario:string; tabela:NomeSync; registro:Remoto; assinatura:string }
@@ -6,13 +8,15 @@ interface Controle { chave:string; valor:string }
 export interface ConflitoData {
   chave:string; usuario:string; tabela:NomeSync; data:string; local:Remoto; remoto:Remoto
 }
-export const filaBanco = new Dexie('vida-em-dia-sincronizacao')
-filaBanco.version(1).stores({ pendencias:'chave, usuario, tabela', recibos:'chave', controle:'chave' })
-filaBanco.version(2).stores({ conflitos:'chave, usuario, tabela, data' })
-export const pendencias = filaBanco.table('pendencias') as Table<Pendente,string>
-export const recibos = filaBanco.table('recibos') as Table<{chave:string;assinatura:string},string>
-export const controle = filaBanco.table('controle') as Table<Controle,string>
-export const conflitos = filaBanco.table('conflitos') as Table<ConflitoData,string>
+export let pendencias: Table<Pendente,string>
+export let recibos: Table<{chave:string;assinatura:string},string>
+export let controle: Table<Controle,string>
+export let conflitos: Table<ConflitoData,string>
+function atualizarTabelas() {
+ pendencias = banco.table('pendencias'); recibos = banco.table('recibos'); controle = banco.table('controle'); conflitos = banco.table('conflitos')
+}
+atualizarTabelas()
+observarBanco(atualizarTabelas)
 export async function pausaRestauracao(){ return (await controle.get('restauracao'))?.valor }
 export const mensagemPausa = 'Sincronização pausada após restaurar o backup. Revise a retomada para mesclar com a conta.'
 
