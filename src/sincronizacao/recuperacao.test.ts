@@ -122,7 +122,7 @@ test.each(['local','remoto'] as const)('resolva com escolha %s, preserve o conte
   expect(ativos).toHaveLength(1);expect(ativos[0].id).toBe(c.remoto.id)
   expect(ativos[0].passos).toBe(escolha==='local'?200:100)
   expect(removidos).toHaveLength(1);expect(removidos[0].passos).toBe(escolha==='local'?100:200)
-  expect((await exportarBackup(false)).tabelas.atividade_diaria).toHaveLength(2)
+  expect((await exportarBackup(false,true)).tabelas.atividade_diaria).toHaveLength(2)
   expect([...n.tabelas.atividade_diaria.values()].filter(r=>!r.apagado_em)).toHaveLength(1)
   expect(await listarConflitos(usuario)).toHaveLength(0);expect(await contarPendencias(usuario)).toBe(0)
 })

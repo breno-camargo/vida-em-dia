@@ -7,10 +7,16 @@ export interface Backup { app:'vida-em-dia'; versao:1; schema:number; criado_em:
 export const blobParaJson = async (blob:Blob) => {
  const bytes=new Uint8Array(await blob.arrayBuffer());let texto='';for(let i=0;i<bytes.length;i+=8192)texto+=String.fromCharCode(...bytes.subarray(i,i+8192));return {tipo:'blob',mime:blob.type,base64:btoa(texto)}
 }
-export async function exportarBackup(fotos=true):Promise<Backup>{
+export async function exportarBackup(fotos=true,incluirRemovidos=false):Promise<Backup>{
  const linhas:Record<string,LinhaBackup[]>={}
  const dono = identidadeAtual(), geracao = geracaoAtual()
- await banco.transaction('r',tabelasDados(),async()=>{for(const t of tabelasDados())linhas[t.name]=await t.filter(r=>r.user_id===dono).toArray()})
+ await banco.transaction('r',tabelasDados(),async()=>{for(const t of tabelasDados())linhas[t.name]=await t.filter(r=>r.user_id===dono&&(incluirRemovidos||r.apagado_em===null)).toArray()})
+ if(!incluirRemovidos){
+  // Não ressuscitar pais removidos nem exportar dependentes com vínculos inválidos.
+  const refs:Record<string,[string,string][]>={ficha_exercicios:[['ficha_id','fichas'],['exercicio_id','exercicios']],treinos:[['ficha_id','fichas']],treino_exercicios:[['treino_id','treinos'],['exercicio_id','exercicios']],series_treino:[['treino_id','treinos'],['exercicio_id','exercicios']],cardio_sessoes:[['treino_id','treinos'],['exercicio_id','exercicios']],fotos:[['medida_id','medidas_corporais'],['exercicio_id','exercicios']],refeicoes_dia:[['foto_id','fotos'],['alimento_id','alimentos_favoritos']]}
+  let mudou=true
+  while(mudou){mudou=false;for(const[nome,vinculos]of Object.entries(refs)){const antes=linhas[nome];const ids=vinculos.map(([campo,pai])=>[campo,new Set(linhas[pai].map(r=>r.id))] as const);linhas[nome]=antes.filter(r=>ids.every(([campo,pais])=>r[campo]===undefined||pais.has(String(r[campo]))));if(antes.length!==linhas[nome].length)mudou=true}}
+ }
  for(const foto of linhas.fotos??[]){for(const campo of ['imagem_local','miniatura_local']){const valor=foto[campo];if(valor instanceof Blob){if(fotos)foto[campo]=await blobParaJson(valor);else delete foto[campo]}}}
  if(geracao!==geracaoAtual())throw new Error('A identidade mudou. Exportação cancelada.')
  return {app:'vida-em-dia',versao:1,schema:banco.verno,criado_em:new Date().toISOString(),fotos_incluidas:fotos,tabelas:linhas}
@@ -74,7 +80,16 @@ export async function importarBackup(arquivo:unknown,modo:'mesclar'|'substituir'
  }
  await banco.transaction('rw',tabelasDados(),async()=>{
   if(verificarAntes)await verificarAntes()
-  if(modo==='substituir'){for(const t of tabelasDados())await t.clear();for(const t of tabelasDados())await t.bulkPut(dados[t.name]);return}
+  if(modo==='substituir'){
+   for(const t of tabelasDados()){
+    const removidos=await t.filter(r=>r.user_id===dono&&r.apagado_em!==null).toArray()
+    const preservados=new Map(removidos.map(r=>[r.id,r]))
+    const restaurados=dados[t.name].map(r=>{const local=preservados.get(r.id);return local&&Date.parse(local.atualizado_em)>=Date.parse(r.atualizado_em)?local:r})
+    await t.clear();await t.bulkPut(restaurados)
+    await t.bulkPut(removidos.filter(r=>!restaurados.some(s=>s.id===r.id)))
+   }
+   return
+  }
   for(const t of tabelasDados()){for(const recebido of dados[t.name]){
    let r={...recebido},local=await t.get(r.id)
    if(t.name==='configuracoes'){const principal=await t.where('chave').equals(String(r.chave)).first();if(principal){local=principal;r={...r,id:principal.id}}}

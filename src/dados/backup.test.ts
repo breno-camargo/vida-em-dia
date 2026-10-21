@@ -11,7 +11,7 @@ test('restaure JSON completo com fotos e registros excluídos',async()=>{
  const foto={...criarRegistro(),tipo:'maquina' as const,data:'2026-10-14',angulo:null,exercicio_id:ex.id,tamanho_bytes:3,imagem_local:new Blob(['abc'],{type:'image/jpeg'}),miniatura_local:new Blob(['xy'],{type:'image/jpeg'})}
  await tabela('fotos').add(foto)
  await tabela('medidas_corporais').add({...criarRegistro(),data:'2026-01-01',peso:80,apagado_em:'2026-10-01T12:00:00Z'})
- const b=JSON.parse(JSON.stringify(await exportarBackup(true)))
+ const b=JSON.parse(JSON.stringify(await exportarBackup(true,true)))
  await tabela('exercicios').clear();await tabela('fotos').clear();await tabela('medidas_corporais').clear()
  await importarBackup(b,'substituir')
  expect(await tabela('exercicios').count()).toBe(64)
