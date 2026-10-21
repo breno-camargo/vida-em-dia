@@ -1,1 +1,51 @@
-{"framework":"vite","buildCommand":"npm run typecheck && npm run lint && npm run build","outputDirectory":"dist","headers":[{"source":"/sw.js","headers":[{"key":"Cache-Control","value":"no-cache"}]}],"rewrites":[{"source":"/((?!.*\\.).*)","destination":"/index.html"}]}
+{
+  "framework": "vite",
+  "buildCommand": "npm run typecheck && npm run lint && npm run build",
+  "outputDirectory": "dist",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy-Report-Only",
+          "value": "default-src 'self'; script-src 'self'; connect-src 'self' https://ofzixbpliejnaiyuspti.supabase.co wss://ofzixbpliejnaiyuspti.supabase.co; img-src 'self' data: blob:; style-src 'self'; style-src-attr 'unsafe-inline'; media-src 'self' data: blob:; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), accelerometer=(), gyroscope=(), magnetometer=(), payment=(), usb=(), serial=(), hid=(), bluetooth=(), midi=(), display-capture=(), xr-spatial-tracking=(), fullscreen=(), clipboard-read=(), clipboard-write=(self), screen-wake-lock=(self), web-share=(self), autoplay=(self)"
+        }
+      ]
+    },
+    {
+      "source": "/sw.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/((?!.*\\.).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
