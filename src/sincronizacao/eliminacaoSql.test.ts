@@ -1,8 +1,14 @@
+import 'fake-indexeddb/auto'
 import { PGlite } from '@electric-sql/pglite'
 import { afterAll, beforeAll, expect, test } from 'vitest'
 import base from '../../supabase/migrations/202610140001_conta_sincronizacao.sql?raw'
 import sql from '../../supabase/migrations/202610210001_eliminacao.sql?raw'
 import { RETENCAO_REMOVIDOS_DIAS } from '../dados/retencao'
+import { abrirIdentidade, banco, tabela } from '../dados/banco'
+import { iniciarBanco } from '../dados/configuracoes'
+import { criarRegistro } from '../dados/repositorio'
+import { exportarBackup, importarBackup } from '../dados/backup'
+import { executarSync, vincular, EliminadoRemoto, type Transporte, type Remoto } from './motor'
 const pg=new PGlite(),a='11111111-1111-4111-8111-111111111111',b='22222222-2222-4222-8222-222222222222'
 beforeAll(async()=>{
  await pg.exec(`create role anon;create role authenticated;create role service_role bypassrls;create schema auth;create schema storage;
@@ -32,6 +38,9 @@ test('RPC invoker, RLS, tombstone mínimo e trigger rejeitam update/upsert de qu
  await expect(pg.exec(`delete from fichas`)).rejects.toThrow()
  await pg.query('select public.vida_em_dia_eliminar($1,$2)',['fichas','eliminar'])
  expect((await pg.query<{prosecdef:boolean}>(`select prosecdef from pg_proc where proname='vida_em_dia_eliminar'`)).rows[0].prosecdef).toBe(false)
+ const colunas=(await pg.query<{is_nullable:string}>(`select is_nullable from information_schema.columns where table_schema='public' and table_name='fichas' and column_name in ('id','user_id','criado_em','atualizado_em','dados')`)).rows
+ expect(colunas).toHaveLength(5);expect(colunas.every(c=>c.is_nullable==='NO')).toBe(true)
+ await expect(pg.exec('delete from vida_em_dia_remocoes_storage')).rejects.toThrow()
 })
 test('prazo SQL/cliente iguais, purga conteúdo e enfileira objeto sem tocar storage.objects',async()=>{
  await entrar(a);await enviar('purga')
@@ -53,4 +62,25 @@ test('tentativas atômicas, controles com RLS sem políticas, JWT antigo bloquea
  expect((await pg.query(`select * from pg_policies where tablename in ('vida_em_dia_tentativas_exclusao','vida_em_dia_exclusao_conta')`)).rows).toHaveLength(0)
  await pg.query('delete from auth.users where id=$1',[b]);await entrar(b)
  await expect(enviar('jwt-antigo',b)).rejects.toThrow('foreign key')
+})
+test('backup antigo em banco limpo + sync real com Postgres simulado termina eliminado, inclusive edição pendente rejeitada',async()=>{
+ await entrar(a);await enviar('restaurado')
+ await abrirIdentidade(a);await banco.delete();await banco.open();await iniciarBanco()
+ await tabela('fichas').put({...criarRegistro(),id:'restaurado',nome:'Conteúdo antigo',ordem:1})
+ const backup=await exportarBackup()
+ await pg.query('select public.vida_em_dia_eliminar($1,$2)',['fichas','restaurado'])
+ await banco.delete();await banco.open();await importarBackup(backup,'substituir');await vincular(a)
+ await tabela('fichas').update('restaurado',{atualizado_em:'2999-01-01T00:00:00Z'})
+ let ocultarUmaVez=true,rejeitados=0
+ const transporte:Transporte={
+  async baixar(nome,depois){const rows=(await pg.query<Remoto>(`select * from public.${nome} where id>$1 order by id limit 200`,[depois])).rows;if(nome==='fichas'&&ocultarUmaVez){ocultarUmaVez=false;return rows.filter(r=>r.id!=='restaurado')}return rows},
+  async enviar(nome,registros){
+   try{await pg.query('select public.vida_em_dia_enviar($1,$2::jsonb)',[nome,JSON.stringify(registros)])}
+   catch(e){if((e as {code?:string}).code==='P0002'){rejeitados++;throw new EliminadoRemoto()}throw e}
+  },
+ }
+ await executarSync(a,transporte)
+ expect(rejeitados).toBe(1)
+ const r=await banco.table('fichas').get('restaurado');expect(r.eliminado_em).toBeTruthy();expect(r.nome).toBeUndefined();expect(Object.keys(r)).toHaveLength(4)
+ expect(await banco.table('pendencias').filter(p=>p.registro.id==='restaurado').count()).toBe(0)
 })

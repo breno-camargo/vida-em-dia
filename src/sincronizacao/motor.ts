@@ -175,7 +175,7 @@ async function receber(usuario:string,nome:NomeSync,linhas:Remoto[]){
       if(remoto.user_id!==usuario||remoto.dados.id!==remoto.id||remoto.dados.user_id!==usuario||!Number.isFinite(Date.parse(remoto.atualizado_em)))throw new Error('Resposta de sincronização inválida.')
       let local=await t.get(remoto.id)
       if(eliminado(remoto.dados)){
-        if(local&&!eliminado(local))await eliminarNaTransacao(nome,local.id,remoto.dados.eliminado_em)
+        if(local)await eliminarNaTransacao(nome,local.id,remoto.dados.eliminado_em)
         else if(!local)await t.put(remoto.dados)
         continue
       }

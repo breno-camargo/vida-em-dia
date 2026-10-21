@@ -5,6 +5,10 @@ const chave = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY?.trim() || import.me
 export const supabase = url && chave ? createClient(url, chave, {
   auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
 }) : null
+export function removerSessaoLocal(){
+ supabase?.auth.stopAutoRefresh()
+ if(url){const base=`sb-${new URL(url).hostname.split('.')[0]}-auth-token`;localStorage.removeItem(base);localStorage.removeItem(base+'-code-verifier')}
+}
 
 // Mesma chave padrão do SDK. Leitura local: não pede refresh nem validação de rede.
 export function sessaoLocal(): { user: User } | null {

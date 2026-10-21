@@ -1,7 +1,8 @@
 import { useSyncExternalStore } from 'react'
 import { liveQuery } from 'dexie'
 import type { User } from '@supabase/supabase-js'
-import { supabase, sessaoLocal } from './cliente'
+import { supabase, sessaoLocal, removerSessaoLocal } from './cliente'
+import { apagarBancoAtual, excluirContaConfirmada } from '../dados/limpezaAparelho'
 import { abrirIdentidade, identidadeAtual } from '../dados/banco'
 import { iniciarBanco } from '../dados/configuracoes'
 import { iniciarBiblioteca } from '../dados/biblioteca'
@@ -21,6 +22,7 @@ export function usuarioAtual(){return estado.usuario}
 export function continuarSemConta(){localStorage.setItem('vida-em-dia:visitante-ativo','sim');reiniciarIdentidade()}
 export function definirRecuperacao(recuperando:boolean){alterar({recuperando})}
 let ativo=false
+let encerrando=false
 export async function iniciarConta(){
  if(ativo)return
  ativo=true
@@ -36,6 +38,7 @@ export async function iniciarConta(){
  }
  // Sessão inicial resolvida localmente, inclusive expirada offline.
  supabase.auth.onAuthStateChange((evento,sessao)=>{
+  if(encerrando)return
   if(!navigator.onLine&&!sessao?.user&&estado.usuario)return
   if(['SIGNED_IN','SIGNED_OUT','INITIAL_SESSION','PASSWORD_RECOVERY'].includes(evento)){
    const usuarioEvento=sessao?.user??null
@@ -116,4 +119,36 @@ export async function sairConta(){
  const {error}=await supabase!.auth.signOut({scope:'local'})
  if(error)throw new Error('Não foi possível sair. Tente novamente.')
  alterar({usuario:null,vinculado:false,visitante:false,recuperando:false,mensagem:'Sessão encerrada. Os registros continuam neste aparelho.'})
+}
+async function concluirLimpeza(){
+ try{await supabase?.auth.signOut({scope:'local'})}catch{/* Auth já pode ter sido eliminado; limpar só a sessão local abaixo. */}
+ removerSessaoLocal();localStorage.removeItem('vida-em-dia:visitante-ativo');reiniciarIdentidade()
+}
+export async function sairApagandoDados(aceitarPendencias:boolean){
+ if(estado.ocupado)throw new Error('Aguarde a sincronização terminar.')
+ alterar({ocupado:true});encerrando=true
+ try{
+  if(estado.usuario&&estado.vinculado&&!await pausaRestauracao())await prepararFila(estado.usuario.id)
+  await apagarBancoAtual(true,aceitarPendencias)
+  await concluirLimpeza()
+ }finally{encerrando=false;alterar({ocupado:false})}
+}
+export async function excluirMinhaConta(senha:string,confirmacao:string){
+ if(!supabase||!estado.usuario||estado.ocupado)throw new Error('Entre na conta e aguarde a sincronização terminar.')
+ if(confirmacao!=='EXCLUIR MINHA CONTA')throw new Error('Digite EXCLUIR MINHA CONTA.')
+ const usuario=estado.usuario.id
+ alterar({ocupado:true});encerrando=true
+ try{
+  await excluirContaConfirmada(async()=>{
+   const {data,error}=await supabase!.functions.invoke('excluir-conta',{body:{senha,confirmacao}})
+   if(identidadeAtual()!==usuario)throw new Error('A sessão mudou. Limpeza local cancelada.')
+   if(error){
+    let detalhe:{etapa?:string;erro?:string}|undefined
+    try{detalhe=await error.context?.json()}catch{/* Não mostrar detalhes internos do SDK. */}
+    throw new Error(detalhe?.erro??'Não foi possível confirmar a exclusão. Ela pode estar incompleta; seus dados locais permanecem. Tente novamente.')
+   }
+   return data
+  })
+  await concluirLimpeza()
+ }finally{encerrando=false;alterar({ocupado:false})}
 }

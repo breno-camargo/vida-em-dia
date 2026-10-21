@@ -7,9 +7,10 @@ const dependencias:Record<string,[string,string][]>={fichas:[['ficha_exercicios'
 // Deve ser chamada sob o lock e uma transação que inclua todas as tabelas.
 export async function eliminarNaTransacao(nome:string,id:string,quando=new Date().toISOString()) {
  const dono=identidadeAtual(),t=banco.table(nome),r=await t.get(id)
- if(!r||r.user_id!==dono||eliminado(r))return
+ if(!r||r.user_id!==dono)return
  if(nome==='configuracoes')throw new Error('Para eliminar seu perfil, use Excluir conta ou apagar dados deste aparelho.')
  for(const[filha,campo]of dependencias[nome]??[])for(const filho of await banco.table(filha).filter(r=>r[campo]===id).toArray())await eliminarNaTransacao(filha,filho.id,quando)
+ if(eliminado(r))return
  if(nome==='fotos'&&typeof r.caminho_storage==='string'&&dono){
   if(!r.caminho_storage.startsWith(dono+'/'))throw new Error('Caminho de foto de outro proprietário.')
   await banco.table('remocoes_storage').put({caminho:r.caminho_storage,usuario:dono,tentativas:0})
@@ -33,9 +34,10 @@ export async function purgarRemovidos(agora=Date.now()) {
  }))
 }
 export async function processarRemocoesStorage(usuario:string,remover:(caminho:string)=>Promise<void>) {
- for(const item of await banco.table<RemocaoObjeto>('remocoes_storage').toArray()){
-  if(usuario!==identidadeAtual()||item.usuario!==usuario||!item.caminho.startsWith(usuario+'/'))throw new Error('A identidade mudou. Remoção cancelada.')
-  try{await remover(item.caminho);if(usuario!==identidadeAtual())throw new Error('A identidade mudou.');await banco.table('remocoes_storage').delete(item.caminho)}
-  catch{await banco.table('remocoes_storage').update(item.caminho,{tentativas:item.tentativas+1});throw new Error('Conteúdo local eliminado. Fotos remotas aguardam nova tentativa de remoção.')}
+ const origem=banco,fila=origem.table<RemocaoObjeto>('remocoes_storage')
+ for(const item of await fila.toArray()){
+  if(banco!==origem||usuario!==identidadeAtual()||item.usuario!==usuario||!item.caminho.startsWith(usuario+'/'))throw new Error('A identidade mudou. Remoção cancelada.')
+  try{await remover(item.caminho);if(banco!==origem||usuario!==identidadeAtual())throw new Error('A identidade mudou.');await fila.delete(item.caminho)}
+  catch{if(banco===origem&&origem.isOpen())await fila.update(item.caminho,{tentativas:item.tentativas+1});throw new Error('Conteúdo local eliminado. Fotos remotas aguardam nova tentativa de remoção.')}
  }
 }

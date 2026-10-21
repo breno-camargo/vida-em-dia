@@ -1,4 +1,7 @@
 /* Contrato visual compartilhado. Importado após os estilos específicos. */
+.botao-destrutivo { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 12px 16px; border: 1px solid #60473e; border-radius: 12px; background: #241e1a; color: #edb6a7; font-size: 13px; font-weight: 550; }
+.botao-destrutivo:hover { background: #30231e; }
+.botao-destrutivo:disabled { opacity: .5; cursor: not-allowed; }
 .confirmacao-app { display: grid; gap: 12px; }
 .confirmacao-app > p { margin: 0 0 8px; color: #bacabd; font-size: 14px; line-height: 1.7; }
 .app .confirmacao-app > button { width: 100%; margin: 0; justify-content: center; }

@@ -1,5 +1,6 @@
 import { tiposCardio } from './tiposCardio'
 import { eliminado } from './retencao'
+import { eliminarNaTransacao } from './eliminacao'
 import { validarDominioBackup, validarReferenciasBackup } from './validacaoBackup'
 import { banco, tabela, tabelasDados, identidadeAtual, geracaoAtual } from './banco'
 import { comExclusaoSync, controle, filaBanco, pendencias, recibos, conflitos } from '../sincronizacao/armazenamento'
@@ -84,7 +85,7 @@ export async function importarBackup(arquivo:unknown,modo:'mesclar'|'substituir'
    await pendencias.clear();await recibos.clear();await conflitos.clear()
   })
  }
- await banco.transaction('rw',tabelasDados(),async()=>{
+ await banco.transaction('rw',banco.tables,async()=>{
   if(verificarAntes)await verificarAntes()
   if(modo==='substituir'){
    for(const t of tabelasDados()){
@@ -94,6 +95,7 @@ export async function importarBackup(arquivo:unknown,modo:'mesclar'|'substituir'
     await t.clear();await t.bulkPut(restaurados)
     await t.bulkPut(removidos.filter(r=>!restaurados.some(s=>s.id===r.id)))
    }
+   for(const t of tabelasDados().filter(t=>t.name!=='configuracoes'))for(const r of await t.filter(eliminado).toArray())await eliminarNaTransacao(t.name,r.id,r.eliminado_em)
    return
   }
   for(const t of tabelasDados()){for(const recebido of dados[t.name]){
@@ -111,6 +113,7 @@ export async function importarBackup(arquivo:unknown,modo:'mesclar'|'substituir'
     if(mudou)await t.put(enriquecida)
    }
   }}
+  for(const t of tabelasDados().filter(t=>t.name!=='configuracoes'))for(const r of await t.filter(eliminado).toArray())await eliminarNaTransacao(t.name,r.id,r.eliminado_em)
  })
  })
 }

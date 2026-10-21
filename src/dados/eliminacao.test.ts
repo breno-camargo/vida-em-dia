@@ -46,6 +46,19 @@ test('purga exata após 30 dias, sem purgar remoção recente ou de outro propri
  expect((await tabela('fichas').get('recente'))?.nome).toBe('Teste')
  expect((await tabela('fichas').get('outro'))?.nome).toBe('Teste')
 })
+test('abrir a identidade purga antes de devolver o banco às telas',async()=>{
+ await tabela('fichas').put({...criarRegistro(),id:'abrir',nome:'Não deve permanecer',ordem:1,apagado_em:new Date(Date.now()-31*86400000).toISOString()})
+ banco.close();await abrirIdentidade(usuario)
+ const r=await banco.table('fichas').get('abrir');expect(r.eliminado_em).toBeTruthy();expect(Object.keys(r)).toHaveLength(4)
+ const b=await exportarBackup(true,true);await importarBackup(b,'mesclar');expect((await banco.table('fichas').get('abrir')).nome).toBeUndefined()
+})
+test('retry de Storage preserva só o objeto que falhou após sucesso parcial',async()=>{
+ await banco.table('remocoes_storage').bulkPut([{caminho:usuario+'/a.jpg',usuario,tentativas:0},{caminho:usuario+'/b.jpg',usuario,tentativas:0}])
+ await expect(processarRemocoesStorage(usuario,async caminho=>{if(caminho.endsWith('/b.jpg'))throw new Error('rede')})).rejects.toThrow('aguardam')
+ expect((await banco.table('remocoes_storage').toArray()).map(r=>r.caminho)).toEqual([usuario+'/b.jpg'])
+ const chamadas:string[]=[];await processarRemocoesStorage(usuario,async p=>{chamadas.push(p)})
+ expect(chamadas).toEqual([usuario+'/b.jpg'])
+})
 test('segundo aparelho e banco limpo restaurado descartam edição offline diante de eliminação remota',async()=>{
  const r={...criarRegistro(),nome:'Ficha',ordem:1};await tabela('fichas').put(r)
  const backup=await exportarBackup();await eliminarRegistro('fichas',r.id,true)

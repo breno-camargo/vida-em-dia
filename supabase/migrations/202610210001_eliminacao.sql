@@ -4,7 +4,7 @@ create function public.vida_em_dia_retencao_dias() returns integer language sql 
 create table public.vida_em_dia_remocoes_storage(user_id uuid not null references auth.users(id) on delete cascade,caminho text not null,primary key(user_id,caminho),check(split_part(caminho,'/',1)=user_id::text));
 alter table public.vida_em_dia_remocoes_storage enable row level security;
 revoke all on public.vida_em_dia_remocoes_storage from public,anon,authenticated;
-grant select,insert,delete on public.vida_em_dia_remocoes_storage to authenticated;
+grant select,insert on public.vida_em_dia_remocoes_storage to authenticated;
 create policy dono_remocao on public.vida_em_dia_remocoes_storage to authenticated using(user_id=(select auth.uid())) with check(user_id=(select auth.uid()));
 create table public.vida_em_dia_exclusao_conta(user_id uuid primary key references auth.users(id) on delete cascade,etapa text not null default 'iniciada');
 alter table public.vida_em_dia_exclusao_conta enable row level security;
@@ -221,6 +221,24 @@ end $$;
 revoke all on function public.vida_em_dia_tentar_exclusao(uuid),public.vida_em_dia_apagar_linhas_conta(uuid),public.vida_em_dia_purgar() from public,anon,authenticated;
 grant execute on function public.vida_em_dia_tentar_exclusao(uuid),public.vida_em_dia_apagar_linhas_conta(uuid),public.vida_em_dia_purgar() to service_role;
 grant all on public.vida_em_dia_tentativas_exclusao,public.vida_em_dia_exclusao_conta,public.vida_em_dia_remocoes_storage to service_role;
+-- Privilegios administrativos explicitos, nunca para authenticated.
+grant select,insert,update,delete on public.exercicios to service_role;
+grant select,insert,update,delete on public.fichas to service_role;
+grant select,insert,update,delete on public.ficha_exercicios to service_role;
+grant select,insert,update,delete on public.treinos to service_role;
+grant select,insert,update,delete on public.treino_exercicios to service_role;
+grant select,insert,update,delete on public.series_treino to service_role;
+grant select,insert,update,delete on public.cardio_sessoes to service_role;
+grant select,insert,update,delete on public.medidas_corporais to service_role;
+grant select,insert,update,delete on public.atividade_diaria to service_role;
+grant select,insert,update,delete on public.feriados to service_role;
+grant select,insert,update,delete on public.refeicoes_dia to service_role;
+grant select,insert,update,delete on public.alimentos_favoritos to service_role;
+grant select,insert,update,delete on public.combos_refeicao to service_role;
+grant select,insert,update,delete on public.agua_dia to service_role;
+grant select,insert,update,delete on public.consumo_diario_meta to service_role;
+grant select,insert,update,delete on public.configuracoes to service_role;
+grant select,insert,update,delete on public.fotos to service_role;
 -- Nao instalar extensoes implicitamente. Aplicacao deve conferir pg_cron no STAGING.
 -- O job SQL purga conteudo; o endpoint agendado remove objetos pela Storage API.
 do $$begin
