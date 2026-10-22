@@ -1,3 +1,16 @@
+# Retomada — 22/10/2026
+
+Estado mais recente, prevalece sobre notas históricas abaixo:
+
+- Branch `test`, commit `6faed6a`, enviado a origin/test com autorização. Main não foi alterada. Árvore estava limpa antes desta nota.
+- Preparação de produção entregue: `20e3008` (runtime exige EXPECTED_PROJECT_REF, falha fechada) e `6faed6a` (runbook, SQL de leitura e checklist). Ver `revisao/RUNBOOK-PRODUCAO.md` e `revisao/CHECKLIST-PRODUCAO.md`. Nenhuma migração ou Edge Function aplicada remotamente.
+- CI Ubuntu aprovado no commit enviado: instalação `npm ci --ignore-scripts`, audit com zero vulnerabilidades, tipos, lint, 261 testes em 42 arquivos e build. Evidência: https://github.com/breno-camargo/vida-em-dia/actions/runs/39719455179
+- Preview publicado: https://vida-em-9babr9lwm-breno-camargos-projects.vercel.app . Perfil limpo redireciona ao login da Vercel; não foi possível carregar o app para teste funcional. Console/headers observados eram da página de login, não do app.
+- Local: Node v24.18.0 / npm 11.16.0. `npm ci` falha também fora do sandbox com EPERM/unlink em `node_modules/@rolldown/binding-win32-x64-msvc/rolldown-binding.win32-x64-msvc.node`. Instalação interrompida deixou tsc/vite indisponíveis. Nenhuma tentativa de correção, remoção de node_modules ou alteração do lockfile.
+- Havia servidor Vite preexistente na porta 5173, possível responsável pelo bloqueio; foi preservado. PIDs históricos 1080/6344: reconferir antes de agir. Navegadores headless criados para o teste foram encerrados.
+- Próximo passo: abrir Preview autenticado na Vercel, em armazenamento de teste isolado. Conferir console e headers reais; visitante vazio (sem registros pessoais) com aviso de visibilidade; criar registro/recarregar; backup criptografado ida e volta excluindo removidos por padrão; perfil separado com legado fictício, sem importação automática. Esses fluxos permanecem NÃO TESTADOS no navegador.
+- Não promover à main sem evidência de navegador e aprovação. Não desativar proteção do Preview, usar credenciais, aplicar SQL, fazer deploy de funções ou configurar produção implicitamente. Produção Supabase ainda depende do runbook e homologação A/B/anônimo; estado remoto deve ser reconfirmado.
+
 # APP-01 implementado localmente — 21/10/2026
 
 Ver revisao/APP-01-ISOLAMENTO.md. Bancos separados por UUID/visitante, fila incorporada por identidade, bootstrap local/offline, troca com fechamento e aviso entre abas, filtro no repositório e importação legada explícita filtrada. Legado real preservado; nada importado automaticamente. Backup JSON força proprietário da identidade atual. Visitante não migra para conta.
