@@ -203,6 +203,15 @@
   animation: aparecer-controle var(--movimento-curto) ease-out;
 }
 .app :is(.seta-config, .seta-exercicio) { transition: transform var(--movimento-curto) ease-out; }
+.backup-protecao { display: flex; align-items: flex-start; gap: 10px; padding: 14px; border: 1px solid #3a5040; border-radius: 12px; background: #203225; }
+.backup-protecao > svg { flex-shrink: 0; color: #bcec86; }
+.backup-protecao strong { font-size: 13px; color: #e5f0e5; }
+.backup-config .backup-protecao p { margin: 5px 0 0; font-size: 12px; line-height: 1.6; color: #a4b8aa; }
+.backup-config .opcao-fotos-backup { padding-block: 8px; border-bottom: 1px solid #304235; }
+.backup-outros-formatos { border-top: 1px solid #304235; padding-top: 4px; }
+.backup-outros-formatos > summary { min-height: 48px; align-content: center; cursor: pointer; font-size: 12px; color: #b9cec0; }
+.backup-formatos-acoes { display: grid; gap: 8px; margin-top: 12px; }
+.backup-formatos-acoes > button { display: flex; justify-content: center; align-items: center; gap: 8px; }
 @keyframes aparecer-controle { from { opacity: .7; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
   .app :is(.abas-treino, .abas-medidas, .abas-catalogo, .alternador-seletor) > button,
