@@ -21,18 +21,19 @@ export function PrivacidadeDados(){
  const executar=async(f:()=>Promise<void>)=>{setOcupado(true);setErro('');try{await f()}catch(e){setErro(e instanceof Error?e.message:'Não foi possível concluir.')}finally{setOcupado(false);setSenha('')}}
  const abrir=(valor:typeof acao)=>{setAcao(valor);setConfirmacao('');setAceitar(false);setErro('');setSenha('')}
  const fechar=()=>{if(!ocupado){setAcao(undefined);setSenha('');setConfirmacao('')}}
- return <section className="painel"><h2>Privacidade e eliminação</h2>
-  <p>Remover permite Desfazer. Eliminar definitivamente apaga o conteúdo e as fotos associadas, sem Desfazer. Itens removidos são purgados após {RETENCAO_REMOVIDOS_DIAS} dias; no aparelho, isso acontece ao abrir seu espaço.</p>
-  <details><summary>Revisar itens removidos ({removidos?.length??0})</summary>
+ return <section className="painel privacidade-dados"><h2>Privacidade e dados</h2>
+  <p className="nota-resumo">Revise o que removeu ou gerencie os dados guardados neste navegador.</p>
+  <details className="privacidade-grupo"><summary><span>Itens removidos<small>Revisar e eliminar definitivamente</small></span><span className="privacidade-contagem">{removidos?.length??0}</span></summary>
+   <p className="nota-resumo">Remover permite Desfazer. Eliminar apaga o conteúdo e as fotos, sem volta. Após {RETENCAO_REMOVIDOS_DIAS} dias, o conteúdo dos removidos é eliminado automaticamente; neste aparelho, ao abrir seu espaço.</p>
    {!removidos?.length&&<p>Nenhum item removido aguardando eliminação.</p>}
    {removidos?.map(r=><div className="formulario" key={r.tabela+'/'+r.id}><p>{r.nome} · {r.tabela}</p><button className="botao-destrutivo" disabled={ocupado||conta.ocupado} onClick={()=>{setItem(r);abrir('registro')}}>Eliminar definitivamente</button></div>)}
   </details>
-  <div className="formulario">
+  <div className="privacidade-grupo formulario"><h3>Limpar este aparelho</h3><p className="nota-resumo">Apaga os dados do perfil atual neste navegador. Sua conta e os dados na nuvem permanecem.</p>
    <button className="botao-secundario" disabled={ocupado||conta.ocupado} onClick={()=>void executar(async()=>{setPendentes(await pendenciasLimpeza());abrir('aparelho')})}>Sair e apagar dados deste aparelho</button>
-   <button className="botao-destrutivo" disabled={ocupado||conta.ocupado} onClick={()=>abrir('legado')}>Apagar banco legado deste navegador</button>
-   {conta.usuario&&<button className="botao-destrutivo" disabled={ocupado||conta.ocupado} onClick={()=>abrir('conta')}>Excluir minha conta definitivamente</button>}
   </div>
-  <p className="nota-resumo">Arquivos exportados, backups e logs do provedor e dados em outros aparelhos não são apagados por uma limpeza deste aparelho. Uma exclusão na conta chega aos outros aparelhos ao sincronizar. Não controla cópias externas.</p>
+  <details className="privacidade-grupo"><summary>Dados antigos deste navegador</summary><p className="nota-resumo">O armazenamento antigo (legado) fica separado dos perfis atuais. Apague apenas se não precisar mais desses registros.</p><button className="botao-destrutivo largura-total" disabled={ocupado||conta.ocupado} onClick={()=>abrir('legado')}>Apagar dados antigos</button></details>
+  {conta.usuario&&<div className="privacidade-grupo formulario"><h3>Excluir conta</h3><p className="nota-resumo">Encerra seu acesso e elimina os registros e arquivos da conta. Esta ação é irreversível.</p><button className="botao-destrutivo" disabled={ocupado||conta.ocupado} onClick={()=>abrir('conta')}>Excluir minha conta definitivamente</button></div>}
+  <details className="privacidade-grupo"><summary>O que não é apagado?</summary><p className="nota-resumo">Limpar este aparelho não apaga arquivos exportados, backups e logs do provedor nem dados em outros aparelhos. Exclusões na conta chegam aos outros aparelhos ao sincronizar, mas não apagam cópias externas.</p></details>
   {aviso&&<p role="status">{aviso}</p>}{erro&&!acao&&<p className="erro" role="alert">{erro}</p>}
   {acao==='backup'?<Painel titulo="Guardar backup antes de excluir" fechar={fechar}><BackupConfiguracoes/></Painel>:acao&&<Painel titulo={acao==='conta'?'Excluir conta':acao==='aparelho'?'Apagar dados deste aparelho':acao==='legado'?'Apagar legado':'Eliminar definitivamente'} fechar={fechar}>
    <div className="formulario">
