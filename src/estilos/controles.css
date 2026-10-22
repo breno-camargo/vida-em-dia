@@ -1,5 +1,13 @@
 /* Contrato visual compartilhado. Importado após os estilos específicos. */
-.botao-destrutivo { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 12px 16px; border: 1px solid #60473e; border-radius: 12px; background: #241e1a; color: #edb6a7; font-size: 13px; font-weight: 550; }
+.app .botao-destrutivo { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: var(--controle-altura); margin: 0; padding: 12px 16px; border: 1px solid #60473e; border-radius: var(--controle-raio); background: transparent; color: #edb6a7; font-size: var(--controle-fonte); font-weight: 600; line-height: 1.4; text-align: center; }
+.app .botao-destrutivo:focus-visible { outline: 2px solid #edb6a7; outline-offset: 3px; }
+.confirmacao-privacidade { gap: 16px; }
+.confirmacao-privacidade > p { margin: 0; line-height: 1.7; }
+.confirmacao-privacidade > button { width: 100%; }
+.privacidade-alerta { padding: 14px; border: 1px solid #60473e; border-radius: 12px; background: #241e1a; }
+.privacidade-alerta > strong { font-size: 13px; color: #edb6a7; }
+.privacidade-alerta > p { margin: 6px 0 0; font-size: 12px; line-height: 1.7; color: #bacabd; }
+.confirmacao-privacidade .opcao-copia-exercicio { font-size: 12px; line-height: 1.6; padding: 8px 0; }
 .botao-destrutivo:hover { background: #30231e; }
 .botao-destrutivo:disabled { opacity: .5; cursor: not-allowed; }
 .confirmacao-app { display: grid; gap: 12px; }

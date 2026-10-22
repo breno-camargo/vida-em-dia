@@ -36,10 +36,10 @@ export function PrivacidadeDados(){
   <details className="privacidade-grupo"><summary>O que não é apagado?</summary><p className="nota-resumo">Limpar este aparelho não apaga arquivos exportados, backups e logs do provedor nem dados em outros aparelhos. Exclusões na conta chegam aos outros aparelhos ao sincronizar, mas não apagam cópias externas.</p></details>
   {aviso&&<p role="status">{aviso}</p>}{erro&&!acao&&<p className="erro" role="alert">{erro}</p>}
   {acao==='backup'?<Painel titulo="Guardar backup antes de excluir" fechar={fechar}><BackupConfiguracoes/></Painel>:acao&&<Painel titulo={acao==='conta'?'Excluir conta':acao==='aparelho'?'Apagar dados deste aparelho':acao==='legado'?'Apagar legado':'Eliminar definitivamente'} fechar={fechar}>
-   <div className="formulario">
+   <div className="formulario confirmacao-privacidade">
     {acao==='registro'&&<p>Eliminar {item?.nome}? Fotos e registros dependentes também serão eliminados. Não há Desfazer. A exclusão remota e de objetos ficará pendente se estiver offline.</p>}
-    {acao==='aparelho'&&<><p>Apaga somente o banco da identidade atual. A nuvem, o visitante separado, as outras contas e o legado permanecem. Você poderá perder dados ainda não enviados.</p><p>{pendentes} envios ou remoções de objetos na fila agora. A fila será conferida novamente ao confirmar.</p><label><input type="checkbox" checked={aceitar} onChange={e=>setAceitar(e.target.checked)}/> Aceito perder quaisquer envios ou remoções de objetos pendentes.</label></>}
-    {acao==='legado'&&<p>Apaga exclusivamente o banco antigo vida-em-dia deste navegador. Pode conter dados de várias pessoas. Não apaga os bancos separados das contas nem a nuvem. Esta confirmação é independente e não há Desfazer.</p>}
+    {acao==='aparelho'&&<><p>Os dados deste perfil serão apagados deste navegador. Você sairá do app.</p><p className="nota-resumo">A conta na nuvem, os outros perfis e os dados antigos serão mantidos.</p><div className="privacidade-alerta"><strong>{pendentes?`${pendentes} itens pendentes`:'Nenhum envio pendente agora'}</strong><p>A fila será conferida novamente ao confirmar. Dados ainda não enviados poderão ser perdidos.</p></div><label className="opcao-copia-exercicio"><input type="checkbox" checked={aceitar} disabled={ocupado} onChange={e=>setAceitar(e.target.checked)}/><span>Aceito perder dados e remoções que ainda estejam na fila.</span></label></>}
+    {acao==='legado'&&<><p>Apaga os dados antigos deste navegador, que podem pertencer a mais de uma pessoa.</p><div className="privacidade-alerta"><strong>Não é possível desfazer</strong><p>Os perfis atuais e a conta na nuvem serão mantidos.</p></div></>}
     {acao==='conta'&&<><p>A exclusão é irreversível: apaga arquivos, registros remotos e o acesso à conta. Após confirmação do servidor, apaga o banco desta identidade no aparelho. Em falha parcial, o conteúdo remoto já apagado não volta, mas os dados locais ficam para você exportar e tentar novamente.</p><button className="botao-secundario" disabled={ocupado} onClick={()=>abrir('backup')}>Exportar backup criptografado antes</button><label>Senha atual da conta<input type="password" autoComplete="current-password" value={senha} disabled={ocupado} onChange={e=>setSenha(e.target.value)}/></label></>}
     <label>Digite {acao==='conta'?'EXCLUIR MINHA CONTA':acao==='legado'?'APAGAR LEGADO':acao==='aparelho'?'APAGAR APARELHO':'ELIMINAR'} para confirmar<input value={confirmacao} autoComplete="off" disabled={ocupado} onChange={e=>setConfirmacao(e.target.value)}/></label>
     {erro&&<p className="erro" role="alert">{erro}</p>}
@@ -49,7 +49,7 @@ export function PrivacidadeDados(){
      if(acao==='legado')await apagarLegado(confirmacao)
      if(acao==='registro'&&item)await eliminarRegistro(item.tabela,item.id,true)
      setAcao(undefined);setAviso('Operação concluída neste aparelho. Exclusões da conta e de fotos podem aguardar sincronização.')
-    })}>{ocupado?'Aguarde…':'Confirmar ação irreversível'}</button>
+    })}>{ocupado?'Aguarde…':acao==='aparelho'?'Apagar dados e sair':acao==='legado'?'Apagar dados antigos':acao==='conta'?'Excluir minha conta':'Eliminar definitivamente'}</button>
     <button className="botao-secundario" disabled={ocupado} onClick={fechar}>Cancelar</button>
    </div>
   </Painel>}
