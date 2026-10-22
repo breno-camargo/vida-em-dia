@@ -43,7 +43,7 @@ export function PrivacidadeDados(){
     {acao==='conta'&&<><p>A exclusão é irreversível: apaga arquivos, registros remotos e o acesso à conta. Após confirmação do servidor, apaga o banco desta identidade no aparelho. Em falha parcial, o conteúdo remoto já apagado não volta, mas os dados locais ficam para você exportar e tentar novamente.</p><button className="botao-secundario" disabled={ocupado} onClick={()=>abrir('backup')}>Exportar backup criptografado antes</button><label>Senha atual da conta<input type="password" autoComplete="current-password" value={senha} disabled={ocupado} onChange={e=>setSenha(e.target.value)}/></label></>}
     <label>Digite {acao==='conta'?'EXCLUIR MINHA CONTA':acao==='legado'?'APAGAR LEGADO':acao==='aparelho'?'APAGAR APARELHO':'ELIMINAR'} para confirmar<input value={confirmacao} autoComplete="off" disabled={ocupado} onChange={e=>setConfirmacao(e.target.value)}/></label>
     {erro&&<p className="erro" role="alert">{erro}</p>}
-    <button className="botao-destrutivo" disabled={ocupado||conta.ocupado||confirmacao!==(acao==='conta'?'EXCLUIR MINHA CONTA':acao==='legado'?'APAGAR LEGADO':acao==='aparelho'?'APAGAR APARELHO':'ELIMINAR')||(acao==='conta'&&!senha)} onClick={()=>void executar(async()=>{
+    <button className="botao-principal" disabled={ocupado||conta.ocupado||confirmacao!==(acao==='conta'?'EXCLUIR MINHA CONTA':acao==='legado'?'APAGAR LEGADO':acao==='aparelho'?'APAGAR APARELHO':'ELIMINAR')||(acao==='conta'&&!senha)} onClick={()=>void executar(async()=>{
      if(acao==='conta')await excluirMinhaConta(senha,confirmacao)
      if(acao==='aparelho')await sairApagandoDados(aceitar)
      if(acao==='legado')await apagarLegado(confirmacao)
