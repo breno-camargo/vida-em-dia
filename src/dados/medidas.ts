@@ -38,6 +38,28 @@ export async function salvarMedida(medida: MedidaCorporal) {
   })
 }
 export async function novaMedida() { const config = await tabela('configuracoes').where('chave').equals('principal').first(); return { ...criarRegistro(config?.user_id), data: dataMedida() } satisfies MedidaCorporal }
+export class AlteracaoMedidas extends Error {
+  revisao: string
+  aviso: string
+  constructor(revisao: string, aviso: string) { super(aviso); this.revisao = revisao; this.aviso = aviso }
+}
+// A confirmação pertence à fotografia atual do registro, nunca a alterações futuras.
+export async function complementarMedida(medida: MedidaCorporal, revisaoConfirmada?: string) {
+  validarMedida(medida)
+  return banco.transaction('rw', tabela('medidas_corporais'), async () => {
+    const atual = await tabela('medidas_corporais').get(medida.id)
+    if (atual?.eliminado_em || atual?.apagado_em) throw new Error('Este registro foi removido. Reabra as medidas para continuar.')
+    const existente = await tabela('medidas_corporais').where('data').equals(medida.data).filter(m => !m.apagado_em && !m.eliminado_em).first()
+    if (atual && existente && atual.id !== existente.id) throw new Error('Já há um registro nessa data. Complemente pela opção Registrar, sem mover outro registro.')
+    const destino = existente ?? atual
+    const revisao = JSON.stringify(destino)
+    const alteracoes = destino ? camposMedidas.filter(([c]) => medida[c] !== undefined && destino[c] !== undefined && medida[c] !== destino[c]).map(([c,n,u]) => `${n}: você registrou ${formatarValorMedida(c,destino[c]!)} ${u}; deseja alterar para ${formatarValorMedida(c,medida[c]!)} ${u}?`) : []
+    if (alteracoes.length && revisaoConfirmada !== revisao) throw new AlteracaoMedidas(revisao, `Em ${formatarDataMedida(medida.data)}: ${alteracoes.join(' ')} Campos em branco serão preservados.`)
+    const resultado = { ...(destino ?? medida), data: medida.data, atualizado_em: new Date().toISOString() }
+    for (const [c] of camposMedidas) if (medida[c] !== undefined) resultado[c] = medida[c]
+    await tabela('medidas_corporais').put(resultado)
+  })
+}
 export function lembreteMedidas(medidas: MedidaCorporal[], dia = 6, agora = new Date()) {
   const hoje = dataMedida(agora)
   const inicio = new Date(agora.getFullYear(), agora.getMonth(), agora.getDate(), 12)

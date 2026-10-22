@@ -8,8 +8,43 @@ import { criarRegistro } from './repositorio'
 import { iniciarBanco } from './configuracoes'
 import { camposMedidas, diferencaMedida, lembreteMedidas, salvarMedida, formatarValorMedida, lerValorMedida } from './medidas'
 import { repositorio } from './repositorio'
+import { complementarMedida, AlteracaoMedidas } from './medidas'
 beforeEach(async () => { await banco.delete(); await banco.open(); await iniciarBanco() })
 const medida = (data: string, peso?: number) => ({ ...criarRegistro(), data, peso })
+
+test('complemente a mesma data preservando campos, ID e sem duplicatas', async () => {
+ const m = medida('2026-01-01',80)
+ await salvarMedida(m)
+ await complementarMedida({...medida(m.data),cintura:82})
+ await complementarMedida({...medida(m.data,80),busto:90})
+ const lista = await repositorio('medidas_corporais').listar()
+ expect(lista).toHaveLength(1)
+ expect(lista[0]).toMatchObject({id:m.id,peso:80,cintura:82,busto:90})
+})
+test('confirme alterações existentes e recuse confirmação obsoleta', async () => {
+ const m = {...medida('2026-01-01',80),cintura:82}
+ await salvarMedida(m)
+ const novo = {...medida(m.data,79),cintura:81,busto:90}
+ const conflito = await complementarMedida(novo).catch(e=>e)
+ expect(conflito).toBeInstanceOf(AlteracaoMedidas)
+ expect(conflito.aviso).toContain('80,000 kg')
+ expect(conflito.aviso).toContain('Cintura')
+ expect(await tabela('medidas_corporais').get(m.id)).toMatchObject({peso:80,cintura:82})
+ await salvarMedida({...m,peso:81})
+ await expect(complementarMedida(novo,conflito.revisao)).rejects.toBeInstanceOf(AlteracaoMedidas)
+ const atual = await complementarMedida(novo).catch(e=>e)
+ await complementarMedida(novo,atual.revisao)
+ expect(await tabela('medidas_corporais').get(m.id)).toMatchObject({peso:79,cintura:81,busto:90})
+ expect(await tabela('medidas_corporais').count()).toBe(1)
+})
+test('editar preserva campos vazios e não modifica registros removidos', async () => {
+ const m = {...medida('2026-01-01',80),cintura:82}
+ await salvarMedida(m)
+ await complementarMedida({...m,peso:undefined,busto:90})
+ expect(await tabela('medidas_corporais').get(m.id)).toMatchObject({peso:80,cintura:82,busto:90})
+ await repositorio('medidas_corporais').apagar(m.id)
+ await expect(complementarMedida(m)).rejects.toThrow('removido')
+})
 test('peso mantém gramas no parsing, salvamento e comparação', async () => {
   const peso = lerValorMedida('peso', '77,830')
   expect(peso).toBe(77.83)
