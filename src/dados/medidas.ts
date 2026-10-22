@@ -53,8 +53,8 @@ export async function complementarMedida(medida: MedidaCorporal, revisaoConfirma
     if (atual && existente && atual.id !== existente.id) throw new Error('Já há um registro nessa data. Complemente pela opção Registrar, sem mover outro registro.')
     const destino = existente ?? atual
     const revisao = JSON.stringify(destino)
-    const alteracoes = destino ? camposMedidas.filter(([c]) => medida[c] !== undefined && destino[c] !== undefined && medida[c] !== destino[c]).map(([c,n,u]) => `${n}: você registrou ${formatarValorMedida(c,destino[c]!)} ${u}; deseja alterar para ${formatarValorMedida(c,medida[c]!)} ${u}?`) : []
-    if (alteracoes.length && revisaoConfirmada !== revisao) throw new AlteracaoMedidas(revisao, `Em ${formatarDataMedida(medida.data)}: ${alteracoes.join(' ')} Campos em branco serão preservados.`)
+    const alteracoes = destino ? camposMedidas.filter(([c]) => medida[c] !== undefined && destino[c] !== undefined && medida[c] !== destino[c]).map(([c,n,u]) => `${n}: ${formatarValorMedida(c,destino[c]!)} ${u} → ${formatarValorMedida(c,medida[c]!)} ${u}`) : []
+    if (alteracoes.length && revisaoConfirmada !== revisao) throw new AlteracaoMedidas(revisao, `Atualizar as medidas de ${formatarDataMedida(medida.data)}?\n\n${alteracoes.join('\n')}\n\nAs demais medidas continuam iguais.`)
     const resultado = { ...(destino ?? medida), data: medida.data, atualizado_em: new Date().toISOString() }
     for (const [c] of camposMedidas) if (medida[c] !== undefined) resultado[c] = medida[c]
     await tabela('medidas_corporais').put(resultado)

@@ -204,6 +204,7 @@
 }
 .app :is(.seta-config, .seta-exercicio) { transition: transform var(--movimento-curto) ease-out; }
 .app .aviso-modo-visitante { margin: 0 0 20px; line-height: 1.75; }
+.confirmacao-app > p { white-space: pre-line; }
 .backup-protecao { display: flex; align-items: flex-start; gap: 10px; padding: 14px; border: 1px solid #3a5040; border-radius: 12px; background: #203225; }
 .backup-protecao > svg { flex-shrink: 0; color: #bcec86; }
 .backup-protecao strong { font-size: 13px; color: #e5f0e5; }
