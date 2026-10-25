@@ -1,4 +1,0 @@
-﻿Dados coletados com ├¬xito; sa├¡da = C:\Users\breno\Documents\Codex\2026-10-05\ol\outputs\vida-em-dia-novo-visual\revisao\wifi-wfp-events.xml
-
-Dados coletados com ├¬xito; sa├¡da = C:\Users\breno\Documents\Codex\2026-10-05\ol\outputs\vida-em-dia-novo-visual\revisao\wifi-wfp-filters.xml
-
