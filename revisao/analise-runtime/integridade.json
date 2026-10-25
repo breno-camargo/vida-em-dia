@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-25",
+  "checks": [
+    {
+      "name": "copia",
+      "files": 169,
+      "mismatches": [],
+      "added": [],
+      "passed": true
+    },
+    {
+      "name": "original",
+      "files": 153,
+      "mismatches": [],
+      "added": [],
+      "passed": true
+    }
+  ],
+  "frozenRenderers": [
+    "utilitarios/renderCardAprovado.ts",
+    "utilitarios/imagensCardAprovado.ts"
+  ],
+  "allPassed": true
+}
