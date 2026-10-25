@@ -1,0 +1,313 @@
+{
+  "date": "2026-10-25",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "timezone": "America/Sao_Paulo",
+  "locale": "pt-BR",
+  "screens": [
+    {
+      "theme": "escuro",
+      "name": "hoje"
+    },
+    {
+      "theme": "escuro",
+      "name": "comida"
+    },
+    {
+      "theme": "escuro",
+      "name": "medidas-vazia"
+    },
+    {
+      "theme": "escuro",
+      "name": "registrar-medidas"
+    },
+    {
+      "theme": "escuro",
+      "name": "medida-peso-rolar"
+    },
+    {
+      "theme": "escuro",
+      "name": "medida-peso-digitar"
+    },
+    {
+      "theme": "escuro",
+      "name": "seletor-data"
+    },
+    {
+      "theme": "escuro",
+      "name": "evolucao-vazia"
+    },
+    {
+      "theme": "escuro",
+      "name": "treino-fichas-vazia"
+    },
+    {
+      "theme": "escuro",
+      "name": "nova-ficha-sem-selecao"
+    },
+    {
+      "theme": "escuro",
+      "name": "nova-ficha-com-selecao"
+    },
+    {
+      "theme": "escuro",
+      "name": "nova-ficha-com-item"
+    },
+    {
+      "theme": "escuro",
+      "name": "nova-ficha-item-expandido"
+    },
+    {
+      "theme": "escuro",
+      "name": "seletor-descanso"
+    },
+    {
+      "theme": "escuro",
+      "name": "treino-fichas"
+    },
+    {
+      "theme": "escuro",
+      "name": "treino-exercicios"
+    },
+    {
+      "theme": "escuro",
+      "name": "detalhe-exercicio"
+    },
+    {
+      "theme": "escuro",
+      "name": "treino-cardio"
+    },
+    {
+      "theme": "escuro",
+      "name": "registrar-cardio"
+    },
+    {
+      "theme": "escuro",
+      "name": "treino-ativo"
+    },
+    {
+      "theme": "escuro",
+      "name": "treino-exercicio-expandido"
+    },
+    {
+      "theme": "escuro",
+      "name": "seletor-valores-serie"
+    },
+    {
+      "theme": "escuro",
+      "name": "timer-descanso"
+    },
+    {
+      "theme": "escuro",
+      "name": "resumo-treino"
+    },
+    {
+      "theme": "escuro",
+      "name": "treino-em-andamento"
+    },
+    {
+      "theme": "escuro",
+      "name": "configuracoes"
+    },
+    {
+      "theme": "escuro",
+      "name": "config-conta"
+    },
+    {
+      "theme": "escuro",
+      "name": "config-aparencia"
+    },
+    {
+      "theme": "escuro",
+      "name": "config-backup"
+    },
+    {
+      "theme": "escuro",
+      "name": "config-atividade"
+    },
+    {
+      "theme": "escuro",
+      "name": "config-aparelho"
+    },
+    {
+      "theme": "escuro",
+      "name": "config-instalar"
+    },
+    {
+      "theme": "escuro",
+      "name": "config-sobre"
+    },
+    {
+      "theme": "escuro",
+      "name": "privacidade"
+    },
+    {
+      "theme": "escuro",
+      "name": "medidas-preenchida"
+    },
+    {
+      "theme": "escuro",
+      "name": "evolucao-preenchida"
+    },
+    {
+      "theme": "claro",
+      "name": "hoje"
+    },
+    {
+      "theme": "claro",
+      "name": "comida"
+    },
+    {
+      "theme": "claro",
+      "name": "medidas-vazia"
+    },
+    {
+      "theme": "claro",
+      "name": "registrar-medidas"
+    },
+    {
+      "theme": "claro",
+      "name": "medida-peso-rolar"
+    },
+    {
+      "theme": "claro",
+      "name": "medida-peso-digitar"
+    },
+    {
+      "theme": "claro",
+      "name": "seletor-data"
+    },
+    {
+      "theme": "claro",
+      "name": "evolucao-vazia"
+    },
+    {
+      "theme": "claro",
+      "name": "treino-fichas-vazia"
+    },
+    {
+      "theme": "claro",
+      "name": "nova-ficha-sem-selecao"
+    },
+    {
+      "theme": "claro",
+      "name": "nova-ficha-com-selecao"
+    },
+    {
+      "theme": "claro",
+      "name": "nova-ficha-com-item"
+    },
+    {
+      "theme": "claro",
+      "name": "nova-ficha-item-expandido"
+    },
+    {
+      "theme": "claro",
+      "name": "seletor-descanso"
+    },
+    {
+      "theme": "claro",
+      "name": "treino-fichas"
+    },
+    {
+      "theme": "claro",
+      "name": "treino-exercicios"
+    },
+    {
+      "theme": "claro",
+      "name": "detalhe-exercicio"
+    },
+    {
+      "theme": "claro",
+      "name": "treino-cardio"
+    },
+    {
+      "theme": "claro",
+      "name": "registrar-cardio"
+    },
+    {
+      "theme": "claro",
+      "name": "treino-ativo"
+    },
+    {
+      "theme": "claro",
+      "name": "treino-exercicio-expandido"
+    },
+    {
+      "theme": "claro",
+      "name": "seletor-valores-serie"
+    },
+    {
+      "theme": "claro",
+      "name": "timer-descanso"
+    },
+    {
+      "theme": "claro",
+      "name": "resumo-treino"
+    },
+    {
+      "theme": "claro",
+      "name": "treino-em-andamento"
+    },
+    {
+      "theme": "claro",
+      "name": "configuracoes"
+    },
+    {
+      "theme": "claro",
+      "name": "config-conta"
+    },
+    {
+      "theme": "claro",
+      "name": "config-aparencia"
+    },
+    {
+      "theme": "claro",
+      "name": "config-backup"
+    },
+    {
+      "theme": "claro",
+      "name": "config-atividade"
+    },
+    {
+      "theme": "claro",
+      "name": "config-aparelho"
+    },
+    {
+      "theme": "claro",
+      "name": "config-instalar"
+    },
+    {
+      "theme": "claro",
+      "name": "config-sobre"
+    },
+    {
+      "theme": "claro",
+      "name": "privacidade"
+    },
+    {
+      "theme": "claro",
+      "name": "medidas-preenchida"
+    },
+    {
+      "theme": "claro",
+      "name": "evolucao-preenchida"
+    }
+  ],
+  "limitations": [
+    {
+      "theme": "escuro",
+      "step": "conta-entrada",
+      "message": "Supabase é null por configuração deliberada da cópia; entrada/cadastro não alcançáveis sem mudar o ambiente. Capturado config-conta, sem simular backend."
+    },
+    {
+      "theme": "claro",
+      "step": "conta-entrada",
+      "message": "Supabase é null por configuração deliberada da cópia; entrada/cadastro não alcançáveis sem mudar o ambiente. Capturado config-conta, sem simular backend."
+    }
+  ],
+  "errors": [],
+  "browser": "156.0.4314.42"
+}

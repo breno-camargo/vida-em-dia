@@ -1,0 +1,15 @@
+
+> vida-em-dia@0.0.0 test
+> vitest run --fsModuleCache --maxWorkers=1
+
+
+ RUN  v5.0.3 C:/Users/breno/Documents/Codex/2026-10-05/ol/outputs/vida-em-dia-novo-visual
+
+
+ Test Files  46 passed (46)
+      Tests  278 passed (278)
+   Start at  01:36:17
+   Duration  28.41s (tests 85%, import 13%, transform 1%, worker 1%)
+
+    Isolate  46 workers spawned · ~108ms startup each (spawn + environment, per file)
+             at least ~4.84s faster with isolate: false — reuses workers across files instead of one per file

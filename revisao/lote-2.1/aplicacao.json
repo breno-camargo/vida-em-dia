@@ -1,0 +1,18 @@
+{
+  "sourceCommit": "8ed7705e6194156709cb91ca3e42decc5124af1e",
+  "afterHashes": {
+    "src/index.css": "a739cb1cf9d8826c6a705cc2964fee92eb7ed5d70ae0a261889050c8169b2e9d",
+    "src/estilos/controles.css": "d335f86aa9b45676adad8df0ed3943da63abf7dd90551b5fb379ebcbd7dfbc5f",
+    "src/estilos/novo-visual.css": "bb01ad5d5388d9fc4678e77bd65938c3217455e77b1b53b1580c26a6c4fb86a0",
+    "src/estilos/paleta-clara.css": "bc4ca2d653a7a551cda2e384eab566cb8497db1bbc2bd3652b4c29833afaa8fb",
+    "src/estilos/contraste-claro.css": "ea53bad012044d68dcedb777685880e406da1da13d199dfd2088a92009aac35b",
+    "src/estilos/tokens.css": "b8da2b0b4299b08c5618ddefc7668ce499bc19ea299b096a0e7d1f6742febc49"
+  },
+  "totals": {
+    "literais-conta-sync": 21,
+    "tokenizadas": 138,
+    "literais-por-exclusao": 12
+  },
+  "existingTokensChanged": 0,
+  "removedDeclarations": 0
+}

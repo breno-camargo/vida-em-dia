@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-25",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "timezone": "America/Sao_Paulo",
+  "locale": "pt-BR",
+  "screens": [],
+  "limitations": [],
+  "errors": [
+    {
+      "fatal": "Error: GATE: escuro-hoje pixels=0 estilos=1\n    at capture (C:\\Users\\breno\\Documents\\Codex\\2026-10-05\\ol\\outputs\\vida-em-dia-novo-visual\\revisao\\lote-2.1\\gate.cjs:36:32)\n    at async gate.capture (C:\\Users\\breno\\Documents\\Codex\\2026-10-05\\ol\\outputs\\vida-em-dia-novo-visual\\revisao\\lote-2.1\\gate.cjs:44:160)\n    at async shot (eval at <anonymous> (C:\\Users\\breno\\Documents\\Codex\\2026-10-05\\ol\\outputs\\vida-em-dia-novo-visual\\revisao\\lote-2.1\\gate.cjs:51:1), <anonymous>:31:58)\n    at async eval (eval at <anonymous> (C:\\Users\\breno\\Documents\\Codex\\2026-10-05\\ol\\outputs\\vida-em-dia-novo-visual\\revisao\\lote-2.1\\gate.cjs:51:1), <anonymous>:34:2)"
+    }
+  ],
+  "browser": "156.0.4314.42"
+}

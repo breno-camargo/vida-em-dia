@@ -1,0 +1,42 @@
+
+> vida-em-dia@0.0.0 build
+> tsc -b && vite build
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 2640 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/manifest.webmanifest                          0.53 kB
+dist/index.html                                    1.33 kB │ gzip:   0.59 kB
+dist/assets/index-CoJvi76B.css                   201.06 kB │ gzip:  33.99 kB
+dist/assets/useEstadoTemporario-Cgk6s9vo.js        0.28 kB │ gzip:   0.22 kB
+dist/assets/share-2-DgRGZBGw.js                    0.59 kB │ gzip:   0.34 kB
+dist/assets/rolldown-runtime-XKyaHtl9.js           0.72 kB │ gzip:   0.42 kB
+dist/assets/trash-DNqReGzu.js                      0.75 kB │ gzip:   0.40 kB
+dist/assets/EscolherOpcao-ee4knITW.js              0.86 kB │ gzip:   0.52 kB
+dist/assets/GraficoCarga-oFr2REWn.js               1.23 kB │ gzip:   0.75 kB
+dist/assets/GraficoAtividade-BSqXTCSV.js           1.51 kB │ gzip:   0.75 kB
+dist/assets/dexie-react-hooks-ClkRPKOk.js          2.61 kB │ gzip:   1.16 kB
+dist/assets/EvolucaoExercicio-Cu5l_9tY.js          5.24 kB │ gzip:   1.85 kB
+dist/assets/workbox-window.prod.es5-Bd17z0YL.js    5.65 kB │ gzip:   2.20 kB
+dist/assets/Evolucao-SP2bzR11.js                   7.32 kB │ gzip:   2.67 kB
+dist/assets/jsx-runtime-D65ibrDb.js                8.24 kB │ gzip:   3.11 kB
+dist/assets/Medidas-OjyUkJZ1.js                    8.28 kB │ gzip:   2.72 kB
+dist/assets/Painel-DkKqz3Sy.js                     8.50 kB │ gzip:   3.71 kB
+dist/assets/CardCompartilhavel-03h9XLrq.js        25.97 kB │ gzip:   8.88 kB
+dist/assets/idsCatalogoWifi-Cfmx6yKF.js           33.29 kB │ gzip:  14.31 kB
+dist/assets/Configuracoes-DoQzWZLI.js             38.13 kB │ gzip:  11.63 kB
+dist/assets/banco-Drvj1HJs.js                    100.80 kB │ gzip:  33.53 kB
+dist/assets/Treino-BzxCJAwQ.js                   118.16 kB │ gzip:  34.96 kB
+dist/assets/index-4GGIp6N6.js                    337.77 kB │ gzip: 103.30 kB
+dist/assets/LineChart-DD_GxiZQ.js                351.27 kB │ gzip: 101.87 kB
+
+✓ built in 1.08s
+
+PWA v2.0.0
+mode      generateSW
+precache  32 entries (1249.86 KiB)
+files generated
+  dist/sw.js
+  dist/workbox-2fbc6a65.js

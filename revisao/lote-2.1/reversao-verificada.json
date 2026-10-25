@@ -1,0 +1,72 @@
+{
+  "checks": [
+    {
+      "name": "copia",
+      "files": 169,
+      "differences": [],
+      "added": [],
+      "frozen": [
+        {
+          "file": "componentes/CardCompartilhavel.tsx",
+          "baseline": "0e33c09253b5e75a78766c78a2bcfb27ec3a62bc3b3aa9894321822f5f29798d",
+          "current": "0e33c09253b5e75a78766c78a2bcfb27ec3a62bc3b3aa9894321822f5f29798d"
+        },
+        {
+          "file": "componentes/CompartilharCardio.tsx",
+          "baseline": "cef694d47f9f6d4d8f72dc7a51138cfec3fc4083e1b3fdb278ffe5f69583f30d",
+          "current": "cef694d47f9f6d4d8f72dc7a51138cfec3fc4083e1b3fdb278ffe5f69583f30d"
+        },
+        {
+          "file": "utilitarios/imagensCardAprovado.ts",
+          "baseline": "f476da56b1c6613deac9672bb0e57060e54306bd7c276016e552072021a213cc",
+          "current": "f476da56b1c6613deac9672bb0e57060e54306bd7c276016e552072021a213cc"
+        },
+        {
+          "file": "utilitarios/renderCardAprovado.test.ts",
+          "baseline": "062b5dc61052d9096567c082322d6ec9178e7aad3516e862c9740ca9ea489131",
+          "current": "062b5dc61052d9096567c082322d6ec9178e7aad3516e862c9740ca9ea489131"
+        },
+        {
+          "file": "utilitarios/renderCardAprovado.ts",
+          "baseline": "2b60250ebc55e3243f7d624f51b330952618636989adbef0ef13adbd30e573e8",
+          "current": "2b60250ebc55e3243f7d624f51b330952618636989adbef0ef13adbd30e573e8"
+        }
+      ]
+    },
+    {
+      "name": "original",
+      "files": 153,
+      "differences": [],
+      "added": [],
+      "frozen": [
+        {
+          "file": "componentes/CardCompartilhavel.tsx",
+          "baseline": "bf46aa3c2ae82e18def8c12da376b82b719edd35ce95cb17cf1929eb222d2644",
+          "current": "bf46aa3c2ae82e18def8c12da376b82b719edd35ce95cb17cf1929eb222d2644"
+        },
+        {
+          "file": "componentes/CompartilharCardio.tsx",
+          "baseline": "cef694d47f9f6d4d8f72dc7a51138cfec3fc4083e1b3fdb278ffe5f69583f30d",
+          "current": "cef694d47f9f6d4d8f72dc7a51138cfec3fc4083e1b3fdb278ffe5f69583f30d"
+        },
+        {
+          "file": "utilitarios/imagensCardAprovado.ts",
+          "baseline": "f476da56b1c6613deac9672bb0e57060e54306bd7c276016e552072021a213cc",
+          "current": "f476da56b1c6613deac9672bb0e57060e54306bd7c276016e552072021a213cc"
+        },
+        {
+          "file": "utilitarios/renderCardAprovado.test.ts",
+          "baseline": "062b5dc61052d9096567c082322d6ec9178e7aad3516e862c9740ca9ea489131",
+          "current": "062b5dc61052d9096567c082322d6ec9178e7aad3516e862c9740ca9ea489131"
+        },
+        {
+          "file": "utilitarios/renderCardAprovado.ts",
+          "baseline": "2b60250ebc55e3243f7d624f51b330952618636989adbef0ef13adbd30e573e8",
+          "current": "2b60250ebc55e3243f7d624f51b330952618636989adbef0ef13adbd30e573e8"
+        }
+      ]
+    }
+  ],
+  "tokensCssExists": false,
+  "reverted": true
+}

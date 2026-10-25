@@ -1,0 +1,21 @@
+{
+  "status": "reprovado-e-revertido",
+  "beforeScreens": 72,
+  "beforeStates": 4936,
+  "postScreens": 1,
+  "pixelDiffFirst": 0,
+  "styleDiffFirst": 1,
+  "postStateMatrixCompleted": false,
+  "newTokensProposed": 124,
+  "newTokensPersisted": 0,
+  "totalsAttempt": {
+    "literais-conta-sync": 21,
+    "tokenizadas": 138,
+    "literais-por-exclusao": 12
+  },
+  "reversionPassed": true,
+  "buildCompleted": true,
+  "buildCertifiesAttempt": false,
+  "testsPassed": 278,
+  "testsFiles": 46
+}
