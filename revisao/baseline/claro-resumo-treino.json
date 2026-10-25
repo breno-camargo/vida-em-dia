@@ -25,10 +25,10 @@
       "threshold": 3,
       "control": false,
       "disabled": false,
-      "width": 146.46875,
-      "height": 53.1875,
+      "width": 129.3125,
+      "height": 46.796875,
       "x": 66,
-      "y": 14
+      "y": 14.09375
     },
     {
       "tag": "SMALL",
@@ -45,7 +45,7 @@
       "gradient": false,
       "borderColor": "rgb(71, 93, 64)",
       "borderWidth": "0px",
-      "fontSize": "12px",
+      "fontSize": "8px",
       "fontWeight": "700",
       "opacity": 1,
       "textContrast": 5.631440026034538,
@@ -53,10 +53,10 @@
       "threshold": 4.5,
       "control": false,
       "disabled": false,
-      "width": 146.46875,
-      "height": 19.1875,
+      "width": 129.3125,
+      "height": 12.796875,
       "x": 66,
-      "y": 48
+      "y": 48.09375
     },
     {
       "tag": "SPAN",
@@ -73,7 +73,7 @@
       "gradient": false,
       "borderColor": "rgb(71, 93, 64)",
       "borderWidth": "0px",
-      "fontSize": "12px",
+      "fontSize": "9px",
       "fontWeight": "400",
       "opacity": 1,
       "textContrast": 5.631440026034538,
@@ -81,10 +81,10 @@
       "threshold": 4.5,
       "control": false,
       "disabled": false,
-      "width": 34.9375,
-      "height": 19.1875,
-      "x": 235.0625,
-      "y": 31
+      "width": 26.953125,
+      "height": 14.390625,
+      "x": 243.046875,
+      "y": 30.296875
     },
     {
       "tag": "BUTTON",
@@ -112,7 +112,7 @@
       "width": 44,
       "height": 44,
       "x": 278,
-      "y": 18.59375
+      "y": 15.5
     },
     {
       "tag": "BUTTON",
@@ -140,7 +140,7 @@
       "width": 44,
       "height": 44,
       "x": 330,
-      "y": 18.59375
+      "y": 15.5
     },
     {
       "tag": "SPAN",
@@ -157,7 +157,7 @@
       "gradient": false,
       "borderColor": "rgb(71, 93, 64)",
       "borderWidth": "0px",
-      "fontSize": "12px",
+      "fontSize": "10px",
       "fontWeight": "400",
       "opacity": 1,
       "textContrast": 5.95840575349503,
@@ -165,10 +165,10 @@
       "threshold": 4.5,
       "control": false,
       "disabled": false,
-      "width": 131.265625,
-      "height": 19.1875,
+      "width": 109.390625,
+      "height": 16,
       "x": 16,
-      "y": 100.1875
+      "y": 94
     },
     {
       "tag": "SPAN",
@@ -185,7 +185,7 @@
       "gradient": false,
       "borderColor": "rgb(71, 93, 64)",
       "borderWidth": "0px",
-      "fontSize": "12px",
+      "fontSize": "10px",
       "fontWeight": "400",
       "opacity": 1,
       "textContrast": 5.95840575349503,
@@ -193,10 +193,10 @@
       "threshold": 4.5,
       "control": false,
       "disabled": false,
-      "width": 45.71875,
-      "height": 19.1875,
-      "x": 328.28125,
-      "y": 100.1875
+      "width": 39.9375,
+      "height": 16,
+      "x": 334.0625,
+      "y": 94
     },
     {
       "tag": "H1",
@@ -224,7 +224,7 @@
       "width": 358,
       "height": 32.5,
       "x": 16,
-      "y": 127.375
+      "y": 118
     },
     {
       "tag": "P",
@@ -252,7 +252,7 @@
       "width": 358,
       "height": 87.171875,
       "x": 16,
-      "y": 183.875
+      "y": 174.5
     },
     {
       "tag": "SPAN",
@@ -280,7 +280,7 @@
       "width": 68.5625,
       "height": 12,
       "x": 16,
-      "y": 299.046875
+      "y": 289.671875
     },
     {
       "tag": "H2",
@@ -308,7 +308,7 @@
       "width": 358,
       "height": 24,
       "x": 16,
-      "y": 323.4375
+      "y": 314.0625
     },
     {
       "tag": "P",
@@ -336,7 +336,7 @@
       "width": 358,
       "height": 22.390625,
       "x": 16,
-      "y": 355.4375
+      "y": 346.0625
     },
     {
       "tag": "SPAN",
@@ -364,7 +364,7 @@
       "width": 139,
       "height": 17.59375,
       "x": 33,
-      "y": 420.828125
+      "y": 411.453125
     },
     {
       "tag": "STRONG",
@@ -392,7 +392,7 @@
       "width": 40.234375,
       "height": 35,
       "x": 33,
-      "y": 446.421875
+      "y": 437.046875
     },
     {
       "tag": "SMALL",
@@ -420,7 +420,7 @@
       "width": 25.265625,
       "height": 17,
       "x": 47.96875,
-      "y": 460.421875
+      "y": 451.046875
     },
     {
       "tag": "SPAN",
@@ -448,7 +448,7 @@
       "width": 139,
       "height": 17.59375,
       "x": 218,
-      "y": 420.828125
+      "y": 411.453125
     },
     {
       "tag": "STRONG",
@@ -476,7 +476,7 @@
       "width": 32.65625,
       "height": 35,
       "x": 218,
-      "y": 446.421875
+      "y": 437.046875
     },
     {
       "tag": "SMALL",
@@ -504,7 +504,7 @@
       "width": 17.6875,
       "height": 17,
       "x": 232.96875,
-      "y": 460.421875
+      "y": 451.046875
     },
     {
       "tag": "SPAN",
@@ -532,7 +532,7 @@
       "width": 139,
       "height": 17.59375,
       "x": 33,
-      "y": 526.8125
+      "y": 517.4375
     },
     {
       "tag": "STRONG",
@@ -560,7 +560,7 @@
       "width": 14.96875,
       "height": 35,
       "x": 33,
-      "y": 552.40625
+      "y": 543.03125
     },
     {
       "tag": "SPAN",
@@ -588,7 +588,7 @@
       "width": 139,
       "height": 17.59375,
       "x": 218,
-      "y": 526.8125
+      "y": 517.4375
     },
     {
       "tag": "STRONG",
@@ -616,7 +616,7 @@
       "width": 14.96875,
       "height": 35,
       "x": 218,
-      "y": 552.40625
+      "y": 543.03125
     },
     {
       "tag": "P",
@@ -644,7 +644,7 @@
       "width": 358,
       "height": 20.390625,
       "x": 16,
-      "y": 623.796875
+      "y": 614.421875
     },
     {
       "tag": "SPAN",
@@ -672,7 +672,7 @@
       "width": 300,
       "height": 25.59375,
       "x": 33,
-      "y": 681.1875
+      "y": 671.8125
     },
     {
       "tag": "STRONG",
@@ -700,7 +700,7 @@
       "width": 16,
       "height": 25.59375,
       "x": 341,
-      "y": 681.1875
+      "y": 671.8125
     },
     {
       "tag": "SMALL",
@@ -728,7 +728,7 @@
       "width": 324,
       "height": 17.59375,
       "x": 33,
-      "y": 714.78125
+      "y": 705.40625
     },
     {
       "tag": "BUTTON",
@@ -756,7 +756,35 @@
       "width": 358,
       "height": 48,
       "x": 16,
-      "y": 786.375
+      "y": 777
+    },
+    {
+      "tag": "BUTTON",
+      "selector": "button.botao-secundario",
+      "text": "Voltar ao treino",
+      "color": "rgb(40, 67, 30)",
+      "background": "rgb(220, 233, 205)",
+      "effectiveBackground": [
+        220,
+        233,
+        205,
+        1
+      ],
+      "gradient": false,
+      "borderColor": "rgb(111, 133, 96)",
+      "borderWidth": "1px",
+      "fontSize": "13px",
+      "fontWeight": "600",
+      "opacity": 1,
+      "textContrast": 8.672437786739266,
+      "borderContrast": 3.361413158936644,
+      "threshold": 4.5,
+      "control": true,
+      "disabled": false,
+      "width": 358,
+      "height": 48,
+      "x": 16,
+      "y": 837
     },
     {
       "tag": "BUTTON",
