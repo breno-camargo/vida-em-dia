@@ -52,7 +52,8 @@ describe('SelecionarNumero (renderização e regressão)', () => {
     expect(html).toContain('-10 bpm')
     expect(html).toContain('+10 bpm')
     // Renderiza botão "Não informar" pois é opcional
-    expect(html).toContain('Não informar')
+    expect(html).not.toContain('Não informar')
+    expect(html).toContain('salvar-cabecalho')
   })
 
   test('valor existente é renderizado exatamente onde foi salvo', () => {

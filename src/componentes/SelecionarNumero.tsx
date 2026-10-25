@@ -167,7 +167,7 @@ export function SelecionarNumero({
         : `${numero.toLocaleString('pt-BR')} ${unidade}`
 
   return (
-    <Painel titulo={titulo} fechar={fechar}>
+    <Painel titulo={titulo} fechar={() => { if (!ocupado) { if (opcional) void aplicar(undefined); else fechar() } }} acao={<button type="button" className="botao-principal salvar-cabecalho" disabled={ocupado} onClick={handleConfirmar}>Salvar</button>}>
       {permitirDigitar ? (
         <div className="cabecalho-seletor-numero">
           <div className="alternador-seletor" role="tablist" aria-label="Modo de seleção">
@@ -302,24 +302,6 @@ export function SelecionarNumero({
 
       <p className="valor-escolhido">{valorFormatado}</p>
       {erro && <p className="erro" role="alert">{erro}</p>}
-      <button
-        type="button"
-        className="botao-principal largura-total"
-        disabled={ocupado}
-        onClick={handleConfirmar}
-      >
-        Confirmar
-      </button>
-      {opcional && (
-        <button
-          type="button"
-          className="botao-secundario"
-          disabled={ocupado}
-          onClick={() => void aplicar(undefined)}
-        >
-          Não informar
-        </button>
-      )}
     </Painel>
   )
 }

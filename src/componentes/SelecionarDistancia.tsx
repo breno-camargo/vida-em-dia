@@ -32,10 +32,10 @@ export function SelecionarDistancia({ valor = 0, fechar, confirmar }: { valor?: 
       definirKm(String(partes.km)); definirMetros(String(partes.metros)); definirErro('')
     } catch (e) { definirErro((e as Error).message) }
   }
-  return <Painel titulo="Distância" fechar={fechar}>
+  return <Painel titulo="Distância" fechar={() => { confirmar(undefined); fechar() }} acao={<button type="button" className="botao-principal salvar-cabecalho" onClick={aplicar}>Salvar</button>}>
     <div className="cabecalho-seletor-numero"><div className="alternador-seletor" aria-label="Modo de seleção">{(['rolar', 'digitar'] as const).map(m => <button type="button" key={m} className={`opcao-seletor${modo === m ? ' selecionada' : ''}`} aria-pressed={modo === m} onClick={() => mudarModo(m)}>{m === 'rolar' ? 'Rolar' : 'Digitar'}</button>)}</div><div className="atalhos-numero"><button type="button" className="botao-atalho-numero" onClick={() => salto(-1)}>−1 km</button><button type="button" className="botao-atalho-numero" onClick={() => salto(1)}>+1 km</button></div></div>
     {modo === 'rolar' ? <div className="rodas-numero casas-numero"><Rolagem valores={listaKm} inicial={Number(km)} valor={Number(km)} rotulo="KM" escolher={v => { definirKm(String(v)); definirErro('') }} />{([100, 10, 1] as const).map(casa => { const atual = Math.floor(Number(metros) / casa) % 10; return <Rolagem key={casa} valores={digitos} inicial={atual} valor={atual} rotulo={`${casa} M`} escolher={v => { definirMetros(String(Number(metros) + (v - atual) * casa)); definirErro('') }} /> })}</div> : <div className="digitar-duracao">{([['Quilômetros', km, definirKm], ['Metros', metros, definirMetros]] as const).map(([nome, texto, definir], i) => <label key={nome}>{nome}<input autoFocus={i === 0} type="text" inputMode="numeric" value={texto} onChange={e => { definir(e.target.value); definirErro('') }} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); e.stopPropagation(); aplicar() } }} /></label>)}</div>}
     <p className="valor-escolhido">{km || '—'} km {metros || '—'} m</p><p className="nota-resumo dica-duracao">Metros nas três últimas rodas: 5 · 0 · 0 = 500 m.</p>
-    {erro && <p className="erro" role="alert">{erro}</p>}<button type="button" className="botao-principal largura-total" onClick={aplicar}>Confirmar distância</button><button type="button" className="botao-secundario" onClick={() => { confirmar(undefined); fechar() }}>Não informar</button>
+    {erro && <p className="erro" role="alert">{erro}</p>}
   </Painel>
 }

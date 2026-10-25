@@ -1,3 +1,4 @@
+import { recolherDetalhesSuavemente } from '../utilitarios/enquadrarDetalhes'
 import { useEffect, useRef, useState } from 'react'
 import { CheckCircle2, Files, ArrowRight, Smartphone, Cloud, Check, RefreshCw, ChevronDown } from 'lucide-react'
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -27,7 +28,7 @@ function ComparacaoRegistro({conflito,escolha,bloqueado,escolher,aplicar}:{confl
     </button>
    })}
   </div>
-  <details className="detalhes-comparacao-sync"><summary>Ver todos os detalhes<ChevronDown size={16} aria-hidden="true"/></summary><div className="cabecalho-detalhes-sync"><span>Aparelho</span><span>Conta</span></div>{detalhes.map(([campo,rotulo])=><div className="linha-detalhes-sync" key={campo}><span>{rotulo}</span><strong>{formatarValor(c.local.dados[campo])}</strong><strong>{formatarValor(c.remoto.dados[campo])}</strong></div>)}</details>
+  <details className="detalhes-comparacao-sync"><summary onClick={recolherDetalhesSuavemente}>Ver todos os detalhes<ChevronDown size={16} aria-hidden="true"/></summary><div className="cabecalho-detalhes-sync"><span>Aparelho</span><span>Conta</span></div>{detalhes.map(([campo,rotulo])=><div className="linha-detalhes-sync" key={campo}><span>{rotulo}</span><strong>{formatarValor(c.local.dados[campo])}</strong><strong>{formatarValor(c.remoto.dados[campo])}</strong></div>)}</details>
   <button type="button" className="botao-principal largura-total confirmar-registro-sync" disabled={bloqueado||!escolha} onClick={aplicar}>{bloqueado?'Salvando escolha…':escolha?'Confirmar escolha':'Selecione um registro'}</button>
  </section>
 }

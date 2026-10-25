@@ -13,9 +13,10 @@ export const ListaExercicios = memo(function ListaExercicios({ exercicios, busca
   return <div className="selecao-catalogo">
     {filtros}
     <div className="contagem-catalogo"><span>{filtrados.length} exercícios</span><span>Ordem alfabética</span></div>
+    {adicionarVarios && !escolhidos.length && <p className="orientacao-catalogo">Toque nos exercícios para selecionar.</p>}
     <div className="lista-catalogo">{visiveis.map(ex => <button type="button" className="selecionar-exercicio" disabled={ocupado} key={ex.id} aria-pressed={adicionarVarios ? ordemSelecao.has(ex.id) : undefined} onClick={() => adicionarVarios ? definirSelecionados(ids => ids.includes(ex.id) ? ids.filter(id => id !== ex.id) : [...ids, ex.id]) : adicionar(ex)}><MiniaturaExercicio id={ex.id} nome={ex.nome} dados={ex} /><span className="nome-catalogo"><strong>{ex.nome}</strong><small>{ex.grupo_muscular}{ex.equipamento ? ` · ${ex.equipamento}` : ''}</small></span><span className="marcador-catalogo" aria-hidden="true">{adicionarVarios ? ordemSelecao.get(ex.id) : <Plus size={18} />}</span><span className="sr-only">{adicionarVarios ? ordemSelecao.has(ex.id) ? 'Remover da seleção' : 'Selecionar exercício' : 'Adicionar exercício'}</span></button>)}</div>
     {mais}
     {filtrados.length === 0 && <p className="vazio-catalogo">Nenhum exercício encontrado. Tente outro nome ou grupo.</p>}
-    {adicionarVarios && <div className="confirmar-catalogo"><span>{escolhidos.length ? `${escolhidos.length} selecionado${escolhidos.length > 1 ? 's' : ''} · na ordem dos toques` : 'Selecione os exercícios da ficha'}</span><button type="button" className="botao-principal" disabled={ocupado || !escolhidos.length} onClick={() => { adicionarVarios(escolhidos); definirSelecionados([]) }}>Adicionar{escolhidos.length ? ` (${escolhidos.length})` : ''}</button></div>}
+    {adicionarVarios && escolhidos.length > 0 && <div className="confirmar-catalogo"><span>{escolhidos.length ? `${escolhidos.length} selecionado${escolhidos.length > 1 ? 's' : ''}` : 'Selecione os exercícios da ficha'}</span><button type="button" className="botao-principal" disabled={ocupado || !escolhidos.length} onClick={() => { adicionarVarios(escolhidos); definirSelecionados([]) }}>Adicionar{escolhidos.length ? ` (${escolhidos.length})` : ''}</button></div>}
   </div>
 })

@@ -2,7 +2,6 @@ import { useConfirmacao } from '../hooks/useConfirmacao'
 import { TransicaoConteudo } from '../componentes/TransicaoConteudo'
 import { RevisarDuplicatas } from '../componentes/RevisarDuplicatas'
 import { useEstadoTemporario } from '../hooks/useEstadoTemporario'
-import { exerciciosUnicos } from '../dados/duplicatasExercicios'
 import { Cardio } from './Cardio'
 import { MiniaturaExercicio } from '../componentes/MiniaturaExercicio'
 import { useEffect, useState } from 'react'
@@ -107,7 +106,7 @@ export function Treino({ online }: { online: boolean }) {
       </div>}
       <button type="button" className="botao-principal" disabled={ocupado} onClick={() => { definirAbrirResumo(false); definirSessao(ativo.id) }}>Continuar treino <ArrowRight size={18} aria-hidden="true" /></button>
     </section>}
-    <div className="abas-treino tres-abas"><button aria-pressed={secao === 'fichas'} onClick={() => definirSecao('fichas')}>Minhas fichas</button><button aria-pressed={secao === 'biblioteca'} onClick={() => definirSecao('biblioteca')}>Exercícios ({exerciciosUnicos(exercicios).length})</button><button aria-pressed={secao === 'cardio'} onClick={() => definirSecao('cardio')}>Cardio</button></div>
+    <div className="abas-treino tres-abas"><button aria-pressed={secao === 'fichas'} onClick={() => definirSecao('fichas')}>Minhas fichas</button><button aria-pressed={secao === 'biblioteca'} onClick={() => definirSecao('biblioteca')}>Exercícios</button><button aria-pressed={secao === 'cardio'} onClick={() => definirSecao('cardio')}>Cardio</button></div>
     <TransicaoConteudo chave={secao}>{secao === 'cardio' && <Cardio />}
     {secao === 'fichas' && ultimoFinalizado && <button type="button" className="ultimo-concluido ultimo-treino-atalho" onClick={() => definirCardFinalizado(ultimoFinalizado.id)} aria-label={`Ver card do último treino: ${formatarNomeFicha(ultimoFinalizado.titulo ?? 'Treino livre')}`}>
       <span className="icone-ultimo-treino"><Image size={19} aria-hidden="true" /></span>

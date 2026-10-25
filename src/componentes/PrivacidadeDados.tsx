@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { recolherSecaoSuavemente } from '../utilitarios/enquadrarDetalhes'
+import { useEffect, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { identidadeAtual, tabelasDados } from '../dados/banco'
 import { eliminarRegistro } from '../dados/eliminacao'
@@ -9,6 +10,24 @@ import { Painel } from './Painel'
 import { BackupConfiguracoes } from './BackupConfiguracoes'
 
 export function PrivacidadeDados(){
+ const raiz=useRef<HTMLElement>(null)
+ const [grupo,setGrupo]=useState<number|null>(null)
+ useEffect(()=>{
+  if(grupo===null)return
+  const quadro=requestAnimationFrame(()=>{
+   const secao=raiz.current?.querySelectorAll<HTMLDetailsElement>('details.privacidade-grupo')[grupo]
+   const conteudo=secao?.closest<HTMLElement>('main#conteudo')
+   if(!secao||!conteudo)return
+   const caixa=secao.getBoundingClientRect(),area=conteudo.getBoundingClientRect()
+   conteudo.scrollTo({top:conteudo.scrollTop+caixa.top-area.top-Math.max(12,(conteudo.clientHeight-caixa.height)/2),behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'})
+  })
+  return()=>cancelAnimationFrame(quadro)
+ },[grupo])
+ const alternarGrupo=(indice:number)=>{
+  const anterior=raiz.current?.querySelector<HTMLDetailsElement>('details.privacidade-grupo[open]')
+  const mudar=()=>setGrupo(grupo===indice?null:indice)
+  if(anterior)recolherSecaoSuavemente(anterior,mudar);else mudar()
+ }
  const conta=useConta()
  const removidos=useLiveQuery(async()=>{
   const itens:{tabela:string;id:string;nome:string}[]=[]
@@ -21,9 +40,9 @@ export function PrivacidadeDados(){
  const executar=async(f:()=>Promise<void>)=>{setOcupado(true);setErro('');try{await f()}catch(e){setErro(e instanceof Error?e.message:'Não foi possível concluir.')}finally{setOcupado(false);setSenha('')}}
  const abrir=(valor:typeof acao)=>{setAcao(valor);setConfirmacao('');setAceitar(false);setErro('');setSenha('')}
  const fechar=()=>{if(!ocupado){setAcao(undefined);setSenha('');setConfirmacao('')}}
- return <section className="painel privacidade-dados"><h2>Privacidade e dados</h2>
+ return <section ref={raiz} className="painel privacidade-dados"><h2>Privacidade e dados</h2>
   <p className="nota-resumo">Revise o que removeu ou gerencie os dados guardados neste navegador.</p>
-  <details className="privacidade-grupo"><summary><span>Itens removidos<small>Revisar e eliminar definitivamente</small></span><span className="privacidade-contagem">{removidos === undefined ? 'Carregando…' : `${removidos.length} ${removidos.length === 1 ? 'item' : 'itens'}`}</span></summary>
+  <details className="privacidade-grupo" open={grupo===0} onToggle={e=>e.stopPropagation()}><summary onClick={e=>{e.preventDefault();alternarGrupo(0)}}><span>Itens removidos<small>Revisar e eliminar definitivamente</small></span><span className="privacidade-contagem">{removidos === undefined ? 'Carregando…' : `${removidos.length} ${removidos.length === 1 ? 'item' : 'itens'}`}</span></summary>
    <p className="nota-resumo">Remover permite Desfazer. Eliminar apaga o conteúdo e as fotos, sem volta. Após {RETENCAO_REMOVIDOS_DIAS} dias, o conteúdo dos removidos é eliminado automaticamente; neste aparelho, ao abrir seu espaço.</p>
    {!removidos?.length&&<p>Nenhum item removido aguardando eliminação.</p>}
    {removidos?.map(r=><div className="formulario" key={r.tabela+'/'+r.id}><p>{r.nome} · {r.tabela}</p><button className="botao-destrutivo" disabled={ocupado||conta.ocupado} onClick={()=>{setItem(r);abrir('registro')}}>Eliminar definitivamente</button></div>)}
@@ -31,9 +50,9 @@ export function PrivacidadeDados(){
   <div className="privacidade-grupo formulario"><h3>Limpar este aparelho</h3><p className="nota-resumo">Apaga os dados do perfil atual neste navegador. Sua conta e os dados na nuvem permanecem.</p>
    <button className="botao-secundario" disabled={ocupado||conta.ocupado} onClick={()=>void executar(async()=>{setPendentes(await pendenciasLimpeza());abrir('aparelho')})}>Sair e apagar dados deste aparelho</button>
   </div>
-  <details className="privacidade-grupo"><summary>Dados antigos deste navegador</summary><p className="nota-resumo">O armazenamento antigo (legado) fica separado dos perfis atuais. Apague apenas se não precisar mais desses registros.</p><button className="botao-destrutivo largura-total" disabled={ocupado||conta.ocupado} onClick={()=>abrir('legado')}>Apagar dados antigos</button></details>
+  <details className="privacidade-grupo" open={grupo===1} onToggle={e=>e.stopPropagation()}><summary onClick={e=>{e.preventDefault();alternarGrupo(1)}}>Dados antigos deste navegador</summary><p className="nota-resumo">O armazenamento antigo (legado) fica separado dos perfis atuais. Apague apenas se não precisar mais desses registros.</p><button className="botao-destrutivo largura-total" disabled={ocupado||conta.ocupado} onClick={()=>abrir('legado')}>Apagar dados antigos</button></details>
   {conta.usuario&&<div className="privacidade-grupo formulario"><h3>Excluir conta</h3><p className="nota-resumo">Encerra seu acesso e elimina os registros e arquivos da conta. Esta ação é irreversível.</p><button className="botao-destrutivo" disabled={ocupado||conta.ocupado} onClick={()=>abrir('conta')}>Excluir minha conta definitivamente</button></div>}
-  <details className="privacidade-grupo"><summary>O que não é apagado?</summary><p className="nota-resumo">Limpar este aparelho não apaga arquivos exportados, backups e logs do provedor nem dados em outros aparelhos. Exclusões na conta chegam aos outros aparelhos ao sincronizar, mas não apagam cópias externas.</p></details>
+  <details className="privacidade-grupo" open={grupo===2} onToggle={e=>e.stopPropagation()}><summary onClick={e=>{e.preventDefault();alternarGrupo(2)}}>O que não é apagado?</summary><p className="nota-resumo">Limpar este aparelho não apaga arquivos exportados, backups e logs do provedor nem dados em outros aparelhos. Exclusões na conta chegam aos outros aparelhos ao sincronizar, mas não apagam cópias externas.</p></details>
   {aviso&&<p role="status">{aviso}</p>}{erro&&!acao&&<p className="erro" role="alert">{erro}</p>}
   {acao==='backup'?<Painel titulo="Guardar backup antes de excluir" fechar={fechar}><BackupConfiguracoes/></Painel>:acao&&<Painel titulo={acao==='conta'?'Excluir conta':acao==='aparelho'?'Apagar dados deste aparelho':acao==='legado'?'Apagar legado':'Eliminar definitivamente'} fechar={fechar}>
    <div className="formulario confirmacao-privacidade">

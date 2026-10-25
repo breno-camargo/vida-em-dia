@@ -1,3 +1,4 @@
+import { recolherDetalhesSuavemente } from '../utilitarios/enquadrarDetalhes'
 import { useId, useState } from 'react'
 import { Painel } from './Painel'
 import { SelecionarDescanso } from './SelecionarDescanso'
@@ -27,7 +28,7 @@ export function EditorExercicio({ exercicio, fechar }: { exercicio: Exercicio; f
     <fieldset className="secao-editor"><legend>Exercício</legend>
       <label>Nome<input required value={dados.nome} onChange={e => campo('nome', e.target.value)} placeholder="Nome do exercício" /></label>
       <div><span className="rotulo-editor">Tipo</span><div className="escolhas-editor" role="group" aria-label="Tipo de exercício">{(['forca', 'cardio'] as const).map(tipo => <button type="button" key={tipo} aria-pressed={dados.tipo === tipo} onClick={() => campo('tipo', tipo)}>{tipo === 'forca' ? 'Força' : 'Cardio'}</button>)}</div></div>
-      <div><span className="rotulo-editor">Grupo muscular</span><div className="filtro-musculos" role="group" aria-label="Grupo muscular">{[...new Set([...grupos, dados.grupo_muscular])].filter(Boolean).map(grupo => <button type="button" key={grupo} aria-pressed={dados.grupo_muscular === grupo} onClick={() => campo('grupo_muscular', grupo)}>{grupo}</button>)}</div><details className="grupo-personalizado"><summary>Outro grupo</summary><label>Nome do grupo<input value={dados.grupo_muscular} onChange={e => campo('grupo_muscular', e.target.value)} /></label></details></div>
+      <div><span className="rotulo-editor">Grupo muscular</span><div className="filtro-musculos" role="group" aria-label="Grupo muscular">{[...new Set([...grupos, dados.grupo_muscular])].filter(Boolean).map(grupo => <button type="button" key={grupo} aria-pressed={dados.grupo_muscular === grupo} onClick={() => campo('grupo_muscular', grupo)}>{grupo}</button>)}</div><details className="grupo-personalizado"><summary onClick={recolherDetalhesSuavemente}>Outro grupo</summary><label>Nome do grupo<input value={dados.grupo_muscular} onChange={e => campo('grupo_muscular', e.target.value)} /></label></details></div>
       <label>Equipamento<input value={dados.equipamento} onChange={e => campo('equipamento', e.target.value)} placeholder="Ex.: polia, halteres ou máquina" /></label>
     </fieldset>
     {dados.tipo === 'forca' && <fieldset className="secao-editor"><legend>Planejamento</legend>
