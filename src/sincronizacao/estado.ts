@@ -1,9 +1,10 @@
 import { useSyncExternalStore } from 'react'
-import { liveQuery } from 'dexie'
+import { observarDados } from './observarDados'
+import { atualizarCampos } from '../utilitarios/atualizarCampos'
 import type { User } from '@supabase/supabase-js'
 import { supabase, sessaoLocal, removerSessaoLocal } from './cliente'
 import { apagarBancoAtual, excluirContaConfirmada } from '../dados/limpezaAparelho'
-import { abrirIdentidade, identidadeAtual } from '../dados/banco'
+import { abrirIdentidade, identidadeAtual, observarBanco } from '../dados/banco'
 import { iniciarBanco } from '../dados/configuracoes'
 import { iniciarBiblioteca } from '../dados/biblioteca'
 import { iniciarFeriados } from '../dados/atividade'
@@ -16,8 +17,10 @@ import { nomesSync } from './motor'
 interface Estado { usuario:User|null; carregando:boolean; vinculado:boolean; ocupado:boolean; mensagem:string; erro:string; pendentes:number; visitante:boolean; recuperando:boolean }
 let estado:Estado={usuario:null,carregando:!!supabase,vinculado:false,ocupado:false,mensagem:'',erro:'',pendentes:0,visitante:false,recuperando:false}
 const ouvintes=new Set<()=>void>()
-const alterar=(valor:Partial<Estado>)=>{estado={...estado,...valor};ouvintes.forEach(f=>f())}
-export function useConta(){return useSyncExternalStore(f=>{ouvintes.add(f);return()=>ouvintes.delete(f)},()=>estado)}
+const alterar=(valor:Partial<Estado>)=>{const novo=atualizarCampos(estado,valor);if(novo===estado)return;estado=novo;ouvintes.forEach(f=>f())}
+const assinar=(f:()=>void)=>{ouvintes.add(f);return()=>{ouvintes.delete(f)}}
+const lerEstado=()=>estado
+export function useConta(){return useSyncExternalStore(assinar,lerEstado)}
 export function usuarioAtual(){return estado.usuario}
 export function continuarSemConta(){localStorage.setItem('vida-em-dia:visitante-ativo','sim');reiniciarIdentidade()}
 export function definirRecuperacao(recuperando:boolean){alterar({recuperando})}
@@ -52,9 +55,14 @@ export async function iniciarConta(){
  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')void sincronizarAutomatico()})
  window.addEventListener('vida-em-dia:treino-finalizado',()=>void sincronizarAutomatico())
  let atraso:ReturnType<typeof setTimeout>
- liveQuery(async()=>{for(const nome of nomesSync)await banco.table(nome).toArray()}).subscribe({next:()=>{
-  clearTimeout(atraso);atraso=setTimeout(()=>void atualizarFila(),500)
- },error:()=>alterar({erro:'Não foi possível conferir as pendências. Seus registros locais foram preservados.'})})
+ const origem=banco
+ const agendar=()=>{
+  if(banco!==origem)return
+  clearTimeout(atraso);atraso=setTimeout(()=>{if(banco===origem&&origem.isOpen())void atualizarFila()},500)
+ }
+ const parar=observarDados(banco.name,nomesSync,agendar)
+ const pararBanco=observarBanco(()=>{clearTimeout(atraso);parar();pararBanco()})
+ agendar()
 }
 export async function confirmarVinculo(){
  if(!estado.usuario||estado.ocupado)return

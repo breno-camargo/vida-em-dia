@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { ChartNoAxesCombined, ChevronDown } from 'lucide-react'
 import type { MedidaCorporal } from '../dados/modelos'
 import { camposMedidas, formatarValorMedida, paresMedidas, formatarDataMedida, type CampoMedida } from '../dados/medidas'
@@ -9,7 +9,12 @@ export type VisaoMedidas = 'resumo' | 'evolucao' | 'historico'
 export function ResumoMedidas({ registros, visao, navegar }: { registros: MedidaCorporal[]; visao: VisaoMedidas; navegar: (visao: VisaoMedidas) => void }) {
   const [campoGrafico, definirCampoGrafico] = useState<CampoMedida>('peso')
   const [escolher, definirEscolher] = useState(false)
-  const ultimo = (campo: CampoMedida) => registros.filter(m => m[campo] !== undefined).at(-1)
+  const ultimos = useMemo(() => {
+    const valores = new Map<CampoMedida, MedidaCorporal>()
+    for (const registro of registros) for (const [campo] of camposMedidas) if (registro[campo] !== undefined) valores.set(campo, registro)
+    return valores
+  }, [registros])
+  const ultimo = (campo: CampoMedida) => ultimos.get(campo)
   const peso = ultimo('peso')
   const infoGrafico = camposMedidas.find(([campo]) => campo === campoGrafico)!
   return <>

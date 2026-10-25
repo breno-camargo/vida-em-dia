@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import NoSleep from 'nosleep.js'
 export function useTelaLigada() {
   const alternativa = useRef<NoSleep | null>(null)
@@ -76,11 +76,16 @@ export function useTelaLigada() {
     alternativa.current?.disable()
   }
   useEffect(() => { refManter.current = manter })
+  const interromper = useCallback(() => {
+    ativo.current = false; versao.current++
+    void bloqueio.current?.release().catch(() => undefined)
+    alternativa.current?.disable()
+  }, [])
   useEffect(() => {
     const voltar = () => { if (ativo.current && document.visibilityState === 'visible') void refManter.current() }
     document.addEventListener('visibilitychange', voltar)
-    return () => { ativo.current = false; versao.current++; document.removeEventListener('visibilitychange', voltar); void bloqueio.current?.release().catch(() => undefined); alternativa.current?.disable() }
-  }, [])
+    return () => { document.removeEventListener('visibilitychange', voltar); interromper() }
+  }, [interromper])
   const alternar = () => { if (ativo.current) parar(); else void manter() }
   const renovar = () => { if (ativo.current) void manter() }
   return { estado, habilitada, ocupado, manter, parar, alternar, renovar }

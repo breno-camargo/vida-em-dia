@@ -1,10 +1,10 @@
 import type { Exercicio } from '../dados/modelos'
 import { Plus } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 import { MiniaturaExercicio } from './MiniaturaExercicio'
 import { useFiltroExercicios } from './FiltrosExercicios'
 
-export function ListaExercicios({ exercicios, busca, adicionar, adicionarVarios, ocupado = false }: { exercicios: Exercicio[]; busca: string; adicionar: (exercicio: Exercicio) => void; adicionarVarios?: (exercicios: Exercicio[]) => void; ocupado?: boolean }) {
+export const ListaExercicios = memo(function ListaExercicios({ exercicios, busca, adicionar, adicionarVarios, ocupado = false }: { exercicios: Exercicio[]; busca: string; adicionar: (exercicio: Exercicio) => void; adicionarVarios?: (exercicios: Exercicio[]) => void; ocupado?: boolean }) {
   const { filtrados, visiveis, filtros, mais } = useFiltroExercicios(exercicios, busca)
   const [selecionados, definirSelecionados] = useState<string[]>([])
   const porId = useMemo(() => new Map(exercicios.map(e => [e.id, e])), [exercicios])
@@ -18,4 +18,4 @@ export function ListaExercicios({ exercicios, busca, adicionar, adicionarVarios,
     {filtrados.length === 0 && <p className="vazio-catalogo">Nenhum exercício encontrado. Tente outro nome ou grupo.</p>}
     {adicionarVarios && <div className="confirmar-catalogo"><span>{escolhidos.length ? `${escolhidos.length} selecionado${escolhidos.length > 1 ? 's' : ''} · na ordem dos toques` : 'Selecione os exercícios da ficha'}</span><button type="button" className="botao-principal" disabled={ocupado || !escolhidos.length} onClick={() => { adicionarVarios(escolhidos); definirSelecionados([]) }}>Adicionar{escolhidos.length ? ` (${escolhidos.length})` : ''}</button></div>}
   </div>
-}
+})

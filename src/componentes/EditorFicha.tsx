@@ -1,6 +1,6 @@
 import { exerciciosDisponiveis } from '../dados/duplicatasExercicios'
 import { SelecionarSeries } from './SelecionarSeries'
-import { useId, useMemo, useState } from 'react'
+import { useCallback, useDeferredValue, useId, useMemo, useState } from 'react'
 import { Painel } from './Painel'
 import { ListaExercicios } from './ListaExercicios'
 import type { Exercicio, Ficha, FichaExercicio } from '../dados/modelos'
@@ -16,11 +16,14 @@ export function EditorFicha({ ficha, iniciais, exercicios, fechar }: { ficha: Fi
   const [nome, definirNome] = useState(ficha.nome)
   const [itens, definirItens] = useState(iniciais)
   const [busca, definirBusca] = useState('')
+  const buscaFiltrada = useDeferredValue(busca)
   const [erro, definirErro] = useState('')
   const [salvando, definirSalvando] = useState(false)
   const [ajuda, definirAjuda] = useState<Exercicio | null>(null)
   const [edicao, definirEdicao] = useState<Exercicio | null>(null)
   const disponiveis = useMemo(() => exerciciosDisponiveis(exercicios, itens.map(i => i.exercicio_id)), [exercicios, itens])
+  const adicionarVarios = useCallback((novos: Exercicio[]) => definirItens(atuais => [...atuais, ...novos.filter(ex => !atuais.some(i => i.exercicio_id === ex.id)).map((ex, indice) => ({ ...criarRegistro(ficha.user_id), ficha_id: ficha.id, exercicio_id: ex.id, ordem: atuais.length + indice, series_planejadas: 3, descanso_segundos: ex.descanso_padrao_segundos }))]), [ficha.id, ficha.user_id])
+  const adicionar = useCallback((ex: Exercicio) => adicionarVarios([ex]), [adicionarVarios])
   const alterar = (id: string, dados: Partial<FichaExercicio>) => definirItens(itens.map(item => item.id === id ? { ...item, ...dados } : item))
   const mover = (indice: number, direcao: number) => { const novos = [...itens]; [novos[indice], novos[indice + direcao]] = [novos[indice + direcao], novos[indice]]; definirItens(novos) }
   return <Painel titulo={ficha.nome ? 'Editar ficha' : 'Nova ficha'} fechar={fechar} acao={<button type="submit" form={formularioId} disabled={salvando} className="botao-principal salvar-cabecalho">{salvando ? 'Salvando…' : 'Salvar'}</button>}><form id={formularioId} className="formulario" onSubmit={async e => {
@@ -36,7 +39,7 @@ export function EditorFicha({ ficha, iniciais, exercicios, fechar }: { ficha: Fi
       <div className="acoes"><button type="button" disabled={indice === 0} onClick={() => mover(indice, -1)} aria-label="Mover exercício para cima">Subir</button><button type="button" disabled={indice === itens.length - 1} onClick={() => mover(indice, 1)} aria-label="Mover exercício para baixo">Descer</button><button type="button" onClick={() => definirItens(itens.filter(i => i.id !== item.id))}>Retirar</button></div>
     </div></details>)}
     <label>Buscar para adicionar<input value={busca} onChange={e => definirBusca(e.target.value)} placeholder="Nome do exercício" /></label>
-    <ListaExercicios exercicios={disponiveis} busca={busca} adicionarVarios={novos => definirItens(atuais => [...atuais, ...novos.filter(ex => !atuais.some(i => i.exercicio_id === ex.id)).map((ex, indice) => ({ ...criarRegistro(ficha.user_id), ficha_id: ficha.id, exercicio_id: ex.id, ordem: atuais.length + indice, series_planejadas: 3, descanso_segundos: ex.descanso_padrao_segundos }))])} adicionar={ex => definirItens([...itens, { ...criarRegistro(ficha.user_id), ficha_id: ficha.id, exercicio_id: ex.id, ordem: itens.length, series_planejadas: 3, descanso_segundos: ex.descanso_padrao_segundos }])} />
+    <ListaExercicios exercicios={disponiveis} busca={buscaFiltrada} adicionarVarios={adicionarVarios} adicionar={adicionar} />
     {erro && <p className="erro" role="alert">{erro}</p>}
     <small>Durante o treino, você poderá alterar o planejamento só daquele dia.</small>
   </form>

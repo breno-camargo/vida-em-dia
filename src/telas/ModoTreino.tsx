@@ -5,7 +5,7 @@ import { CardioNoTreino } from '../componentes/CardioNoTreino'
 import { EditorCardio } from '../componentes/EditorCardio'
 import { novoCardio } from '../dados/cardio'
 import { ListaExercicios } from '../componentes/ListaExercicios'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { banco, tabela } from '../dados/banco'
 import { criarRegistro, repositorio } from '../dados/repositorio'
@@ -67,6 +67,15 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
   const raizTreino = useRef<HTMLElement>(null)
   const acoesTreino = useRef<HTMLDivElement>(null)
   useReservaAcoes(raizTreino, acoesTreino, !!treino && !!itens && !!series && !!exercicios && !resumo && !treino.fim)
+  const gruposSeries = useMemo(() => {
+    const grupos = new Map<string, SerieTreino[]>()
+    for (const serie of series ?? []) {
+      const grupo = grupos.get(serie.exercicio_id)
+      if (grupo) grupo.push(serie); else grupos.set(serie.exercicio_id, [serie])
+    }
+    return grupos
+  }, [series])
+  const exerciciosPorId = useMemo(() => new Map((exercicios ?? []).map(ex => [ex.id, ex])), [exercicios])
   const executar = async (acao: () => Promise<void>) => {
     definirErro(''); definirOcupado(true)
     try { await acao() } catch (error) { definirErro(error instanceof Error ? error.message : 'Não foi possível salvar. Tente novamente.') }
@@ -82,7 +91,7 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
     })
   }
   if (!treino || !itens || !series || !exercicios) return <p role="status">Carregando treino salvo…</p>
-  const proxima = itens.flatMap(item => series.filter(s => s.exercicio_id === item.exercicio_id)).find(s => !s.concluida_em)
+  const proxima = itens.map(item => gruposSeries.get(item.exercicio_id)?.find(s => !s.concluida_em)).find(Boolean)
   const atualizarDescanso = async (fim: string | null) => { await tabela('treinos').update(id, { descanso_fim: fim, atualizado_em: new Date().toISOString() }) }
   if (resumo || treino.fim) return <>{dialogo}<ResumoTreino treino={treino} series={series} anterior={comparacao} pesoInicial={peso} fechar={fechar} voltar={() => definirResumo(false)} finalizar={async (peso_corporal, calorias) => {
     if (proxima && !await confirmar('Ainda existem séries pendentes. Finalizar somente com as séries concluídas?', "Finalizar treino")) return
@@ -101,8 +110,8 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
     <Descanso fim={treino.descanso_fim} alterar={fim => void executar(() => atualizarDescanso(fim))} />
     {itens.map((item, indice) => {
       if (item.tipo === 'cardio') return <CardioNoTreino key={item.id} item={item} data={treino.data} remover={() => void executar(async () => { await repositorio('treino_exercicios').apagar(item.id) })} />
-      const ex = exercicios.find(e => e.id === item.exercicio_id)
-      const grupo = series.filter(s => s.exercicio_id === item.exercicio_id)
+      const ex = exerciciosPorId.get(item.exercicio_id)
+      const grupo = gruposSeries.get(item.exercicio_id) ?? []
       const semPeso = grupo.length > 0 && grupo.every(s => s.modo_carga === 'peso_corporal')
       const feitas = grupo.filter(s => s.concluida_em).length
       const resumoReps = [...new Set(grupo.map(s => s.repeticoes))]

@@ -23,9 +23,9 @@
 
 /* A troca de paleta interpola somente pintura, sem mover o conteúdo. */
 @media (prefers-reduced-motion: no-preference) {
-  body,
-  :root[data-tema] .app,
-  :root[data-tema] .app :where(
+  :root.mudando-tema body,
+  :root.mudando-tema[data-tema] .app,
+  :root.mudando-tema[data-tema] .app :where(
     .cabecalho, main, .conteudo-pagina, .navegacao, .linha-data, .estado-rede,
     h1, h2, h3, p, small, label, dt, dd, legend, strong,
     .marca, .marca > span, .titulo-secao > span, .nota, .ponto,

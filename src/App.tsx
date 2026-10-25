@@ -51,7 +51,17 @@ export default function App() {
   const [entradaTreino, definirEntradaTreino] = useState(0)
   const [erro, definirErro] = useState('')
   const configVisual = useLiveQuery(() => tabela('configuracoes').where('chave').equals('principal').first())
-  useLayoutEffect(() => { document.documentElement.dataset.tema = configVisual?.tema ?? 'escuro' }, [configVisual?.tema])
+  const temaSalvo = configVisual?.tema
+  const temaAnterior = useRef<string | undefined>(undefined)
+  useLayoutEffect(() => {
+    const raiz = document.documentElement, tema = temaSalvo ?? 'escuro'
+    const animar = temaAnterior.current !== undefined && temaAnterior.current !== tema && !matchMedia('(prefers-reduced-motion: reduce)').matches
+    raiz.classList.toggle('mudando-tema', animar)
+    raiz.dataset.tema = tema
+    temaAnterior.current = temaSalvo
+    const prazo = animar ? setTimeout(() => raiz.classList.remove('mudando-tema'), 300) : undefined
+    return () => { clearTimeout(prazo); raiz.classList.remove('mudando-tema') }
+  }, [temaSalvo])
   const ambiente = useAmbiente()
   const conta = useConta()
   const entrada = !!supabase && !conta.visitante && (!conta.usuario || conta.recuperando)
