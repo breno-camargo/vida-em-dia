@@ -58,25 +58,46 @@ export function Configuracoes({ instalado, persistente, inicial, abrirAcesso }: 
     }
   }
 
+  // Mede a caixa final, sem disputar a rolagem durante a transicao.
   useEffect(() => {
-    if (inicial) {
-      const elemento = raiz.current?.querySelector<HTMLElement>(`#secao-config-${inicial}`)
+    if (!aberta) return
+    const elemento = raiz.current?.querySelector<HTMLElement>(`#secao-config-${aberta}`)
+    const gaveta = elemento?.querySelector<HTMLElement>('.gaveta-config')
+    if (!elemento || !gaveta) return
+    let cancelado = false
+    let conferido = false
+    let quadro = 0
+    const cancelar = () => { cancelado = true }
+    const conferir = () => {
+      if (cancelado || conferido) return
+      conferido = true
       assegurarVisivel(elemento)
     }
-  }, [inicial])
+    const terminou = (evento: TransitionEvent) => {
+      if (evento.target === gaveta && evento.propertyName === 'grid-template-rows') conferir()
+    }
+    gaveta.addEventListener('transitionend', terminou)
+    const conteudo = elemento.closest('main#conteudo')
+    conteudo?.addEventListener('pointerdown', cancelar, { passive: true })
+    conteudo?.addEventListener('wheel', cancelar, { passive: true })
+    quadro = requestAnimationFrame(() => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) conferir()
+    })
+    // Cobre ausencia de transicao e preenchimento assincrono inicial.
+    const prazo = setTimeout(conferir, 300)
+    return () => {
+      cancelAnimationFrame(quadro)
+      clearTimeout(prazo)
+      gaveta.removeEventListener('transitionend', terminou)
+      conteudo?.removeEventListener('pointerdown', cancelar)
+      conteudo?.removeEventListener('wheel', cancelar)
+    }
+  }, [aberta])
 
   const alternarSecao = (id: SecaoConfiguracoes) => {
-    definirAberta(atual => {
-      const nova = atual === id ? null : id
-      if (nova) {
-        definirSecoesMontadas(ant => new Set(ant).add(nova))
-        requestAnimationFrame(() => {
-          const elemento = raiz.current?.querySelector<HTMLElement>(`#secao-config-${nova}`)
-          assegurarVisivel(elemento)
-        })
-      }
-      return nova
-    })
+    const nova = aberta === id ? null : id
+    if (nova) definirSecoesMontadas(ant => new Set(ant).add(nova))
+    definirAberta(nova)
   }
 
   const data = (valor?: string) => valor ? new Date(valor).toLocaleString('pt-BR') : 'Nunca'
