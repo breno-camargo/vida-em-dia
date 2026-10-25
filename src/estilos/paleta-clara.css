@@ -405,7 +405,9 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .painel-modal::backdrop {
-    background: var(--visual-rebaixo)
+    background: #0006;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px)
 }
 :root[data-tema=claro] .app .painel-modal>.topo-painel>header {
     background: var(--visual-rebaixo);
@@ -1517,8 +1519,10 @@
 :root[data-tema=claro] .app .item-catalogo>.menu-ficha>summary {
     color: var(--visual-suave)
 }
+@media (hover: hover) and (pointer: fine) {
 :root[data-tema=claro] .app .item-catalogo:hover {
     background: var(--visual-rebaixo)
+}
 }
 :root[data-tema=claro] .app .selecionar-exercicio {
     border-bottom-color: var(--borda-controle-legada-claro)

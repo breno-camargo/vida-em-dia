@@ -226,3 +226,6 @@ button,input,textarea,select { font: inherit; }
 .app .treino-em-andamento .ultimo-desempenho p { margin: 0; }
 .app .treino-em-andamento .conteudo-exercicio > .acoes { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin-top: 0; padding-top: 12px; border-top: 1px solid var(--visual-borda); }
 .app .treino-em-andamento .conteudo-exercicio > .acoes > button:last-child { grid-column: 1 / -1; }
+
+/* Resumo de Hoje: o convite cabe na mesma linha dos valores dos demais cards. */
+.app .grade-equilibrio .cartao > .convite-treino { font-size: clamp(14px, 4.35vw, 17px); line-height: 40px; white-space: nowrap; letter-spacing: -.5px; }
