@@ -14,7 +14,7 @@ import type { Exercicio, Ficha, FichaExercicio } from '../dados/modelos'
 import { EditorExercicio } from '../componentes/EditorExercicio'
 import { EditorFicha } from '../componentes/EditorFicha'
 import { AjudaExercicio } from '../componentes/AjudaExercicio'
-import { iniciarTreino, treinoAtivo, descartarTreinoLivreVazio } from '../dados/treinos'
+import { iniciarTreino, treinoAtivo, treinoSemAtividade, descartarTreinoLivreVazio } from '../dados/treinos'
 import { ModoTreino } from './ModoTreino'
 import { Ellipsis, Play, Plus, ArrowRight, Dumbbell, Image } from 'lucide-react'
 import { Painel } from '../componentes/Painel'
@@ -69,7 +69,7 @@ export function Treino({ online }: { online: boolean }) {
   }
   const iniciar = async (fichaId?: string) => {
     const atual = await treinoAtivo()
-    if (atual && atual.ficha_id !== fichaId) { definirNovoPedido({ fichaId }); return }
+    if (atual && atual.ficha_id !== fichaId && !await treinoSemAtividade(atual)) { definirNovoPedido({ fichaId }); return }
     definirAbrirResumo(false)
     definirSessao(await iniciarTreino(fichaId))
   }
