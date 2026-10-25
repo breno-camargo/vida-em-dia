@@ -1,2 +1,45 @@
 /* A entrada curta é controlada por useTransicaoSuave, sem sobrepor telas. */
 .app > main#conteudo { position: relative; left: 0; }
+.app .painel-modal > .topo-arrastavel { touch-action: none; user-select: none; cursor: grab; }
+.app .painel-modal > .topo-arrastavel:active { cursor: grabbing; }
+.app .painel-modal > .topo-arrastavel :is(button,a,input,select,textarea) { cursor: pointer; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .app .painel-modal[open]:not(.painel-centralizado) {
+    animation: subir-painel 320ms cubic-bezier(.22,.61,.36,1);
+  }
+  .app .painel-modal[open]:not(.painel-centralizado)::backdrop {
+    animation: revelar-fundo-painel 240ms ease-out;
+  }
+}
+@keyframes subir-painel {
+  from { transform: translateY(32px); opacity: .65; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes revelar-fundo-painel {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* A troca de paleta interpola somente pintura, sem mover o conteúdo. */
+@media (prefers-reduced-motion: no-preference) {
+  body,
+  :root[data-tema] .app,
+  :root[data-tema] .app :where(
+    .cabecalho, main, .conteudo-pagina, .navegacao, .linha-data, .estado-rede,
+    h1, h2, h3, p, small, label, dt, dd, legend, strong,
+    .marca, .marca > span, .titulo-secao > span, .nota, .ponto,
+    .painel, .cartao, .config-lista, .secao-config, .texto-config,
+    .aviso-modo-visitante, .lembrete-medidas, .lembrete-backup,
+    .campo-medida, .data-medida, input, select, textarea,
+    .painel-modal, .topo-painel, .conteudo-modal,
+    .registro-medida, .par-resumo-medida, .peso-resumo-medidas,
+    .grade-resumo-medidas > div, .item-ficha, .exercicio-treino,
+    .retomar-treino, .opcionais-cardio
+  ) {
+    transition: background-color 260ms cubic-bezier(.22,.61,.36,1),
+      color 260ms cubic-bezier(.22,.61,.36,1),
+      border-color 260ms cubic-bezier(.22,.61,.36,1),
+      box-shadow 260ms cubic-bezier(.22,.61,.36,1);
+  }
+}

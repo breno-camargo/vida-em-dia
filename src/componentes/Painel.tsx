@@ -6,11 +6,17 @@ export function Painel({ titulo, fechar, children, centralizado = false, acao, f
     if (ref.current) ref.current.style.transform = ''
     arrasto.current = null
   }
-  useEffect(() => { ref.current?.showModal(); const estilo = document.body.style.overflow; document.body.style.overflow = 'hidden'; return () => { document.body.style.overflow = estilo } }, [])
-  return <dialog ref={ref} className={`painel-modal${centralizado ? ' painel-centralizado' : ''}`} aria-label={titulo} onCancel={e => { if (fechamentoLivre) fechar(); else e.preventDefault() }}>
-    <div className="topo-painel">{!centralizado && <button type="button" className="alca-painel" aria-label="Arraste para baixo para fechar o painel" onClick={e => { if (e.detail === 0) fechar() }}
+  useEffect(() => { ref.current?.showModal(); ref.current?.focus({ preventScroll: true }); const estilo = document.body.style.overflow; document.body.style.overflow = 'hidden'; return () => { document.body.style.overflow = estilo } }, [])
+  return <dialog ref={ref} tabIndex={-1} className={`painel-modal${centralizado ? ' painel-centralizado' : ''}`} aria-label={titulo} onCancel={e => { if (fechamentoLivre) fechar(); else e.preventDefault() }}>
+    <div className={`topo-painel${!centralizado && fechamentoLivre ? ' topo-arrastavel' : ''}`}
       onPointerDown={e => {
-        if (!e.isPrimary || e.button !== 0) return
+        if (centralizado || !fechamentoLivre || !e.isPrimary || e.button !== 0) return
+        const alvo = e.target as Element
+        if (alvo.closest('button,a,input,select,textarea,[role=button]') && !alvo.closest('.alca-painel')) return
+        // O gesto assume o controle mesmo se a animação de entrada ainda não terminou.
+        ref.current?.getAnimations().forEach(animacao => {
+          if ('animationName' in animacao && animacao.animationName === 'subir-painel') animacao.cancel()
+        })
         e.preventDefault()
         arrasto.current = { id: e.pointerId, inicio: e.clientY, distancia: 0, tempo: performance.now() }
         e.currentTarget.setPointerCapture(e.pointerId)
@@ -26,7 +32,8 @@ export function Painel({ titulo, fechar, children, centralizado = false, acao, f
         const deveFechar = distancia >= 40 || (distancia >= 18 && velocidade > 0.3)
         restaurar()
         if (deveFechar) fechar()
-      }} onPointerCancel={restaurar} onLostPointerCapture={restaurar}><span aria-hidden="true" /></button>}
+      }} onPointerCancel={restaurar} onLostPointerCapture={restaurar}>
+    {!centralizado && fechamentoLivre && <button type="button" className="alca-painel" aria-label="Arraste para baixo para fechar o painel" onClick={e => { if (e.detail === 0) fechar() }}><span aria-hidden="true" /></button>}
     <header><h2>{titulo}</h2>{acao}{fechamentoLivre && <button type="button" className="botao-icone" onClick={fechar} aria-label="Fechar painel">✕</button>}</header></div>
     <div className="conteudo-modal">{children}</div>
   </dialog>
