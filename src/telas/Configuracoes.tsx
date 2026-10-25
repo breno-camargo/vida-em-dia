@@ -114,7 +114,7 @@ export function Configuracoes({ instalado, persistente, inicial, abrirAcesso }: 
       <div><dt>Último backup</dt><dd>{data(config?.ultimo_backup)}</dd></div>
     </dl><p>Instalar, sincronizar e exportar backups ajuda a proteger seus dados. A persistência depende do navegador.</p></section>},
     ...(!instalado?[{id:'instalar' as const,titulo:'Instalar no iPhone',resumo:'Adicionar à Tela de Início',icone:<Download size={20}/>,conteudo:<section className="painel"><h2>Instalar no iPhone</h2><p>Abra no Safari → Compartilhar → Adicionar à Tela de Início.</p><p>Instale antes de registrar dados ou fazer login. Safari e app instalado podem ter dados separados; cada endereço tem seu próprio armazenamento.</p></section>}]:[]),
-    {id:'sobre' as const,titulo:'Sobre o Vida em Dia',resumo:'Versão e próximas novidades',icone:<Info size={20}/>,conteudo:<section className="painel"><h2>Sobre o Vida em Dia</h2><p>Seu espaço pessoal de treino, alimentação e evolução.</p><small>Versão 0.7.0 · Backup e proteção dos dados</small><h3>Em breve</h3><p>Sincronização das fotos na etapa 11. Personalização do tema na etapa 13.</p></section>},
+    {id:'sobre' as const,titulo:'Sobre o Vida em Dia',resumo:'Recursos e armazenamento',icone:<Info size={20}/>,conteudo:<section className="painel"><h2>Sobre o Vida em Dia</h2><p>Seu espaço pessoal de treino, alimentação e evolução.</p><small>Novo visual · Temas claro, escuro e automático</small><h3>Seus dados</h3><p>Registros disponíveis offline, com backup e sincronização pela conta. As fotos ficam neste aparelho; inclua-as no backup para guardá-las.</p></section>},
   ]
   const grupos = [
     {titulo:'SEU PERFIL',ids:['conta']},
