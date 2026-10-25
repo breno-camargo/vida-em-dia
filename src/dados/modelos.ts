@@ -79,6 +79,7 @@ export interface Configuracao extends Registro {
   prompt_ia_modelo: string; dia_lembrete_medidas: number; dias_lembrete_backup: number
   ultimo_backup?: string; ultima_sincronizacao?: string; sync_automatico: boolean
   metas_calorias_separadas?: boolean
+  descanso_por_data?: Record<string, boolean>
   anos_feriados_inicializados?: number[]
   biblioteca_inicializada?: boolean
 }
