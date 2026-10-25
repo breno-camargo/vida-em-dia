@@ -1,5 +1,8 @@
 # Cópia isolada para o novo visual
 
+> [!NOTE]
+> **Promovido a Aplicativo Principal:** Em 25/10/2026, esta base com novo visual foi promovida a aplicação principal. O isolamento foi desativado, o banco Supabase da prévia foi conectado e o PWA assumiu a identidade oficial "Vida em Dia".
+
 Origem: pasta irmã `vida-em-dia`, branch `test`. O arquivo `ORIGEM-COPIA.json` registra o commit e os hashes dos arquivos copiados. Esta é uma cópia do checkout local atual, não um download da versão publicada.
 
 O projeto original permanece intacto. Os dois protótipos e a matriz `revisao/PARIDADE-APP-PROTOTIPO.md` foram copiados para referência. O novo layout ainda não foi aplicado ao React nesta preparação.
