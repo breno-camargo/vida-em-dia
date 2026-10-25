@@ -1,3 +1,6 @@
+import { registrarTemaManual } from './utilitarios/tema'
+import { useTema } from './hooks/useTema'
+import { temaRecuperacaoSenha } from './sincronizacao/recuperacaoSenha'
 import { ConcluirPerfilCadastro } from './componentes/ConcluirPerfilCadastro'
 import { continuarSemConta, useConta } from './sincronizacao/estado'
 import { supabase } from './sincronizacao/cliente'
@@ -34,6 +37,8 @@ const proximas = {
 export default function App() {
   const [aba, definirAba] = useState<Aba>('Hoje')
   const [menu, definirMenu] = useState(false)
+  const [acessoSolicitado, definirAcessoSolicitado] = useState(false)
+  const conta = useConta()
   const conteudoRef = useRef<HTMLElement>(null)
   useTransicaoSuave(conteudoRef, menu ? 'configuracoes' : aba)
   useEffect(() => {
@@ -51,20 +56,22 @@ export default function App() {
   const [entradaTreino, definirEntradaTreino] = useState(0)
   const [erro, definirErro] = useState('')
   const configVisual = useLiveQuery(() => tabela('configuracoes').where('chave').equals('principal').first())
-  const temaSalvo = configVisual?.tema
+  const temaPreferido = useTema()
+  const temaSalvo = conta.recuperando ? temaRecuperacaoSenha() ?? temaPreferido : temaPreferido
   const temaAnterior = useRef<string | undefined>(undefined)
   useLayoutEffect(() => {
-    const raiz = document.documentElement, tema = temaSalvo ?? 'escuro'
+    const raiz = document.documentElement, tema = temaSalvo
     const animar = temaAnterior.current !== undefined && temaAnterior.current !== tema && !matchMedia('(prefers-reduced-motion: reduce)').matches
     raiz.classList.toggle('mudando-tema', animar)
     raiz.dataset.tema = tema
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', getComputedStyle(raiz).getPropertyValue('--visual-fundo').trim())
     temaAnterior.current = temaSalvo
     const prazo = animar ? setTimeout(() => raiz.classList.remove('mudando-tema'), 300) : undefined
     return () => { clearTimeout(prazo); raiz.classList.remove('mudando-tema') }
   }, [temaSalvo])
   const ambiente = useAmbiente()
-  const conta = useConta()
-  const entrada = !!supabase && !conta.visitante && (!conta.usuario || conta.recuperando)
+
+  const entrada = !!supabase && ((acessoSolicitado && !conta.usuario) || conta.recuperando || (!conta.visitante && !conta.usuario))
   useLayoutEffect(() => { document.getElementById('conteudo')?.scrollTo({ top: 0, behavior: 'instant' }); window.scrollTo({ top: 0, behavior: 'instant' }) }, [aba, menu])
   const selecionar = useCallback((nova: Aba, abrirMedida = false) => {
     if (nova === aba && !menu && !abrirMedida) return
@@ -84,20 +91,20 @@ export default function App() {
       <div className="apresentacao-entrada"><h1>{conta.recuperando ? 'Vamos recuperar seu acesso.' : 'Bom ter você aqui.'}</h1><p>{conta.recuperando ? 'Receba um código e crie uma nova senha.' : 'Seu treino, sua rotina e sua evolução, juntos.'}</p></div>
       {erro && <p role="alert" className="erro">{erro}</p>}
       <ContaConfiguracoes entrada />
-      <div className="alternativa-entrada"><span>ou</span><button className="link-conta" onClick={continuarSemConta}>Continuar sem conta</button><p>Você pode entrar depois. Seus registros de visitante ficam vis?veis a quem usar este perfil do navegador.</p></div>
+      <div className="alternativa-entrada"><span>ou</span><button className="link-conta" onClick={() => { definirAcessoSolicitado(false); continuarSemConta() }}>Continuar sem conta</button><p>Você pode entrar depois. Seus registros de visitante ficam visíveis a quem usar este perfil do navegador.</p></div>
     </main>
     <AvisosPwa />
   </div>
   return <div className={`app ${ambiente.instalado ? 'instalado' : 'nao-instalado'}`}>
     <header className="cabecalho"><div className="marca"><span><Leaf size={22} /></span><div>Vida em Dia<small>UM ESPAÇO PARA VOCÊ</small></div></div>
-      <div className="acoes-cabecalho"><span className="selo-previa">Prévia</span><button className="botao-icone" aria-label={configVisual?.tema === 'claro' ? 'Usar tema escuro' : 'Usar tema claro'} onClick={() => { if(configVisual)void tabela('configuracoes').update(configVisual.id,{tema:configVisual.tema==='claro'?'escuro':'claro',atualizado_em:new Date().toISOString()}).catch(()=>definirErro('Não foi possível salvar o tema.')) }}>{configVisual?.tema === 'claro' ? <Moon size={20}/> : <Sun size={20}/>}</button><button className="botao-icone" aria-label={menu ? 'Fechar configurações' : 'Abrir configurações'} aria-expanded={menu} onClick={() => menu ? definirMenu(false) : abrirConfiguracoes()}>{menu ? <X /> : <Settings size={22} />}</button></div>
+      <div className="acoes-cabecalho"><span className="selo-previa">Prévia</span><button className="botao-icone" aria-label={temaSalvo === 'claro' ? 'Usar tema escuro' : 'Usar tema claro'} onClick={() => { if(configVisual)void tabela('configuracoes').update(configVisual.id,{tema:temaSalvo==='claro'?'escuro':'claro',atualizado_em:new Date().toISOString()}).then(()=>registrarTemaManual(temaSalvo==='claro'?'escuro':'claro')).catch(()=>definirErro('Não foi possível salvar o tema.')) }}>{configVisual?.tema === 'claro' ? <Moon size={20}/> : <Sun size={20}/>}</button><button className="botao-icone" aria-label={menu ? 'Fechar configurações' : 'Abrir configurações'} aria-expanded={menu} onClick={() => menu ? definirMenu(false) : abrirConfiguracoes()}>{menu ? <X /> : <Settings size={22} />}</button></div>
     </header>
     <main ref={conteudoRef} id="conteudo"><div className="linha-data"><span>{new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}</span><span className="estado-rede"><i className={ambiente.online ? 'online' : ''} />{ambiente.online ? 'Online' : 'Offline'}</span></div>
       <h1>{menu ? 'Configurações' : aba === 'Hoje' ? 'Olá, vamos cuidar de você?' : aba}</h1>
       {erro && <div role="alert" className="erro">{erro}</div>}
       <ConcluirPerfilCadastro abrirConta={() => abrirConfiguracoes('conta')} />
       {conta.visitante && <p className="nota-resumo aviso-modo-visitante">Modo visitante: estes registros ficam visíveis a quem usar este perfil do navegador. Eles não são transferidos ao criar ou acessar uma conta.</p>}
-      <div className="conteudo-pagina">{menu ? <Suspense fallback={<p role="status">Carregando configurações…</p>}><Configuracoes {...ambiente} inicial={secaoConfiguracoes} /></Suspense> : aba === 'Hoje' ? <Hoje abrirBackup={() => abrirConfiguracoes('backup')} abrirConta={() => abrirConfiguracoes('conta')} abrir={selecionar} registrarMedida={() => selecionar('Medidas', true)} /> : aba === 'Treino' ? <Suspense fallback={<p role="status">Carregando treino…</p>}><Treino key={entradaTreino} online={ambiente.online} /></Suspense> : aba === 'Evolução' ? <Suspense fallback={<p role="status">Carregando evolução…</p>}><Evolucao /></Suspense> : aba === 'Medidas' ? <Suspense fallback={<p role="status">Carregando medidas…</p>}><Medidas registrarInicial={registrarMedida} /></Suspense> : <EstadoVazio {...proximas[aba]} />}</div>
+      <div className="conteudo-pagina">{menu ? <Suspense fallback={<p role="status">Carregando configurações…</p>}><Configuracoes {...ambiente} inicial={secaoConfiguracoes} abrirAcesso={() => definirAcessoSolicitado(true)} /></Suspense> : aba === 'Hoje' ? <Hoje abrirBackup={() => abrirConfiguracoes('backup')} abrirConta={() => abrirConfiguracoes('conta')} abrir={selecionar} registrarMedida={() => selecionar('Medidas', true)} /> : aba === 'Treino' ? <Suspense fallback={<p role="status">Carregando treino…</p>}><Treino key={entradaTreino} online={ambiente.online} /></Suspense> : aba === 'Evolução' ? <Suspense fallback={<p role="status">Carregando evolução…</p>}><Evolucao /></Suspense> : aba === 'Medidas' ? <Suspense fallback={<p role="status">Carregando medidas…</p>}><Medidas registrarInicial={registrarMedida} /></Suspense> : <EstadoVazio {...proximas[aba]} />}</div>
     </main>
     <AvisosPwa /><Navegacao atual={aba} selecionar={selecionar} preparar={prepararAba} />
   </div>
