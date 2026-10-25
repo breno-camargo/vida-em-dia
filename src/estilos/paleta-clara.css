@@ -1,4 +1,7 @@
 /* Gerado por revisao/gerar-paleta-clara.cjs: cobertura das cores fixas legadas. */
+:root[data-tema=claro] .app {
+    --borda-controle-legada-claro: #7c8d76;
+}
 :root[data-tema=claro] .app .introducao-comparacao-sync>p {
     color: var(--visual-texto)
 }
@@ -94,22 +97,22 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .aviso-data-atividade {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .aviso-data-atividade>p {
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .concluir-backup {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     color: #28431e
 }
 :root[data-tema=claro] .app .concluir-backup:active {
-    border-color: #7c8d76
+    border-color: var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .concluir-backup:disabled {
     background: var(--visual-acento-fundo);
-    border-color: #7c8d76;
+    border-color: var(--borda-controle-legada-claro);
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .backup-config .introducao-backup {
@@ -121,11 +124,11 @@
 :root[data-tema=claro] .app .backup-config .preparar-backup.backup-gerado {
     background: transparent;
     color: var(--visual-texto);
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .backup-config .backup-pronto {
     background: var(--visual-rebaixo);
-    border-color: #7c8d76
+    border-color: var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .icone-arquivo-backup {
     background: var(--visual-acento-fundo);
@@ -145,7 +148,7 @@
 }
 :root[data-tema=claro] .app .acoes-arquivo-backup>button {
     color: var(--visual-texto);
-    border-color: #7c8d76
+    border-color: var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .nota-salvamento-backup {
     color: var(--visual-suave)
@@ -160,7 +163,7 @@
 }
 :root[data-tema=claro] .app .acoes-backup-secundarias>button+button,
 :root[data-tema=claro] .app .acoes-backup-secundarias>label+button {
-    border-top: 1px solid #7c8d76
+    border-top: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .acoes-backup-secundarias strong {
     color: var(--visual-texto)
@@ -169,7 +172,7 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .acao-backup-importar:focus-within {
-    outline: 2px solid #7c8d76
+    outline: 2px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .lembrete-backup-opcao {
     background: transparent;
@@ -245,7 +248,7 @@
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .cabecalho {
-    border-bottom: 1px solid #7c8d76
+    border-bottom: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .marca>span {
     color: #28431e
@@ -274,7 +277,7 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .cartao {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .cartao>span {
@@ -302,11 +305,11 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .botao-secundario {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: transparent
 }
 :root[data-tema=claro] .app .navegacao {
-    border-top: 1px solid #7c8d76;
+    border-top: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .navegacao button {
@@ -318,7 +321,7 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .instalacao {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo);
     color: var(--visual-texto)
 }
@@ -339,18 +342,18 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .selo {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .painel {
     background: var(--visual-rebaixo);
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .painel p {
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .painel dl>div {
-    border-bottom: 1px solid #7c8d76
+    border-bottom: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .painel dt {
     color: var(--visual-suave)
@@ -363,7 +366,7 @@
 }
 :root[data-tema=claro] .app .aviso-pwa {
     background: var(--visual-acento-fundo);
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .aviso-pwa button {
     color: #28431e
@@ -374,8 +377,8 @@
 }
 @media (min-width:600px) {
     :root[data-tema=claro] .app {
-        border-left: 1px solid #7c8d76;
-        border-right: 1px solid #7c8d76
+        border-left: 1px solid var(--borda-controle-legada-claro);
+        border-right: 1px solid var(--borda-controle-legada-claro)
     }
 }
 :root[data-tema=claro] .app .abas-treino button {
@@ -392,12 +395,12 @@
 :root[data-tema=claro] .app .formulario input,
 :root[data-tema=claro] .app .formulario select,
 :root[data-tema=claro] .app .formulario textarea {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo);
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .painel-modal {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo);
     color: var(--visual-texto)
 }
@@ -406,7 +409,7 @@
 }
 :root[data-tema=claro] .app .painel-modal>.topo-painel>header {
     background: var(--visual-rebaixo);
-    border-bottom: 1px solid #7c8d76
+    border-bottom: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .acoes button,
 :root[data-tema=claro] .app .seletor-exercicios button {
@@ -417,7 +420,7 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .item-ficha {
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .fotos-maquina img {
     background: var(--visual-rebaixo)
@@ -436,7 +439,7 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .exercicio-treino {
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .ultimo-desempenho {
     color: var(--visual-suave)
@@ -445,38 +448,38 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .serie {
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .serie.concluida {
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .serie.proxima-serie {
-    border: 2px solid #7c8d76
+    border: 2px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .ajuste-numero button {
     background: var(--visual-rebaixo);
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .reducao {
-    border-bottom: 1px solid #7c8d76
+    border-bottom: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .descanso {
     background: var(--visual-rebaixo);
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .descanso>span {
     color: var(--visual-texto)
 }
 @media (prefers-reduced-motion:reduce) {
     :root[data-tema=claro] .app .descanso.terminou {
-        outline: 3px solid #7c8d76
+        outline: 3px solid var(--borda-controle-legada-claro)
     }
 }
 :root[data-tema=claro] .app .exercicio-recolhivel {
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .cabecalho-exercicio:focus-visible {
-    outline: 3px solid #7c8d76
+    outline: 3px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .miniatura-exercicio {
     background: var(--visual-rebaixo);
@@ -492,7 +495,7 @@
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .conteudo-exercicio {
-    border-top: 1px solid #7c8d76
+    border-top: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .cabecalho-series {
     color: var(--visual-suave)
@@ -502,10 +505,10 @@
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .serie-compacta.proxima-serie {
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .linha-serie input {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo);
     color: var(--visual-texto)
 }
@@ -531,7 +534,7 @@
 }
 :root[data-tema=claro] .app .abas-detalhe {
     background: var(--visual-rebaixo);
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .abas-detalhe button {
     background: transparent;
@@ -545,20 +548,20 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .passos-exercicio li {
-    border-bottom: 1px solid #7c8d76
+    border-bottom: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .passos-exercicio li::marker {
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .miniatura-exercicio:focus-visible {
-    outline: 3px solid #7c8d76
+    outline: 3px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .painel-modal::before {
     background: var(--visual-acento-fundo)
 }
 :root[data-tema=claro] .app .painel-modal {
     background: var(--visual-rebaixo);
-    border-color: #7c8d76
+    border-color: var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .painel-modal>.topo-painel>header {
     background: var(--visual-rebaixo)
@@ -580,7 +583,7 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .aplicar-proximas {
-    border-top: 1px solid #7c8d76;
+    border-top: 1px solid var(--borda-controle-legada-claro);
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .aplicar-proximas input {
@@ -605,11 +608,11 @@
 :root[data-tema=claro] .app .valor-serie {
     background: transparent;
     color: var(--visual-texto);
-    border-bottom: 2px dashed #7c8d76
+    border-bottom: 2px dashed var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .lista-tipos>button {
     background: transparent;
-    border-bottom: 1px solid #7c8d76
+    border-bottom: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .lista-tipos small {
     color: var(--visual-suave)
@@ -644,7 +647,7 @@
 }
 :root[data-tema=claro] .app .ficha-nova {
     background: linear-gradient(145deg,var(--visual-rebaixo),var(--visual-rebaixo));
-    border-color: #7c8d76
+    border-color: var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .icone-ficha {
     background: var(--visual-acento-fundo);
@@ -656,13 +659,13 @@
 }
 :root[data-tema=claro] .app .menu-ficha .acoes {
     background: var(--visual-rebaixo);
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .iniciar-ficha {
     color: #28431e
 }
 :root[data-tema=claro] .app .treino-livre {
-    border: 1px dashed #7c8d76;
+    border: 1px dashed var(--borda-controle-legada-claro);
     background: transparent;
     color: var(--visual-texto)
 }
@@ -670,7 +673,7 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .grupo-exercicios {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .grupo-exercicios>summary small {
@@ -679,15 +682,15 @@
 }
 :root[data-tema=claro] .app .botao-principal {
     color: #28431e;
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .botao-principal:disabled {
     background: var(--visual-acento-fundo);
     color: var(--visual-suave);
-    border-color: #7c8d76
+    border-color: var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .botao-principal:focus-visible {
-    outline: 3px solid #7c8d76
+    outline: 3px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .alca-painel {
     background: var(--visual-rebaixo)
@@ -696,10 +699,10 @@
     background: var(--visual-acento-fundo)
 }
 :root[data-tema=claro] .app .alca-painel:focus-visible {
-    outline: 2px solid #7c8d76
+    outline: 2px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .acao-treino {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .icone-acao {
@@ -726,12 +729,12 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .filtro-musculos button {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo);
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .filtro-musculos button[aria-pressed=true] {
-    border-color: #7c8d76;
+    border-color: var(--borda-controle-legada-claro);
     color: #28431e
 }
 :root[data-tema=claro] .app .biblioteca-cabecalho p {
@@ -742,7 +745,7 @@
     color: #963e32
 }
 :root[data-tema=claro] .app .secao-editor {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .secao-editor legend {
@@ -753,11 +756,11 @@
 }
 :root[data-tema=claro] .app .escolhas-editor button {
     background: var(--visual-rebaixo);
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .escolhas-editor button[aria-pressed=true] {
-    border-color: #7c8d76;
+    border-color: var(--borda-controle-legada-claro);
     color: #28431e
 }
 :root[data-tema=claro] .app .explicacao-editor {
@@ -773,7 +776,7 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .metricas-resumo>div {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .metricas-resumo span {
@@ -793,7 +796,7 @@
 }
 :root[data-tema=claro] .app .calorias-resumo {
     background: var(--visual-rebaixo);
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .calorias-resumo>span {
     color: var(--visual-texto)
@@ -806,7 +809,7 @@
 }
 :root[data-tema=claro] .app .acoes-resumo-fixas {
     background: var(--visual-rebaixo);
-    border-top: 1px solid #7c8d76
+    border-top: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .historico-series {
     color: var(--visual-texto)
@@ -824,14 +827,14 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .sugestao-carga {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .tabela-grafico {
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .exercicio-historico {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo);
     color: var(--visual-texto)
 }
@@ -844,7 +847,7 @@
 }
 :root[data-tema=claro] .app .aviso-recorde {
     background: var(--visual-acento-fundo);
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .aviso-recorde button {
@@ -852,13 +855,13 @@
 }
 :root[data-tema=claro] .app .ultimo-concluido {
     background: var(--visual-rebaixo);
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .ultimo-concluido>span {
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .aviso-remocao {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .aviso-remocao>span {
@@ -871,7 +874,7 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .valor-serie {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .foto-card {
@@ -884,7 +887,7 @@
 }
 :root[data-tema=claro] .app .aviso-offline {
     background: var(--visual-rebaixo);
-    border-color: #7c8d76
+    border-color: var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .icone-aviso-offline {
     background: var(--visual-acento-fundo);
@@ -899,7 +902,7 @@
 }
 :root[data-tema=claro] .app .finalizar-acoes .continuar-depois {
     background: var(--visual-rebaixo);
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .finalizar-acoes .continuar-depois svg {
@@ -912,7 +915,7 @@
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .abas-treino {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .abas-treino button {
@@ -921,11 +924,11 @@
 }
 :root[data-tema=claro] .app .abas-treino button[aria-pressed=true] {
     background: var(--visual-acento-fundo);
-    border-color: #7c8d76;
+    border-color: var(--borda-controle-legada-claro);
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .abas-treino button:focus-visible {
-    outline: 2px solid #7c8d76
+    outline: 2px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .abas-treino button:active {
     background: var(--visual-acento-fundo)
@@ -939,7 +942,7 @@
     background: var(--visual-acento-fundo)
 }
 :root[data-tema=claro] .app .opcoes-serie>.formulario {
-    border-top: 1px solid #7c8d76
+    border-top: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .ultimo-desempenho {
     background: var(--visual-rebaixo);
@@ -952,7 +955,7 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .linha-historico-serie {
-    border-top: 1px solid #7c8d76
+    border-top: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .linha-historico-serie>span:first-child {
     background: var(--visual-acento-fundo);
@@ -971,16 +974,16 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .ultimo-concluido>.botao-secundario {
-    border-color: #7c8d76;
+    border-color: var(--borda-controle-legada-claro);
     background: var(--visual-acento-fundo);
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .barra-fichas>button {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .treino-livre {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .treino-livre>svg:first-child {
@@ -1002,7 +1005,7 @@
 }
 :root[data-tema=claro] .app .andamento-treino>.manter-tela {
     background: var(--visual-rebaixo);
-    border-color: #7c8d76;
+    border-color: var(--borda-controle-legada-claro);
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .manter-tela svg {
@@ -1010,14 +1013,14 @@
 }
 :root[data-tema=claro] .app .acao-treino .salvar-planejamento {
     color: #28431e;
-    border-color: #7c8d76
+    border-color: var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .metricas-resumo .explicacao-volume {
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .aviso-recorde {
     background: var(--visual-rebaixo);
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .aviso-recorde>.icone-recorde {
@@ -1039,7 +1042,7 @@
 :root[data-tema=claro] .app .guia-esforco {
     color: var(--visual-texto);
     background: var(--visual-rebaixo);
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .guia-esforco strong {
     color: var(--visual-texto)
@@ -1061,7 +1064,7 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .data-medida {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo);
     color: var(--visual-texto)
 }
@@ -1070,7 +1073,7 @@
 }
 :root[data-tema=claro] .app .campo-medida {
     background: var(--visual-rebaixo);
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .campo-medida>span {
     color: var(--visual-suave)
@@ -1079,7 +1082,7 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .registro-medida {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .registro-medida>summary small {
@@ -1089,7 +1092,7 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .registro-medida dl>div {
-    border-top: 1px solid #7c8d76
+    border-top: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .registro-medida dt {
     color: var(--visual-suave)
@@ -1098,7 +1101,7 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .acoes-medida>button {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-acento-fundo);
     color: var(--visual-texto)
 }
@@ -1108,7 +1111,7 @@
     border-color: #a76a5b
 }
 :root[data-tema=claro] .app .escolher-comparacao {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .escolher-comparacao span {
@@ -1118,11 +1121,11 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .tabela-comparacao {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .tabela-comparacao>div {
-    border-bottom: 1px solid #7c8d76
+    border-bottom: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .tabela-comparacao small {
     color: var(--visual-suave)
@@ -1135,7 +1138,7 @@
     background: var(--visual-acento-fundo)
 }
 :root[data-tema=claro] .app .lembrete-medidas {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .lembrete-medidas>svg {
@@ -1148,7 +1151,7 @@
     color: #28431e
 }
 :root[data-tema=claro] .app .peso-resumo-medidas {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .peso-resumo-medidas span {
@@ -1161,7 +1164,7 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .grade-resumo-medidas>div {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .grade-resumo-medidas>div>span {
@@ -1177,7 +1180,7 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .grafico-medidas-recolhivel {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .grafico-medidas-recolhivel>summary {
@@ -1195,7 +1198,7 @@
 :root[data-tema=claro] .app .acoes-cardio button+button {
     background: var(--visual-acento-fundo);
     color: var(--visual-texto);
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .opcionais-cardio>summary {
     color: var(--visual-texto)
@@ -1222,7 +1225,7 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .linha-feriado {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .linha-feriado>button {
@@ -1242,7 +1245,7 @@
     accent-color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .arquivo-backup {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .arquivo-backup>small {
@@ -1314,7 +1317,7 @@
 }
 :root[data-tema=claro] .app .secao-config {
     background: var(--visual-rebaixo);
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .icone-config {
     background: var(--visual-acento-fundo);
@@ -1330,7 +1333,7 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .secao-config.expandida>h2 {
-    border-bottom: 1px solid #7c8d76
+    border-bottom: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .conta .conta-vinculo>p {
     color: var(--visual-texto)
@@ -1361,7 +1364,7 @@
     border-top: 1px solid #7c8d76
 }
 :root[data-tema=claro] .app .saida-config {
-    border-top: 1px solid #7c8d76
+    border-top: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .saida-config>.sair-conta {
     border: 1px solid #a76a5b;
@@ -1375,7 +1378,7 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .treino-em-andamento .andamento-treino {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: linear-gradient(125deg,var(--visual-rebaixo),var(--visual-rebaixo))
 }
 :root[data-tema=claro] .app .treino-em-andamento .progresso-sessao {
@@ -1401,7 +1404,7 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .treino-em-andamento .exercicio-recolhivel {
-    border-color: #7c8d76;
+    border-color: var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .treino-em-andamento .exercicio-recolhivel[open]>.cabecalho-exercicio {
@@ -1414,7 +1417,7 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .treino-em-andamento .conteudo-exercicio {
-    border-color: #7c8d76
+    border-color: var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .treino-em-andamento .ajuda-no-treino {
     background: transparent;
@@ -1435,11 +1438,11 @@
 }
 :root[data-tema=claro] .app .treino-em-andamento .serie-compacta.proxima-serie {
     background: var(--visual-rebaixo);
-    border-color: #7c8d76
+    border-color: var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .treino-em-andamento .valor-serie {
     background: var(--visual-rebaixo);
-    border-color: #7c8d76
+    border-color: var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .treino-em-andamento .serie-compacta.concluida {
     background: var(--visual-rebaixo)
@@ -1449,7 +1452,7 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .treino-em-andamento .conteudo-exercicio>.ultimo-desempenho {
-    border-top: 1px solid #7c8d76;
+    border-top: 1px solid var(--borda-controle-legada-claro);
     background: transparent
 }
 :root[data-tema=claro] .app .treino-em-andamento>.cancelar-sessao {
@@ -1466,7 +1469,7 @@
 }
 :root[data-tema=claro] .app .abas-catalogo {
     background: var(--visual-rebaixo);
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .abas-catalogo>button {
     background: transparent;
@@ -1476,14 +1479,14 @@
     color: #28431e
 }
 :root[data-tema=claro] .app .musculos-catalogo>button {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: transparent;
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .musculos-catalogo>button[aria-pressed=true] {
     background: var(--visual-acento-fundo);
     color: var(--visual-texto);
-    border-color: #7c8d76
+    border-color: var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .musculos-catalogo::-webkit-scrollbar-track {
     background: var(--visual-rebaixo)
@@ -1498,7 +1501,7 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .item-catalogo {
-    border-bottom: 1px solid #7c8d76
+    border-bottom: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .nome-catalogo>strong {
     color: var(--visual-texto)
@@ -1507,7 +1510,7 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .lista-catalogo .miniatura-exercicio {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: linear-gradient(145deg,var(--visual-acento-fundo),var(--visual-rebaixo));
     color: var(--visual-texto)
 }
@@ -1518,32 +1521,32 @@
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .selecionar-exercicio {
-    border-bottom-color: #7c8d76
+    border-bottom-color: var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .selecionar-exercicio[aria-pressed=true] {
     background: var(--visual-rebaixo);
-    border-color: #7c8d76
+    border-color: var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .marcador-catalogo {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .selecionar-exercicio[aria-pressed=true] .marcador-catalogo {
     color: #28431e;
-    border-color: #7c8d76
+    border-color: var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .vazio-catalogo {
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .confirmar-catalogo {
     background: var(--visual-rebaixo);
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .confirmar-catalogo>span {
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .ampliar-catalogo {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .ampliar-catalogo strong {
@@ -1559,7 +1562,7 @@
 :root[data-tema=claro] .app .retomar-treino.retomar-compacto {
     background: linear-gradient(130deg,var(--visual-acento-fundo),var(--visual-rebaixo));
     color: var(--visual-texto);
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .retomar-identidade {
     color: var(--visual-texto)
@@ -1577,7 +1580,7 @@
     color: #28431e
 }
 :root[data-tema=claro] .app .ficha-nova.ficha-em-andamento {
-    border-color: #7c8d76
+    border-color: var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .ficha-em-andamento .abrir-ficha small {
     color: var(--visual-texto)
@@ -1585,10 +1588,10 @@
 :root[data-tema=claro] .app .ficha-em-andamento .iniciar-ficha {
     background: var(--visual-acento-fundo);
     color: var(--visual-texto);
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .abas-medidas {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .abas-medidas>button {
@@ -1599,7 +1602,7 @@
     color: #28431e
 }
 :root[data-tema=claro] .app .par-resumo-medida {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .par-resumo-medida h3 {
@@ -1609,7 +1612,7 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .par-resumo-medida>dl>div+div {
-    border-left: 1px solid #7c8d76
+    border-left: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .par-resumo-medida dt {
     color: var(--visual-suave)
@@ -1624,7 +1627,7 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .evolucao-medidas {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .evolucao-medidas>header>svg {
@@ -1659,11 +1662,11 @@
 }
 :root[data-tema=claro] .app .ultimo-concluido.ultimo-treino-atalho {
     border: 0;
-    border-bottom: 1px solid #7c8d76;
+    border-bottom: 1px solid var(--borda-controle-legada-claro);
     background: transparent
 }
 :root[data-tema=claro] .app .ultimo-treino-atalho>.icone-ultimo-treino {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo);
     color: var(--visual-texto)
 }
@@ -1740,7 +1743,7 @@
 }
 :root[data-tema=claro] .app .alternador-seletor {
     background: var(--visual-rebaixo);
-    border: 1px solid #7c8d76
+    border: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .opcao-seletor {
     background: transparent;
@@ -1750,7 +1753,7 @@
     color: #28431e
 }
 :root[data-tema=claro] .app .botao-atalho-numero {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo);
     color: var(--visual-texto)
 }
@@ -1759,18 +1762,18 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .input-com-unidade input {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo);
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .input-com-unidade input:focus-visible {
-    outline: 2px solid #7c8d76
+    outline: 2px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .unidade-input {
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .formulario-cardio .opcionais-cardio {
-    border-top: 1px solid #7c8d76
+    border-top: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .formulario-cardio .opcionais-cardio>summary {
     color: var(--visual-texto)
@@ -1782,7 +1785,7 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .digitar-duracao input {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo);
     color: var(--visual-texto)
 }
@@ -1811,7 +1814,7 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .aviso-backup {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .aviso-backup-titulo > svg {
@@ -1830,7 +1833,7 @@
 :root[data-tema=claro] .app .botao-secundario:disabled {
     background: var(--visual-acento-fundo);
     color: var(--visual-suave);
-    border-color: #7c8d76
+    border-color: var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .botao-secundario.excluir-historico {
     background: transparent;
@@ -1841,7 +1844,7 @@
 :root[data-tema=claro] .app .abas-medidas,
 :root[data-tema=claro] .app .abas-catalogo,
 :root[data-tema=claro] .app .alternador-seletor {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .abas-treino > button,
@@ -1852,7 +1855,7 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app :is(.botao-principal, .botao-secundario, .abas-treino > button, .abas-medidas > button, .abas-catalogo > button, .alternador-seletor > button):focus-visible {
-    outline: 2px solid #7c8d76
+    outline: 2px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .aviso-confirmacao-conta {
     border: 1px solid #7c8d76;
@@ -1878,7 +1881,7 @@
     background: radial-gradient(ellipse at 20% 30%, var(--visual-acento-fundo), transparent 60%), linear-gradient(145deg, var(--visual-acento-fundo), var(--visual-rebaixo) 70%)
 }
 :root[data-tema=claro] .app .privacidade-grupo {
-    border-top: 1px solid #7c8d76
+    border-top: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .privacidade-grupo > summary {
     color: var(--visual-texto)
@@ -1894,7 +1897,7 @@
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .backup-protecao {
-    border: 1px solid #7c8d76;
+    border: 1px solid var(--borda-controle-legada-claro);
     background: var(--visual-rebaixo)
 }
 :root[data-tema=claro] .app .backup-protecao > svg {
@@ -1907,16 +1910,16 @@
     color: var(--visual-suave)
 }
 :root[data-tema=claro] .app .backup-config .opcao-fotos-backup {
-    border-bottom: 1px solid #7c8d76
+    border-bottom: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .backup-outros-formatos {
-    border-top: 1px solid #7c8d76
+    border-top: 1px solid var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .backup-outros-formatos > summary {
     color: var(--visual-texto)
 }
 :root[data-tema=claro] .app .botao-secundario:hover:not(:disabled) {
-    border-color: #7c8d76
+    border-color: var(--borda-controle-legada-claro)
 }
 :root[data-tema=claro] .app .treino-em-andamento .conteudo-exercicio > .acoes > button:last-child {
     background: transparent;
