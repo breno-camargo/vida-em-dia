@@ -1,6 +1,6 @@
 {
   "framework": "vite",
-  "buildCommand": "npm run typecheck && npm run lint && npm run build:homologacao",
+  "buildCommand": "npm run typecheck && npm run lint && npm run build",
   "outputDirectory": "dist",
   "headers": [
     {
