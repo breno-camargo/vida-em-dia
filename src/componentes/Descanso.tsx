@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { segundosRestantes } from '../utilitarios/treino'
-import { tocarAlerta, tocarContagem, silenciarAlerta } from '../utilitarios/alerta'
+import { tocarAlerta, tocarContagem, silenciarAlerta, liberarAudio } from '../utilitarios/alerta'
 import { Painel } from './Painel'
 export function Descanso({ fim, alterar }: { fim?: string | null; alterar: (fim: string | null) => void }) {
   const [agora, definirAgora] = useState(Date.now)
@@ -13,7 +13,7 @@ export function Descanso({ fim, alterar }: { fim?: string | null; alterar: (fim:
     const chave = `${fim}-${restantes}`
     if (fim && restantes > 0 && restantes <= 10 && ultimoBipe.current !== chave && !document.hidden) {
       ultimoBipe.current = chave
-      if (som) tocarContagem()
+      if (som) void tocarContagem()
     }
   }, [fim, restantes, som])
   useEffect(() => {
@@ -34,7 +34,7 @@ export function Descanso({ fim, alterar }: { fim?: string | null; alterar: (fim:
   useEffect(() => {
     if (fim && restantes <= 0 && avisado.current !== fim && !document.hidden) {
       avisado.current = fim
-      if (som) tocarAlerta()
+      if (som) void tocarAlerta()
       if (navigator.vibrate) navigator.vibrate([100, 100, 100])
       alterar(null)
     }
@@ -46,7 +46,7 @@ export function Descanso({ fim, alterar }: { fim?: string | null; alterar: (fim:
       <p>Recupere o fôlego. Ao terminar, esta janela fecha automaticamente.</p>
       <div className="ajustes-descanso"><button type="button" className="botao-secundario" onClick={() => alterar(new Date(Math.max(Date.now(), Date.parse(fim)) - 15000).toISOString())}>−15 s</button><button type="button" className="botao-secundario" onClick={() => alterar(new Date(Math.max(Date.now(), Date.parse(fim)) + 15000).toISOString())}>+15 s</button></div>
       <button type="button" className="botao-principal largura-total" onClick={() => alterar(null)}>Pular descanso e continuar</button>
-      <button type="button" className="botao-secundario" aria-pressed={!som} onClick={() => definirSom(!som)}>{som ? 'Silenciar alerta' : 'Ativar som'}</button>
+      <button type="button" className="botao-secundario" aria-pressed={!som} onClick={() => { if (!som) void liberarAudio(); definirSom(!som) }}>{som ? 'Silenciar alerta' : 'Ativar som'}</button>
     </section>
   </Painel>
 }

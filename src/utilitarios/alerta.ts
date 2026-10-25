@@ -14,7 +14,7 @@ function tocarTom(frequencia: number, duracao: number, atraso = 0) {
   const inicio = audio.currentTime + atraso
   tom.frequency.value = frequencia
   ganho.gain.setValueAtTime(0.001, inicio)
-  ganho.gain.linearRampToValueAtTime(0.15, inicio + 0.02)
+  ganho.gain.linearRampToValueAtTime(0.6, inicio + 0.02)
   ganho.gain.exponentialRampToValueAtTime(0.001, inicio + duracao)
   tom.connect(ganho); ganho.connect(audio.destination)
   ativos.add(tom)
