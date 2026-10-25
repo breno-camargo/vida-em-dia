@@ -1,6 +1,6 @@
 // Só prepara a proposta em revisao/. Não escreve no aplicativo.
 const fs=require('fs'),path=require('path');
-const root=path.resolve(__dirname,'../..'),inv=JSON.parse(fs.readFileSync(path.join(root,'revisao/INVENTARIO-VISUAL.json')));
+const root=path.resolve(__dirname,'../..'),inv=JSON.parse(fs.readFileSync(path.join(root,'../vida-em-dia-evidencias/revisao/INVENTARIO-VISUAL.json')));
 const tokens=[];const add=(name,dark,light=dark,group='tema')=>tokens.push({name,dark,light,group});
 for(const [name,legacy]of Object.entries({
  '--cor-pagina':'--visual-fundo','--cor-painel':'--visual-painel','--cor-campo':'--visual-rebaixo','--cor-borda-superficie':'--visual-borda',

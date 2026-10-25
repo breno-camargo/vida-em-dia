@@ -3,7 +3,7 @@ const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypt
 const {PNG}=require('C:/Users/breno/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/pngjs');
 const root=path.resolve(__dirname,'../..'),mode=process.argv[2];
 if(!['antes','depois'].includes(mode))throw new Error('Use: node revisao/lote-2.1/gate.cjs antes|depois');
-const out=path.join(__dirname,mode);fs.mkdirSync(out,{recursive:true});
+const out=path.join(root,'../vida-em-dia-evidencias/revisao/lote-2.1',mode);fs.mkdirSync(out,{recursive:true});
 const allowedNew=new Set(fs.existsSync(path.join(__dirname,'tokens-propostos.json'))?JSON.parse(fs.readFileSync(path.join(__dirname,'tokens-propostos.json'))).map(t=>t.name):[]);
 const result={mode,viewport:{width:390,height:844},normal:[],states:[],failures:[],allowedNewTokens:[...allowedNew],stateMethod:'Um controle por vez; CSS.forcePseudoState via CDP; todos os estilos de todos os elementos visíveis são comparados em cada estado. Sem clicks ou alterações de atributos disabled.'};
 const hash=x=>crypto.createHash('sha256').update(typeof x==='string'?x:JSON.stringify(x)).digest('hex');

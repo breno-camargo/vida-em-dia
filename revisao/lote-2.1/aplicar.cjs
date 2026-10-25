@@ -37,9 +37,9 @@ for(const file of files){const bytes=fs.readFileSync(target(file));originals[fil
  for(const r of protectedRules.filter(r=>r.file===file)){let found=false;nextAst.walkRules(n=>{if(n.selector===r.selector&&n.toString()===r.text)found=true});if(!found)throw new Error('Regra protegida alterada: '+r.selector)}
  changed[file]=next;
 }
-const originalOccurrences=JSON.parse(fs.readFileSync(path.join(root,'revisao/INVENTARIO-VISUAL.json'))).colors.filter(r=>/#7c8d76\b/i.test(r.value)).reduce((a,r)=>a+(r.value.match(/#7c8d76\b/gi)||[]).length,0);
+const originalOccurrences=JSON.parse(fs.readFileSync(path.join(root,'../vida-em-dia-evidencias/revisao/INVENTARIO-VISUAL.json'))).colors.filter(r=>/#7c8d76\b/i.test(r.value)).reduce((a,r)=>a+(r.value.match(/#7c8d76\b/gi)||[]).length,0);
 const totals=records.reduce((a,r)=>(a[r.category]=(a[r.category]||0)+r.count,a),{});if(records.reduce((a,r)=>a+r.count,0)!==originalOccurrences)throw new Error('Contagem diferente do Apêndice D');
-const plan={originalOccurrences,totals,records,annotations,protectedRules:protectedRules.map(({text,...r})=>r),removedDeclarations:0,existingTokensChanged:0};fs.writeFileSync(path.join(__dirname,'mapeamento-bordas.json'),JSON.stringify(plan,null,2));
+const plan={originalOccurrences,totals,records,annotations,protectedRules:protectedRules.map(({text,...r})=>r),removedDeclarations:0,existingTokensChanged:0};fs.writeFileSync(path.join(root,'../vida-em-dia-evidencias/revisao/lote-2.1/mapeamento-bordas.json'),JSON.stringify(plan,null,2));
 if(mode==='planejar'){console.log(JSON.stringify({originalOccurrences,totals,sourceFilesChanged:0}));process.exit(0)}
 if(mode!=='aplicar')throw new Error('Modo inválido');
 const before=JSON.parse(fs.readFileSync(path.join(__dirname,'antes/resultado.json')));if(before.normal.length!==72||before.failures.length||before.normal.some(r=>r.pixelDiff))throw new Error('Gate antes incompleto/falhou');
