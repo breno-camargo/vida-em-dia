@@ -141,7 +141,6 @@
   border: 1px solid var(--aviso-borda);
   border-left: 3px solid var(--visual-acento);
 }
-:root[data-tema=claro] .app :is(.marca small,.selo-previa,.linha-data,.estado-rede,.cartao > span,.cartao small,.abrir-ficha small,.resumo-exercicio small,.retomar-identidade span,.retomar-identidade small,.texto-config small,.aviso-modo-visitante,.grade-resumo-medidas p,.grade-resumo-medidas span,.par-resumo-medida dt,.par-resumo-medida dl p,.par-resumo-medida > header > span) {
+:root[data-tema=claro] .app :is(.cartao > span,.cartao small,.abrir-ficha small,.resumo-exercicio small,.retomar-identidade span,.retomar-identidade small,.texto-config small,.aviso-modo-visitante,.grade-resumo-medidas p,.grade-resumo-medidas span,.par-resumo-medida dt,.par-resumo-medida dl p,.par-resumo-medida > header > span) {
   font-size: 12px;
 }
-:root[data-tema=claro] .app .marca small { letter-spacing: .5px; }
