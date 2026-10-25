@@ -145,6 +145,15 @@ button,input,textarea,select { font: inherit; }
 .app .texto-config strong { font-size: 13px; color: var(--visual-texto); }
 .app .texto-config small { font-size: 11px; color: var(--visual-suave); line-height: 1.5; }
 .app .conteudo-config:not([hidden]) { padding: 4px 16px 20px; }
+.app .seta-config { transition: transform 240ms cubic-bezier(.22, .61, .36, 1); }
+.app .gaveta-config { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 240ms cubic-bezier(.22, .61, .36, 1); }
+.app .gaveta-config.aberta { grid-template-rows: 1fr; }
+.app .gaveta-config > .gaveta-interna { min-height: 0; overflow: hidden; }
+.app .gaveta-config .conteudo-config { padding: 4px 16px 20px; opacity: 0; transform: translateY(-4px); transition: opacity 180ms ease, transform 240ms cubic-bezier(.22, .61, .36, 1); }
+.app .gaveta-config.aberta .conteudo-config { opacity: 1; transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) {
+  .app .gaveta-config, .app .gaveta-config .conteudo-config, .app .seta-config { transition: none !important; transform: none !important; }
+}
 .app .privacidade-recolhida { margin-top: 8px; border: 1px solid var(--visual-borda); border-radius: 18px; background: var(--visual-painel); padding: 0 16px; }
 .app .privacidade-recolhida > summary { min-height: 64px; align-content: center; cursor: pointer; font-size: 13px; font-weight: 600; }
 .app .privacidade-recolhida > .painel { border: 0; padding: 0 0 20px; }
