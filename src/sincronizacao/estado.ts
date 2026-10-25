@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react'
 import { observarDados } from './observarDados'
 import { atualizarCampos } from '../utilitarios/atualizarCampos'
+import { marcarRecuperacaoSenha, recuperacaoSenhaPendente, limparRecuperacaoSenha } from './recuperacaoSenha'
 import type { User } from '@supabase/supabase-js'
 import { supabase, sessaoLocal, removerSessaoLocal } from './cliente'
 import { apagarBancoAtual, excluirContaConfirmada } from '../dados/limpezaAparelho'
@@ -23,7 +24,12 @@ const lerEstado=()=>estado
 export function useConta(){return useSyncExternalStore(assinar,lerEstado)}
 export function usuarioAtual(){return estado.usuario}
 export function continuarSemConta(){localStorage.setItem('vida-em-dia:visitante-ativo','sim');reiniciarIdentidade()}
-export function definirRecuperacao(recuperando:boolean){alterar({recuperando})}
+export function definirRecuperacao(recuperando:boolean){
+ const retomar=!recuperando&&estado.recuperando&&!!estado.usuario
+ if(!recuperando)limparRecuperacaoSenha()
+ alterar({recuperando})
+ if(retomar)void sincronizarAutomatico()
+}
 let ativo=false
 let encerrando=false
 export async function iniciarConta(){
@@ -33,7 +39,7 @@ export async function iniciarConta(){
  const visitante = !usuario && (!supabase || localStorage.getItem('vida-em-dia:visitante-ativo') === 'sim')
  await abrirIdentidade(usuario?.id ?? null)
  await iniciarBanco(); await iniciarBiblioteca(); await iniciarFeriados()
- alterar({usuario,visitante,carregando:false,vinculado:!!usuario&&await vinculoLocal()===usuario.id})
+ alterar({usuario,visitante,carregando:false,vinculado:!!usuario&&await vinculoLocal()===usuario.id,recuperando:recuperacaoSenhaPendente(usuario?.id)})
  if(!supabase)return
  const atualizar=async(usuario:User|null)=>{
   alterar({usuario,carregando:false,vinculado:!!usuario&&await vinculoLocal()===usuario.id,mensagem:'',erro:''})
@@ -42,6 +48,12 @@ export async function iniciarConta(){
  // Sessão inicial resolvida localmente, inclusive expirada offline.
  supabase.auth.onAuthStateChange((evento,sessao)=>{
   if(encerrando)return
+  if(evento==='PASSWORD_RECOVERY'&&sessao?.user){
+   alterar({recuperando:true})
+   // Persistir antes da recarga que protege a troca do banco local.
+   marcarRecuperacaoSenha(sessao.user.id)
+  }
+  if(evento==='SIGNED_OUT'){limparRecuperacaoSenha();alterar({recuperando:false})}
   if(!navigator.onLine&&!sessao?.user&&estado.usuario)return
   if(['SIGNED_IN','SIGNED_OUT','INITIAL_SESSION','PASSWORD_RECOVERY'].includes(evento)){
    const usuarioEvento=sessao?.user??null
@@ -79,6 +91,7 @@ export async function confirmarVinculo(){
  await sincronizar()
 }
 export async function sincronizar(){
+ if(estado.recuperando){alterar({erro:'Defina sua nova senha antes de sincronizar.'});return}
  if(estado.ocupado)return
  if(!estado.usuario||!estado.vinculado){alterar({erro:'Entre na conta e confirme a mesclagem para sincronizar.'});return}
  if(!navigator.onLine){alterar({erro:'Você está offline. Seus registros continuam salvos no aparelho.'});return}
@@ -94,6 +107,7 @@ export async function sincronizar(){
  finally{alterar({ocupado:false})}
 }
 async function sincronizarAutomatico(){
+ if(estado.recuperando)return
  try{
   if(await pausaRestauracao()){alterar({mensagem:mensagemPausa,pendentes:0});return}
   const config=await tabela('configuracoes').where('chave').equals('principal').first()
@@ -102,6 +116,7 @@ async function sincronizarAutomatico(){
  }catch{alterar({erro:'Não foi possível conferir a sincronização. Seus registros continuam neste aparelho.'})}
 }
 async function atualizarFila(){
+ if(estado.recuperando)return
  try{if(await pausaRestauracao()){alterar({mensagem:mensagemPausa,pendentes:0});return}if(estado.usuario&&estado.vinculado&&!estado.ocupado){await prepararFila(estado.usuario.id);alterar({pendentes:await contarPendencias(estado.usuario.id)})}}
  catch(e){alterar({erro:e instanceof Error?e.message:'Não foi possível atualizar as pendências.'})}
 }
@@ -126,6 +141,7 @@ export async function sairConta(){
  if(estado.ocupado)throw new Error('Aguarde a sincronização terminar.')
  const {error}=await supabase!.auth.signOut({scope:'local'})
  if(error)throw new Error('Não foi possível sair. Tente novamente.')
+ limparRecuperacaoSenha()
  alterar({usuario:null,vinculado:false,visitante:false,recuperando:false,mensagem:'Sessão encerrada. Os registros continuam neste aparelho.'})
 }
 async function concluirLimpeza(){

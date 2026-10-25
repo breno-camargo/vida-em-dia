@@ -21,7 +21,7 @@ export function ContaConfiguracoes({entrada=false,resumida=false}:{entrada?:bool
  const [medidaCadastro,setMedidaCadastro]=useState<MedidaCorporal>()
  const [editarMedidas,setEditarMedidas]=useState(false)
  const [baseMedida]=useState(()=>({...criarRegistro(),data:dataMedida()}))
- const [modo,setModo]=useState<'entrar'|'recuperar'|'codigo'|'nova'|'cadastro'|'confirmarCadastro'>('entrar')
+ const [modo,setModo]=useState<'entrar'|'recuperar'|'codigo'|'nova'|'cadastro'|'confirmarCadastro'>(conta.recuperando&&conta.usuario?'nova':'entrar')
  const [mostrarSenha,setMostrarSenha]=useState(false)
  const [ocupado,setOcupado]=useState(false),[erro,setErro]=useState(''),[aviso,setAviso]=useState(''),[mesclar,setMesclar]=useState(false)
  const executar=async(acao:()=>Promise<void>)=>{setOcupado(true);setErro('');try{await acao()}catch(e){setErro(e instanceof Error?e.message:'Não foi possível concluir. Tente novamente.')}finally{setOcupado(false)}}
@@ -81,7 +81,7 @@ export function ContaConfiguracoes({entrada=false,resumida=false}:{entrada?:bool
  <button className="botao-principal" disabled={ocupado}>{ocupado?'Aguarde…':modo==='entrar'?'Entrar':modo==='cadastro'?'Criar conta':modo==='confirmarCadastro'?'Confirmar e-mail':modo==='recuperar'?'Enviar código':modo==='codigo'?'Confirmar código':'Salvar nova senha'}</button>
  {modo==='entrar'&&<button type="button" className="botao-secundario" disabled={ocupado} onClick={()=>{setModo('cadastro');setSenha('');setConfirmacao('');setAviso('');setErro('')}}>Criar conta</button>}
  {modo==='confirmarCadastro'&&<button type="button" className="botao-secundario" disabled={ocupado} onClick={()=>void executar(async()=>{if(!navigator.onLine)throw new Error('Conecte à internet para reenviar.');await reenviarCadastro(email);setAviso('Se houver cadastro pendente, uma nova confirmação será enviada ao e-mail informado.')})}>Reenviar confirmação</button>}
- {modo==='entrar'?<button type="button" className="link-conta recuperar-senha" disabled={ocupado} onClick={()=>{setModo('recuperar');definirRecuperacao(true);setSenha('');setConfirmacao('');setCodigo('');setAviso('');setErro('')}}>Esqueci minha senha</button>:<button type="button" className="link-conta" disabled={ocupado} onClick={()=>{setModo('entrar');definirRecuperacao(false);setSenha('');setErro('')}}>Voltar para entrar</button>}
+ {modo==='entrar'?<button type="button" className="link-conta recuperar-senha" disabled={ocupado} onClick={()=>{setModo('recuperar');definirRecuperacao(true);setSenha('');setConfirmacao('');setCodigo('');setAviso('');setErro('')}}>Esqueci minha senha</button>:<button type="button" className="link-conta" disabled={ocupado} onClick={()=>void executar(async()=>{if(modo==='nova'&&conta.usuario)await sairConta();definirRecuperacao(false);setModo('entrar');setSenha('');setCodigo('');setErro('')})}>Voltar para entrar</button>}
 
  </form>:<div className="conta-sessao">
  {!resumida&&<p>{conta.usuario.email}</p>}
