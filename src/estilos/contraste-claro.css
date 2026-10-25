@@ -30,7 +30,7 @@
 :root[data-tema=claro] .app .config-lista { background: var(--visual-painel); }
 :root[data-tema=claro] .app .secao-config { background: transparent; }
 :root[data-tema=claro] .app .icone-config { background: #d6e7c1; color: #315b24; }
-:root[data-tema=claro] .app .destaque { background: linear-gradient(125deg,#c9eb8f,#aedb72); border: 1px solid #a6ca75; box-shadow: 0 6px 18px #45632412; }
+:root[data-tema=claro] .app .destaque { background: linear-gradient(125deg,#c9eb8f,#aedb72); border: 0; box-shadow: 0 6px 18px #45632412, inset 0 0 0 1px #a6ca75; }
 :root[data-tema=claro] .app .cartao .verde { color: #346329; }
 :root[data-tema=claro] .app .cartao .laranja { color: #9a4827; }
 :root[data-tema=claro] .app .cartao .azul { color: #246778; }
