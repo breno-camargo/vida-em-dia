@@ -1,0 +1,2 @@
+/* A entrada curta é controlada por useTransicaoSuave, sem sobrepor telas. */
+.app > main#conteudo { position: relative; left: 0; }

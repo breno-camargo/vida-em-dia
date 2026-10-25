@@ -1,0 +1,457 @@
+{
+  "date": "2026-10-25",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "timezone": "America/Sao_Paulo",
+  "locale": "pt-BR",
+  "screens": [
+    {
+      "theme": "escuro",
+      "name": "hoje",
+      "png": "escuro-hoje.png",
+      "data": "escuro-hoje.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "comida",
+      "png": "escuro-comida.png",
+      "data": "escuro-comida.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "medidas-vazia",
+      "png": "escuro-medidas-vazia.png",
+      "data": "escuro-medidas-vazia.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "registrar-medidas",
+      "png": "escuro-registrar-medidas.png",
+      "data": "escuro-registrar-medidas.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "medida-peso-rolar",
+      "png": "escuro-medida-peso-rolar.png",
+      "data": "escuro-medida-peso-rolar.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "medida-peso-digitar",
+      "png": "escuro-medida-peso-digitar.png",
+      "data": "escuro-medida-peso-digitar.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "seletor-data",
+      "png": "escuro-seletor-data.png",
+      "data": "escuro-seletor-data.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "evolucao-vazia",
+      "png": "escuro-evolucao-vazia.png",
+      "data": "escuro-evolucao-vazia.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "treino-fichas-vazia",
+      "png": "escuro-treino-fichas-vazia.png",
+      "data": "escuro-treino-fichas-vazia.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "nova-ficha-sem-selecao",
+      "png": "escuro-nova-ficha-sem-selecao.png",
+      "data": "escuro-nova-ficha-sem-selecao.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "nova-ficha-com-selecao",
+      "png": "escuro-nova-ficha-com-selecao.png",
+      "data": "escuro-nova-ficha-com-selecao.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "nova-ficha-com-item",
+      "png": "escuro-nova-ficha-com-item.png",
+      "data": "escuro-nova-ficha-com-item.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "nova-ficha-item-expandido",
+      "png": "escuro-nova-ficha-item-expandido.png",
+      "data": "escuro-nova-ficha-item-expandido.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "seletor-descanso",
+      "png": "escuro-seletor-descanso.png",
+      "data": "escuro-seletor-descanso.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "treino-fichas",
+      "png": "escuro-treino-fichas.png",
+      "data": "escuro-treino-fichas.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "treino-exercicios",
+      "png": "escuro-treino-exercicios.png",
+      "data": "escuro-treino-exercicios.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "detalhe-exercicio",
+      "png": "escuro-detalhe-exercicio.png",
+      "data": "escuro-detalhe-exercicio.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "treino-cardio",
+      "png": "escuro-treino-cardio.png",
+      "data": "escuro-treino-cardio.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "registrar-cardio",
+      "png": "escuro-registrar-cardio.png",
+      "data": "escuro-registrar-cardio.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "treino-ativo",
+      "png": "escuro-treino-ativo.png",
+      "data": "escuro-treino-ativo.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "treino-exercicio-expandido",
+      "png": "escuro-treino-exercicio-expandido.png",
+      "data": "escuro-treino-exercicio-expandido.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "seletor-valores-serie",
+      "png": "escuro-seletor-valores-serie.png",
+      "data": "escuro-seletor-valores-serie.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "timer-descanso",
+      "png": "escuro-timer-descanso.png",
+      "data": "escuro-timer-descanso.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "resumo-treino",
+      "png": "escuro-resumo-treino.png",
+      "data": "escuro-resumo-treino.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "treino-em-andamento",
+      "png": "escuro-treino-em-andamento.png",
+      "data": "escuro-treino-em-andamento.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "configuracoes",
+      "png": "escuro-configuracoes.png",
+      "data": "escuro-configuracoes.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "config-conta",
+      "png": "escuro-config-conta.png",
+      "data": "escuro-config-conta.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "config-aparencia",
+      "png": "escuro-config-aparencia.png",
+      "data": "escuro-config-aparencia.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "config-backup",
+      "png": "escuro-config-backup.png",
+      "data": "escuro-config-backup.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "config-atividade",
+      "png": "escuro-config-atividade.png",
+      "data": "escuro-config-atividade.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "config-aparelho",
+      "png": "escuro-config-aparelho.png",
+      "data": "escuro-config-aparelho.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "config-instalar",
+      "png": "escuro-config-instalar.png",
+      "data": "escuro-config-instalar.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "config-sobre",
+      "png": "escuro-config-sobre.png",
+      "data": "escuro-config-sobre.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "privacidade",
+      "png": "escuro-privacidade.png",
+      "data": "escuro-privacidade.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "medidas-preenchida",
+      "png": "escuro-medidas-preenchida.png",
+      "data": "escuro-medidas-preenchida.json"
+    },
+    {
+      "theme": "escuro",
+      "name": "evolucao-preenchida",
+      "png": "escuro-evolucao-preenchida.png",
+      "data": "escuro-evolucao-preenchida.json"
+    },
+    {
+      "theme": "claro",
+      "name": "hoje",
+      "png": "claro-hoje.png",
+      "data": "claro-hoje.json"
+    },
+    {
+      "theme": "claro",
+      "name": "comida",
+      "png": "claro-comida.png",
+      "data": "claro-comida.json"
+    },
+    {
+      "theme": "claro",
+      "name": "medidas-vazia",
+      "png": "claro-medidas-vazia.png",
+      "data": "claro-medidas-vazia.json"
+    },
+    {
+      "theme": "claro",
+      "name": "registrar-medidas",
+      "png": "claro-registrar-medidas.png",
+      "data": "claro-registrar-medidas.json"
+    },
+    {
+      "theme": "claro",
+      "name": "medida-peso-rolar",
+      "png": "claro-medida-peso-rolar.png",
+      "data": "claro-medida-peso-rolar.json"
+    },
+    {
+      "theme": "claro",
+      "name": "medida-peso-digitar",
+      "png": "claro-medida-peso-digitar.png",
+      "data": "claro-medida-peso-digitar.json"
+    },
+    {
+      "theme": "claro",
+      "name": "seletor-data",
+      "png": "claro-seletor-data.png",
+      "data": "claro-seletor-data.json"
+    },
+    {
+      "theme": "claro",
+      "name": "evolucao-vazia",
+      "png": "claro-evolucao-vazia.png",
+      "data": "claro-evolucao-vazia.json"
+    },
+    {
+      "theme": "claro",
+      "name": "treino-fichas-vazia",
+      "png": "claro-treino-fichas-vazia.png",
+      "data": "claro-treino-fichas-vazia.json"
+    },
+    {
+      "theme": "claro",
+      "name": "nova-ficha-sem-selecao",
+      "png": "claro-nova-ficha-sem-selecao.png",
+      "data": "claro-nova-ficha-sem-selecao.json"
+    },
+    {
+      "theme": "claro",
+      "name": "nova-ficha-com-selecao",
+      "png": "claro-nova-ficha-com-selecao.png",
+      "data": "claro-nova-ficha-com-selecao.json"
+    },
+    {
+      "theme": "claro",
+      "name": "nova-ficha-com-item",
+      "png": "claro-nova-ficha-com-item.png",
+      "data": "claro-nova-ficha-com-item.json"
+    },
+    {
+      "theme": "claro",
+      "name": "nova-ficha-item-expandido",
+      "png": "claro-nova-ficha-item-expandido.png",
+      "data": "claro-nova-ficha-item-expandido.json"
+    },
+    {
+      "theme": "claro",
+      "name": "seletor-descanso",
+      "png": "claro-seletor-descanso.png",
+      "data": "claro-seletor-descanso.json"
+    },
+    {
+      "theme": "claro",
+      "name": "treino-fichas",
+      "png": "claro-treino-fichas.png",
+      "data": "claro-treino-fichas.json"
+    },
+    {
+      "theme": "claro",
+      "name": "treino-exercicios",
+      "png": "claro-treino-exercicios.png",
+      "data": "claro-treino-exercicios.json"
+    },
+    {
+      "theme": "claro",
+      "name": "detalhe-exercicio",
+      "png": "claro-detalhe-exercicio.png",
+      "data": "claro-detalhe-exercicio.json"
+    },
+    {
+      "theme": "claro",
+      "name": "treino-cardio",
+      "png": "claro-treino-cardio.png",
+      "data": "claro-treino-cardio.json"
+    },
+    {
+      "theme": "claro",
+      "name": "registrar-cardio",
+      "png": "claro-registrar-cardio.png",
+      "data": "claro-registrar-cardio.json"
+    },
+    {
+      "theme": "claro",
+      "name": "treino-ativo",
+      "png": "claro-treino-ativo.png",
+      "data": "claro-treino-ativo.json"
+    },
+    {
+      "theme": "claro",
+      "name": "treino-exercicio-expandido",
+      "png": "claro-treino-exercicio-expandido.png",
+      "data": "claro-treino-exercicio-expandido.json"
+    },
+    {
+      "theme": "claro",
+      "name": "seletor-valores-serie",
+      "png": "claro-seletor-valores-serie.png",
+      "data": "claro-seletor-valores-serie.json"
+    },
+    {
+      "theme": "claro",
+      "name": "timer-descanso",
+      "png": "claro-timer-descanso.png",
+      "data": "claro-timer-descanso.json"
+    },
+    {
+      "theme": "claro",
+      "name": "resumo-treino",
+      "png": "claro-resumo-treino.png",
+      "data": "claro-resumo-treino.json"
+    },
+    {
+      "theme": "claro",
+      "name": "treino-em-andamento",
+      "png": "claro-treino-em-andamento.png",
+      "data": "claro-treino-em-andamento.json"
+    },
+    {
+      "theme": "claro",
+      "name": "configuracoes",
+      "png": "claro-configuracoes.png",
+      "data": "claro-configuracoes.json"
+    },
+    {
+      "theme": "claro",
+      "name": "config-conta",
+      "png": "claro-config-conta.png",
+      "data": "claro-config-conta.json"
+    },
+    {
+      "theme": "claro",
+      "name": "config-aparencia",
+      "png": "claro-config-aparencia.png",
+      "data": "claro-config-aparencia.json"
+    },
+    {
+      "theme": "claro",
+      "name": "config-backup",
+      "png": "claro-config-backup.png",
+      "data": "claro-config-backup.json"
+    },
+    {
+      "theme": "claro",
+      "name": "config-atividade",
+      "png": "claro-config-atividade.png",
+      "data": "claro-config-atividade.json"
+    },
+    {
+      "theme": "claro",
+      "name": "config-aparelho",
+      "png": "claro-config-aparelho.png",
+      "data": "claro-config-aparelho.json"
+    },
+    {
+      "theme": "claro",
+      "name": "config-instalar",
+      "png": "claro-config-instalar.png",
+      "data": "claro-config-instalar.json"
+    },
+    {
+      "theme": "claro",
+      "name": "config-sobre",
+      "png": "claro-config-sobre.png",
+      "data": "claro-config-sobre.json"
+    },
+    {
+      "theme": "claro",
+      "name": "privacidade",
+      "png": "claro-privacidade.png",
+      "data": "claro-privacidade.json"
+    },
+    {
+      "theme": "claro",
+      "name": "medidas-preenchida",
+      "png": "claro-medidas-preenchida.png",
+      "data": "claro-medidas-preenchida.json"
+    },
+    {
+      "theme": "claro",
+      "name": "evolucao-preenchida",
+      "png": "claro-evolucao-preenchida.png",
+      "data": "claro-evolucao-preenchida.json"
+    }
+  ],
+  "limitations": [
+    {
+      "theme": "escuro",
+      "step": "conta-entrada",
+      "message": "Supabase é null por configuração deliberada da cópia; entrada/cadastro não alcançáveis sem mudar o ambiente. Capturado config-conta, sem simular backend."
+    },
+    {
+      "theme": "claro",
+      "step": "conta-entrada",
+      "message": "Supabase é null por configuração deliberada da cópia; entrada/cadastro não alcançáveis sem mudar o ambiente. Capturado config-conta, sem simular backend."
+    }
+  ],
+  "errors": [],
+  "browser": "156.0.4314.42"
+}

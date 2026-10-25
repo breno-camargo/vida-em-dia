@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vida em Dia — Protótipo de Repaginação Visual</title>
+  <link rel="stylesheet" href="estilos.css" />
+  <link rel="stylesheet" href="correcoes-codex.css" />
+</head>
+<body>
+  <div class="shell-prototipo" id="shell-prototipo">
+    <!-- Barra Superior de Controle do Protótipo (Inspeção de Codex e Usuário) -->
+    <header id="barra-prototipo" class="barra-prototipo" role="banner"></header>
+
+    <!-- Área de Visualização Central do Dispositivo -->
+    <main class="area-visualizacao">
+      <div id="dispositivo-moldura" class="dispositivo-moldura">
+        <!-- Barra de Status Mobile Simulado -->
+        <div class="barra-status-mobile" aria-hidden="true">
+          <span>09:41</span>
+          <div style="display:flex; gap:6px; align-items:center;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L12 22l7.03-4.39C20.26 16.07 21 14.12 21 12c0-4.97-4.03-9-9-9z"/></svg>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="6" width="18" height="12" rx="2"/><path d="M22 10v4"/></svg>
+          </div>
+        </div>
+
+        <!-- Cabeçalho do App Real -->
+        <header class="app-cabecalho">
+          <a href="#" class="app-marca" onclick="navegarPara('hoje'); return false;" aria-label="Ir para Hoje">
+            <span class="app-marca-icone">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+            </span>
+            <div class="app-marca-texto">
+              <strong>Vida em Dia</strong>
+              <small>UM ESPAÇO PARA VOCÊ</small>
+            </div>
+          </a>
+
+          <button class="app-botao-icone" onclick="navegarPara('configuracoes')" aria-label="Abrir Configurações">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </header>
+
+        <!-- Corpo Principal com Conteúdo Dinâmico -->
+        <main id="app-corpo" class="app-corpo" role="main"></main>
+
+        <!-- Barra Inferior de Navegação Fixa (5 Abas Reais com Comida e sem Cardio) -->
+        <nav class="app-navegacao-inferior" aria-label="Navegação principal">
+          <button class="app-navegacao-item ativo" data-tela="hoje" onclick="navegarPara('hoje')" aria-label="Hoje">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Hoje</span>
+          </button>
+          <button class="app-navegacao-item" data-tela="treino" onclick="navegarPara('treino')" aria-label="Treino">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6.5 6.5 11 11"/><path d="m21 21-1-1"/><path d="m3 3 1 1"/><path d="m18 22 4-4"/><path d="m2 6 4-4"/><path d="m3 10 7-7"/><path d="m14 21 7-7"/></svg>
+            <span>Treino</span>
+          </button>
+          <button class="app-navegacao-item" data-tela="comida" onclick="navegarPara('comida')" aria-label="Comida">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"/><path d="M15 2v14a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V2"/><path d="M8 2v6"/><line x1="12" y1="2" x2="12" y2="8"/></svg>
+            <span>Comida</span>
+          </button>
+          <button class="app-navegacao-item" data-tela="medidas" onclick="navegarPara('medidas')" aria-label="Medidas">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5 4 4"/><path d="m13 7 4 4"/><path d="m11 9 4 4"/><path d="m9 11 4 4"/><path d="m7 13 4 4"/><path d="M21.17 8 8 21.17a2.83 2.83 0 0 1-4-4L17.17 4a2.83 2.83 0 0 1 4 4Z"/></svg>
+            <span>Medidas</span>
+          </button>
+          <button class="app-navegacao-item" data-tela="evolucao" onclick="navegarPara('evolucao')" aria-label="Evolução">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+            <span>Evolução</span>
+          </button>
+        </nav>
+      </div>
+    </main>
+
+    <!-- ======================================================================
+         MODAIS, BOTTOM SHEETS E DIÁLOGOS DE FLUXOS
+         ====================================================================== -->
+
+    <!-- MODAL 1: EDITOR DE MEDIDAS -->
+    <div id="modal-editor-medidas" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="titulo-editor-medidas" hidden>
+      <div class="modal-sheet">
+        <div class="modal-alca" onclick="fecharModais()"><div class="modal-alca-barra"></div></div>
+        <div class="modal-cabecalho">
+          <h2 id="titulo-editor-medidas">Registrar Medidas</h2>
+          <button class="app-botao-icone" onclick="fecharModais()" aria-label="Fechar editor de medidas">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-corpo">
+          <p class="nota-explicativa">
+            Preencha apenas o que você mediu. Peso com precisão de gramas (3 casas); circunferências e membros em cm (2 casas). Campos em branco preservam valores salvos anteriormente.
+          </p>
+
+          <div class="campo-grupo">
+            <label for="input-medida-data">Data da Medição</label>
+            <input type="date" id="input-medida-data" class="campo-input" onchange="aoMudarDataEditorMedidas(this.value)" />
+          </div>
+
+          <div class="formulario">
+            <div class="campo-grupo">
+              <label for="input-medida-peso">Peso Corporal (kg)</label>
+              <input type="number" step="0.001" id="input-medida-peso" class="campo-input" placeholder="Ex.: 72,500" style="font-size:18px; font-weight:700;" />
+              <small class="campo-ajuda">Precisão de 3 casas decimais (gramas)</small>
+            </div>
+
+            <div class="campo-grupo">
+              <label for="input-medida-cintura">Cintura (cm)</label>
+              <input type="number" step="0.01" id="input-medida-cintura" class="campo-input" placeholder="Ex.: 78,00" />
+            </div>
+
+            <div class="campo-grupo">
+              <label for="input-medida-busto">Busto / Tórax (cm)</label>
+              <input type="number" step="0.01" id="input-medida-busto" class="campo-input" placeholder="Ex.: 93,50" />
+            </div>
+
+            <div class="campo-grupo">
+              <label for="input-medida-abdomen">Abdômen (cm)</label>
+              <input type="number" step="0.01" id="input-medida-abdomen" class="campo-input" placeholder="Ex.: 81,50" />
+            </div>
+
+            <div class="campo-grupo">
+              <label for="input-medida-quadril">Quadril (cm)</label>
+              <input type="number" step="0.01" id="input-medida-quadril" class="campo-input" placeholder="Ex.: 97,50" />
+            </div>
+
+            <div class="grade-dupla">
+              <div class="campo-grupo">
+                <label for="input-medida-braco-d">Braço Direito (cm)</label>
+                <input type="number" step="0.01" id="input-medida-braco-d" class="campo-input" placeholder="Ex.: 33,50" />
+              </div>
+              <div class="campo-grupo">
+                <label for="input-medida-braco-e">Braço Esquerdo (cm)</label>
+                <input type="number" step="0.01" id="input-medida-braco-e" class="campo-input" placeholder="Ex.: 33,00" />
+              </div>
+            </div>
+
+            <div class="grade-dupla">
+              <div class="campo-grupo">
+                <label for="input-medida-antebraco-d">Antebraço Dir. (cm)</label>
+                <input type="number" step="0.01" id="input-medida-antebraco-d" class="campo-input" placeholder="Ex.: 28,50" />
+              </div>
+              <div class="campo-grupo">
+                <label for="input-medida-antebraco-e">Antebraço Esq. (cm)</label>
+                <input type="number" step="0.01" id="input-medida-antebraco-e" class="campo-input" placeholder="Ex.: 28,00" />
+              </div>
+            </div>
+
+            <div class="grade-dupla">
+              <div class="campo-grupo">
+                <label for="input-medida-coxa-d">Coxa Direita (cm)</label>
+                <input type="number" step="0.01" id="input-medida-coxa-d" class="campo-input" placeholder="Ex.: 56,50" />
+              </div>
+              <div class="campo-grupo">
+                <label for="input-medida-coxa-e">Coxa Esquerda (cm)</label>
+                <input type="number" step="0.01" id="input-medida-coxa-e" class="campo-input" placeholder="Ex.: 56,00" />
+              </div>
+            </div>
+
+            <div class="grade-dupla">
+              <div class="campo-grupo">
+                <label for="input-medida-panturrilha-d">Panturrilha Dir. (cm)</label>
+                <input type="number" step="0.01" id="input-medida-panturrilha-d" class="campo-input" placeholder="Ex.: 37,50" />
+              </div>
+              <div class="campo-grupo">
+                <label for="input-medida-panturrilha-e">Panturrilha Esq. (cm)</label>
+                <input type="number" step="0.01" id="input-medida-panturrilha-e" class="campo-input" placeholder="Ex.: 37,00" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-rodape">
+          <button type="button" class="botao-secundario" style="flex:1;" onclick="fecharModais()">Cancelar</button>
+          <button type="button" class="botao-principal" style="flex:1.5;" onclick="acaoSalvarEditorMedidas()">Salvar Medidas</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 2: CONFIRMAÇÃO DE ALTERAÇÃO DE MEDIDAS (Antes/Depois) -->
+    <div id="modal-confirmacao-medidas" class="modal-overlay centralizado" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmacao-medidas" hidden>
+      <div class="modal-sheet">
+        <div class="modal-cabecalho">
+          <h2 id="titulo-confirmacao-medidas">Confirmar Alterações</h2>
+          <button class="app-botao-icone" onclick="fecharModalConfirmacaoMedidas()" aria-label="Voltar para o editor">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div id="corpo-confirmacao-medidas" class="modal-corpo"></div>
+        <div class="modal-rodape">
+          <button type="button" class="botao-secundario" style="flex:1;" onclick="fecharModalConfirmacaoMedidas()">Voltar</button>
+          <button type="button" class="botao-principal" style="flex:1.5;" onclick="confirmarAlteracaoMedidas()">Confirmar Alterações</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 3: EDITOR DE FICHA (Criar e Editar) -->
+    <div id="modal-editor-ficha" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="titulo-editor-ficha" hidden>
+      <div class="modal-sheet">
+        <div class="modal-alca" onclick="fecharModais()"><div class="modal-alca-barra"></div></div>
+        <div class="modal-cabecalho">
+          <h2 id="titulo-editor-ficha">Nova Ficha</h2>
+          <button class="app-botao-icone" onclick="fecharModais()" aria-label="Fechar editor de ficha">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-corpo">
+          <div class="campo-grupo">
+            <label for="editor-ficha-nome">Nome da Ficha</label>
+            <input type="text" id="editor-ficha-nome" class="campo-input" placeholder="Ex.: Treino C · Pernas e Ombros" required />
+          </div>
+
+          <div class="secao-editor-ficha">
+            <span class="subtitulo-seletor">Exercícios planejados nesta ficha:</span>
+            <div id="editor-ficha-itens" class="lista-itens-ficha"></div>
+          </div>
+
+          <div class="secao-adicionar-exercicio-ficha">
+            <label for="busca-exercicio-ficha">Buscar para adicionar à ficha</label>
+            <div class="campo-senha-container">
+              <input type="search" id="busca-exercicio-ficha" class="campo-input" placeholder="Nome do exercício ou músculo…" oninput="filtrarExerciciosParaFicha(this.value)" />
+            </div>
+            <div id="lista-exercicios-disponiveis-ficha" class="lista-exercicios-disponiveis"></div>
+          </div>
+        </div>
+        <div class="modal-rodape">
+          <button type="button" class="botao-secundario" style="flex:1;" onclick="fecharModais()">Cancelar</button>
+          <button type="button" class="botao-principal" style="flex:1.5;" onclick="salvarEditorFicha()">Salvar Ficha</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 4: OPÇÕES DA FICHA (Disparado pela Engrenagem) -->
+    <div id="modal-opcoes-ficha" class="modal-overlay centralizado" role="dialog" aria-modal="true" aria-labelledby="titulo-opcoes-ficha" hidden>
+      <div class="modal-sheet">
+        <div class="modal-cabecalho">
+          <h2 id="titulo-opcoes-ficha">Opções da Ficha</h2>
+          <button class="app-botao-icone" onclick="fecharModais()" aria-label="Fechar opções">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div id="corpo-opcoes-ficha" class="modal-corpo" style="display:flex; flex-direction:column; gap:10px;"></div>
+      </div>
+    </div>
+
+    <!-- MODAL 5: MODO TREINO (Execução Fiel de Treino por Ficha e Treino Livre) -->
+    <div id="modal-modo-treino" class="modal-overlay modo-treino-tela" role="dialog" aria-modal="true" aria-labelledby="titulo-modo-treino" hidden>
+      <div class="modal-sheet modo-treino-sheet">
+        <div class="modal-cabecalho">
+          <div style="display:flex; align-items:center; gap:8px;">
+            <h2 id="titulo-modo-treino">Treino em Andamento</h2>
+            <button id="btn-nomear-treino-livre" type="button" class="botao-secundario" style="min-height:36px; padding:4px 10px; font-size:11px;" onclick="abrirModalNomearTreinoLivre()" hidden>
+              Nomear
+            </button>
+          </div>
+          <button class="app-botao-icone" onclick="perguntarCancelarTreino()" aria-label="Cancelar treino em andamento">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-corpo">
+          <!-- Painel de Andamento e Progresso -->
+          <div class="painel-card andamento-topo">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;">
+              <span id="treino-progresso-texto" style="font-size:12px; font-weight:600; color:var(--text-secondary);">0 de 0 séries concluídas</span>
+              <span id="treino-tempo-decorrido" style="font-size:12px; font-family:var(--fonte-mono); color:var(--brand-primary); font-weight:700;">00:00</span>
+            </div>
+            <progress id="treino-barra-progresso" class="barra-sessao" value="0" max="100"></progress>
+          </div>
+
+          <!-- Timer de Descanso Simulado -->
+          <div id="painel-descanso" class="painel-card painel-descanso-container" style="display:flex; justify-content:space-between; align-items:center; background:var(--brand-surface); border-color:var(--brand-border);">
+            <div>
+              <span style="font-size:11px; color:var(--brand-primary-text); font-weight:600;">Descanso entre séries</span>
+              <strong id="descanso-cronometro" style="display:block; font-size:18px; font-weight:700; color:var(--brand-primary-text); font-family:var(--fonte-mono);">01:30</strong>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button type="button" class="botao-secundario" style="min-height:44px; padding:4px 10px; font-size:11px;" onclick="adicionarTempoDescanso(30)">+30s</button>
+              <button type="button" class="botao-secundario" style="min-height:44px; padding:4px 10px; font-size:11px;" onclick="pularDescanso()">Pular</button>
+            </div>
+          </div>
+
+          <!-- Exercícios no Treino (Controles Fiéis a Serie.tsx) -->
+          <div id="treino-exercicios-container" class="lista-exercicios-treino"></div>
+
+          <!-- Adicionar Exercício ao Treino em Andamento -->
+          <details class="painel-card acao-treino-detalhes" style="margin-top:16px;">
+            <summary class="cabecalho-acao-treino">
+              <span class="icone-acao-mais">+</span>
+              <div>
+                <strong>Adicionar Exercício ao Treino</strong>
+                <small style="display:block; font-size:11px; color:var(--text-secondary);">Válido para este treino</small>
+              </div>
+            </summary>
+            <div style="padding-top:12px;">
+              <input type="search" id="busca-exercicio-treino-ativo" class="campo-input" placeholder="Buscar exercício da biblioteca…" oninput="filtrarExerciciosParaTreinoAtivo(this.value)" />
+              <div id="lista-exercicios-disponiveis-treino" class="lista-exercicios-disponiveis" style="margin-top:8px;"></div>
+            </div>
+          </details>
+
+          <!-- Observações do Treino -->
+          <div class="campo-grupo" style="margin-top:16px;">
+            <label for="treino-observacao">Observações do Treino (opcional)</label>
+            <textarea id="treino-observacao" class="campo-input" rows="2" placeholder="Ex.: boa intensidade, última série no limite…"></textarea>
+          </div>
+        </div>
+        <div class="modal-rodape" style="display:flex; flex-direction:column; gap:8px;">
+          <button type="button" class="botao-principal largura-total" onclick="abrirResumoFinalizacaoTreino()">Ver Resumo e Finalizar</button>
+          <button type="button" class="botao-destrutivo largura-total" onclick="perguntarCancelarTreino()">Cancelar Treino</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 6: RESUMO E FINALIZAÇÃO DO TREINO -->
+    <div id="modal-resumo-finalizacao" class="modal-overlay centralizado" role="dialog" aria-modal="true" aria-labelledby="titulo-resumo-finalizacao" hidden>
+      <div class="modal-sheet">
+        <div class="modal-cabecalho">
+          <h2 id="titulo-resumo-finalizacao">Finalizar Treino</h2>
+          <button class="app-botao-icone" onclick="fecharModalResumoFinalizacao()" aria-label="Voltar para o treino">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-corpo">
+          <div id="resumo-metricas-painel" class="painel-card" style="margin-bottom:14px;"></div>
+          <div class="formulario">
+            <div class="campo-grupo">
+              <label for="finalizacao-peso">Peso Corporal Hoje (kg - opcional)</label>
+              <input type="number" step="0.001" id="finalizacao-peso" class="campo-input" placeholder="Ex.: 72,500" />
+            </div>
+            <div class="campo-grupo">
+              <label for="finalizacao-calorias">Calorias Estimadas (kcal - opcional)</label>
+              <input type="number" id="finalizacao-calorias" class="campo-input" placeholder="Ex.: 450" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-rodape">
+          <button type="button" class="botao-secundario" style="flex:1;" onclick="fecharModalResumoFinalizacao()">Voltar</button>
+          <button type="button" class="botao-principal" style="flex:1.5;" onclick="concluirTreinoDefinitivo()">Concluir Treino</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 7: DETALHES DE TREINO CONCLUÍDO (Histórico) -->
+    <div id="modal-detalhes-treino" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="titulo-detalhes-treino" hidden>
+      <div class="modal-sheet">
+        <div class="modal-alca" onclick="fecharModais()"><div class="modal-alca-barra"></div></div>
+        <div class="modal-cabecalho">
+          <h2 id="titulo-detalhes-treino">Detalhes do Treino</h2>
+          <button class="app-botao-icone" onclick="fecharModais()" aria-label="Fechar detalhes">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div id="corpo-modal-detalhes-treino" class="modal-corpo"></div>
+        <div class="modal-rodape">
+          <button type="button" class="botao-secundario largura-total" onclick="fecharModais()">Fechar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 8: EDITOR DE CARDIO -->
+    <div id="modal-editor-cardio" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="titulo-editor-cardio" hidden>
+      <div class="modal-sheet">
+        <div class="modal-alca" onclick="fecharModais()"><div class="modal-alca-barra"></div></div>
+        <div class="modal-cabecalho">
+          <h2 id="titulo-editor-cardio">Registrar Cardio</h2>
+          <button class="app-botao-icone" onclick="fecharModais()" aria-label="Fechar editor de cardio">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-corpo">
+          <div class="formulario">
+            <div class="campo-grupo">
+              <label for="tipo-cardio-select">Modalidade de Cardio</label>
+              <select id="tipo-cardio-select" class="campo-input" onchange="aoMudarModalidadeCardio(this.value)">
+                <option value="esteira">Esteira Ergométrica</option>
+                <option value="corrida_rua" selected>Corrida na Rua</option>
+                <option value="ciclismo">Ciclismo / Bicicleta</option>
+                <option value="eliptico">Elíptico</option>
+                <option value="natacao">Natação</option>
+                <option value="caminhada">Caminhada</option>
+              </select>
+            </div>
+            <div class="grade-dupla">
+              <div class="campo-grupo">
+                <label for="duracao-cardio-min">Duração (minutos)</label>
+                <input type="number" id="duracao-cardio-min" class="campo-input" value="45" min="1" max="360" />
+              </div>
+              <div class="campo-grupo" id="grupo-distancia-cardio">
+                <label for="distancia-cardio-km">Distância (km)</label>
+                <input type="number" step="0.01" id="distancia-cardio-km" class="campo-input" value="6.10" />
+              </div>
+            </div>
+            <div class="grade-dupla">
+              <div class="campo-grupo">
+                <label for="calorias-cardio">Calorias (kcal)</label>
+                <input type="number" id="calorias-cardio" class="campo-input" value="420" />
+              </div>
+              <div class="campo-grupo">
+                <label for="fc-media-cardio">FC Média (bpm)</label>
+                <input type="number" id="fc-media-cardio" class="campo-input" value="148" />
+              </div>
+            </div>
+            <div class="campo-grupo">
+              <label for="obs-cardio">Observações do Cardio</label>
+              <input type="text" id="obs-cardio" class="campo-input" placeholder="Ex.: ritmo moderado, clima ameno…" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-rodape">
+          <button type="button" class="botao-secundario" style="flex:1;" onclick="fecharModais()">Cancelar</button>
+          <button type="button" class="botao-principal" style="flex:1.5;" onclick="salvarCardio()">Salvar Cardio</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 9: NOVO EXERCÍCIO NA BIBLIOTECA -->
+    <div id="modal-novo-exercicio" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="titulo-novo-exercicio" hidden>
+      <div class="modal-sheet">
+        <div class="modal-alca" onclick="fecharModais()"><div class="modal-alca-barra"></div></div>
+        <div class="modal-cabecalho">
+          <h2 id="titulo-novo-exercicio">Novo Exercício</h2>
+          <button class="app-botao-icone" onclick="fecharModais()" aria-label="Fechar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-corpo">
+          <div class="formulario">
+            <div class="campo-grupo">
+              <label for="novo-ex-nome">Nome do Exercício</label>
+              <input type="text" id="novo-ex-nome" class="campo-input" placeholder="Ex.: Elevação Lateral com Halteres" required />
+            </div>
+            <div class="grade-dupla">
+              <div class="campo-grupo">
+                <label for="novo-ex-grupo">Grupo Muscular</label>
+                <select id="novo-ex-grupo" class="campo-input">
+                  <option value="Peito">Peito</option>
+                  <option value="Costas">Costas</option>
+                  <option value="Pernas">Pernas</option>
+                  <option value="Ombros">Ombros</option>
+                  <option value="Braços">Braços</option>
+                  <option value="Abdômen">Abdômen</option>
+                  <option value="Cardio">Cardio</option>
+                </select>
+              </div>
+              <div class="campo-grupo">
+                <label for="novo-ex-equipamento">Equipamento</label>
+                <select id="novo-ex-equipamento" class="campo-input">
+                  <option value="Halteres">Halteres</option>
+                  <option value="Barra">Barra</option>
+                  <option value="Polia">Polia / Cabo</option>
+                  <option value="Máquina">Máquina</option>
+                  <option value="Peso corporal">Peso corporal</option>
+                </select>
+              </div>
+            </div>
+            <div class="campo-grupo">
+              <label for="novo-ex-descanso">Descanso Padrão (segundos)</label>
+              <input type="number" id="novo-ex-descanso" class="campo-input" value="90" min="15" max="300" step="15" />
+            </div>
+            <div class="campo-grupo">
+              <label for="novo-ex-nota">Nota Técnica / Como fazer (opcional)</label>
+              <textarea id="novo-ex-nota" class="campo-input" rows="2" placeholder="Ex.: cotovelos alinhados com os ombros…"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-rodape">
+          <button type="button" class="botao-secundario" style="flex:1;" onclick="fecharModais()">Cancelar</button>
+          <button type="button" class="botao-principal" style="flex:1.5;" onclick="salvarNovoExercicioCatalogo()">Salvar Exercício</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 10: AJUDA E DETALHES DO EXERCÍCIO -->
+    <div id="modal-ajuda-exercicio" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="titulo-ajuda-exercicio" hidden>
+      <div class="modal-sheet">
+        <div class="modal-alca" onclick="fecharModais()"><div class="modal-alca-barra"></div></div>
+        <div class="modal-cabecalho">
+          <h2 id="titulo-ajuda-exercicio">Detalhes do Exercício</h2>
+          <button class="app-botao-icone" onclick="fecharModais()" aria-label="Fechar detalhes">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div id="corpo-modal-ajuda-exercicio" class="modal-corpo"></div>
+        <div class="modal-rodape">
+          <button type="button" class="botao-secundario largura-total" onclick="fecharModais()">Fechar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 11: BACKUP CRIPTOGRAFADO (Fluxo 3) -->
+    <div id="modal-backup" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="titulo-backup" hidden>
+      <div class="modal-sheet">
+        <div class="modal-alca" onclick="fecharModais()"><div class="modal-alca-barra"></div></div>
+        <div class="modal-cabecalho">
+          <h2 id="titulo-backup">Backup Criptografado</h2>
+          <button class="app-botao-icone" onclick="fecharModais()" aria-label="Fechar backup">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div id="corpo-modal-backup" class="modal-corpo"></div>
+      </div>
+    </div>
+
+    <!-- MODAL 12: IMPORTAÇÃO E RESTAURAÇÃO (Fluxo 3B - JSON Criptografado e JSON Legível) -->
+    <div id="modal-importar-backup" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="titulo-importar" hidden>
+      <div class="modal-sheet">
+        <div class="modal-alca" onclick="fecharModais()"><div class="modal-alca-barra"></div></div>
+        <div class="modal-cabecalho">
+          <h2 id="titulo-importar">Restaurar Backup</h2>
+          <button class="app-botao-icone" onclick="fecharModais()" aria-label="Fechar restauração">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div id="corpo-modal-importar" class="modal-corpo"></div>
+      </div>
+    </div>
+
+    <!-- MODAL 13: PRIVACIDADE E DADOS (Fluxo 4) -->
+    <div id="modal-privacidade" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="titulo-privacidade" hidden>
+      <div class="modal-sheet">
+        <div class="modal-alca" onclick="fecharModais()"><div class="modal-alca-barra"></div></div>
+        <div class="modal-cabecalho">
+          <h2 id="titulo-privacidade">Privacidade e Armazenamento</h2>
+          <button class="app-botao-icone" onclick="fecharModais()" aria-label="Fechar privacidade">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div id="corpo-modal-privacidade" class="modal-corpo"></div>
+      </div>
+    </div>
+
+    <!-- MODAL 14: CONFIRMAÇÃO DE ELIMINAÇÃO DEFINITIVA (Lixeira) -->
+    <div id="modal-confirmar-eliminacao" class="modal-overlay centralizado" role="dialog" aria-modal="true" aria-labelledby="titulo-confirmar-eliminacao" hidden>
+      <div class="modal-sheet">
+        <div class="modal-cabecalho">
+          <h2 id="titulo-confirmar-eliminacao">Eliminar Definitivamente?</h2>
+          <button class="app-botao-icone" onclick="fecharModalConfirmarEliminacao()" aria-label="Fechar confirmação">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-corpo">
+          <div class="aviso-banner aviso-destrutivo">
+            <strong>Ação irreversível:</strong> Este item será purgado imediatamente do armazenamento e não poderá ser recuperado.
+          </div>
+          <p id="texto-item-a-eliminar" style="font-size:13px; color:var(--text-primary); margin:12px 0;"></p>
+        </div>
+        <div class="modal-rodape">
+          <button type="button" class="botao-secundario" style="flex:1;" onclick="fecharModalConfirmarEliminacao()">Cancelar</button>
+          <button type="button" class="botao-destrutivo" style="flex:1.5;" onclick="executarEliminacaoDefinitiva()">Eliminar Definitivamente</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 15: CONTA E ACESSO (Fluxo 5) -->
+    <div id="modal-conta" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="titulo-conta" hidden>
+      <div class="modal-sheet">
+        <div class="modal-alca" onclick="fecharModais()"><div class="modal-alca-barra"></div></div>
+        <div class="modal-cabecalho">
+          <h2 id="titulo-conta">Conta e Acesso</h2>
+          <button class="app-botao-icone" onclick="fecharModais()" aria-label="Fechar conta">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div id="corpo-modal-conta" class="modal-corpo"></div>
+      </div>
+    </div>
+
+    <!-- MODAL 16: CARDS COMPARTILHÁVEIS (CARDS CONGELADOS - PLACEHOLDER NEUTRO) -->
+    <div id="modal-cards-compartilhar" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="titulo-compartilhar" hidden>
+      <div class="modal-sheet">
+        <div class="modal-alca" onclick="fecharModais()"><div class="modal-alca-barra"></div></div>
+        <div class="modal-cabecalho">
+          <h2 id="titulo-compartilhar">Compartilhar Treino</h2>
+          <button class="app-botao-icone" onclick="fecharModais()" aria-label="Fechar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="modal-corpo">
+          <div class="container-componente-congelado">
+            <span class="etiqueta-congelado">Componente existente preservado</span>
+            <p class="placeholder-descricao">
+              Cards compartilháveis pós-treino (modelos Tipográfico, Foto e Editorial) mantidos sem alteração.
+            </p>
+          </div>
+          <div class="modal-rodape" style="padding:16px 0 0;">
+            <button type="button" class="botao-secundario largura-total" onclick="fecharModais()">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+  <script src="correcoes-codex.js"></script>
+  <script src="funcionalidades-codex.js"></script>
+  <script src="backup-demonstracao-codex.js"></script>
+  <script src="renderer-aprovado-copia.js"></script>
+  <script src="compartilhamento-codex.js"></script>
+  <script src="historico-codex.js"></script>
+  <script src="agua-codex.js"></script>
+  <script src="acabamento-codex.js"></script>
+</body>
+</html>

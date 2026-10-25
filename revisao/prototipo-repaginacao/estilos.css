@@ -1,0 +1,1684 @@
+/* ==========================================================================
+   VIDA EM DIA — PROTÓTIPO DE REPAGINAÇÃO VISUAL (REVISÃO CODEX)
+   Contrato de Design System, Variáveis Semânticas, Temas e Componentes
+   Data: 22/10/2026
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. TOKENS DE DESIGN E VARIÁVEIS SEMÂNTICAS
+   -------------------------------------------------------------------------- */
+:root {
+  /* Dimensões e Padrões Compartilhados (PADROES-INTERFACE.md) */
+  --controle-altura: 48px;
+  --controle-altura-sm: 44px;
+  --controle-raio: 12px;
+  --controle-raio-lg: 16px;
+  --controle-raio-xl: 22px;
+  --controle-fonte: 13px;
+  --controle-fonte-sm: 12px;
+
+  /* Transições e Movimento (120ms / 160ms - puramente opacidade/cor, sem deslize) */
+  --movimento-curto: 120ms;
+  --movimento-painel: 160ms;
+
+  /* Fontes do Sistema */
+  --fonte-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --fonte-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+}
+
+/* TEMA ESCURO (Padrão do App) */
+[data-theme="dark"] {
+  --bg-app: #101714;
+  --bg-canvas: #0c120f;
+  --bg-surface: #16221b;
+  --bg-surface-elevated: #1d2c23;
+  --bg-surface-sunken: #111a15;
+  --bg-surface-active: #23362a;
+
+  /* Bordas */
+  --border-subtle: #24352a;
+  --border-default: #314637;
+  --border-highlight: #46634f;
+
+  /* Textos - Contraste Validado (mínimo 4.5:1 para secundário e terciário) */
+  --text-primary: #edf4ee;     /* 13.5:1 em #16221b */
+  --text-secondary: #9cb1a2;   /* 5.8:1 em #16221b */
+  --text-tertiary: #8ba593;    /* 4.8:1 em #16221b (>= 4.5:1) */
+  --text-disabled: #637769;
+
+  /* Identidade Verde (Preservada) */
+  --brand-primary: #bcec86;
+  --brand-primary-hover: #ade075;
+  --brand-primary-text: #172d16; /* 10.88:1 em #bcec86 */
+  --brand-surface: #223522;
+  --brand-surface-subtle: #19271c;
+  --brand-border: #4d6d45;
+
+  /* Foco */
+  --foco-anel: #bcec86;
+
+  /* Estados de Feedback e Semânticos */
+  --destructive-bg: #2a1816;
+  --destructive-border: #633933;
+  --destructive-text: #f0ada3;
+  --destructive-hover: #361f1c;
+
+  --warning-bg: #292414;
+  --warning-border: #594d27;
+  --warning-text: #e6ce84;
+
+  --info-bg: #15252e;
+  --info-border: #284859;
+  --info-text: #96c8e3;
+
+  --success-bg: #1c2e1f;
+  --success-border: #3b5f3f;
+  --success-text: #a8e596;
+
+  /* Sombras */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.55);
+}
+
+/* TEMA CLARO (Coerente, Confortável e Acessível) */
+[data-theme="light"] {
+  --bg-app: #f4f8f4;
+  --bg-canvas: #e9f0ea;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #fbfdfb;
+  --bg-surface-sunken: #edf4ee;
+  --bg-surface-active: #e2ede3;
+
+  /* Bordas - Contraste Validado (>= 3:1) */
+  --border-subtle: #d0ded1;
+  --border-default: #6b8a78;   /* 3.80:1 em #ffffff, 3.39:1 em #edf4ee (>= 3:1) */
+  --border-highlight: #4a6d54;
+
+  /* Textos - Contraste Validado (>= 4.5:1) */
+  --text-primary: #122116;     /* 16.74:1 em #ffffff */
+  --text-secondary: #405a46;   /* 7.58:1 em #ffffff */
+  --text-tertiary: #48604d;    /* 6.87:1 em #ffffff (>= 4.5:1) */
+  --text-disabled: #809686;
+
+  /* Identidade Verde (Preservada) */
+  --brand-primary: #bcec86;
+  --brand-primary-hover: #abdf73;
+  --brand-primary-text: #142813; /* 10.88:1 em #bcec86 */
+  --brand-surface: #d8ecd0;    /* 3.2:1 de distinção em fundo claro */
+  --brand-surface-subtle: #e9f5e5;
+  --brand-border: #63964e;
+
+  /* Foco de alto contraste */
+  --foco-anel: #174d15;        /* 9.96:1 em #ffffff, 7.34:1 em #bcec86 (>= 3:1) */
+
+  /* Estados Semânticos */
+  --destructive-bg: #fdf3f2;
+  --destructive-border: #e28e83;
+  --destructive-text: #8e1f17;  /* 5.5:1 em #ffffff */
+  --destructive-hover: #faeae7;
+
+  --warning-bg: #fdf9ec;
+  --warning-border: #d4b55c;
+  --warning-text: #6b4f0b;      /* 5.8:1 em #ffffff */
+
+  --info-bg: #f0f7fb;
+  --info-border: #9ec2d6;
+  --info-text: #174e6d;        /* 6.4:1 em #ffffff */
+
+  --success-bg: #f0f9ee;
+  --success-border: #91c782;
+  --success-text: #1b5b18;      /* 5.9:1 em #ffffff */
+
+  /* Sombras */
+  --shadow-sm: 0 2px 6px rgba(18, 33, 22, 0.08);
+  --shadow-md: 0 6px 18px rgba(18, 33, 22, 0.12);
+  --shadow-lg: 0 12px 36px rgba(18, 33, 22, 0.16);
+}
+
+/* --------------------------------------------------------------------------
+   2. RESET E TIPOGRAFIA BASE
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  min-height: 100%;
+  font-family: var(--fonte-sans);
+  background: var(--bg-canvas);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Moldura de Apresentação do Protótipo (Shell Desktop & Mobile) */
+.shell-prototipo {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg-canvas);
+}
+
+/* Barra de Ferramentas Superior do Protótipo */
+.barra-prototipo {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 18px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-default);
+  box-shadow: var(--shadow-sm);
+  font-size: 12px;
+}
+
+.barra-prototipo-titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.barra-prototipo-titulo .badge {
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--brand-surface);
+  color: var(--brand-primary);
+  border: 1px solid var(--brand-border);
+  font-size: 11px;
+  font-weight: 600;
+}
+[data-theme="light"] .barra-prototipo-titulo .badge {
+  color: #174d15;
+}
+
+.barra-prototipo-acoes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.seletor-visao, .seletor-tema, .seletor-dispositivo {
+  display: inline-flex;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  background: var(--bg-surface-sunken);
+  padding: 2px;
+}
+
+.seletor-visao button, .seletor-tema button, .seletor-dispositivo button {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--movimento-curto), color var(--movimento-curto);
+}
+
+.seletor-visao button.ativo, .seletor-tema button.ativo, .seletor-dispositivo button.ativo {
+  background: var(--brand-primary);
+  color: var(--brand-primary-text);
+}
+
+.seletor-visao button:focus-visible, .seletor-tema button:focus-visible, .seletor-dispositivo button:focus-visible {
+  outline: 2px solid var(--foco-anel);
+  outline-offset: 2px;
+}
+
+/* Área de Visualização Central */
+.area-visualizacao {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px 12px 60px;
+}
+
+/* Container do Dispositivo Simulado */
+.dispositivo-moldura {
+  width: 100%;
+  max-width: 390px;
+  min-height: 844px;
+  background: var(--bg-app);
+  border-radius: 36px;
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-default);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: max-width var(--movimento-curto) ease-out;
+}
+
+.dispositivo-moldura.modo-360 {
+  max-width: 360px;
+  min-height: 780px;
+  border-radius: 28px;
+}
+
+.dispositivo-moldura.modo-desktop {
+  max-width: 480px;
+  min-height: 900px;
+  border-radius: 16px;
+}
+
+/* Notch / Barra de Status Mobile */
+.barra-status-mobile {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  user-select: none;
+  background: var(--bg-app);
+}
+
+/* --------------------------------------------------------------------------
+   3. CABEÇALHO DO APLICATIVO REAL
+   -------------------------------------------------------------------------- */
+.app-cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 14px;
+  background: var(--bg-app);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.app-marca {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--text-primary);
+}
+
+.app-marca-icone {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--brand-primary);
+  color: var(--brand-primary-text);
+  box-shadow: var(--shadow-sm);
+}
+
+.app-marca-texto {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-marca-texto strong {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
+}
+
+.app-marca-texto small {
+  font-size: 8px;
+  letter-spacing: 1.8px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  margin-top: 1px;
+}
+
+.app-botao-icone {
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-surface-sunken);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background var(--movimento-curto), color var(--movimento-curto);
+}
+
+.app-botao-icone:hover {
+  background: var(--bg-surface-active);
+  color: var(--text-primary);
+}
+
+.app-botao-icone:focus-visible {
+  outline: 2px solid var(--foco-anel);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   4. CONTEÚDO PRINCIPAL E NAVEGAÇÃO
+   -------------------------------------------------------------------------- */
+.app-corpo {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 18px 20px calc(84px + env(safe-area-inset-bottom, 20px));
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Linha de Data e Rede */
+.linha-data-rede {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+
+.linha-data-rede span:first-child::first-letter {
+  text-transform: uppercase;
+}
+
+.estado-rede {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+
+.ponto-rede {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brand-primary);
+}
+
+.ponto-rede.offline {
+  background: var(--destructive-text);
+}
+
+/* Título de Página */
+.titulo-pagina {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  line-height: 1.25;
+  color: var(--text-primary);
+  margin-bottom: 18px;
+}
+
+/* --------------------------------------------------------------------------
+   5. BOTÕES E CONTROLES (PADROES-INTERFACE.MD)
+   -------------------------------------------------------------------------- */
+.botao-principal,
+.botao-secundario,
+.botao-destrutivo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--controle-altura);
+  padding: 12px 16px;
+  border-radius: var(--controle-raio);
+  font-size: var(--controle-fonte);
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color var(--movimento-curto) ease-out,
+              color var(--movimento-curto) ease-out,
+              border-color var(--movimento-curto) ease-out;
+}
+
+.botao-principal {
+  background: var(--brand-primary);
+  color: var(--brand-primary-text);
+  border-color: var(--brand-primary);
+}
+
+.botao-principal:active:not(:disabled) {
+  background: var(--brand-primary-hover);
+}
+
+.botao-secundario {
+  background: var(--bg-surface-elevated);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
+.botao-secundario:active:not(:disabled) {
+  background: var(--bg-surface-active);
+}
+
+.botao-destrutivo {
+  background: var(--destructive-bg);
+  color: var(--destructive-text);
+  border-color: var(--destructive-border);
+}
+
+.botao-destrutivo:active:not(:disabled) {
+  background: var(--destructive-hover);
+}
+
+.botao-principal:disabled,
+.botao-secundario:disabled,
+.botao-destrutivo:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.botao-principal:focus-visible,
+.botao-secundario:focus-visible,
+.botao-destrutivo:focus-visible {
+  outline: 2px solid var(--foco-anel);
+  outline-offset: 3px;
+}
+
+.largura-total {
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   6. CONTROLES SEGMENTADOS (ABAS)
+   -------------------------------------------------------------------------- */
+.abas-segmentadas {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--controle-raio-lg);
+  background: var(--bg-surface-sunken);
+  margin-bottom: 20px;
+}
+
+.abas-segmentadas button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--controle-altura-sm);
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: var(--controle-fonte-sm);
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color var(--movimento-curto) ease-out,
+              color var(--movimento-curto) ease-out;
+}
+
+.abas-segmentadas button[aria-pressed="true"],
+.abas-segmentadas button.ativo {
+  background: var(--brand-primary);
+  color: var(--brand-primary-text);
+  border-color: var(--brand-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.abas-segmentadas button:focus-visible {
+  outline: 2px solid var(--foco-anel);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   7. FORMULÁRIOS, INPUTS, SWITCHES E CHECKBOXES
+   -------------------------------------------------------------------------- */
+.formulario {
+  display: grid;
+  gap: 16px;
+}
+
+.campo-grupo {
+  display: grid;
+  gap: 6px;
+}
+
+.campo-grupo label {
+  font-size: 13px;
+  font-weight: 550;
+  color: var(--text-secondary);
+}
+
+.campo-input,
+.campo-select,
+.campo-textarea {
+  width: 100%;
+  min-height: var(--controle-altura);
+  padding: 12px 14px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--controle-raio);
+  background: var(--bg-surface-sunken);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 15px;
+  transition: border-color var(--movimento-curto), box-shadow var(--movimento-curto);
+}
+
+.campo-input:focus,
+.campo-select:focus,
+.campo-textarea:focus {
+  outline: none;
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px rgba(188, 236, 134, 0.2);
+}
+[data-theme="light"] .campo-input:focus,
+[data-theme="light"] .campo-select:focus,
+[data-theme="light"] .campo-textarea:focus {
+  border-color: #2a692a;
+  box-shadow: 0 0 0 3px rgba(42, 105, 42, 0.2);
+}
+
+.campo-textarea {
+  min-height: 88px;
+  resize: vertical;
+}
+
+.campo-senha-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.campo-senha-container .campo-input {
+  padding-right: 50px;
+}
+
+.campo-senha-alternar {
+  position: absolute;
+  right: 2px;
+  display: grid;
+  place-items: center;
+  min-width: 44px;
+  min-height: 44px;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: 0;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.campo-senha-alternar:focus-visible {
+  outline: 2px solid var(--foco-anel);
+  outline-offset: 2px;
+}
+
+/* Interruptor Binário (Switch) 44x26px */
+.opcao-interruptor {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 52px;
+  padding: 8px 0;
+  cursor: pointer;
+  user-select: none;
+}
+
+.opcao-interruptor-texto {
+  display: grid;
+  gap: 3px;
+  flex: 1;
+}
+
+.opcao-interruptor-texto strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.opcao-interruptor-texto small {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.opcao-interruptor input[type="checkbox"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.interruptor-trilha {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: 44px;
+  height: 26px;
+  border-radius: 20px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-default);
+  transition: background var(--movimento-curto), border-color var(--movimento-curto);
+}
+
+.interruptor-trilha::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--text-secondary);
+  transition: transform var(--movimento-curto);
+}
+
+.opcao-interruptor input[type="checkbox"]:checked + .interruptor-trilha {
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+}
+
+.opcao-interruptor input[type="checkbox"]:checked + .interruptor-trilha::after {
+  transform: translateX(18px);
+  background: var(--brand-primary-text);
+}
+
+.opcao-interruptor input[type="checkbox"]:focus-visible + .interruptor-trilha {
+  outline: 2px solid var(--foco-anel);
+  outline-offset: 3px;
+}
+
+/* Checkbox Compacto */
+.opcao-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-height: 44px;
+  padding: 8px 0;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.opcao-checkbox input[type="checkbox"],
+.opcao-checkbox input[type="radio"] {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  min-height: 22px;
+  margin-top: 1px;
+  flex-shrink: 0;
+  accent-color: var(--brand-primary);
+  cursor: pointer;
+}
+
+.opcao-checkbox input:focus-visible {
+  outline: 2px solid var(--foco-anel);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   8. CARDS, PAINÉIS E SUPERFÍCIES
+   -------------------------------------------------------------------------- */
+.painel-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--controle-raio-lg);
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.painel-card-destaque {
+  background: linear-gradient(145deg, var(--brand-surface), var(--bg-surface));
+  border-color: var(--brand-border);
+}
+
+.painel-cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.painel-cabecalho h2 {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  color: var(--text-primary);
+}
+
+.painel-cabecalho span {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* Destaque "Hoje" */
+.destaque-hoje {
+  position: relative;
+  overflow: hidden;
+  background: var(--brand-primary);
+  color: var(--brand-primary-text);
+  padding: 22px 20px;
+  border-radius: var(--controle-raio-xl);
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-md);
+}
+
+.destaque-hoje .etiqueta {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(23, 45, 22, 0.8);
+}
+
+.destaque-hoje h2 {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  line-height: 1.15;
+  margin: 10px 0 8px;
+}
+
+.destaque-hoje p {
+  font-size: 12px;
+  line-height: 1.6;
+  max-width: 280px;
+  color: rgba(23, 45, 22, 0.85);
+  margin-bottom: 16px;
+}
+
+.destaque-hoje .botao-principal {
+  background: var(--brand-primary-text);
+  color: var(--brand-primary);
+  border-color: var(--brand-primary-text);
+}
+
+/* Grade de Métricas */
+.grade-dupla {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.cartao-metrica {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--controle-raio);
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cartao-metrica-rotulo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.cartao-metrica-valor {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  margin: 8px 0 2px;
+}
+
+.cartao-metrica-valor small {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+}
+
+.cartao-metrica-sub {
+  font-size: 10px;
+  color: var(--text-tertiary);
+}
+
+/* --------------------------------------------------------------------------
+   9. AVISOS, BANNERS E ESTADOS SEMÂNTICOS
+   -------------------------------------------------------------------------- */
+.aviso-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: var(--controle-raio);
+  margin-bottom: 16px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.aviso-banner.aviso-info {
+  background: var(--info-bg);
+  border: 1px solid var(--info-border);
+  color: var(--info-text);
+}
+
+.aviso-banner.aviso-alerta {
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  color: var(--warning-text);
+}
+
+.aviso-banner.aviso-erro {
+  background: var(--destructive-bg);
+  border: 1px solid var(--destructive-border);
+  color: var(--destructive-text);
+}
+
+.aviso-banner.aviso-sucesso {
+  background: var(--success-bg);
+  border: 1px solid var(--success-border);
+  color: var(--success-text);
+}
+
+.aviso-banner.aviso-visitante {
+  background: var(--brand-surface-subtle);
+  border: 1px solid var(--brand-border);
+  color: var(--text-primary);
+}
+
+.aviso-banner .icone {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Banner de Desfazer (Undo) */
+.toast-desfazer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-radius: var(--controle-raio);
+  color: var(--text-primary);
+  font-size: 12px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.toast-desfazer button {
+  min-height: 38px;
+  padding: 6px 14px;
+  background: var(--brand-primary);
+  color: var(--brand-primary-text);
+  border-radius: 8px;
+  font-weight: 700;
+  border: 0;
+  cursor: pointer;
+}
+
+.toast-desfazer button:focus-visible {
+  outline: 2px solid var(--foco-anel);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   10. MODAIS, BOTTOM SHEETS E DIÁLOGOS
+   Conforme PADROES-INTERFACE.md: sem translate/deslize ou escala.
+   Aparição estritamente por opacidade em 160ms.
+   -------------------------------------------------------------------------- */
+.modal-overlay[hidden],
+[hidden] {
+  display: none !important;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden; /* Mantém fora da navegação por teclado quando fechado */
+  transition: opacity var(--movimento-painel) ease-out, visibility var(--movimento-painel) ease-out;
+}
+
+.modal-overlay.aberto {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.modal-sheet {
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-bottom: 0;
+  border-radius: 28px 28px 0 0;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Sem translate/deslize lateral ou vertical */
+  transform: none;
+}
+
+.modal-alca {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  flex-shrink: 0;
+}
+
+.modal-alca-barra {
+  width: 40px;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--border-default);
+}
+
+.modal-cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 20px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.modal-cabecalho h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.modal-cabecalho .app-botao-icone {
+  min-width: 40px;
+  min-height: 40px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg-surface-sunken);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+  transition: background var(--movimento-curto), color var(--movimento-curto), border-color var(--movimento-curto);
+}
+
+.modal-cabecalho .app-botao-icone:hover {
+  background: var(--bg-surface-active);
+  color: var(--text-primary);
+  border-color: var(--border-highlight);
+}
+
+.modal-cabecalho .app-botao-icone svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+/* Estilização Customizada de Campo de Arquivo (Foto para prévia/card) */
+.campo-arquivo-custom {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+}
+
+.campo-arquivo-custom .rotulo-arquivo {
+  font-size: 13px;
+  font-weight: 550;
+  color: var(--text-secondary);
+}
+
+.campo-arquivo-custom .zona-arquivo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  min-height: var(--controle-altura);
+  background: var(--bg-surface-sunken);
+  border: 1px dashed var(--border-highlight);
+  border-radius: var(--controle-raio);
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: border-color var(--movimento-curto), background-color var(--movimento-curto);
+}
+
+.campo-arquivo-custom .zona-arquivo:hover {
+  background: var(--bg-surface-active);
+  border-color: var(--brand-primary);
+}
+
+.campo-arquivo-custom .zona-arquivo:focus-visible,
+.campo-arquivo-custom .zona-arquivo:focus-within {
+  outline: 2px solid var(--foco-anel);
+  outline-offset: 2px;
+}
+
+.campo-arquivo-custom .icone-arquivo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--brand-surface);
+  color: var(--brand-primary);
+  flex-shrink: 0;
+  transition: background var(--movimento-curto), color var(--movimento-curto);
+}
+
+.campo-arquivo-custom .texto-arquivo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.campo-arquivo-custom .botao-arquivo-simulado {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.campo-arquivo-custom .nome-arquivo-selecionado {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Fallback genérico para qualquer input[type="file"] */
+input[type="file"] {
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background: var(--bg-surface-sunken);
+  border: 1px dashed var(--border-default);
+  border-radius: var(--controle-raio);
+  padding: 8px 12px;
+  box-sizing: border-box;
+  width: 100%;
+  cursor: pointer;
+}
+
+input[type="file"]::file-selector-button {
+  background: var(--bg-surface-active);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  padding: 8px 14px;
+  margin-right: 12px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--movimento-curto);
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: var(--brand-surface);
+  color: var(--brand-primary);
+  border-color: var(--brand-primary);
+}
+
+.modal-corpo {
+  padding: 20px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.modal-rodape {
+  padding: 14px 20px;
+  border-top: 1px solid var(--border-subtle);
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+  background: var(--bg-surface);
+}
+
+/* Modal Centralizado de Confirmação */
+.modal-overlay.centralizado {
+  align-items: center;
+  padding: 20px;
+}
+
+.modal-overlay.centralizado .modal-sheet {
+  border-radius: var(--controle-raio-xl);
+  border-bottom: 1px solid var(--border-default);
+  max-height: calc(100vh - 40px);
+  /* Sem scale */
+  transform: none;
+}
+
+/* Diálogo de Comparação de Medidas Antes/Depois */
+.tabela-antes-depois {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0 16px;
+  font-size: 13px;
+}
+
+.tabela-antes-depois th {
+  text-align: left;
+  padding: 8px 6px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-default);
+}
+
+.tabela-antes-depois td {
+  padding: 10px 6px;
+  border-bottom: 1px solid var(--border-subtle);
+  font-variant-numeric: tabular-nums;
+}
+
+.tabela-antes-depois td.mudanca {
+  color: var(--brand-primary);
+  font-weight: 700;
+}
+[data-theme="light"] .tabela-antes-depois td.mudanca {
+  color: #175218;
+}
+
+/* --------------------------------------------------------------------------
+   11. BARRA DE ROLAGEM HORIZONTAL DE MÚSCULOS (PRESERVADA)
+   -------------------------------------------------------------------------- */
+.faixa-filtros-musculares {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 2px 12px;
+  margin-bottom: 16px;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+}
+
+.chip-filtro {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--controle-altura-sm);
+  padding: 8px 16px;
+  border: 1px solid var(--border-default);
+  border-radius: 20px;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--movimento-curto);
+}
+
+.chip-filtro.ativo, .chip-filtro[aria-pressed="true"] {
+  background: var(--brand-primary);
+  color: var(--brand-primary-text);
+  border-color: var(--brand-primary);
+}
+
+.chip-filtro:focus-visible {
+  outline: 2px solid var(--foco-anel);
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   12. COMPONENTES CONGELADOS (RESTRIÇÃO ABSOLUTA — PLACEHOLDERS NEUTROS)
+   Sem palavras, métricas, cores ou composição que imitem os cards aprovados.
+   -------------------------------------------------------------------------- */
+.container-componente-congelado {
+  position: relative;
+  border: 2px dashed var(--border-default);
+  border-radius: var(--controle-raio-lg);
+  padding: 24px 16px;
+  margin: 16px 0;
+  background: var(--bg-surface-sunken);
+  text-align: center;
+}
+
+.etiqueta-congelado {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.placeholder-descricao {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  line-height: 1.6;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* --------------------------------------------------------------------------
+   13. NAVEGAÇÃO INFERIOR FIXA (5 ABAS REAIS: Hoje, Treino, Comida, Medidas, Evolução)
+   -------------------------------------------------------------------------- */
+.app-navegacao-inferior {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 8px 6px calc(8px + env(safe-area-inset-bottom, 8px));
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-default);
+  z-index: 50;
+}
+
+.app-navegacao-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 52px;
+  background: transparent;
+  border: 0;
+  border-radius: 10px;
+  color: var(--text-tertiary);
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color var(--movimento-curto) ease-out, background var(--movimento-curto) ease-out;
+}
+
+.app-navegacao-item.ativo, .app-navegacao-item[aria-current="page"] {
+  color: var(--brand-primary);
+  background: var(--brand-surface-subtle);
+}
+[data-theme="light"] .app-navegacao-item.ativo,
+[data-theme="light"] .app-navegacao-item[aria-current="page"] {
+  color: #174d15;
+  background: #d8ecd0; /* Alto contraste >= 3:1 */
+}
+
+.app-navegacao-item:focus-visible {
+  outline: 2px solid var(--foco-anel);
+  outline-offset: -2px;
+}
+
+.app-navegacao-item svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* --------------------------------------------------------------------------
+   14. ESTADOS VAZIOS
+   -------------------------------------------------------------------------- */
+.estado-vazio-card {
+  text-align: center;
+  padding: 40px 16px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--controle-raio-lg);
+  margin: 16px 0;
+}
+
+.estado-vazio-icone {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: var(--brand-surface);
+  color: var(--brand-primary);
+  margin: 0 auto 16px;
+}
+[data-theme="light"] .estado-vazio-icone {
+  color: #174d15;
+}
+
+.estado-vazio-card h2,
+.estado-vazio-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.estado-vazio-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 280px;
+  margin: 0 auto 18px;
+}
+
+.estado-vazio-card .selo-etapa {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: var(--bg-surface-sunken);
+  border: 1px solid var(--border-default);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  margin-top: 14px;
+}
+
+/* --------------------------------------------------------------------------
+   14B. ESTILOS FIÉIS PARA SÉRIES E TREINO EM ANDAMENTO (SERIE.TSX / MODOTREINO.TSX)
+   -------------------------------------------------------------------------- */
+.modo-treino-tela .modal-sheet {
+  max-width: 480px;
+  height: 94vh;
+}
+
+.andamento-topo {
+  padding: 14px 16px;
+  margin-bottom: 14px;
+}
+
+.barra-sessao {
+  width: 100%;
+  height: 8px;
+  border-radius: 4px;
+  appearance: none;
+  background: var(--bg-surface-sunken);
+  border: 1px solid var(--border-subtle);
+  overflow: hidden;
+}
+
+.barra-sessao::-webkit-progress-bar {
+  background: var(--bg-surface-sunken);
+}
+
+.barra-sessao::-webkit-progress-value {
+  background: var(--brand-primary);
+  transition: width 160ms ease-out;
+}
+
+.barra-sessao::-moz-progress-bar {
+  background: var(--brand-primary);
+}
+
+.painel-descanso-container {
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  border-radius: var(--controle-raio);
+}
+
+.lista-exercicios-treino {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.exercicio-treino {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: var(--controle-raio-lg);
+  overflow: hidden;
+}
+
+.exercicio-treino summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.exercicio-treino summary::-webkit-details-marker {
+  display: none;
+}
+
+.exercicio-treino[open] summary {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.conteudo-exercicio-treino {
+  padding: 14px 16px;
+}
+
+.cabecalho-series {
+  display: grid;
+  grid-template-columns: 44px 1fr 1fr 90px 44px;
+  gap: 8px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+  padding: 0 4px;
+  text-align: center;
+}
+
+.lista-series-itens {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.linha-serie {
+  display: grid;
+  grid-template-columns: 44px 1fr 1fr 90px 44px;
+  gap: 8px;
+  align-items: center;
+  padding: 4px;
+  border-radius: 8px;
+  background: var(--bg-surface-sunken);
+}
+
+.linha-serie.concluida {
+  background: var(--brand-surface-subtle);
+  border: 1px solid var(--brand-border);
+}
+
+.tipo-serie-btn {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.tipo-serie-btn.aquecimento { color: #e6ce84; }
+.tipo-serie-btn.falha { color: var(--destructive-text); }
+.tipo-serie-btn.dropset { color: #96c8e3; }
+
+.valor-serie-btn {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.concluir-serie-btn {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  background: var(--bg-surface-elevated);
+  color: var(--text-secondary);
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all var(--movimento-curto);
+}
+
+.concluir-serie-btn.feita {
+  background: var(--brand-primary);
+  color: var(--brand-primary-text);
+  border-color: var(--brand-primary);
+}
+
+.menu-serie-btn {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.opcoes-serie-painel {
+  padding: 12px;
+  margin-top: 8px;
+  border-radius: 8px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.acoes-exercicio-linha {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.acoes-exercicio-linha button {
+  min-height: 44px;
+  padding: 6px 12px;
+  font-size: 12px;
+  flex: 1;
+}
+
+/* Editor de Fichas */
+.lista-itens-ficha {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 12px 0 18px;
+}
+
+.item-ficha-card {
+  padding: 12px 14px;
+  background: var(--bg-surface-sunken);
+  border: 1px solid var(--border-default);
+  border-radius: var(--controle-raio);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.item-ficha-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-ficha-acoes {
+  display: flex;
+  gap: 8px;
+}
+
+.item-ficha-acoes button {
+  min-height: 44px;
+  padding: 6px 12px;
+  font-size: 12px;
+}
+
+.lista-exercicios-disponiveis {
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid var(--border-default);
+  border-radius: var(--controle-raio);
+  background: var(--bg-surface-sunken);
+  margin-top: 8px;
+}
+
+.item-exercicio-catalogo-escolha {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  gap: 10px;
+}
+
+.item-exercicio-catalogo-escolha:last-child {
+  border-bottom: 0;
+}
+
+.item-exercicio-catalogo-escolha button {
+  min-height: 44px;
+  padding: 6px 14px;
+  font-size: 12px;
+}
+
+/* Suporte Acessível para Conteúdo Inerte */
+[inert] {
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   15. REDUÇÃO DE MOVIMENTO (PREFERS-REDUCED-MOTION)
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,228 @@
+/* Layout da cópia isolada. Os cálculos, dados e renderers dos cards permanecem originais. */
+:root {
+  --visual-fundo: #0f1913;
+  --visual-painel: #17271d;
+  --visual-rebaixo: #101c15;
+  --visual-borda: #304536;
+  --visual-texto: #edf3ed;
+  --visual-suave: #adc1b0;
+  --visual-acento: #bcec86;
+  --visual-acento-fundo: #253c23;
+  --visual-margem: 0px;
+  color-scheme: dark;
+}
+[data-tema=claro] {
+  --visual-fundo: #e7ebdd;
+  --visual-painel: #f8f7ee;
+  --visual-rebaixo: #e5eddc;
+  --visual-borda: #b6c6a5;
+  --visual-texto: #20371f;
+  --visual-suave: #475d40;
+  --visual-acento: #315b24;
+  --visual-acento-fundo: #d6e7c1;
+  --status-ponto: #2f7a24;
+  --aviso-fundo: #dbe7c9;
+  --aviso-texto: #415535;
+  --aviso-borda: #b1c695;
+  color-scheme: light;
+}
+html,body,#root { width: 100%; height: 100%; margin: 0; min-height: 0; }
+body { overflow: hidden; background: #242b26; font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; }
+button,input,textarea,select { font: inherit; }
+.app {
+  position: fixed; inset: var(--visual-margem) 0; width: 100%; max-width: 480px; height: auto; min-height: 0;
+  margin: 0 auto; padding: env(safe-area-inset-top) 0 0; display: flex; flex-direction: column;
+  box-sizing: border-box; overflow: hidden; background: var(--visual-fundo); color: var(--visual-texto);
+  font-size: 14px; line-height: 1.6;
+}
+.app > .cabecalho { flex-shrink: 0; min-height: 76px; padding: 14px 16px; box-sizing: border-box; background: var(--visual-fundo); border-bottom: 1px solid var(--visual-borda); }
+.marca > span { width: 40px; height: 40px; border-radius: 13px; background: #bcec86; color: #233b1d; }
+.marca > div { font-size: 20px; font-weight: 700; letter-spacing: -.6px; color: var(--visual-texto); }
+.marca small { font-size: 8px; letter-spacing: 2px; color: var(--visual-suave); }
+.acoes-cabecalho { display: flex; align-items: center; gap: 8px; }
+.selo-previa { font-size: 9px; color: var(--visual-suave); letter-spacing: .5px; }
+.app .botao-icone { width: 44px; height: 44px; min-height: 44px; display: grid; place-items: center; padding: 0; border: 1px solid var(--visual-borda); border-radius: 14px; background: var(--visual-painel); color: var(--visual-suave); }
+.app > main#conteudo { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior-y: contain; padding: 18px 16px 28px; scrollbar-width: thin; scrollbar-color: var(--visual-borda) transparent; }
+.app > main > h1 { margin: 8px 0 24px; font-size: 25px; font-weight: 700; letter-spacing: -.8px; line-height: 1.3; }
+.app .linha-data { font-size: 10px; color: var(--visual-suave); }
+.app .aviso-modo-visitante { margin: 0 0 22px; padding: 12px 14px; background: var(--visual-acento-fundo); border: 1px solid var(--visual-borda); border-radius: 12px; font-size: 11px; line-height: 1.7; color: var(--visual-suave); }
+.app .conteudo-pagina { min-width: 0; }
+.app > .navegacao { position: relative; inset: auto; transform: none; width: 100%; max-width: none; flex-shrink: 0; height: auto; min-height: calc(72px + env(safe-area-inset-bottom)); box-sizing: border-box; padding: 8px 10px calc(8px + env(safe-area-inset-bottom)); background: var(--visual-painel); border-top: 1px solid var(--visual-borda); z-index: 30; }
+.app .navegacao button { min-height: 48px; gap: 4px; font-size: 10px; line-height: 1.4; color: var(--visual-suave); border-radius: 12px; }
+.app .navegacao button[aria-current=page] { background: var(--visual-acento-fundo); color: var(--visual-acento); }
+.app :is(.painel,.cartao,.secao-config,.registro-medida,.exercicio-treino,.item-ficha,.retomar-treino,.treino-livre,.ampliar-catalogo,.peso-resumo-medidas,.par-resumo-medida) { background: var(--visual-painel); color: var(--visual-texto); border: 1px solid var(--visual-borda); border-radius: 18px; box-shadow: none; }
+.app .painel { padding: 18px; margin-bottom: 16px; }
+.app h2 { font-size: 16px; font-weight: 650; line-height: 1.5; letter-spacing: -.3px; }
+.app h3 { font-size: 14px; line-height: 1.5; }
+.app .nota-resumo { color: var(--visual-suave); line-height: 1.7; font-size: 12px; }
+.app :is(.titulo-secao,.topo-medidas,.barra-fichas) { gap: 12px; margin: 24px 0 14px; }
+.app .destaque { border: 0; border-radius: 24px; background: #bcec86; color: #1b3615; padding: 28px 22px 24px; margin: 0 0 26px; overflow: hidden; }
+.app .destaque h2 { font-size: 30px; line-height: 1.2; letter-spacing: -1px; color: #1b3615; max-width: 270px; margin: 16px 0 12px; }
+.app .destaque p { font-size: 13px; line-height: 1.8; color: #294323; max-width: 240px; }
+.app .destaque .etiqueta { font-size: 9px; letter-spacing: 1.7px; color: #294323; }
+.app .destaque .botao-principal { position: relative; background: #213e18; border-color: #213e18; color: #e1f5cc; margin-top: 24px; }
+.app .destaque .decoracao { opacity: .14; pointer-events: none; color: #294323; }
+.app .grade-cartoes { gap: 12px; margin-bottom: 24px; }
+.app .cartao { padding: 18px 14px; gap: 10px; min-width: 0; }
+.app .cartao > span { font-size: 11px; color: var(--visual-suave); }
+.app .cartao > strong { color: var(--visual-texto); font-size: 25px; font-weight: 650; letter-spacing: -.5px; }
+.app .cartao small { font-size: 11px; color: var(--visual-suave); line-height: 1.6; }
+.app progress { height: 7px; border-radius: 20px; overflow: hidden; border: 0; background: var(--visual-borda); accent-color: #bcec86; }
+.app progress::-webkit-progress-bar { background: var(--visual-borda); border-radius: 20px; }
+.app progress::-webkit-progress-value { background: #bcec86; border-radius: 20px; }
+.app progress::-moz-progress-bar { background: #bcec86; border-radius: 20px; }
+.app .abas-treino { margin-bottom: 20px; }
+.app .ficha-nova { padding: 16px; }
+.app .topo-ficha { gap: 12px; margin-bottom: 12px; }
+.app .icone-ficha { width: 36px; height: 36px; border-radius: 11px; background: var(--visual-acento-fundo); color: var(--visual-acento); }
+.app .abrir-ficha { color: var(--visual-texto); font-size: 14px; line-height: 1.5; }
+.app .abrir-ficha small { margin-top: 5px; color: var(--visual-suave); font-size: 11px; }
+.app .ficha-nova .iniciar-ficha { width: 100%; margin: 0; }
+.app .menu-ficha summary { display: grid; place-items: center; min-width: 44px; min-height: 44px; color: var(--visual-suave); }
+.app .menu-ficha > .acoes { z-index: 35; background: var(--visual-painel); border-color: var(--visual-borda); }
+.app .menu-ficha > .acoes button { min-height: 44px; color: var(--visual-texto); }
+.app .paginacao-fichas { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 18px 0; font-size: 12px; color: var(--visual-suave); }
+.app :is(.lista-catalogo,.historico-medidas) { gap: 12px; }
+.app :is(.item-catalogo,.selecionar-exercicio) { background: var(--visual-painel); border-color: var(--visual-borda); border-radius: 14px; padding: 12px; }
+.app .nome-catalogo strong { font-size: 13px; color: var(--visual-texto); }
+.app .nome-catalogo small { font-size: 11px; color: var(--visual-suave); }
+.app :is(.formulario,.confirmacao-app,.editor-medidas-grupos) { gap: 20px; }
+.app .formulario > label { gap: 8px; font-size: 12px; line-height: 1.6; color: var(--visual-suave); }
+.app input:not([type=checkbox]):not([type=radio]),.app textarea,.app select { background: var(--visual-rebaixo); color: var(--visual-texto); border-color: var(--visual-borda); font-size: 16px; border-radius: 12px; }
+.app .campo-medida { background: var(--visual-rebaixo); color: var(--visual-texto); border-color: var(--visual-borda); min-height: 84px; border-radius: 14px; padding: 14px; }
+.app .campo-medida > span { color: var(--visual-suave); font-size: 11px; }
+.app .campo-medida strong { font-size: 20px; line-height: 1.4; }
+.app :is(.data-medida,.botao-descanso) { background: var(--visual-rebaixo); color: var(--visual-suave); border-color: var(--visual-borda); border-radius: 13px; min-height: 58px; gap: 12px; }
+.app :is(.data-medida,.botao-descanso) strong { color: var(--visual-texto); }
+.app .titulo-detalhe h2 { font-size: 24px; }
+.app .capa-exercicio { background: var(--visual-rebaixo); border-radius: 18px; color: var(--visual-acento); }
+.app .painel-modal { background: var(--visual-painel); color: var(--visual-texto); border: 1px solid var(--visual-borda); max-height: min(92dvh,900px); border-radius: 24px 24px 0 0; box-shadow: 0 -10px 70px #0005; }
+.app .painel-centralizado { border-radius: 22px; width: calc(100% - 24px); max-height: 88dvh; }
+.app .painel-modal::backdrop { background: #0009; backdrop-filter: blur(5px); }
+.app .topo-painel { padding: 0; border-color: var(--visual-borda); background: var(--visual-painel); }
+.app .topo-painel header { align-items: center; gap: 12px; }
+.app .topo-painel h2 { font-size: 18px; color: var(--visual-texto); }
+.app .conteudo-modal { padding: 20px 18px max(22px,env(safe-area-inset-bottom)); min-height: 0; }
+.app .conteudo-modal .formulario > small { font-size: 11px; line-height: 1.7; color: var(--visual-suave); }
+.app .coluna-roda { border: 1px solid color-mix(in srgb,var(--visual-borda) 45%,transparent); border-radius: 18px; overflow: hidden; padding-top: 12px; background: color-mix(in srgb,var(--visual-rebaixo) 65%,var(--visual-painel)); color: var(--visual-texto); }
+.app .coluna-roda > span { color: var(--visual-suave); margin-bottom: 8px; font-size: 8px; letter-spacing: .5px; }
+.app .coluna-roda .faixa-roda { left: 3px; right: 3px; border-radius: 12px; background: var(--visual-acento-fundo); }
+.app .rolagem { color: var(--visual-texto); }
+.app .valor-escolhido { font-size: 20px; color: var(--visual-texto); }
+.app .andamento-treino { margin-bottom: 20px; }
+.app .cabecalho-exercicio { padding: 16px; gap: 12px; }
+.app .resumo-exercicio strong { font-size: 14px; line-height: 1.5; color: var(--visual-texto); }
+.app .resumo-exercicio small { font-size: 11px; line-height: 1.7; color: var(--visual-suave); }
+.app .conteudo-exercicio { padding: 0 14px 14px; }
+.app .exercicio-finalizado { border-color: #87af63; box-shadow: inset 0 3px 0 #bcec86; }
+.app .exercicio-finalizado .resumo-exercicio::after { content: '✓ Concluído'; display: block; margin-top: 6px; font-size: 11px; color: var(--visual-acento); font-weight: 600; }
+.app .serie-compacta { background: var(--visual-rebaixo); border: 1px solid var(--visual-borda); border-radius: 12px; margin-bottom: 8px; }
+.app .serie-compacta .linha-serie { gap: 6px; }
+.app :is(.tipo-serie,.valor-serie,.menu-serie) { min-height: 44px; color: var(--visual-texto); background: transparent; }
+.app .concluir-compacto { min-height: 44px; border-radius: 10px; font-size: 11px; }
+.app .proxima-serie { border-color: #8dae70; }
+.app .ultimo-desempenho { padding: 14px; border: 1px solid var(--visual-borda); border-radius: 12px; background: var(--visual-rebaixo); }
+.app .ultimo-desempenho :is(p,span,small) { color: var(--visual-suave); line-height: 1.7; }
+.app .finalizar-acoes { position: fixed; z-index: 25; left: 50%; bottom: calc(72px + env(safe-area-inset-bottom) + var(--visual-margem)); transform: translateX(-50%); width: min(100%,480px); padding: 14px 16px; margin: 0; box-sizing: border-box; background: var(--visual-fundo); border-top: 1px solid var(--visual-borda); display: grid; grid-template-columns: 1.3fr 1fr; gap: 12px; }
+.app .finalizar-acoes > button { width: 100%; margin: 0; min-width: 0; padding: 10px; font-size: 12px; }
+.app .treino-em-andamento { padding-bottom: 100px; }
+.app .cancelar-sessao { margin: 20px 0; color: #edb6a7; }
+.app .acoes-resumo-fixas { position: static; transform: none; width: 100%; padding: 16px 0 0; display: grid; gap: 12px; background: transparent; }
+.app :is(.metricas-resumo,.grade-resumo-medidas,.campos-medidas) { gap: 12px; }
+.app .metricas-resumo > div { padding: 16px; border: 1px solid var(--visual-borda); border-radius: 14px; background: var(--visual-rebaixo); color: var(--visual-texto); }
+.app .metricas-resumo strong { color: var(--visual-texto); }
+.app .metricas-resumo span { color: var(--visual-suave); }
+.app .grade-resumo-medidas > div { background: var(--visual-painel); border-color: var(--visual-borda); border-radius: 14px; }
+.app .grade-resumo-medidas :is(span,p),.app .par-resumo-medida dt { color: var(--visual-suave); }
+.app .grade-resumo-medidas strong,.app .par-resumo-medida dd { color: var(--visual-texto); }
+.app .config-bloco { margin-bottom: 24px; }
+.app .config-bloco > h2 { font-size: 10px; letter-spacing: 1.2px; color: var(--visual-suave); margin: 0 4px 10px; font-weight: 550; }
+.app .config-lista { border: 1px solid var(--visual-borda); border-radius: 18px; background: var(--visual-painel); overflow: hidden; }
+.app .config-lista .secao-config { border: 0; border-radius: 0; margin: 0; }
+.app .config-lista .secao-config + .secao-config { border-top: 1px solid var(--visual-borda); }
+.app .secao-config > h2 > button { padding: 16px 14px; gap: 12px; min-height: 76px; }
+.app .icone-config { width: 34px; height: 34px; border-radius: 10px; background: var(--visual-acento-fundo); color: var(--visual-acento); }
+.app .texto-config strong { font-size: 13px; color: var(--visual-texto); }
+.app .texto-config small { font-size: 11px; color: var(--visual-suave); line-height: 1.5; }
+.app .conteudo-config:not([hidden]) { padding: 4px 16px 20px; }
+.app .privacidade-recolhida { margin-top: 8px; border: 1px solid var(--visual-borda); border-radius: 18px; background: var(--visual-painel); padding: 0 16px; }
+.app .privacidade-recolhida > summary { min-height: 64px; align-content: center; cursor: pointer; font-size: 13px; font-weight: 600; }
+.app .privacidade-recolhida > .painel { border: 0; padding: 0 0 20px; }
+.app .privacidade-grupo { padding-block: 18px; border-color: var(--visual-borda); }
+.app .privacidade-grupo :is(p,small) { color: var(--visual-suave); }
+.app .backup-config .introducao-backup { margin-bottom: 18px; }
+.app .backup-protecao { border-color: var(--visual-borda); background: var(--visual-acento-fundo); border-radius: 14px; padding: 14px; }
+.app .backup-outros-formatos > summary { min-height: 48px; align-content: center; }
+.app .backup-formatos-acoes { display: grid; gap: 12px; padding-top: 12px; }
+.app .backup-formatos-acoes > button { margin: 0; }
+.app .opcao-sync-automatica { gap: 16px; padding: 12px 0; }
+.app .recordes :is(p,span),.app .verde { color: var(--visual-acento); }
+[data-tema=claro] .app :is(.nota,.ajuda-texto,.nota-fixa,.comparacao-resumo,.calorias-resumo,.explicacao-volume,.dica-story,.preview-card,.aviso-desfazer) { color: var(--visual-suave); }
+[data-tema=claro] .app :is(.calorias-resumo,.grupo-exercicios,.opcionais-cardio,.acao-treino,.campo-digitar-numero,.opcoes-serie,.fotos-maquina,.grafico-carga) { background: var(--visual-rebaixo); border-color: var(--visual-borda); color: var(--visual-texto); }
+[data-tema=claro] .app :is(.nota-resumo,.ajuda-texto,.conteudo-config,.conteudo-modal,.historico-series,.detalhe-cardio,.texto-sync-automatica,.backup-config) :is(p,label,dt,small) { color: var(--visual-suave); }
+[data-tema=claro] .app :is(.resumo-titulo,.titulo-detalhe,.historico-cartao,.detalhe-historico,.calorias-resumo,.peso-resumo-medidas,.ajuda-texto,.texto-sync-automatica) :is(h2,h3,strong,dd) { color: var(--visual-texto); }
+[data-tema=claro] .app .botao-secundario { background: var(--controle-superficie); color: var(--controle-texto); border-color: var(--controle-borda); }
+[data-tema=claro] .app .botao-destrutivo { color: #973e31; border-color: #c7978b; background: #fff7f4; }
+[data-tema=claro] .app .privacidade-alerta { background: #fff2e9; color: #6d3b2c; border-color: #c7978b; }
+[data-tema=claro] .app .privacidade-alerta :is(p,strong) { color: #6d3b2c; }
+@media(min-width:600px) {
+  :root { --visual-margem: 20px; }
+  .app { border: 1px solid var(--visual-borda); border-radius: 24px; box-shadow: 0 20px 70px #0003; }
+  .app .painel-modal { margin: auto; border-radius: 24px; max-height: 88dvh; }
+}
+@media(max-width:374px) { .selo-previa { display: none; } .marca > div { font-size: 18px; } .acoes-cabecalho { gap: 6px; } .app .conteudo-modal { padding-inline: 14px; } }
+@media(prefers-reduced-motion:reduce) { .app *, .app *::before,.app *::after { scroll-behavior: auto; } }
+.app .item-ficha .conteudo-exercicio { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; padding: 4px 14px 16px; }
+.app .item-ficha .conteudo-exercicio > .botao-descanso { width: 100%; min-width: 0; display: flex; flex-wrap: wrap; gap: 6px; padding: 10px 12px; margin: 0; min-height: 48px; }
+.app .item-ficha .conteudo-exercicio > .botao-descanso strong { margin-left: auto; font-size: 14px; }
+.app .item-ficha .conteudo-exercicio > .botao-descanso > span { display: none; }
+.app .item-ficha .conteudo-exercicio > .acoes { grid-column: 1 / -1; gap: 8px; padding-top: 12px; border-top: 1px solid var(--visual-borda); }
+.app .item-ficha .acoes > button { flex: 1; min-height: 44px; padding: 10px; border-radius: 10px; font-size: 12px; background: var(--controle-superficie); color: var(--controle-texto); border: 1px solid var(--controle-borda); }
+.app .item-ficha .acoes > button:last-child { color: #edb6a7; border-color: #60473e; background: transparent; }
+.app .item-ficha .acoes > button:disabled { opacity: .45; }
+.app .tela-cardio .registro-medida { margin-bottom: 14px; padding: 0; overflow: hidden; }
+.app .tela-cardio .registro-medida > summary { padding: 16px; min-height: 76px; }
+.app .tela-cardio .detalhe-cardio { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; padding: 16px; }
+.app .tela-cardio .detalhe-cardio > p { background: var(--visual-rebaixo); border: 1px solid var(--visual-borda); border-radius: 12px; padding: 12px; margin: 0; color: var(--visual-texto); font-size: 12px; line-height: 1.7; overflow-wrap: anywhere; }
+.app .tela-cardio .registro-medida > button { width: calc(100% - 32px); margin: 0 16px 14px; }
+.app .tela-cardio .acoes-medida { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 16px 16px; }
+.app .tela-cardio .acoes-medida > button { min-height: 48px; border: 1px solid var(--controle-borda); border-radius: 12px; background: var(--controle-superficie); color: var(--controle-texto); justify-content: center; }
+.app .tela-cardio .acoes-medida > button:last-child { background: transparent; border-color: #60473e; color: #edb6a7; }
+.app .registro-medida > summary { min-height: 60px; }
+.app .aplicar-proximas { gap: 12px; padding-top: 16px; margin-top: 12px; border-top: 1px solid var(--visual-borda); font-size: 12px; line-height: 1.6; }
+.app .aplicar-proximas input { flex: 0 0 18px; width: 18px; height: 18px; accent-color: #bcec86; }
+/* Cabeçalho compacto; espaçamento pertence ao conteúdo, sem duas camadas de padding. */
+.app .painel-modal > .topo-painel > header { padding: 8px 18px 12px; min-height: 60px; box-sizing: border-box; background: var(--visual-painel); gap: 12px; }
+.app .painel-modal > .topo-painel > header h2 { margin: 0 auto 0 0; font-size: 17px; line-height: 1.35; }
+.app .painel-modal > .topo-painel > .alca-painel { height: 26px; min-height: 26px; }
+.app .painel-centralizado > .topo-painel > header { padding-top: 12px; }
+.app .painel-modal > .conteudo-modal { padding-top: 24px; }
+.app .conteudo-modal > .alternador-seletor { margin-bottom: 24px; }
+.app .cabecalho-seletor-numero { margin-bottom: 24px; }
+.app .conteudo-modal > .botao-secundario { margin-top: 12px; }
+.app .confirmacao-app { gap: 24px; }
+.app .secao-config > h2 > button { min-height: 68px; padding-block: 14px; }
+.app .conteudo-config:not([hidden]) { padding: 12px 16px 24px; }
+.app .conteudo-config > .painel { margin: 0; padding: 18px; }
+.app .conteudo-config > .painel p + p { margin-top: 10px; }
+[data-tema=claro] .app .treino-em-andamento .cabecalho-exercicio { background: var(--visual-rebaixo); color: var(--visual-texto); }
+[data-tema=claro] .app .treino-em-andamento .resumo-exercicio strong { color: var(--visual-texto); }
+[data-tema=claro] .app .treino-em-andamento :is(.progresso-sessao,.resumo-exercicio small,.cabecalho-series,.ajuda-no-treino,.botao-descanso) { color: var(--visual-suave); }
+[data-tema=claro] .app .treino-em-andamento :is(.progresso-sessao > strong,.resumo-exercicio small:last-child) { color: var(--visual-acento); }
+[data-tema=claro] .app .treino-em-andamento :is(.serie-compacta,.valor-serie) { background: var(--visual-rebaixo); color: var(--visual-texto); border-color: var(--visual-borda); }
+.app .rolagem-opcoes .janela-roda,.app .rolagem-opcoes .roda { height: 144px; }
+.app .rolagem-opcoes .roda { padding-block: 48px; }
+.app .rolagem-opcoes .faixa-roda { top: 48px; }
+.app .rolagem-opcoes .coluna-roda { padding: 12px; border-radius: 14px; }
+.app .rolagem-opcoes .coluna-roda > span { display: none; }
+.app .treino-em-andamento .andamento-treino { padding: 18px; gap: 12px; }
+.app .andamento-treino .titulo-andamento h2 { font-size: 20px; line-height: 1.3; margin: 0; }
+.app .treino-em-andamento .progresso-sessao { margin: 0; gap: 12px; }
+.app .progresso-sessao > strong { display: flex; align-items: baseline; gap: 4px; font-size: 18px; white-space: nowrap; }
+.app .progresso-sessao > strong > small { display: inline; font-size: 12px; }
+.app .andamento-treino .barra-sessao { margin: 0; height: 5px; }
+.app .treino-em-andamento .andamento-treino .manter-tela { margin: 0; padding: 8px 0 0; border-top: 1px solid var(--visual-borda); min-height: 40px; }
+.app .treino-em-andamento .ultimo-desempenho { border: 0; border-radius: 0; padding: 12px 0; margin: 8px 0 0; font-size: 11px; line-height: 1.7; color: var(--visual-suave); }
+.app .treino-em-andamento .ultimo-desempenho p { margin: 0; }
+.app .treino-em-andamento .conteudo-exercicio > .acoes { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin-top: 0; padding-top: 12px; border-top: 1px solid var(--visual-borda); }
+.app .treino-em-andamento .conteudo-exercicio > .acoes > button:last-child { grid-column: 1 / -1; }

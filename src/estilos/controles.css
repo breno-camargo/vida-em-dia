@@ -1,0 +1,298 @@
+/* Contrato visual compartilhado. Importado após os estilos específicos. */
+.app .botao-destrutivo { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: var(--controle-altura); margin: 0; padding: 12px 16px; border: 1px solid #60473e; border-radius: var(--controle-raio); background: transparent; color: #edb6a7; font-size: var(--controle-fonte); font-weight: 600; line-height: 1.4; text-align: center; }
+.app .botao-destrutivo:focus-visible { outline: 2px solid #edb6a7; outline-offset: 3px; }
+.confirmacao-privacidade { gap: 16px; }
+.confirmacao-privacidade > p { margin: 0; line-height: 1.7; }
+.confirmacao-privacidade > button { width: 100%; }
+.privacidade-alerta { padding: 14px; border: 1px solid #60473e; border-radius: 12px; background: #241e1a; }
+.privacidade-alerta > strong { font-size: 13px; color: #edb6a7; }
+.privacidade-alerta > p { margin: 6px 0 0; font-size: 12px; line-height: 1.7; color: #bacabd; }
+.confirmacao-privacidade .opcao-copia-exercicio { font-size: 12px; line-height: 1.6; padding: 8px 0; }
+.botao-destrutivo:hover { background: #30231e; }
+.botao-destrutivo:disabled { opacity: .5; cursor: not-allowed; }
+.confirmacao-app { display: grid; gap: 12px; }
+.confirmacao-app > p { margin: 0 0 8px; color: #bacabd; font-size: 14px; line-height: 1.7; }
+.app .confirmacao-app > button { width: 100%; margin: 0; justify-content: center; }
+.aviso-backup { display: grid; gap: 12px; padding: 18px; margin-bottom: 20px; border: 1px solid #3a5039; border-radius: 18px; background: #19271d; }
+.aviso-backup-titulo { display: flex; align-items: center; gap: 10px; }
+.aviso-backup-titulo > svg { color: #bcec86; }
+.aviso-backup-titulo > h2 { margin: 0; font-size: 14px; line-height: 1.4; font-weight: 600; }
+.aviso-backup > p { margin: 0; font-size: 12px; line-height: 1.7; color: #a9bcae; }
+.app .aviso-backup > .botao-principal { margin: 2px 0 0; width: 100%; justify-content: center; }
+.formulario .opcao-copia-exercicio { display: flex; align-items: center; gap: 12px; min-height: 48px; overflow-wrap: anywhere; }
+.formulario .opcao-copia-exercicio > input { width: 18px; min-height: 18px; height: 18px; flex: 0 0 18px; accent-color: #bcec86; }
+:root {
+  --controle-altura: 48px;
+  --controle-raio: 12px;
+  --controle-fonte: 13px;
+  --controle-destaque: #bcec86;
+  --controle-texto-escuro: #192d18;
+  --controle-superficie: #203123;
+  --controle-borda: #3d553e;
+  --controle-texto: #c7ddbe;
+}
+
+.app .botao-principal,
+.app .botao-secundario {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: var(--controle-altura);
+  padding: 12px 16px;
+  border-radius: var(--controle-raio);
+  font-size: var(--controle-fonte);
+  font-weight: 600;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+}
+.app .botao-principal {
+  background: var(--controle-destaque);
+  color: var(--controle-texto-escuro);
+  border: 1px solid var(--controle-destaque);
+  box-shadow: none;
+}
+.app .botao-secundario {
+  background: var(--controle-superficie);
+  color: var(--controle-texto);
+  border: 1px solid var(--controle-borda);
+  box-shadow: none;
+}
+.app .botao-principal:active:not(:disabled) { background: #a9d875; }
+.app .historico-cartao > .acoes { align-items: stretch; }
+.app .historico-cartao > .acoes > button {
+  width: 100%;
+  min-width: 0;
+  min-height: var(--controle-altura);
+  margin: 0;
+  padding: 12px 8px;
+}
+.app .botao-secundario:active:not(:disabled) { background: #2c422c; }
+.app .botao-principal:disabled,
+.app .botao-secundario:disabled {
+  background: #293b2e;
+  color: #8fa394;
+  border-color: #374c3d;
+  box-shadow: none;
+  opacity: 1;
+  cursor: default;
+}
+.app .botao-secundario.excluir-historico {
+  background: transparent;
+  color: #edb6a7;
+  border-color: #60473e;
+}
+
+/* Navegação segmentada e alternância do modo de entrada compartilham a seleção. */
+.app .abas-treino,
+.app .abas-medidas,
+.app .abas-catalogo,
+.app .alternador-seletor {
+  display: grid;
+  gap: 4px;
+  padding: 5px;
+  border: 1px solid #304435;
+  border-radius: 16px;
+  background: #17251d;
+}
+.app .abas-treino > button,
+.app .abas-medidas > button,
+.app .abas-catalogo > button,
+.app .alternador-seletor > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 6px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  background: transparent;
+  color: #a4bcad;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+}
+.app .abas-treino > button[aria-pressed=true],
+.app .abas-medidas > button[aria-pressed=true],
+.app .abas-catalogo > button[aria-pressed=true],
+.app .alternador-seletor > button:is([aria-pressed=true], [aria-selected=true], .selecionada) {
+  background: var(--controle-destaque);
+  color: var(--controle-texto-escuro);
+  border-color: var(--controle-destaque);
+  box-shadow: none;
+}
+.app :is(.botao-principal, .botao-secundario, .abas-treino > button, .abas-medidas > button, .abas-catalogo > button, .alternador-seletor > button):focus-visible {
+  outline: 2px solid #e1f6cb;
+  outline-offset: 3px;
+}
+
+/* Interruptores binários: mesma trilha e alvo de toque em conta e backup. */
+.app .opcao-sync-automatica { min-height: 48px; }
+.app .interruptor-sync { width: 44px; height: 26px; }
+.app .opcao-sync-automatica > input:checked + .interruptor-sync {
+  background: var(--controle-destaque);
+  border-color: var(--controle-destaque);
+}
+
+.rodas-numero.centesimos-medida { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: none; gap: 8px; }
+.centesimos-medida .coluna-roda > span { font-size: 10px; letter-spacing: .5px; }
+
+/* Movimento: alterações curtas de cor/opacidade, sem deslize de conteúdo. */
+:root { --movimento-curto: 160ms; --movimento-painel: 220ms; }
+.app :is(.abas-treino, .abas-medidas, .abas-catalogo, .alternador-seletor) > button {
+  transition: background-color var(--movimento-curto) ease-out, color var(--movimento-curto) ease-out, border-color var(--movimento-curto) ease-out;
+  transform: none;
+}
+.conteudo-alternado { min-width: 0; }
+.conteudo-pagina { min-width: 0; overflow-anchor: none; }
+.layouts-adesivo { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.perfil-opcional-cadastro { border: 1px solid var(--controle-borda); border-radius: 14px; padding: 0 14px; }
+.perfil-opcional-cadastro[open] { padding-bottom: 14px; }
+.perfil-opcional-cadastro > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 54px; font-size: 13px; font-weight: 600; cursor: pointer; list-style: none; }
+.perfil-opcional-cadastro > summary::-webkit-details-marker { display: none; }
+.perfil-opcional-cadastro > summary::after { content: ''; width: 8px; height: 8px; flex-shrink: 0; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(45deg); margin: -4px 3px 0; }
+.perfil-opcional-cadastro[open] > summary::after { transform: rotate(225deg); margin-top: 4px; }
+.perfil-opcional-cadastro > .formulario { margin-top: 8px; }
+.perfil-inicial-cadastro { display: grid; gap: 12px; margin-bottom: 20px; }
+.perfil-inicial-cadastro > h2, .perfil-inicial-cadastro > p { margin: 0; }
+.perfil-inicial-cadastro > button { width: 100%; margin: 0; }
+.aviso-confirmacao-conta { display: grid; gap: 12px; padding: 20px; border: 1px solid #708e50; border-left: 4px solid #bcec86; border-radius: 14px; background: #1c2c1c; overflow-wrap: anywhere; }
+.aviso-confirmacao-conta > strong { color: #bcec86; font-size: 18px; line-height: 1.35; }
+.conta .aviso-confirmacao-conta > p { margin: 0; color: #c5d4c4; font-size: 13px; line-height: 1.65; }
+.aviso-confirmacao-conta b { color: #edf1ed; }
+.app.entrada-conta { padding-top: max(28px, env(safe-area-inset-top)); padding-bottom: max(24px, env(safe-area-inset-bottom)); }
+.entrada-conta > .marca-entrada { flex: 0 0 auto; padding-top: 0; min-height: 44px; }
+.entrada-conta > .marca-entrada > span { flex: 0 0 44px; }
+.entrada-conta > .conteudo-entrada { flex: 0 0 auto; padding-block: 40px 16px; }
+.conta-entrada .formulario-conta { gap: 20px; }
+.conta-entrada .formulario-conta > .nota-resumo { margin: 0; line-height: 1.65; }
+.conta-entrada .formulario-conta > .campo-senha + .nota-resumo { margin-top: -12px; }
+.conta-entrada .formulario-conta > .botao-principal { margin-top: 4px; }
+.criador-card > .area-preview-card.preview-aprovada { padding: 0; background: transparent; }
+.criador-card > .area-preview-card > .preview-card { width: 100%; max-width: 320px; border-radius: 0; box-shadow: none; }
+.criador-card > .modelos-card { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.criador-card .modelos-card > button { min-width: 0; padding: 10px 6px; }
+.criador-card .modelos-card strong { font-size: 12px; }
+.criador-card .modelos-card small { font-size: 10px; }
+.criador-card .amostra-minimalista { background: #f1eee4; border-color: #d9d8cc; }
+.criador-card .amostra-minimalista > span:first-child { height: 28px; width: 65%; background: #14241b; }
+.criador-card .amostra-adesivo { background: transparent; }
+.app .layouts-adesivo > button { width: 100%; margin: 0; }
+.app .layouts-adesivo > button[aria-pressed=true] { background: var(--controle-destaque); color: var(--controle-texto-escuro); border-color: var(--controle-destaque); }
+.campos-adesivo { display: flex; flex-wrap: wrap; gap: 4px 16px; border: 1px solid #344c3a; border-radius: 14px; padding: 8px 12px; }
+.campos-adesivo legend { padding: 0 6px; font-size: 12px; color: #adc2b0; }
+.campos-adesivo label { display: flex; align-items: center; gap: 8px; min-height: 44px; font-size: 12px; }
+.campos-adesivo input { width: 18px; height: 18px; accent-color: var(--controle-destaque); }
+.criador-card > .preview-story { position: relative; isolation: isolate; aspect-ratio: 9/16; display: flex; align-items: center; justify-content: center; padding: 24px 16px; overflow: hidden; background: radial-gradient(ellipse at 20% 30%, #607a6b, transparent 60%), linear-gradient(145deg, #293e32, #111b16 70%); }
+.criador-card > .preview-story.texto-escura { background: linear-gradient(145deg, #e0e6dc, #a9b8a5); }
+.preview-story > .foto-preview-story { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; }
+.criador-card > .preview-story > .preview-card { position: relative; width: 100%; max-width: none; max-height: 100%; object-fit: contain; border-radius: 0; box-shadow: none; }
+.criador-card > .preview-story.layout-coluna > .preview-card { width: 64%; }
+.criador-card > .preview-story.layout-faixa { align-items: flex-end; padding-bottom: 56px; }
+.app .navegacao button {
+  transition: background-color var(--movimento-curto) ease-out, color var(--movimento-curto) ease-out;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .app .navegacao button { transition: none; }
+}
+.tela-evolucao > .conteudo-alternado { min-height: 240px; overflow-anchor: none; }
+.tela-evolucao .busca-historico > small { min-height: 36px; }
+.app .botao-principal:active { transform: none; }
+.app :is(.botao-principal, .botao-secundario, .botao-atalho-numero) {
+  transition: background-color var(--movimento-curto) ease-out, color var(--movimento-curto) ease-out, border-color var(--movimento-curto) ease-out;
+}
+.painel-modal[open] { animation: aparecer-controle var(--movimento-painel) ease-out; }
+.painel-modal[open]::backdrop { animation: aparecer-controle var(--movimento-painel) ease-out; }
+:is(.resumo-todas-medidas, .evolucao-medidas, .historico-medidas, .comparacao-medidas, .rodas-numero, .rodas-medida, .campo-digitar-numero, .digitar-duracao, .conteudo-config:not([hidden])) {
+  animation: aparecer-controle var(--movimento-curto) ease-out;
+}
+.app :is(.seta-config, .seta-exercicio) { transition: transform var(--movimento-curto) ease-out; }
+.app .aviso-modo-visitante { margin: 0 0 20px; line-height: 1.75; }
+.confirmacao-app > p { white-space: pre-line; }
+.privacidade-dados { display: grid; gap: 16px; }
+.privacidade-dados > h2 { margin: 0; }
+.privacidade-grupo { border-top: 1px solid #304235; padding-top: 16px; min-width: 0; }
+.privacidade-grupo > summary { cursor: pointer; min-height: 44px; align-content: center; font-size: 13px; color: #dce8df; line-height: 1.6; }
+.privacidade-grupo > summary > span:first-child { display: inline-block; vertical-align: middle; }
+.privacidade-grupo summary small { display: block; font-size: 11px; color: #8fa698; }
+.privacidade-contagem { display: inline-block; margin-left: 12px; padding: 2px 9px; border-radius: 12px; background: #293d2b; font-size: 12px; color: #bcec86; }
+.privacidade-dados .privacidade-grupo > h3 { margin: 0; font-size: 13px; color: #dce8df; }
+.privacidade-dados .privacidade-grupo > p { margin: 8px 0 12px; }
+.privacidade-dados .privacidade-grupo.formulario { gap: 12px; }
+.privacidade-dados .privacidade-grupo.formulario > p { margin: 0; }
+.backup-protecao { display: flex; align-items: flex-start; gap: 10px; padding: 14px; border: 1px solid #3a5040; border-radius: 12px; background: #203225; }
+.backup-protecao > svg { flex-shrink: 0; color: #bcec86; }
+.backup-protecao strong { font-size: 13px; color: #e5f0e5; }
+.backup-config .backup-protecao p { margin: 5px 0 0; font-size: 12px; line-height: 1.6; color: #a4b8aa; }
+.backup-config .opcao-fotos-backup { padding-block: 8px; border-bottom: 1px solid #304235; }
+.backup-outros-formatos { border-top: 1px solid #304235; padding-top: 4px; }
+.backup-outros-formatos > summary { min-height: 48px; align-content: center; cursor: pointer; font-size: 12px; color: #b9cec0; }
+.backup-formatos-acoes { display: grid; gap: 8px; margin-top: 12px; }
+.backup-formatos-acoes > button { display: flex; justify-content: center; align-items: center; gap: 8px; }
+@keyframes aparecer-controle { from { opacity: .92; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .app :is(.abas-treino, .abas-medidas, .abas-catalogo, .alternador-seletor) > button,
+  .app :is(.botao-principal, .botao-secundario, .botao-atalho-numero, .seta-config, .seta-exercicio, .interruptor-sync),
+  .app .interruptor-sync::after { transition: none; }
+  .painel-modal[open], .painel-modal[open]::backdrop,
+  :is(.resumo-todas-medidas, .evolucao-medidas, .historico-medidas, .comparacao-medidas, .rodas-numero, .rodas-medida, .campo-digitar-numero, .digitar-duracao, .conteudo-config:not([hidden])) { animation: none; }
+}
+/* Paleta da cópia visual; fonte única dos controles de ação. */
+:root {
+ --controle-superficie: #263e2b;
+ --controle-borda: #58764d;
+ --controle-texto: #e5f1de;
+}
+[data-tema=claro] {
+ --controle-destaque: #bcec86;
+ --controle-texto-escuro: #193017;
+ --controle-superficie: #dce9cd;
+ --controle-borda: #6f8560;
+ --controle-ativo-fundo: var(--visual-acento);
+ --controle-ativo-texto: #f8f7ee;
+ --controle-texto: #28431e;
+}
+.app .botao-secundario:hover:not(:disabled) { border-color: #94b678; }
+.app .concluir-compacto:not(:disabled) { background: var(--controle-destaque); color: var(--controle-texto-escuro); border: 1px solid var(--controle-destaque); font-weight: 650; }
+.app .concluida .concluir-compacto { background: var(--controle-superficie); color: var(--controle-texto); border-color: var(--controle-borda); }
+.app .treino-em-andamento .conteudo-exercicio > .acoes > button { min-height: 44px; padding: 10px 12px; border: 1px solid var(--controle-borda); background: var(--controle-superficie); color: var(--controle-texto); font-size: 12px; }
+.app .treino-em-andamento .conteudo-exercicio > .acoes > button:last-child { background: transparent; border-color: #795247; color: #edb6a7; }
+[data-tema=claro] .app .treino-em-andamento .conteudo-exercicio > .acoes > button:last-child { border-color: #c7978b; color: #973e31; }
+:root[data-tema=claro] .app .botao-principal:not(:disabled) { background: var(--controle-destaque); color: var(--controle-texto-escuro); }
+
+/* Prevalece sobre as cores legadas; tamanhos e estados partem do mesmo contrato. */
+:root[data-tema] .app :is(.botao-principal,.botao-secundario,.botao-destrutivo):not(:disabled) { min-height: var(--controle-altura); border-radius: var(--controle-raio); font-size: var(--controle-fonte); line-height: 1.4; gap: 8px; }
+:root[data-tema] .app .botao-principal:not(:disabled) { background: var(--controle-destaque); color: var(--controle-texto-escuro); border-color: var(--controle-destaque); }
+:root[data-tema] .app .botao-secundario:not(:disabled):not(.excluir-historico) { background: var(--controle-superficie); color: var(--controle-texto); border-color: var(--controle-borda); }
+:root[data-tema] .app :is(.abas-treino,.abas-medidas,.abas-catalogo,.alternador-seletor) { background: var(--visual-rebaixo); border-color: var(--visual-borda); border-radius: 16px; padding: 5px; gap: 4px; }
+:root[data-tema] .app :is(.abas-treino,.abas-medidas,.abas-catalogo,.alternador-seletor) > button { min-height: 44px; border-radius: 11px; font-size: 12px; color: var(--visual-suave); background: transparent; border-color: transparent; }
+:root[data-tema] .app :is(.abas-treino,.abas-medidas,.abas-catalogo,.alternador-seletor) > button:is([aria-pressed=true],[aria-selected=true]) { background: var(--controle-destaque); border-color: var(--controle-destaque); color: var(--controle-texto-escuro); }
+
+/* Acesso à tela ligada: ação discreta com o mesmo alvo de toque dos controles. */
+:root[data-tema] .app .treino-em-andamento .andamento-treino .manter-tela:not(:disabled) {
+  display: flex; align-items: center; justify-content: flex-start; width: 100%;
+  min-height: 48px; margin: 4px 0 0; padding: 8px 10px; gap: 10px;
+  border: 1px solid var(--controle-borda); border-radius: var(--controle-raio);
+  background: transparent; color: var(--controle-texto); text-align: left;
+  font-size: 12px; font-weight: 500; line-height: 1.5;
+}
+:root[data-tema] .app .manter-tela > svg { flex: 0 0 30px; width: 30px; height: 30px; padding: 6px; border-radius: 9px; background: var(--visual-acento-fundo); color: var(--visual-acento); }
+:root[data-tema] .app .manter-tela > span { flex: 1; min-width: 0; }
+:root[data-tema] .app .manter-tela::after { content: '›'; font-size: 20px; color: var(--visual-suave); }
+
+/* Seleção de alcance dos valores: todo o cartão aciona o checkbox nativo. */
+:root[data-tema] .app .seletor-valores .aplicar-proximas { display: flex; align-items: center; gap: 14px; min-height: 72px; margin: 20px 0 24px; padding: 14px; border: 1px solid var(--controle-borda); border-radius: var(--controle-raio); background: var(--visual-rebaixo); cursor: pointer; }
+:root[data-tema] .app .seletor-valores .aplicar-proximas:has(input:checked) { background: var(--visual-acento-fundo); border-color: var(--visual-acento); }
+:root[data-tema] .app .seletor-valores .aplicar-proximas input { flex: 0 0 22px; width: 22px; height: 22px; margin: 0; accent-color: var(--visual-acento); cursor: pointer; }
+:root[data-tema] .app .seletor-valores .aplicar-proximas span { display: grid; gap: 4px; min-width: 0; }
+:root[data-tema] .app .seletor-valores .aplicar-proximas strong { color: var(--visual-texto); font-size: 13px; line-height: 1.5; font-weight: 600; }
+:root[data-tema] .app .seletor-valores .aplicar-proximas small { color: var(--visual-suave); font-size: 11px; line-height: 1.5; }
+:root[data-tema] .app .seletor-valores .aplicar-proximas:has(input:focus-visible) { outline: 2px solid var(--visual-acento); outline-offset: 3px; }
+:root[data-tema] .app .treino-em-andamento .ferramentas-exercicio > .botao-descanso { display: inline-flex; align-items: center; width: auto; max-width: 100%; margin: 0; min-height: 48px; gap: 6px; padding: 8px 10px; border: 1px solid var(--controle-borda); background: var(--controle-superficie); color: var(--controle-texto); border-radius: var(--controle-raio); font-size: 11px; white-space: nowrap; }
+:root[data-tema] .app .treino-em-andamento .ferramentas-exercicio > .botao-descanso strong { color: var(--controle-texto); font-size: 13px; }
+:root[data-tema] .app .treino-em-andamento .ferramentas-exercicio > .botao-descanso > span { display: none; }
+:root[data-tema] .app .botao-descanso > span::after { content: none; }

@@ -1,0 +1,14 @@
+[
+  {
+    "arquivo": "src/utilitarios/renderCardAprovado.ts",
+    "sha256": "2b60250ebc55e3243f7d624f51b330952618636989adbef0ef13adbd30e573e8"
+  },
+  {
+    "arquivo": "src/utilitarios/sessao.ts",
+    "sha256": "23d4c4bc06d3e154188dd6754ff0e6a5b705d58070a455bdbe01ae26b97619b6"
+  },
+  {
+    "arquivo": "src/utilitarios/imagensCardAprovado.ts",
+    "sha256": "f476da56b1c6613deac9672bb0e57060e54306bd7c276016e552072021a213cc"
+  }
+]

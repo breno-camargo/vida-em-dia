@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-tema="escuro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Vida em Dia — Refino Visual Fiel ao App</title>
+  <!-- Folhas de Estilo: Base Fiel + Controles + Refino Visual -->
+  <link rel="stylesheet" href="estilos/index.css">
+  <link rel="stylesheet" href="estilos/controles.css">
+  <link rel="stylesheet" href="estilos/refino.css">
+</head>
+<body>
+
+  <!-- Container Raiz da Aplicação -->
+  <div id="app-root" class="app instalado">
+
+    <!-- Cabeçalho Principal Fiel ao App Real -->
+    <header class="cabecalho">
+      <div class="marca">
+        <span>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+          </svg>
+        </span>
+        <div>
+          Vida em Dia
+          <small>UM ESPAÇO PARA VOCÊ</small>
+        </div>
+      </div>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <button type="button" id="btn-tema" class="botao-icone" aria-label="Alternar tema claro/escuro" title="Alternar tema claro/escuro">
+          <span id="btn-tema-icone" aria-hidden="true">☀️</span>
+        </button>
+        <button type="button" id="btn-cabecalho-config" class="botao-icone" aria-label="Abrir configurações" aria-expanded="false">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main id="conteudo">
+
+      <div class="linha-data">
+        <span>quarta-feira, 22 de outubro</span>
+        <span class="estado-rede">
+          <i class="online" aria-hidden="true"></i>Online
+        </span>
+      </div>
+
+      <h1 id="titulo-pagina-h1">Olá, vamos cuidar de você?</h1>
+
+      <p class="nota-resumo aviso-modo-visitante" role="status">
+        Modo visitante: estes registros ficam visíveis a quem usar este perfil do navegador. Eles não são transferidos ao criar ou acessar uma conta.
+      </p>
+
+      <!-- ====================================================================
+           TELA: HOJE (#hoje)
+           ==================================================================== -->
+      <section id="tela-hoje" class="tela-pagina" style="display: block;">
+        
+        <!-- Lembrete de Backup Real -->
+        <section class="aviso-backup" role="region" aria-label="Lembrete de backup">
+          <div class="aviso-backup-titulo">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+            <h2>Guarde uma cópia da sua evolução</h2>
+          </div>
+          <p>Salve seus registros e fotos em um arquivo de backup. A sincronização não inclui suas fotos.</p>
+          <button type="button" class="botao-principal" data-abre-modal="popup-backup">Criar backup</button>
+        </section>
+
+        <!-- Destaque Hoje (Identidade Verde do App) -->
+        <section class="destaque">
+          <span class="etiqueta">SEU RITMO. SUA EVOLUÇÃO.</span>
+          <h2>Um dia de cada vez.</h2>
+          <p>Seu cuidado começa aqui.<br>Vamos construir uma rotina que faz sentido para você.</p>
+          <a href="#treino" class="botao-principal" style="text-decoration: none;">
+            Conhecer meu espaço
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <line x1="7" y1="17" x2="17" y2="7"></line>
+              <polyline points="7 7 17 7 17 17"></polyline>
+            </svg>
+          </a>
+          <svg class="decoracao" width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+        </section>
+
+        <!-- Grade de Resumos Hoje -->
+        <div class="titulo-secao">
+          <h2>Seu dia, em equilíbrio</h2>
+          <span>Hoje</span>
+        </div>
+        <div class="grade-cartoes">
+          <button type="button" class="cartao" onclick="window.location.hash='#treino'">
+            <svg class="verde" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="m6.5 6.5 11 11"></path><path d="m21 21-1-1"></path><path d="m3 3 1 1"></path><path d="m18 22 4-4"></path><path d="m2 6 4-4"></path><path d="m3 10 7-7"></path><path d="m14 21 7-7"></path>
+            </svg>
+            <span>Treino e cardio</span>
+            <strong>Vamos começar</strong>
+            <small>Seu próximo movimento</small>
+          </button>
+          <button type="button" class="cartao" onclick="window.location.hash='#comida'">
+            <svg class="laranja" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"></path><path d="M12 2v20"></path><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+            </svg>
+            <span>Alimentação</span>
+            <strong>— <small>kcal</small></strong>
+            <small>Seu diário em breve</small>
+          </button>
+        </div>
+
+        <!-- Atividade Hoje -->
+        <section class="atividade-hoje" style="margin-top: 16px;">
+          <div class="titulo-secao">
+            <h2>Seu movimento</h2>
+            <button type="button" class="link-atividade" onclick="window.location.hash='#evolucao'">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16"></path><path d="m19 9-5 5-4-4-3 3"></path></svg>
+              Histórico
+            </button>
+          </div>
+          <div class="grade-cartoes cartoes-movimento">
+            <button type="button" class="cartao" data-abre-modal="popup-medida">
+              <svg class="amarelo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.67-2 8.5V16"></path><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.67 2 8.5V20"></path>
+              </svg>
+              <span>Passos do dia</span>
+              <strong class="valor-movimento">6.840</strong>
+              <small>Meta: 8.000 passos</small>
+              <progress aria-label="Progresso da meta de passos" max="8000" value="6840"></progress>
+            </button>
+            <button type="button" class="cartao" data-abre-modal="popup-medida">
+              <svg class="laranja" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
+              </svg>
+              <span>Calorias gastas</span>
+              <strong class="valor-movimento">420 <small>kcal</small></strong>
+              <small>Meta: 500 kcal</small>
+              <progress aria-label="Progresso da meta de calorias" max="500" value="420"></progress>
+            </button>
+          </div>
+          <p class="nota-resumo" style="margin-top: 10px;">quarta-feira · Meta de dia útil</p>
+        </section>
+
+        <!-- Nota Informativa -->
+        <section class="nota" style="margin-top: 16px;">
+          <span class="ponto"></span>
+          <div>
+            <h3>Um espaço só seu</h3>
+            <p>Os dados ficam primeiro neste aparelho. Conecte sua conta para sincronizar e guarde também um backup com fotos.</p>
+          </div>
+        </section>
+
+        <!-- Sincronização -->
+        <div class="estado-sync" style="margin-top: 16px;">
+          <button type="button" class="botao-principal acao-sincronizar" onclick="window.location.hash='#login'">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"></path>
+              <path d="M12 12v9"></path>
+              <path d="m16 16-4-4-4 4"></path>
+            </svg>
+            Sincronizar dados
+          </button>
+          <span>Última sincronização: 22/10/2026 às 14:10</span>
+        </div>
+
+      </section>
+
+      <!-- ====================================================================
+           TELA: TREINO (#treino)
+           ==================================================================== -->
+      <section id="tela-treino" class="tela-pagina" style="display: none;">
+        
+        <!-- Bloco de Retomar Treino Fiel ao App -->
+        <section class="retomar-treino retomar-compacto" style="margin-bottom: 16px;">
+          <div class="retomar-identidade">
+            <span class="sinal-treino" aria-hidden="true"></span>
+            <span>Em andamento</span>
+            <small>22/10</small>
+          </div>
+          <h2>Treino A — Peito e Tríceps</h2>
+          <div class="retomar-progresso">
+            <p>4 de 12 séries concluídas · Cardio planejado</p>
+            <progress class="barra-sessao" aria-label="Progresso do treino em andamento" max="12" value="4"></progress>
+          </div>
+          <button type="button" class="botao-principal" id="btn-continuar-treino-topo" onclick="window.location.hash='#treino-andamento'">
+            Continuar treino
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </button>
+        </section>
+
+        <!-- Três Abas de Treino -->
+        <div id="abas-treino-secao" class="abas-treino tres-abas">
+          <button type="button" data-sub="fichas" aria-pressed="true">Minhas fichas</button>
+          <button type="button" data-sub="biblioteca" aria-pressed="false">Exercícios (65)</button>
+          <button type="button" data-sub="cardio" aria-pressed="false">Cardio</button>
+        </div>
+
+        <!-- Subseção: Minhas Fichas -->
+        <div id="treino-secao-fichas" style="display: block; margin-top: 14px;">
+          <button type="button" class="ultimo-concluido ultimo-treino-atalho" data-abre-modal="popup-card-congelado" aria-label="Ver card do último treino: Treino B — Costas e Bíceps">
+            <span class="icone-ultimo-treino">
+              <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+                <circle cx="9" cy="9" r="2"></circle>
+                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+              </svg>
+            </span>
+            <span class="texto-ultimo-treino">
+              <small>Último treino · 20/10</small>
+              <strong>Treino B — Costas e Bíceps</strong>
+            </span>
+            <span class="acao-ultimo-treino">
+              Ver card
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </span>
+          </button>
+
+          <div class="barra-fichas" style="margin-top: 16px;">
+            <span>3 fichas de treino</span>
+            <button type="button" class="botao-principal" data-abre-modal="popup-nova-ficha">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              Nova ficha
+            </button>
+          </div>
+
+          <!-- Cards de Ficha Oficiais -->
+          <div style="display: grid; gap: 12px; margin-top: 12px;">
+            <section class="painel ficha-cartao ficha-nova ficha-em-andamento">
+              <div class="topo-ficha">
+                <span class="icone-ficha">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6.5 6.5 11 11"></path><path d="m21 21-1-1"></path><path d="m3 3 1 1"></path><path d="m18 22 4-4"></path><path d="m2 6 4-4"></path><path d="m3 10 7-7"></path><path d="m14 21 7-7"></path></svg>
+                </span>
+                <button type="button" class="abrir-ficha">
+                  Treino A — Peito, Tríceps e Ombro
+                  <small>5 exercícios · Em andamento</small>
+                </button>
+                <details class="menu-ficha">
+                  <summary aria-label="Opções da ficha Treino A">⋯</summary>
+                  <div class="acoes">
+                    <button type="button">Subir</button>
+                    <button type="button">Descer</button>
+                    <button type="button">Duplicar</button>
+                    <button type="button">Excluir</button>
+                  </div>
+                </details>
+              </div>
+              <button type="button" class="iniciar-ficha botao-secundario" onclick="window.location.hash='#treino-andamento'">
+                Continuar treino
+              </button>
+            </section>
+
+            <section class="painel ficha-cartao ficha-nova">
+              <div class="topo-ficha">
+                <span class="icone-ficha">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6.5 6.5 11 11"></path><path d="m21 21-1-1"></path><path d="m3 3 1 1"></path><path d="m18 22 4-4"></path><path d="m2 6 4-4"></path><path d="m3 10 7-7"></path><path d="m14 21 7-7"></path></svg>
+                </span>
+                <button type="button" class="abrir-ficha">
+                  Treino B — Costas, Bíceps e Trapézio
+                  <small>5 exercícios · seu planejamento</small>
+                </button>
+                <details class="menu-ficha">
+                  <summary aria-label="Opções da ficha Treino B">⋯</summary>
+                  <div class="acoes">
+                    <button type="button">Subir</button>
+                    <button type="button">Descer</button>
+                    <button type="button">Duplicar</button>
+                    <button type="button">Excluir</button>
+                  </div>
+                </details>
+              </div>
+              <button type="button" class="iniciar-ficha botao-principal" onclick="window.location.hash='#treino-andamento'">
+                Iniciar treino
+              </button>
+            </section>
+          </div>
+
+          <button type="button" class="treino-livre" style="margin-top: 14px;" onclick="window.location.hash='#treino-andamento'">
+            Iniciar treino livre
+          </button>
+        </div>
+
+        <!-- Subseção: Biblioteca de Exercícios -->
+        <div id="treino-secao-biblioteca" style="display: none; margin-top: 14px;">
+          <div class="formulario">
+            <label for="busca-exercicio-input">
+              Buscar na biblioteca
+              <input type="search" id="busca-exercicio-input" placeholder="Ex.: supino, agachamento ou puxada" autocomplete="off">
+            </label>
+          </div>
+
+          <!-- Filtros Musculares Horizontais (Rolagem Preservada) -->
+          <div class="filtros-musculares-container" role="region" aria-label="Filtros por grupo muscular">
+            <div class="filtros-musculares">
+              <button type="button" class="pill-filtro" data-grupo="todos" aria-pressed="true">Todos</button>
+              <button type="button" class="pill-filtro" data-grupo="peito" aria-pressed="false">Peito</button>
+              <button type="button" class="pill-filtro" data-grupo="costas" aria-pressed="false">Costas</button>
+              <button type="button" class="pill-filtro" data-grupo="pernas" aria-pressed="false">Pernas</button>
+              <button type="button" class="pill-filtro" data-grupo="ombros" aria-pressed="false">Ombros</button>
+              <button type="button" class="pill-filtro" data-grupo="biceps" aria-pressed="false">Bíceps</button>
+              <button type="button" class="pill-filtro" data-grupo="triceps" aria-pressed="false">Tríceps</button>
+              <button type="button" class="pill-filtro" data-grupo="abdomen" aria-pressed="false">Abdômen</button>
+            </div>
+          </div>
+
+          <!-- Lista de Exercícios -->
+          <div id="lista-exercicios-corpo" style="display: grid; gap: 8px; margin-top: 10px;">
+            <div class="painel item-exercicio-lista" data-grupo="peito" style="cursor: pointer; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;" data-abre-modal="popup-ajuda-exercicio">
+              <div>
+                <strong>Supino Reto com Barra</strong>
+                <small style="display: block; color: var(--tema-texto-terciario);">Peito · Barra e banco reto</small>
+              </div>
+              <span style="color: var(--tema-texto-terciario);">→</span>
+            </div>
+            <div class="painel item-exercicio-lista" data-grupo="costas" style="cursor: pointer; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;" data-abre-modal="popup-ajuda-exercicio">
+              <div>
+                <strong>Puxada Alta Pronada</strong>
+                <small style="display: block; color: var(--tema-texto-terciario);">Costas · Polia alta</small>
+              </div>
+              <span style="color: var(--tema-texto-terciario);">→</span>
+            </div>
+            <div class="painel item-exercicio-lista" data-grupo="pernas" style="cursor: pointer; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;" data-abre-modal="popup-ajuda-exercicio">
+              <div>
+                <strong>Agachamento Livre</strong>
+                <small style="display: block; color: var(--tema-texto-terciario);">Pernas · Barra olímpica</small>
+              </div>
+              <span style="color: var(--tema-texto-terciario);">→</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subseção: Cardio (Dentro de Treino) -->
+        <div id="treino-secao-cardio" style="display: none; margin-top: 14px;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+            <div>
+              <strong style="font-size: 16px;">Sessões de Cardio</strong>
+              <small style="display: block; color: var(--tema-texto-terciario);">Esta semana: 95 min · 3 sessões</small>
+            </div>
+            <button type="button" class="botao-principal" style="min-height: 40px; padding: 8px 14px; font-size: 13px;" data-abre-modal="popup-cardio">+ Novo cardio</button>
+          </div>
+
+          <div style="display: grid; gap: 10px;">
+            <div class="painel" style="padding: 14px;">
+              <div style="display: flex; justify-content: space-between;">
+                <strong>Corrida na Esteira</strong>
+                <span style="font-size: 12px; color: var(--tema-texto-terciario);">21/10</span>
+              </div>
+              <p style="font-size: 13px; margin: 4px 0 8px;">30 min · 3,5 km · 280 kcal estimadas</p>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="botao-secundario" style="min-height: 38px; padding: 6px 12px; font-size: 12px;" data-abre-modal="popup-card-congelado">Ver card</button>
+                <button type="button" class="botao-secundario" style="min-height: 38px; padding: 6px 12px; font-size: 12px;" data-abre-modal="popup-cardio">Editar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ====================================================================
+           TELA: MODO TREINO / TREINO EM ANDAMENTO (#treino-andamento)
+           Fiel ao app real (src/telas/ModoTreino.tsx e src/componentes/Serie.tsx)
+           ==================================================================== -->
+      <section id="tela-treino-andamento" class="tela-pagina" style="display: none;">
+        <div class="treino-em-andamento">
+
+          <!-- Painel do Andamento do Treino Real -->
+          <div class="painel andamento-treino">
+            <div class="titulo-andamento">
+              <h2>Treino A — Peito e Tríceps</h2>
+            </div>
+            <div class="progresso-sessao">
+              <span>Seu progresso</span>
+              <strong>4<small> / 12 séries</small></strong>
+            </div>
+            <progress class="barra-sessao" aria-label="Séries concluídas" max="12" value="4"></progress>
+            <button type="button" class="botao-secundario manter-tela" id="btn-manter-tela">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+              <span>Manter tela acesa</span>
+            </button>
+          </div>
+
+          <!-- Exercício 1: Supino Reto com Barra -->
+          <details class="exercicio-treino exercicio-recolhivel" open>
+            <summary class="cabecalho-exercicio">
+              <span class="miniatura-exercicio" style="display:grid;place-items:center;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6.5 6.5 11 11"></path><path d="m21 21-1-1"></path><path d="m3 3 1 1"></path><path d="m18 22 4-4"></path><path d="m2 6 4-4"></path><path d="m3 10 7-7"></path><path d="m14 21 7-7"></path></svg>
+              </span>
+              <span class="resumo-exercicio">
+                <strong>Supino Reto com Barra</strong>
+                <small>4 séries · 10 reps · 60 kg</small>
+                <small>2/4 concluídas · Próximo exercício</small>
+              </span>
+              <span class="seta-exercicio" aria-hidden="true">▾</span>
+            </summary>
+            <div class="conteudo-exercicio">
+              <button type="button" class="ajuda-no-treino" data-abre-modal="popup-ajuda-exercicio">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                Como fazer
+              </button>
+
+              <div class="cabecalho-series" aria-hidden="true">
+                <span>SÉRIE</span><span>REPS</span><span>KG</span><span>FEITO</span>
+              </div>
+
+              <!-- Séries Compactas Reais (src/componentes/Serie.tsx) -->
+              <section class="serie serie-compacta concluida" aria-label="Série 1, concluída">
+                <div class="linha-serie">
+                  <button type="button" class="tipo-serie normal" aria-label="Tipo da série 1">1</button>
+                  <button type="button" class="valor-serie" aria-label="Repetições série 1">10</button>
+                  <button type="button" class="valor-serie" aria-label="Carga série 1">60</button>
+                  <button type="button" class="concluir-compacto" aria-label="Concluída">Feita</button>
+                  <button type="button" class="menu-serie" aria-label="Opções da série 1">⋯</button>
+                </div>
+              </section>
+
+              <section class="serie serie-compacta concluida" aria-label="Série 2, concluída">
+                <div class="linha-serie">
+                  <button type="button" class="tipo-serie normal" aria-label="Tipo da série 2">2</button>
+                  <button type="button" class="valor-serie" aria-label="Repetições série 2">10</button>
+                  <button type="button" class="valor-serie" aria-label="Carga série 2">60</button>
+                  <button type="button" class="concluir-compacto" aria-label="Concluída">Feita</button>
+                  <button type="button" class="menu-serie" aria-label="Opções da série 2">⋯</button>
+                </div>
+              </section>
+
+              <section class="serie serie-compacta proxima-serie" aria-label="Série 3, próxima série">
+                <div class="linha-serie">
+                  <button type="button" class="tipo-serie normal" aria-label="Tipo da série 3">3</button>
+                  <button type="button" class="valor-serie" aria-label="Repetições série 3">10</button>
+                  <button type="button" class="valor-serie" aria-label="Carga série 3">60</button>
+                  <button type="button" class="concluir-compacto" aria-label="Concluir série 3">Concluir</button>
+                  <button type="button" class="menu-serie" aria-label="Opções da série 3">⋯</button>
+                </div>
+              </section>
+
+              <section class="serie serie-compacta" aria-label="Série 4, pendente">
+                <div class="linha-serie">
+                  <button type="button" class="tipo-serie normal" aria-label="Tipo da série 4">4</button>
+                  <button type="button" class="valor-serie" aria-label="Repetições série 4">10</button>
+                  <button type="button" class="valor-serie" aria-label="Carga série 4">60</button>
+                  <button type="button" class="concluir-compacto" aria-label="Concluir série 4">Concluir</button>
+                  <button type="button" class="menu-serie" aria-label="Opções da série 4">⋯</button>
+                </div>
+              </section>
+
+              <div class="acoes" style="margin-top: 10px;">
+                <button type="button">Série extra</button>
+                <button type="button">Subir exercício</button>
+              </div>
+            </div>
+          </details>
+
+          <!-- Exercício 2: Tríceps Pulley -->
+          <details class="exercicio-treino exercicio-recolhivel" style="margin-top: 12px;">
+            <summary class="cabecalho-exercicio">
+              <span class="miniatura-exercicio" style="display:grid;place-items:center;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6.5 6.5 11 11"></path><path d="m21 21-1-1"></path><path d="m3 3 1 1"></path><path d="m18 22 4-4"></path><path d="m2 6 4-4"></path><path d="m3 10 7-7"></path><path d="m14 21 7-7"></path></svg>
+              </span>
+              <span class="resumo-exercicio">
+                <strong>Tríceps Pulley</strong>
+                <small>4 séries · 12 reps · 35 kg</small>
+                <small>0/4 concluídas</small>
+              </span>
+              <span class="seta-exercicio" aria-hidden="true">▾</span>
+            </summary>
+            <div class="conteudo-exercicio">
+              <div class="cabecalho-series" aria-hidden="true">
+                <span>SÉRIE</span><span>REPS</span><span>KG</span><span>FEITO</span>
+              </div>
+              <section class="serie serie-compacta" aria-label="Série 1, pendente">
+                <div class="linha-serie">
+                  <button type="button" class="tipo-serie normal">1</button>
+                  <button type="button" class="valor-serie">12</button>
+                  <button type="button" class="valor-serie">35</button>
+                  <button type="button" class="concluir-compacto">Concluir</button>
+                  <button type="button" class="menu-serie">⋯</button>
+                </div>
+              </section>
+            </div>
+          </details>
+
+          <!-- Ações Reais de Finalização de ModoTreino -->
+          <div class="finalizar-acoes" style="margin-top: 24px;">
+            <button type="button" class="botao-principal" onclick="window.location.hash='#popup-card-congelado'">
+              Ver resumo e finalizar
+            </button>
+            <button type="button" class="botao-secundario continuar-depois" onclick="window.location.hash='#treino'">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              <span>Continuar depois</span>
+            </button>
+          </div>
+          <button type="button" class="cancelar-sessao" onclick="window.location.hash='#treino'">
+            Cancelar treino
+          </button>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           TELA: COMIDA (#comida) — Preservada como EstadoVazio da Etapa 9
+           ==================================================================== -->
+      <section id="tela-comida" class="tela-pagina" style="display: none;">
+        <div class="painel vazio-medidas" style="align-items: center; text-align: center; padding: 36px 20px;">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"></path>
+            <path d="M12 2v20"></path>
+            <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+          </svg>
+          <span class="etiqueta" style="background: var(--tema-superficie-destaque); padding: 4px 10px; border-radius: 8px;">ETAPA 9</span>
+          <h2>Mais simples, mais constante</h2>
+          <p>Um diário rápido para acompanhar suas refeições, sem complicar a rotina.</p>
+          <p class="nota-resumo" style="font-size: 12px; max-width: 320px;">
+            Esta área do aplicativo está planejada para a etapa 9. Conforme as regras do projeto, o estado vazio foi mantido integralmente sem invenção de telas.
+          </p>
+        </div>
+      </section>
+
+      <!-- ====================================================================
+           TELA: MEDIDAS (#medidas) — 100% FIEL AO APP REAL
+           ==================================================================== -->
+      <section id="tela-medidas" class="tela-pagina" style="display: none;">
+        
+        <div class="tela-medidas">
+          <div class="topo-medidas">
+            <p>Peso e medidas, no seu ritmo.</p>
+            <button type="button" class="nova-medida botao-principal" data-abre-modal="popup-medida">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              Registrar
+            </button>
+          </div>
+
+          <!-- Resumo de Peso Real do App -->
+          <section class="peso-resumo-medidas">
+            <div>
+              <span>Último peso</span>
+              <strong id="resumo-peso-valor">72,4<small> kg</small></strong>
+            </div>
+            <p>20 de outubro de 2026</p>
+          </section>
+
+          <!-- Abas de Visualização Oficiais: Resumo | Evolução | Histórico -->
+          <div class="abas-medidas" aria-label="Visualização das medidas">
+            <button type="button" id="aba-medidas-resumo" aria-pressed="true">Resumo</button>
+            <button type="button" id="aba-medidas-evolucao" aria-pressed="false">Evolução</button>
+            <button type="button" id="aba-medidas-historico" aria-pressed="false">Histórico</button>
+          </div>
+
+          <!-- 1. Visão Resumo -->
+          <section id="visao-medidas-resumo" class="resumo-todas-medidas" style="display: block;">
+            <h2>Suas medidas</h2>
+            <p class="nota-resumo">Último valor informado, com a data de cada registro.</p>
+            
+            <div class="grade-resumo-medidas">
+              <div>
+                <span>Cintura</span>
+                <strong>81,0<small> cm</small></strong>
+                <p>20 de outubro de 2026</p>
+              </div>
+              <div>
+                <span>Quadril</span>
+                <strong>98,5<small> cm</small></strong>
+                <p>20 de outubro de 2026</p>
+              </div>
+            </div>
+
+            <div class="pares-resumo-medidas">
+              <section class="par-resumo-medida">
+                <header>
+                  <h3>Braço</h3>
+                  <span>20 de outubro de 2026</span>
+                </header>
+                <dl>
+                  <div>
+                    <dt>Direito</dt>
+                    <dd>36,5<small> cm</small></dd>
+                  </div>
+                  <div>
+                    <dt>Esquerdo</dt>
+                    <dd>36,5<small> cm</small></dd>
+                  </div>
+                </dl>
+              </section>
+
+              <section class="par-resumo-medida">
+                <header>
+                  <h3>Coxa</h3>
+                  <span>20 de outubro de 2026</span>
+                </header>
+                <dl>
+                  <div>
+                    <dt>Direito</dt>
+                    <dd>57,0<small> cm</small></dd>
+                  </div>
+                  <div>
+                    <dt>Esquerdo</dt>
+                    <dd>57,0<small> cm</small></dd>
+                  </div>
+                </dl>
+              </section>
+            </div>
+          </section>
+
+          <!-- 2. Visão Histórico (com sub-abas Registros e Comparar datas) -->
+          <div id="visao-medidas-historico" style="display: none;">
+            <div class="abas-treino" style="margin-bottom: 14px;">
+              <button type="button" id="sub-historico-registros" aria-pressed="true">Registros</button>
+              <button type="button" id="sub-historico-comparar" aria-pressed="false">Comparar datas</button>
+            </div>
+
+            <!-- Sub-aba Registros Históricos -->
+            <div id="medidas-sub-registros" class="historico-medidas" style="display: grid;">
+              <details class="registro-medida" open>
+                <summary>
+                  <span>20 de outubro de 2026<small>72,4 kg · 6 medidas registradas</small></span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </summary>
+                <dl>
+                  <div><dt>Peso</dt><dd>72,4 kg</dd></div>
+                  <div><dt>Cintura</dt><dd>81,0 cm</dd></div>
+                  <div><dt>Braço esquerdo</dt><dd>36,5 cm</dd></div>
+                  <div><dt>Braço direito</dt><dd>36,5 cm</dd></div>
+                  <div><dt>Coxa esquerda</dt><dd>57,0 cm</dd></div>
+                  <div><dt>Coxa direita</dt><dd>57,0 cm</dd></div>
+                </dl>
+                <div class="acoes-medida">
+                  <button type="button" class="botao-secundario" data-abre-modal="popup-medida">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path></svg>
+                    Editar
+                  </button>
+                  <button type="button" class="botao-destrutivo">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path></svg>
+                    Remover
+                  </button>
+                </div>
+              </details>
+
+              <details class="registro-medida">
+                <summary>
+                  <span>15 de setembro de 2026<small>73,6 kg · 6 medidas registradas</small></span>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </summary>
+              </details>
+            </div>
+
+            <!-- Sub-aba Comparar Datas -->
+            <div id="medidas-sub-comparar" class="comparacao-medidas" style="display: none;">
+              <div class="dupla">
+                <button type="button" class="escolher-comparacao">
+                  <span>Antes</span>
+                  <strong>15 de setembro de 2026</strong>
+                </button>
+                <button type="button" class="escolher-comparacao">
+                  <span>Depois</span>
+                  <strong>20 de outubro de 2026</strong>
+                </button>
+              </div>
+              <p class="nota-resumo">A diferença descreve a mudança; não classifica o resultado como bom ou ruim.</p>
+              <div class="tabela-comparacao">
+                <div class="cabecalho-comparacao">
+                  <span>Medida</span><span>Antes</span><span>Depois</span><span>Diferença</span>
+                </div>
+                <div><span>Peso<small>kg</small></span><span>73,6</span><span>72,4</span><strong style="color: var(--tema-primaria);">-1,2</strong></div>
+                <div><span>Cintura<small>cm</small></span><span>83,0</span><span>81,0</span><strong style="color: var(--tema-primaria);">-2,0</strong></div>
+                <div><span>Braço direito<small>cm</small></span><span>36,0</span><span>36,5</span><strong style="color: var(--tema-primaria);">+0,5</strong></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ====================================================================
+           TELA: EVOLUÇÃO (#evolucao)
+           ==================================================================== -->
+      <section id="tela-evolucao" class="tela-pagina" style="display: none;">
+        
+        <div id="abas-evolucao-secao" class="abas-treino duas-abas">
+          <button type="button" data-sub="historico" aria-pressed="true">Meus treinos</button>
+          <button type="button" data-sub="exercicios" aria-pressed="false">Por exercício</button>
+        </div>
+
+        <div class="formulario busca-historico" style="margin-top: 14px;">
+          <label for="busca-historico-input">
+            Encontrar um treino
+            <input type="search" id="busca-historico-input" placeholder="Ex.: treino A, supino ou 20/10/2026">
+          </label>
+          <small id="dica-busca-historico">Busque por ficha, exercício ou data (dia/mês/ano).</small>
+        </div>
+
+        <!-- Subseção: Meus Treinos -->
+        <div id="evolucao-secao-historico" style="display: block; margin-top: 12px;">
+          <div style="display: grid; gap: 12px;">
+            
+            <section class="painel historico-cartao">
+              <small>20/10/2026<span>18:40</span></small>
+              <h2>Treino B — Costas e Bíceps</h2>
+              <p>5 exercícios · 14 séries · 48 min · 4.850 kg</p>
+              <div class="acoes">
+                <button type="button" class="botao-secundario" data-abre-modal="popup-ajuda-exercicio">Ver detalhes</button>
+                <button type="button" class="botao-secundario" data-abre-modal="popup-card-congelado">Compartilhar</button>
+              </div>
+            </section>
+
+            <section class="painel historico-cartao">
+              <small>18/10/2026<span>10:15</span></small>
+              <h2>Treino A — Peito e Tríceps</h2>
+              <p>5 exercícios · 15 séries · 52 min · 5.200 kg</p>
+              <div class="acoes">
+                <button type="button" class="botao-secundario" data-abre-modal="popup-ajuda-exercicio">Ver detalhes</button>
+                <button type="button" class="botao-secundario" data-abre-modal="popup-card-congelado">Compartilhar</button>
+              </div>
+            </section>
+
+          </div>
+        </div>
+
+        <!-- Subseção: Por Exercício -->
+        <div id="evolucao-secao-exercicios" style="display: none; margin-top: 12px;">
+          <div class="painel">
+            <h2>Evolução por Exercício</h2>
+            <p>Selecione um exercício para ver os gráficos de carga e repetições.</p>
+            <button type="button" class="cartao largura-total" data-abre-modal="popup-ajuda-exercicio" style="padding: 14px;">
+              <strong>Supino Reto com Barra</strong>
+              <small>Carga máxima recente: 84 kg (+4 kg este mês)</small>
+            </button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ====================================================================
+           TELA: CONFIGURAÇÕES (#configuracoes)
+           ==================================================================== -->
+      <section id="tela-configuracoes" class="tela-pagina" style="display: none;">
+        
+        <div class="configuracoes-grupos">
+
+          <!-- 1. Conta e sincronização -->
+          <section class="secao-config" data-secao="conta">
+            <h2>
+              <button type="button" id="titulo-config-conta" aria-expanded="false" aria-controls="conteudo-config-conta">
+                <span class="icone-config">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </span>
+                <span class="texto-config">
+                  <strong>Conta e sincronização</strong>
+                  <small>Entrar e conectar seus dados</small>
+                </span>
+                <span class="seta-config">▼</span>
+              </button>
+            </h2>
+            <div id="conteudo-config-conta" class="conteudo-config" hidden>
+              <div class="painel">
+                <p>Acesse sua conta para manter seus treinos e medidas sincronizados em múltiplos aparelhos.</p>
+                <div style="display: flex; gap: 8px; margin-top: 8px;">
+                  <a href="#login" class="botao-principal" style="text-decoration: none;">Acessar conta</a>
+                  <a href="#cadastro" class="botao-secundario" style="text-decoration: none;">Criar conta</a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2. Backup dos seus dados -->
+          <section class="secao-config" data-secao="backup">
+            <h2>
+              <button type="button" id="titulo-config-backup" aria-expanded="false" aria-controls="conteudo-config-backup">
+                <span class="icone-config">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                </span>
+                <span class="texto-config">
+                  <strong>Backup dos seus dados</strong>
+                  <small>Exportar, importar e configurar lembretes</small>
+                </span>
+                <span class="seta-config">▼</span>
+              </button>
+            </h2>
+            <div id="conteudo-config-backup" class="conteudo-config" hidden>
+              <div class="painel">
+                <p>Guarde uma cópia fora do app para recuperar seus dados quando precisar.</p>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                  <button type="button" class="botao-principal" data-abre-modal="popup-backup">Gerar backup criptografado</button>
+                  <button type="button" class="botao-secundario" data-abre-modal="popup-importar">Importar backup</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3. Lembrete de medidas -->
+          <section class="secao-config" data-secao="medidas">
+            <h2>
+              <button type="button" id="titulo-config-medidas" aria-expanded="false" aria-controls="conteudo-config-medidas">
+                <span class="icone-config">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"></path></svg>
+                </span>
+                <span class="texto-config">
+                  <strong>Lembrete de medidas</strong>
+                  <small>Escolher o dia da semana</small>
+                </span>
+                <span class="seta-config">▼</span>
+              </button>
+            </h2>
+            <div id="conteudo-config-medidas" class="conteudo-config" hidden>
+              <div class="painel">
+                <label class="opcao-sync-automatica">
+                  <span class="texto-sync-automatica">
+                    <strong>Lembrar toda semana</strong>
+                    <span>Receba um aviso discreto no dia escolhido.</span>
+                  </span>
+                  <input type="checkbox" checked aria-label="Ativar lembrete">
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4. Cardio e movimento -->
+          <section class="secao-config" data-secao="atividade">
+            <h2>
+              <button type="button" id="titulo-config-atividade" aria-expanded="false" aria-controls="conteudo-config-atividade">
+                <span class="icone-config">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                </span>
+                <span class="texto-config">
+                  <strong>Cardio e movimento</strong>
+                  <small>Metas, calorias e feriados</small>
+                </span>
+                <span class="seta-config">▼</span>
+              </button>
+            </h2>
+            <div id="conteudo-config-atividade" class="conteudo-config" hidden>
+              <div class="painel">
+                <div class="formulario">
+                  <label>
+                    Meta de passos em dias úteis
+                    <input type="number" value="8000">
+                  </label>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 5. Seu aparelho -->
+          <section class="secao-config" data-secao="aparelho">
+            <h2>
+              <button type="button" id="titulo-config-aparelho" aria-expanded="false" aria-controls="conteudo-config-aparelho">
+                <span class="icone-config">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"></rect><path d="M12 18h.01"></path></svg>
+                </span>
+                <span class="texto-config">
+                  <strong>Seu aparelho</strong>
+                  <small>Instalação e proteção dos dados</small>
+                </span>
+                <span class="seta-config">▼</span>
+              </button>
+            </h2>
+            <div id="conteudo-config-aparelho" class="conteudo-config" hidden>
+              <div class="painel">
+                <dl style="display: grid; gap: 8px; margin: 0; font-size: 13px;">
+                  <div style="display: flex; justify-content: space-between;"><dt>App instalado:</dt><dd style="font-weight: 600;">Sim (PWA)</dd></div>
+                  <div style="display: flex; justify-content: space-between;"><dt>Armazenamento persistente:</dt><dd style="font-weight: 600;">Concedido</dd></div>
+                  <div style="display: flex; justify-content: space-between;"><dt>Último backup:</dt><dd style="font-weight: 600;">Hoje às 14:10</dd></div>
+                </dl>
+              </div>
+            </div>
+          </section>
+
+          <!-- 6. Sobre o Vida em Dia -->
+          <section class="secao-config" data-secao="sobre">
+            <h2>
+              <button type="button" id="titulo-config-sobre" aria-expanded="false" aria-controls="conteudo-config-sobre">
+                <span class="icone-config">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-4"></path><path d="M12 8h.01"></path></svg>
+                </span>
+                <span class="texto-config">
+                  <strong>Sobre o Vida em Dia</strong>
+                  <small>Versão e novidades</small>
+                </span>
+                <span class="seta-config">▼</span>
+              </button>
+            </h2>
+            <div id="conteudo-config-sobre" class="conteudo-config" hidden>
+              <div class="painel">
+                <p>Seu espaço pessoal de treino, alimentação e evolução.</p>
+                <small style="color: var(--tema-texto-terciario);">Versão 0.7.0 · Backup e proteção dos dados</small>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Privacidade e Dados Real do App -->
+        <section class="painel privacidade-dados" style="margin-top: 18px;">
+          <h2>Privacidade e dados</h2>
+          <p class="nota-resumo">Revise o que removeu ou gerencie os dados guardados neste navegador.</p>
+          
+          <details class="privacidade-grupo">
+            <summary>
+              <span>Itens removidos<small>Revisar e eliminar definitivamente</small></span>
+              <span class="privacidade-contagem">0</span>
+            </summary>
+            <p class="nota-resumo" style="margin-top: 8px;">
+              Remover permite Desfazer. Eliminar apaga o conteúdo e as fotos, sem volta. Após 30 dias, o conteúdo dos removidos é eliminado automaticamente; neste aparelho, ao abrir seu espaço.
+            </p>
+          </details>
+
+          <div class="privacidade-grupo formulario">
+            <h3>Limpar este aparelho</h3>
+            <p class="nota-resumo">Apaga os dados do perfil atual neste navegador. Sua conta e os dados na nuvem permanecem.</p>
+            <button type="button" class="botao-secundario" data-abre-modal="popup-limpar-aparelho">
+              Sair e apagar dados deste aparelho
+            </button>
+          </div>
+
+          <details class="privacidade-grupo">
+            <summary>Dados antigos deste navegador</summary>
+            <p class="nota-resumo" style="margin: 8px 0;">
+              O armazenamento antigo (legado) fica separado dos perfis atuais. Apague apenas se não precisar mais desses registros.
+            </p>
+            <button type="button" class="botao-destrutivo largura-total" data-abre-modal="popup-apagar-legado">
+              Apagar dados antigos
+            </button>
+          </details>
+
+          <div class="privacidade-grupo formulario">
+            <h3 style="color: var(--tema-destrutiva-texto);">Excluir conta</h3>
+            <p class="nota-resumo">Encerra seu acesso e elimina os registros e arquivos da conta. Esta ação é irreversível.</p>
+            <button type="button" class="botao-destrutivo" data-abre-modal="popup-excluir-conta">
+              Excluir minha conta definitivamente
+            </button>
+          </div>
+
+          <details class="privacidade-grupo">
+            <summary>O que não é apagado?</summary>
+            <p class="nota-resumo" style="margin-top: 8px;">
+              Limpar este aparelho não apaga arquivos exportados, backups e logs do provedor nem dados em outros aparelhos. Exclusões na conta chegam aos outros aparelhos ao sincronizar, mas não apagam cópias externas.
+            </p>
+          </details>
+        </section>
+
+      </section>
+
+      <!-- ====================================================================
+           TELA: ENTRADA / LOGIN / CADASTRO (#login, #cadastro, #recuperar-senha)
+           ==================================================================== -->
+      <section id="tela-entrada" class="tela-pagina" style="display: none;">
+        
+        <div class="subtela-entrada" data-modo="login" style="display: block;">
+          <div class="painel">
+            <h2 style="font-size: 20px;">Bom ter você aqui.</h2>
+            <p class="nota-resumo">Seu treino, sua rotina e sua evolução, juntos.</p>
+            
+            <form class="formulario" onsubmit="event.preventDefault(); window.location.hash='#hoje';">
+              <label>
+                E-mail
+                <input type="email" placeholder="seu@email.com" required autocomplete="username">
+              </label>
+              <label>
+                Senha
+                <div class="campo-senha-container">
+                  <input type="password" placeholder="Sua senha" required autocomplete="current-password">
+                  <button type="button" class="botao-mostrar-senha" aria-label="Mostrar senha">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  </button>
+                </div>
+              </label>
+              <button type="submit" class="botao-principal largura-total" style="margin-top: 8px;">Entrar</button>
+            </form>
+
+            <div style="display: flex; justify-content: space-between; margin-top: 10px; font-size: 13px;">
+              <a href="#cadastro" style="color: var(--tema-primaria); text-decoration: none;">Criar conta</a>
+              <a href="#recuperar-senha" style="color: var(--tema-texto-secundario); text-decoration: none;">Esqueci a senha</a>
+            </div>
+
+            <div style="text-align: center; border-top: 1px solid var(--tema-borda); padding-top: 14px; margin-top: 14px;">
+              <span style="font-size: 12px; color: var(--tema-texto-terciario); display: block; margin-bottom: 8px;">ou</span>
+              <a href="#hoje?modo=visitante" class="botao-secundario largura-total" style="text-decoration: none;">Continuar sem conta</a>
+              <p class="nota-resumo" style="margin-top: 8px;">Você pode entrar depois. Seus registros de visitante ficam visíveis a quem usar este perfil do navegador.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="subtela-entrada" data-modo="cadastro" style="display: none;">
+          <div class="painel">
+            <h2 style="font-size: 20px;">Crie sua conta</h2>
+            <p class="nota-resumo">Comece a sincronizar seus treinos e medidas com segurança.</p>
+            
+            <form class="formulario" onsubmit="event.preventDefault(); window.location.hash='#confirmar-email';">
+              <label>
+                E-mail
+                <input type="email" placeholder="seu@email.com" required autocomplete="username">
+              </label>
+              <label>
+                Criar uma senha
+                <div class="campo-senha-container">
+                  <input type="password" placeholder="No mínimo 8 caracteres" required autocomplete="new-password">
+                  <button type="button" class="botao-mostrar-senha" aria-label="Mostrar senha">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  </button>
+                </div>
+              </label>
+              <button type="submit" class="botao-principal largura-total" style="margin-top: 8px;">Criar conta</button>
+            </form>
+
+            <div style="text-align: center; margin-top: 12px; font-size: 13px;">
+              <a href="#login" style="color: var(--tema-primaria); text-decoration: none;">Já tem uma conta? Entrar</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="subtela-entrada" data-modo="confirmar-email" style="display: none;">
+          <div class="painel">
+            <h2 style="font-size: 20px;">Confirme seu e-mail</h2>
+            <p class="nota-resumo">Confira seu e-mail para confirmar o cadastro. Se recebeu um código, digite abaixo.</p>
+            
+            <form class="formulario" onsubmit="event.preventDefault(); window.location.hash='#hoje';">
+              <label>
+                Código de confirmação
+                <input type="text" placeholder="123456" inputmode="numeric" maxlength="6" required style="font-size: 22px; letter-spacing: 4px; text-align: center;">
+              </label>
+              <button type="submit" class="botao-principal largura-total">Confirmar e entrar</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="subtela-entrada" data-modo="recuperar-senha" style="display: none;">
+          <div class="painel">
+            <h2 style="font-size: 20px;">Vamos recuperar seu acesso</h2>
+            <p class="nota-resumo">Receba um código e crie uma nova senha.</p>
+            
+            <form class="formulario" onsubmit="event.preventDefault(); window.location.hash='#confirmar-email';">
+              <label>
+                E-mail cadastrado
+                <input type="email" placeholder="seu@email.com" required>
+              </label>
+              <button type="submit" class="botao-principal largura-total">Enviar instruções</button>
+            </form>
+            <div style="text-align: center; margin-top: 12px; font-size: 13px;">
+              <a href="#login" style="color: var(--tema-texto-secundario); text-decoration: none;">Voltar para o login</a>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ====================================================================
+           TELA: REFERÊNCIA DE COMPONENTES REFINADOS (#componentes)
+           ==================================================================== -->
+      <section id="tela-componentes" class="tela-pagina" style="display: none;">
+        
+        <div class="painel">
+          <h2>Catálogo de Design System (Refino Fiel)</h2>
+          <p>
+            Documentação das melhorias de contraste e acessibilidade aplicadas sobre o CSS real do Vida em Dia.
+          </p>
+        </div>
+
+        <section class="painel" style="margin-top: 12px;">
+          <h2>1. Botões & Hierarquia</h2>
+          <div style="display: grid; gap: 8px; margin-top: 8px;">
+            <button type="button" class="botao-principal largura-total">Botão Principal (Verde Marca)</button>
+            <button type="button" class="botao-secundario largura-total">Botão Secundário (Superfície)</button>
+            <button type="button" class="botao-destrutivo largura-total">Botão Destrutivo (Alerta)</button>
+          </div>
+        </section>
+
+        <section class="painel" style="margin-top: 12px;">
+          <h2>2. Comparativo de Melhorias</h2>
+          <div style="display: grid; gap: 10px; font-size: 13px; line-height: 1.5;">
+            <div style="padding: 10px; border: 1px solid var(--tema-borda); border-radius: 12px;">
+              <strong style="color: #ef4444;">Antes:</strong> Somente tema escuro; textos terciários com contraste baixo; inputs menores que 16px causando zoom no celular.
+            </div>
+            <div style="padding: 10px; border: 1px solid var(--tema-borda); border-radius: 12px;">
+              <strong style="color: var(--tema-primaria);">Depois:</strong> Suporte nativo a Tema Claro com contraste ≥ 6.2:1; inputs padronizados em 16px; alvos de toque em 48px; modais com inert.
+            </div>
+          </div>
+        </section>
+
+      </section>
+
+    </main>
+
+    <!-- ====================================================================
+         MODAIS E POP-UPS (Acessíveis via <dialog> com inert e foco preso)
+         ==================================================================== -->
+
+    <!-- Modal 1: Backup dos Dados (#popup-backup) -->
+    <dialog id="popup-backup" class="painel-modal" aria-label="Backup dos seus dados">
+      <div class="topo-painel">
+        <div class="alca-painel" aria-hidden="true"></div>
+        <header>
+          <h2>Backup dos seus dados</h2>
+          <button type="button" class="botao-icone botao-fechar-modal" aria-label="Fechar painel">✕</button>
+        </header>
+      </div>
+      <div class="conteudo-modal">
+        <p class="nota-resumo">Guarde uma cópia fora do app para recuperar seus dados quando precisar.</p>
+        
+        <div class="painel" style="background: var(--tema-superficie-destaque); padding: 12px 14px;">
+          <strong style="color: var(--tema-primaria); font-size: 13px;">Protegido por senha</strong>
+          <p style="font-size: 12px; margin: 4px 0 0;">Sem a senha, o backup não pode ser recuperado.</p>
+        </div>
+
+        <form class="formulario" onsubmit="event.preventDefault();">
+          <label>
+            Crie uma senha
+            <input type="password" id="input-senha-backup" placeholder="No mínimo 12 caracteres" autocomplete="new-password">
+            <small style="color: var(--tema-texto-terciario);">Mínimo de 12 caracteres.</small>
+          </label>
+          <label>
+            Confirme a senha
+            <input type="password" id="input-repetida-backup" placeholder="Digite a mesma senha" autocomplete="new-password">
+          </label>
+          <div id="erro-backup-senha" class="nota-resumo" style="display: none; color: #ef4444; font-weight: 600;"></div>
+
+          <label class="opcao-sync-automatica">
+            <span class="texto-sync-automatica">
+              <strong>Incluir fotos</strong>
+              <span>Guarda também as imagens deste aparelho.</span>
+            </span>
+            <input type="checkbox" checked aria-label="Incluir fotos no backup">
+          </label>
+
+          <button type="button" id="btn-preparar-backup" class="botao-principal largura-total">Preparar backup</button>
+
+          <div id="bloco-backup-pronto" class="painel" style="display: none; gap: 8px; margin-top: 8px; background: var(--tema-superficie-destaque);">
+            <strong style="font-size: 14px; color: var(--tema-primaria);">✓ Backup pronto (420 KB)</strong>
+            <p style="font-size: 12px; margin: 0;">vida-em-dia-backup-criptografado-2026-10-22.json</p>
+            <div style="display: flex; gap: 8px; margin-top: 6px;">
+              <a href="#" download="vida-em-dia-backup.json" class="botao-principal" style="flex: 1; text-decoration: none;">Baixar arquivo</a>
+              <button type="button" class="botao-secundario" style="flex: 1;">Compartilhar</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </dialog>
+
+    <!-- Modal 2: Importar Backup (#popup-importar) -->
+    <dialog id="popup-importar" class="painel-modal" aria-label="Importar backup">
+      <div class="topo-painel">
+        <div class="alca-painel" aria-hidden="true"></div>
+        <header>
+          <h2>Importar backup</h2>
+          <button type="button" class="botao-icone botao-fechar-modal" aria-label="Fechar painel">✕</button>
+        </header>
+      </div>
+      <div class="conteudo-modal">
+        <p class="nota-resumo">Restaure treinos, fichas e medidas a partir de um arquivo .json exportado anteriormente.</p>
+        <div class="formulario">
+          <label>
+            Selecione o arquivo de backup (.json ou .csv)
+            <input type="file" accept=".json,.csv" style="padding: 8px;">
+          </label>
+          <label>
+            Senha do arquivo
+            <input type="password" placeholder="Senha definida na exportação">
+          </label>
+          <div style="display: flex; gap: 8px; margin-top: 8px;">
+            <button type="button" class="botao-principal largura-total">Mesclar registros</button>
+            <button type="button" class="botao-secundario largura-total">Substituir dados</button>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Modal 3: Limpar Aparelho (#popup-limpar-aparelho) -->
+    <dialog id="popup-limpar-aparelho" class="painel-modal" aria-label="Apagar dados deste aparelho">
+      <div class="topo-painel">
+        <div class="alca-painel" aria-hidden="true"></div>
+        <header>
+          <h2>Apagar dados deste aparelho</h2>
+          <button type="button" class="botao-icone botao-fechar-modal" aria-label="Fechar painel">✕</button>
+        </header>
+      </div>
+      <div class="conteudo-modal">
+        <p>Os dados deste perfil serão apagados deste navegador. Você sairá do app.</p>
+        <p class="nota-resumo">A conta na nuvem, os outros perfis e os dados antigos serão mantidos.</p>
+        
+        <div class="painel" style="background: var(--tema-superficie-destaque); padding: 12px 14px;">
+          <strong style="color: var(--tema-primaria);">Nenhum envio pendente agora</strong>
+          <p style="font-size: 12px; margin: 4px 0 0;">A fila será conferida novamente ao confirmar. Dados ainda não enviados poderão ser perdidos.</p>
+        </div>
+
+        <label style="display: flex; align-items: flex-start; gap: 10px; font-size: 13px; line-height: 1.5; cursor: pointer; padding: 6px 0;">
+          <input type="checkbox" id="chk-limpar-aceite" style="width: 20px; height: 20px; margin-top: 2px;">
+          <span>Aceito perder dados e remoções que ainda estejam na fila.</span>
+        </label>
+
+        <div style="display: flex; gap: 8px; margin-top: 10px;">
+          <button type="button" class="botao-secundario botao-fechar-modal largura-total">Cancelar</button>
+          <button type="button" id="btn-confirmar-limpeza" class="botao-destrutivo largura-total" disabled>Confirmar limpeza</button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Modal 4: Apagar Dados Antigos / Legado (#popup-apagar-legado) -->
+    <dialog id="popup-apagar-legado" class="painel-modal" aria-label="Apagar dados antigos">
+      <div class="topo-painel">
+        <div class="alca-painel" aria-hidden="true"></div>
+        <header>
+          <h2>Apagar dados antigos</h2>
+          <button type="button" class="botao-icone botao-fechar-modal" aria-label="Fechar painel">✕</button>
+        </header>
+      </div>
+      <div class="conteudo-modal">
+        <p>Apaga os dados antigos deste navegador, que podem pertencer a mais de uma pessoa.</p>
+        <div class="painel" style="background: var(--tema-destrutiva-fundo); border-color: var(--tema-destrutiva-borda); padding: 12px 14px;">
+          <strong style="color: var(--tema-destrutiva-texto);">Não é possível desfazer</strong>
+          <p style="font-size: 12px; margin: 4px 0 0; color: var(--tema-texto-secundario);">Os perfis atuais e a conta na nuvem serão mantidos.</p>
+        </div>
+        <div style="display: flex; gap: 8px; margin-top: 10px;">
+          <button type="button" class="botao-secundario botao-fechar-modal largura-total">Cancelar</button>
+          <button type="button" id="btn-apagar-legado-acao" class="botao-destrutivo largura-total">Apagar legado definitivamente</button>
+        </div>
+        <div id="aviso-legado-sucesso" class="nota-resumo" style="display: none; color: var(--tema-primaria); font-weight: 600; text-align: center; margin-top: 8px;">
+          Armazenamento legado limpo com sucesso neste aparelho.
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Modal 5: Excluir Conta (#popup-excluir-conta) -->
+    <dialog id="popup-excluir-conta" class="painel-modal" aria-label="Excluir conta">
+      <div class="topo-painel">
+        <div class="alca-painel" aria-hidden="true"></div>
+        <header>
+          <h2>Excluir conta</h2>
+          <button type="button" class="botao-icone botao-fechar-modal" aria-label="Fechar painel">✕</button>
+        </header>
+      </div>
+      <div class="conteudo-modal">
+        <p>A exclusão é irreversível: apaga arquivos, registros remotos e o acesso à conta. Após confirmação do servidor, apaga o banco desta identidade no aparelho. Em falha parcial, o conteúdo remoto eliminado não volta, mas o banco local é mantido até o fluxo ser concluído com sucesso. Exclusões parciais exigem nova tentativa.</p>
+        <p class="nota-resumo">O aplicativo não mantém seus dados. Cópias exportadas ou backups que você baixou continuam onde foram salvos.</p>
+        
+        <button type="button" class="botao-secundario largura-total" data-abre-modal="popup-backup">
+          Baixar backup antes de continuar
+        </button>
+
+        <div class="painel" style="background: var(--tema-destrutiva-fundo); border-color: var(--tema-destrutiva-borda); padding: 12px 14px;">
+          <strong style="color: var(--tema-destrutiva-texto);">Digite EXCLUIR para confirmar</strong>
+          <p style="font-size: 12px; margin: 4px 0 0; color: var(--tema-texto-secundario);">Esta ação não pode ser desfeita.</p>
+        </div>
+
+        <div class="formulario">
+          <label>
+            Digite EXCLUIR
+            <input type="text" id="input-excluir-confirmacao" placeholder="EXCLUIR" autocomplete="off">
+          </label>
+          <label>
+            Sua senha atual
+            <input type="password" id="input-excluir-senha" placeholder="Sua senha atual" autocomplete="current-password">
+          </label>
+          <div id="erro-exclusao-conta" class="nota-resumo" style="display: none; color: #ef4444;"></div>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 10px;">
+          <button type="button" class="botao-secundario botao-fechar-modal largura-total">Cancelar</button>
+          <button type="button" id="btn-confirmar-exclusao" class="botao-destrutivo largura-total" disabled>Excluir definitivamente</button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Modal 6: Editor de Medida (#popup-medida) -->
+    <dialog id="popup-medida" class="painel-modal" aria-label="Registrar medidas corporais">
+      <div class="topo-painel">
+        <div class="alca-painel" aria-hidden="true"></div>
+        <header>
+          <h2>Registrar medidas</h2>
+          <button type="button" class="botao-icone botao-fechar-modal" aria-label="Fechar painel">✕</button>
+        </header>
+      </div>
+      <div class="conteudo-modal">
+        <p class="nota-resumo">Você pode informar apenas o peso ou as medidas que quiser acompanhar hoje.</p>
+        
+        <div id="aviso-confirmacao-medida" class="painel" style="display: none; background: var(--tema-superficie-destaque); border-color: var(--tema-primaria); padding: 10px 14px; font-size: 13px;"></div>
+
+        <div class="formulario">
+          <label>
+            Peso corporal (kg)
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="botao-secundario" data-step-target="medida-input-peso" data-step-delta="-0.1" style="min-width: 48px; font-size: 18px;">−</button>
+              <input type="text" id="medida-input-peso" value="72,4" inputmode="decimal" style="text-align: center; font-weight: 700; font-size: 18px;">
+              <button type="button" class="botao-secundario" data-step-target="medida-input-peso" data-step-delta="0.1" style="min-width: 48px; font-size: 18px;">+</button>
+            </div>
+          </label>
+
+          <label>
+            Cintura (cm)
+            <div style="display: flex; gap: 8px;">
+              <button type="button" class="botao-secundario" data-step-target="medida-input-cintura" data-step-delta="-0.5" style="min-width: 48px; font-size: 18px;">−</button>
+              <input type="text" id="medida-input-cintura" value="81,0" inputmode="decimal" style="text-align: center; font-weight: 700; font-size: 18px;">
+              <button type="button" class="botao-secundario" data-step-target="medida-input-cintura" data-step-delta="0.5" style="min-width: 48px; font-size: 18px;">+</button>
+            </div>
+          </label>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-top: 12px;">
+          <button type="button" class="botao-secundario botao-fechar-modal largura-total">Cancelar</button>
+          <button type="button" id="btn-salvar-medida" class="botao-principal largura-total">Salvar registro</button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Modal: Nova Ficha (Fiel a src/componentes/EditorFicha.tsx) -->
+    <dialog id="popup-nova-ficha" class="painel-modal" aria-label="Nova ficha de treino">
+      <div class="topo-painel">
+        <div class="alca-painel" aria-hidden="true"></div>
+        <header>
+          <h2>Nova ficha</h2>
+          <button type="button" class="botao-icone botao-fechar-modal" aria-label="Fechar painel">✕</button>
+        </header>
+      </div>
+      <form class="formulario conteudo-modal" onsubmit="event.preventDefault(); document.getElementById('popup-nova-ficha').close();">
+        <label>
+          Nome da ficha
+          <input required autoCapitalize="sentences" placeholder="A · Peito e tríceps" />
+        </label>
+        <label>
+          Buscar para adicionar
+          <input type="search" placeholder="Nome do exercício" />
+        </label>
+        <p class="nota-resumo">Durante o treino, você poderá alterar o planejamento só daquele dia.</p>
+        <div style="display: flex; gap: 8px; margin-top: 12px;">
+          <button type="submit" class="botao-principal largura-total">Salvar ficha</button>
+          <button type="button" class="botao-secundario largura-total botao-fechar-modal">Cancelar</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Modal: Registrar Cardio (Fiel a src/componentes/EditorCardio.tsx) -->
+    <dialog id="popup-cardio" class="painel-modal" aria-label="Registrar sessão de cardio">
+      <div class="topo-painel">
+        <div class="alca-painel" aria-hidden="true"></div>
+        <header>
+          <h2>Registrar cardio</h2>
+          <button type="button" class="botao-icone botao-fechar-modal" aria-label="Fechar painel">✕</button>
+        </header>
+      </div>
+      <form class="formulario conteudo-modal" onsubmit="event.preventDefault(); document.getElementById('popup-cardio').close();">
+        <label>
+          Tipo de atividade
+          <select style="min-height: 48px; border-radius: 12px; padding: 10px 14px; background: var(--tema-superficie); border: 1px solid var(--tema-borda-input); color: var(--tema-texto);">
+            <option value="esteira">Esteira</option>
+            <option value="bicicleta">Bicicleta</option>
+            <option value="eliptico">Elíptico</option>
+            <option value="caminhada">Caminhada</option>
+            <option value="outro">Outro</option>
+          </select>
+        </label>
+        <label>
+          Duração (minutos)
+          <input type="number" min="1" max="300" value="30" />
+        </label>
+        <label>
+          Distância estimada (km)
+          <input type="number" step="0.1" value="3.5" />
+        </label>
+        <label>
+          Calorias estimadas (kcal)
+          <input type="number" step="1" value="280" />
+        </label>
+        <div style="display: flex; gap: 8px; margin-top: 12px;">
+          <button type="submit" class="botao-principal largura-total">Salvar cardio</button>
+          <button type="button" class="botao-secundario largura-total botao-fechar-modal">Cancelar</button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Modal 7: Ajuda e Guia de Exercício (#popup-ajuda-exercicio) -->
+    <dialog id="popup-ajuda-exercicio" class="painel-modal" aria-label="Guia do exercício">
+      <div class="topo-painel">
+        <div class="alca-painel" aria-hidden="true"></div>
+        <header>
+          <h2>Supino Reto com Barra</h2>
+          <button type="button" class="botao-icone botao-fechar-modal" aria-label="Fechar painel">✕</button>
+        </header>
+      </div>
+      <div class="conteudo-modal">
+        <span class="etiqueta" style="color: var(--tema-primaria);">PEITORAL MAIOR · OMBRO ANTERIOR · TRÍCEPS</span>
+        <div class="painel">
+          <h3>Como executar</h3>
+          <p>1. Deite-se no banco reto com os olhos alinhados abaixo da barra.<br>
+             2. Segure a barra em pegada um pouco mais larga que os ombros.<br>
+             3. Desça a barra de forma controlada até encostar no meio do peito.<br>
+             4. Empurre firmemente até estender os cotovelos sem travar a articulação.</p>
+        </div>
+        <button type="button" class="botao-principal largura-total botao-fechar-modal">Entendi</button>
+      </div>
+    </dialog>
+
+    <!-- Modal 8: CARD CONGELADO — RESTRIÇÃO ABSOLUTA (#popup-card-congelado) -->
+    <dialog id="popup-card-congelado" class="painel-modal" aria-label="Visualização do card de treino">
+      <div class="topo-painel">
+        <div class="alca-painel" aria-hidden="true"></div>
+        <header>
+          <h2>Card do Treino</h2>
+          <button type="button" class="botao-icone botao-fechar-modal" aria-label="Fechar painel">✕</button>
+        </header>
+      </div>
+      <div class="conteudo-modal">
+        <div class="placeholder-card-congelado" role="region" aria-label="Componente existente preservado">
+          <span class="etiqueta-preservada">Componente existente preservado</span>
+          <p>
+            Card compartilhável (Modelos Tipográfico, Foto e Editorial). Composição, renderizadores, PNGs e séries mantidos estritamente congelados sem redesenho.
+          </p>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" class="botao-secundario largura-total" disabled style="opacity: 0.7;">Baixar imagem PNG</button>
+          <button type="button" class="botao-principal largura-total botao-fechar-modal">Fechar</button>
+        </div>
+      </div>
+    </dialog>
+
+    <!-- Barra de Navegação Inferior Principal (Sempre Centralizada) -->
+    <nav class="navegacao" aria-label="Navegação principal">
+      <button type="button" data-rota="#hoje" aria-current="page">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>Hoje</span>
+      </button>
+
+      <button type="button" data-rota="#treino">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="m6.5 6.5 11 11"></path><path d="m21 21-1-1"></path><path d="m3 3 1 1"></path><path d="m18 22 4-4"></path><path d="m2 6 4-4"></path><path d="m3 10 7-7"></path><path d="m14 21 7-7"></path>
+        </svg>
+        <span>Treino</span>
+      </button>
+
+      <button type="button" data-rota="#comida">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M18 2v6a3 3 0 0 1-3 3 3 3 0 0 1-3-3V2"></path><path d="M12 2v20"></path><path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"></path>
+        </svg>
+        <span>Comida</span>
+      </button>
+
+      <button type="button" data-rota="#medidas">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"></path>
+          <path d="m14.5 12.5 2-2"></path><path d="m11.5 9.5 2-2"></path><path d="m8.5 6.5 2-2"></path><path d="m17.5 15.5 2-2"></path>
+        </svg>
+        <span>Medidas</span>
+      </button>
+
+      <button type="button" data-rota="#evolucao">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M3 3v16a2 2 0 0 0 2 2h16"></path><path d="m19 9-5 5-4-4-3 3"></path>
+        </svg>
+        <span>Evolução</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- Controlador Vanilla JS -->
+  <script src="app.js"></script>
+  <script src="treino-interativo.js"></script>
+</body>
+</html>

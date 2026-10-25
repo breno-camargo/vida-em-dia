@@ -1,0 +1,4 @@
+﻿
+O Monitor de Pacotes n├úo est├í em execu├º├úo.
+Filtros de Pacote:
+    Nenhum

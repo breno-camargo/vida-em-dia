@@ -1,0 +1,43 @@
+/* Complementos para gráficos e estados que usam cores inline ou decoração. */
+:root[data-tema=claro] .app :is(input,textarea)::placeholder { color: #596c55; opacity: 1; }
+:root[data-tema=claro] .app :is(input,select,textarea) { border-color: #7c8d76; }
+:root[data-tema=claro] .app :focus-visible { outline-color: #355f26; }
+:root[data-tema=claro] .app .recharts-cartesian-axis-tick-value { fill: #50644e; }
+:root[data-tema=claro] .app .recharts-cartesian-grid line { stroke: #ccd8c6; }
+:root[data-tema=claro] .app .recharts-line-curve { stroke: #355f26; }
+:root[data-tema=claro] .app .recharts-line-curve[stroke-dasharray] { stroke: #596c55; }
+:root[data-tema=claro] .app .recharts-dot { fill: #355f26; stroke: #fff; }
+:root[data-tema=claro] .app .recharts-default-tooltip { background: #fff !important; border-color: #7c8d76 !important; color: #1a2c1c; }
+:root[data-tema=claro] .app .recharts-tooltip-item { color: #28431e !important; }
+:root[data-tema=claro] .app progress { accent-color: #355f26; }
+:root[data-tema=claro] .app progress::-webkit-progress-value { background: #355f26; }
+:root[data-tema=claro] .app progress::-moz-progress-bar { background: #355f26; }
+:root[data-tema=claro] .app .item-ficha .acoes > button:last-child,
+:root[data-tema=claro] .app .tela-cardio .acoes-medida > button:last-child { color: #963e32; border-color: #a76a5b; }
+:root[data-tema=claro] .app .coluna-roda .faixa-roda { background: #d5e7c8; }
+:root[data-tema=claro] .app .navegacao button { background: transparent; color: #50644e; opacity: 1; }
+:root[data-tema=claro] .app .navegacao button[aria-current=page] { background: #e7f1dd; color: #355f26; }
+:root[data-tema=claro] .app .navegacao button :is(svg,span) { color: inherit; }
+:root[data-tema=claro] .app .destaque .botao-principal { background: #213e18; color: #fff; border-color: #213e18; }
+:root[data-tema=claro] .app .destaque .botao-principal :is(svg,span) { color: inherit; }
+
+/* Claro com identidade: creme, sálvia e verde folha. */
+:root[data-tema=claro] .app { background: var(--visual-fundo); }
+:root[data-tema=claro] .app > .cabecalho { background: #dce7cf; border-bottom-color: #adbf9b; }
+:root[data-tema=claro] .app > .navegacao { background: #dce7cf; border-top-color: #adbf9b; }
+:root[data-tema=claro] .app .navegacao button[aria-current=page] { background: #315b24; color: #fff; }
+:root[data-tema=claro] .app :is(.painel,.cartao,.peso-resumo-medidas,.par-resumo-medida) { background: var(--visual-painel); border-color: #b6c6a5; box-shadow: 0 3px 12px #29401c08; }
+:root[data-tema=claro] .app .config-lista { background: var(--visual-painel); }
+:root[data-tema=claro] .app .secao-config { background: transparent; }
+:root[data-tema=claro] .app .icone-config { background: #d6e7c1; color: #315b24; }
+:root[data-tema=claro] .app .destaque { background: linear-gradient(125deg,#c9eb8f,#aedb72); border: 1px solid #a6ca75; box-shadow: 0 6px 18px #45632412; }
+:root[data-tema=claro] .app .cartao .verde { color: #346329; }
+:root[data-tema=claro] .app .cartao .laranja { color: #9a4827; }
+:root[data-tema=claro] .app .cartao .azul { color: #246778; }
+:root[data-tema=claro] .app .aviso-modo-visitante { background: #dbe7c9; color: #415535; border-color: #b1c695; }
+:root[data-tema=claro] .app .painel-modal { background: var(--visual-painel); }
+:root[data-tema=claro] .app .painel-modal > .topo-painel,
+:root[data-tema=claro] .app .painel-modal > .topo-painel > header { background: #dce7cf; }
+:root[data-tema=claro] .app .ultimo-concluido.ultimo-treino-atalho { background: transparent; border: 0; border-bottom: 1px solid var(--visual-borda); border-radius: 0; box-shadow: none; }
+:root[data-tema=claro] .app .grade-resumo-medidas > div,
+:root[data-tema=claro] .app .par-resumo-medida { background: var(--visual-painel); border-color: var(--visual-borda); box-shadow: 0 3px 12px #29401c08; }

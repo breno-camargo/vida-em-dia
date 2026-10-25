@@ -1,0 +1,29 @@
+[
+  {
+    "rodada": 0,
+    "exibirTodosMs": 549,
+    "leituras": {
+      "exercicios.get": 448,
+      "fotos.openCursor": 448
+    },
+    "itens": 488
+  },
+  {
+    "rodada": 1,
+    "exibirTodosMs": 470,
+    "leituras": {
+      "exercicios.get": 448,
+      "fotos.openCursor": 448
+    },
+    "itens": 488
+  },
+  {
+    "rodada": 2,
+    "exibirTodosMs": 456,
+    "leituras": {
+      "exercicios.get": 448,
+      "fotos.openCursor": 448
+    },
+    "itens": 488
+  }
+]

@@ -1,0 +1,29 @@
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+import { VitePWA } from 'vite-plugin-pwa'
+export default defineConfig({
+  // Esta cópia é exclusivamente local. Não carregar .env da raiz nem habilitar backend.
+  envDir: './ambiente-isolado',
+  define: {
+    'import.meta.env.VITE_SUPABASE_URL': JSON.stringify(''),
+    'import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY': JSON.stringify(''),
+    'import.meta.env.VITE_SUPABASE_ANON_KEY': JSON.stringify(''),
+  },
+  server: { host: '127.0.0.1', port: 5180, strictPort: true },
+  preview: { host: '127.0.0.1', port: 4180, strictPort: true },
+  build: { rolldownOptions: { output: { codeSplitting: { groups: [{ name: 'supabase', test: /node_modules[\\/]@supabase[\\/]/ }] } } } }, plugins: [react(), tailwindcss(), VitePWA({
+  registerType: 'prompt', includeAssets: ['icons/*.png'],
+  manifest: {
+    name: 'Vida em Dia — Novo visual (cópia)', short_name: 'Vida Visual', lang: 'pt-BR',
+    description: 'Seu espaço pessoal de treino, alimentação e evolução.',
+    start_url: '/', scope: '/', display: 'standalone', orientation: 'portrait',
+    theme_color: '#101714', background_color: '#101714',
+    icons: [
+      { src: '/icons/icone-192.png', sizes: '192x192', type: 'image/png' },
+      { src: '/icons/icone-512.png', sizes: '512x512', type: 'image/png' },
+      { src: '/icons/icone-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+    ]
+  },
+  workbox: { globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2}'], navigateFallback: '/index.html' }
+})] })

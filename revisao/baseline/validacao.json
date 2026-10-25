@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-25",
+  "build": {
+    "command": "npm.cmd run build",
+    "exitCode": 0,
+    "modules": 2640,
+    "css": [
+      {
+        "file": "dist/assets/index-BRK3Lot8.css",
+        "bytes": 198590,
+        "gzip": 33492
+      }
+    ]
+  },
+  "tests": {
+    "command": "npm.cmd test",
+    "exitCode": 0,
+    "filesPassed": 46,
+    "testsPassed": 278,
+    "durationSeconds": 28.75
+  },
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "sourceChanges": false
+}

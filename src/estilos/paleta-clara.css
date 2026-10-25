@@ -1,0 +1,1925 @@
+/* Gerado por revisao/gerar-paleta-clara.cjs: cobertura das cores fixas legadas. */
+:root[data-tema=claro] .app .introducao-comparacao-sync>p {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .introducao-comparacao-sync>button {
+    background: transparent;
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .registro-em-revisao {
+    border-bottom: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .registro-em-revisao>header>span {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .registro-em-revisao>header>strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .opcao-registro-sync {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .opcao-registro-sync[aria-pressed=true] {
+    border: 2px solid #7c8d76;
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .origem-registro-sync {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .marca-escolha-sync {
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .opcao-registro-sync[aria-pressed=true] .marca-escolha-sync {
+    border-color: #7c8d76;
+    color: #28431e
+}
+:root[data-tema=claro] .app .opcao-registro-sync[aria-pressed=true] .origem-registro-sync {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .valor-comparado-sync>strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .valor-comparado-sync>span {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .data-versao-sync {
+    border-top: 1px solid #7c8d76;
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .data-versao-sync>time {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .detalhes-comparacao-sync {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .cabecalho-detalhes-sync {
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .linha-detalhes-sync {
+    border-bottom: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .linha-detalhes-sync>span {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .linha-detalhes-sync>strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .registro-em-revisao>.confirmar-registro-sync {
+    color: #28431e
+}
+:root[data-tema=claro] .app .registro-em-revisao>.confirmar-registro-sync:disabled {
+    background: var(--visual-acento-fundo);
+    border: 1px solid #7c8d76;
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .revisao-comparacao>.nota-escolha-sync {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .icone-aviso-conflito {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .aviso-conflito-popup>h3 {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .aviso-conflito-popup>p {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .aviso-conflito-popup>.botao-principal {
+    color: #28431e
+}
+:root[data-tema=claro] .app .aviso-conflito-popup>.andamento-aviso-conflito {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .aviso-data-atividade {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .aviso-data-atividade>p {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .concluir-backup {
+    border: 1px solid #7c8d76;
+    color: #28431e
+}
+:root[data-tema=claro] .app .concluir-backup:active {
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .concluir-backup:disabled {
+    background: var(--visual-acento-fundo);
+    border-color: #7c8d76;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .backup-config .introducao-backup {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .backup-config .preparar-backup {
+    color: #28431e
+}
+:root[data-tema=claro] .app .backup-config .preparar-backup.backup-gerado {
+    background: transparent;
+    color: var(--visual-texto);
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .backup-config .backup-pronto {
+    background: var(--visual-rebaixo);
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .icone-arquivo-backup {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .cabecalho-arquivo-backup strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .cabecalho-arquivo-backup>div>span {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .backup-config .backup-pronto>.nome-arquivo-backup {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .acoes-arquivo-backup>a {
+    color: #28431e
+}
+:root[data-tema=claro] .app .acoes-arquivo-backup>button {
+    color: var(--visual-texto);
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .nota-salvamento-backup {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .backup-config .nota-salvamento-backup>p {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .acoes-backup-secundarias>button,
+:root[data-tema=claro] .app .backup-config .acoes-backup-secundarias>label {
+    background: transparent;
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .acoes-backup-secundarias>button+button,
+:root[data-tema=claro] .app .acoes-backup-secundarias>label+button {
+    border-top: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .acoes-backup-secundarias strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .backup-config .acoes-backup-secundarias small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .acao-backup-importar:focus-within {
+    outline: 2px solid #7c8d76
+}
+:root[data-tema=claro] .app .lembrete-backup-opcao {
+    background: transparent;
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .lembrete-backup-opcao>strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .conclusao-revisao>span {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .conclusao-revisao>h3 {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .conclusao-revisao>p {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .estado-sync>.acao-sincronizar {
+    border: 1px solid #7c8d76;
+    color: #28431e
+}
+:root[data-tema=claro] .app .estado-sync>.acao-sincronizar:disabled {
+    background: var(--visual-acento-fundo);
+    border-color: #7c8d76;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .estado-sync>.detalhes-sync {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .detalhes-sync>time {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .detalhes-sync>.pendencias-sync {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .conta .estado-sync>.mensagem-sync {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .texto-sync-automatica>strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .texto-sync-automatica>span {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .interruptor-sync {
+    border: 1px solid #7c8d76;
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .opcao-sync-automatica>input:checked+.interruptor-sync {
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .opcao-sync-automatica>input:checked+.interruptor-sync::after {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .opcao-sync-automatica>input:focus-visible+.interruptor-sync {
+    outline: 3px solid #7c8d76
+}
+:root[data-tema=claro] .app .revisao-sync {
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .comparacao-sync>section {
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .comparacao-sync h4 {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app button:focus-visible,
+:root[data-tema=claro] .app a:focus-visible {
+    outline: 3px solid #7c8d76
+}
+:root[data-tema=claro] .app {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .cabecalho {
+    border-bottom: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .marca>span {
+    color: #28431e
+}
+:root[data-tema=claro] .app .marca small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .botao-icone {
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .linha-data {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .destaque {
+    color: #28431e
+}
+:root[data-tema=claro] .app .destaque p {
+    color: #28431e
+}
+:root[data-tema=claro] .app .botao-principal {
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .titulo-secao>span {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .cartao {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .cartao>span {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .cartao strong small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .cartao>small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .verde {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .amarelo {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .laranja {
+    color: #963e32
+}
+:root[data-tema=claro] .app .azul {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .nota p {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .botao-secundario {
+    border: 1px solid #7c8d76;
+    background: transparent
+}
+:root[data-tema=claro] .app .navegacao {
+    border-top: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .navegacao button {
+    background: transparent;
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .navegacao button[aria-current] {
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .instalacao {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .instalacao p {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .instalacao small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .icone-vazio {
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .vazio>.etiqueta {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .vazio p {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .selo {
+    border: 1px solid #7c8d76;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .painel {
+    background: var(--visual-rebaixo);
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .painel p {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .painel dl>div {
+    border-bottom: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .painel dt {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .painel dd {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .painel small {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .aviso-pwa {
+    background: var(--visual-acento-fundo);
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .aviso-pwa button {
+    color: #28431e
+}
+:root[data-tema=claro] .app .erro {
+    background: #fff0ea;
+    color: #963e32
+}
+@media (min-width:600px) {
+    :root[data-tema=claro] .app {
+        border-left: 1px solid #7c8d76;
+        border-right: 1px solid #7c8d76
+    }
+}
+:root[data-tema=claro] .app .abas-treino button {
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .abas-treino button[aria-pressed=true] {
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .formulario label {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .formulario input,
+:root[data-tema=claro] .app .formulario select,
+:root[data-tema=claro] .app .formulario textarea {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .painel-modal {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .painel-modal::backdrop {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .painel-modal>.topo-painel>header {
+    background: var(--visual-rebaixo);
+    border-bottom: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .acoes button,
+:root[data-tema=claro] .app .seletor-exercicios button {
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .abrir-ficha small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .item-ficha {
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .fotos-maquina img {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .anexar {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .ajuda-texto p {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .desfazer {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .desfazer button {
+    background: transparent;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .exercicio-treino {
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .ultimo-desempenho {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .nota-fixa {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .serie {
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .serie.concluida {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .serie.proxima-serie {
+    border: 2px solid #7c8d76
+}
+:root[data-tema=claro] .app .ajuste-numero button {
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .reducao {
+    border-bottom: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .descanso {
+    background: var(--visual-rebaixo);
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .descanso>span {
+    color: var(--visual-texto)
+}
+@media (prefers-reduced-motion:reduce) {
+    :root[data-tema=claro] .app .descanso.terminou {
+        outline: 3px solid #7c8d76
+    }
+}
+:root[data-tema=claro] .app .exercicio-recolhivel {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .cabecalho-exercicio:focus-visible {
+    outline: 3px solid #7c8d76
+}
+:root[data-tema=claro] .app .miniatura-exercicio {
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .resumo-exercicio small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .seta-exercicio {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .exercicio-recolhivel[open]>.cabecalho-exercicio {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .conteudo-exercicio {
+    border-top: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .cabecalho-series {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .serie-compacta {
+    border: 0;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .serie-compacta.proxima-serie {
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .linha-serie input {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .concluir-compacto {
+    color: #28431e
+}
+:root[data-tema=claro] .app .concluida .concluir-compacto {
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .opcoes-serie>summary {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .carga-por-lado {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .serie-compacta.concluida {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .capa-exercicio {
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .abas-detalhe {
+    background: var(--visual-rebaixo);
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .abas-detalhe button {
+    background: transparent;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .abas-detalhe button[aria-pressed=true] {
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .passos-exercicio {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .passos-exercicio li {
+    border-bottom: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .passos-exercicio li::marker {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .miniatura-exercicio:focus-visible {
+    outline: 3px solid #7c8d76
+}
+:root[data-tema=claro] .app .painel-modal::before {
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .painel-modal {
+    background: var(--visual-rebaixo);
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .painel-modal>.topo-painel>header {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .subtitulo-seletor {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .coluna-roda>span {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .faixa-roda {
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .roda>button {
+    background: transparent;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .valor-escolhido {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .aplicar-proximas {
+    border-top: 1px solid #7c8d76;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .aplicar-proximas input {
+    accent-color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .tipo-serie {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .tipo-serie.aquecimento {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .tipo-serie.dropset {
+    background: #fff0ea;
+    color: #963e32
+}
+:root[data-tema=claro] .app .tipo-serie.falha {
+    background: #fff0ea;
+    color: #963e32
+}
+:root[data-tema=claro] .app .valor-serie {
+    background: transparent;
+    color: var(--visual-texto);
+    border-bottom: 2px dashed #7c8d76
+}
+:root[data-tema=claro] .app .lista-tipos>button {
+    background: transparent;
+    border-bottom: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .lista-tipos small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .lista-tipos>button.selecionado {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .lista-tipos>button.remover-serie {
+    color: #963e32
+}
+:root[data-tema=claro] .app .botao-descanso {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .botao-descanso strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .retomar-treino {
+    background: linear-gradient(135deg,#bcec86,var(--visual-acento-fundo));
+    color: #28431e
+}
+:root[data-tema=claro] .app .retomar-treino button {
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .barra-fichas {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .barra-fichas button {
+    background: transparent;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .ficha-nova {
+    background: linear-gradient(145deg,var(--visual-rebaixo),var(--visual-rebaixo));
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .icone-ficha {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .menu-ficha>summary {
+    background: transparent;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .menu-ficha .acoes {
+    background: var(--visual-rebaixo);
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .iniciar-ficha {
+    color: #28431e
+}
+:root[data-tema=claro] .app .treino-livre {
+    border: 1px dashed #7c8d76;
+    background: transparent;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .treino-livre small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .grupo-exercicios {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .grupo-exercicios>summary small {
+    color: var(--visual-texto);
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .botao-principal {
+    color: #28431e;
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .botao-principal:disabled {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-suave);
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .botao-principal:focus-visible {
+    outline: 3px solid #7c8d76
+}
+:root[data-tema=claro] .app .alca-painel {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .alca-painel>span {
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .alca-painel:focus-visible {
+    outline: 2px solid #7c8d76
+}
+:root[data-tema=claro] .app .acao-treino {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .icone-acao {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .acao-treino summary small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .seta-acao {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .observacao-treino .opcional {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .descanso-popup>strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .descanso-popup>p {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .ajustes-descanso button {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .filtro-musculos button {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .filtro-musculos button[aria-pressed=true] {
+    border-color: #7c8d76;
+    color: #28431e
+}
+:root[data-tema=claro] .app .biblioteca-cabecalho p {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .biblioteca-cartao .acoes button:last-child {
+    background: #fff0ea;
+    color: #963e32
+}
+:root[data-tema=claro] .app .secao-editor {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .secao-editor legend {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .rotulo-editor {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .escolhas-editor button {
+    background: var(--visual-rebaixo);
+    border: 1px solid #7c8d76;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .escolhas-editor button[aria-pressed=true] {
+    border-color: #7c8d76;
+    color: #28431e
+}
+:root[data-tema=claro] .app .explicacao-editor {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .grupo-personalizado {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .resumo-titulo .etiqueta {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .resumo-titulo p {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .metricas-resumo>div {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .metricas-resumo span {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .metricas-resumo strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .metricas-resumo strong small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .nota-resumo {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .comparacao-resumo {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .calorias-resumo {
+    background: var(--visual-rebaixo);
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .calorias-resumo>span {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .calorias-resumo>strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .calorias-resumo>small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .acoes-resumo-fixas {
+    background: var(--visual-rebaixo);
+    border-top: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .historico-series {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .progressao {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .progressao.subiu {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .progressao.caiu {
+    color: #963e32
+}
+:root[data-tema=claro] .app .progressao.igual {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .sugestao-carga {
+    border: 1px solid #7c8d76;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .tabela-grafico {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .exercicio-historico {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .exercicio-historico small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .excluir-historico {
+    color: #963e32;
+    border-color: #a76a5b
+}
+:root[data-tema=claro] .app .aviso-recorde {
+    background: var(--visual-acento-fundo);
+    border: 1px solid #7c8d76;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .aviso-recorde button {
+    color: #28431e
+}
+:root[data-tema=claro] .app .ultimo-concluido {
+    background: var(--visual-rebaixo);
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .ultimo-concluido>span {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .aviso-remocao {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .aviso-remocao>span {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .aviso-remocao>button {
+    color: #28431e
+}
+:root[data-tema=claro] .app .busca-historico>small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .valor-serie {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .foto-card {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .foto-card:focus-within {
+    outline: 2px solid #7c8d76
+}
+:root[data-tema=claro] .app .aviso-offline {
+    background: var(--visual-rebaixo);
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .icone-aviso-offline {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .aviso-offline p {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .remover-foto-card {
+    color: var(--visual-texto);
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .finalizar-acoes .continuar-depois {
+    background: var(--visual-rebaixo);
+    border: 1px solid #7c8d76;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .finalizar-acoes .continuar-depois svg {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .finalizar-acoes .continuar-depois:active {
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .topo-painel {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .abas-treino {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .abas-treino button {
+    background: transparent;
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .abas-treino button[aria-pressed=true] {
+    background: var(--visual-acento-fundo);
+    border-color: #7c8d76;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .abas-treino button:focus-visible {
+    outline: 2px solid #7c8d76
+}
+:root[data-tema=claro] .app .abas-treino button:active {
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .linha-serie>.menu-serie {
+    background: transparent;
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .menu-serie[aria-expanded=true] {
+    color: var(--visual-texto);
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .opcoes-serie>.formulario {
+    border-top: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .ultimo-desempenho {
+    background: var(--visual-rebaixo);
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .ultimo-desempenho>span {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .ultimo-desempenho small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .linha-historico-serie {
+    border-top: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .linha-historico-serie>span:first-child {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .sessao-exercicio>summary>span>small {
+    background: transparent;
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .painel-modal>.topo-painel>header>.botao-icone {
+    background: transparent;
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .painel-modal>.topo-painel>header>.botao-icone:active {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .ultimo-concluido>.botao-secundario {
+    border-color: #7c8d76;
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .barra-fichas>button {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .treino-livre {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .treino-livre>svg:first-child {
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .treino-livre>span {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .treino-livre small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .treino-livre:active,
+:root[data-tema=claro] .app .barra-fichas>button:active,
+:root[data-tema=claro] .app .ultimo-concluido>.botao-secundario:active {
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .andamento-treino>small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .andamento-treino>.manter-tela {
+    background: var(--visual-rebaixo);
+    border-color: #7c8d76;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .manter-tela svg {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .acao-treino .salvar-planejamento {
+    color: #28431e;
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .metricas-resumo .explicacao-volume {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .aviso-recorde {
+    background: var(--visual-rebaixo);
+    border: 1px solid #7c8d76;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .aviso-recorde>.icone-recorde {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .aviso-recorde p {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .aviso-recorde>button {
+    background: transparent;
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .aviso-recorde>button:active {
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .exercicio-historico-recolhivel>summary svg {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .guia-esforco {
+    color: var(--visual-texto);
+    background: var(--visual-rebaixo);
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .guia-esforco strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .titulo-andamento>button {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .painel-modal>.topo-painel {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .topo-medidas p {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .nova-medida {
+    color: #28431e
+}
+:root[data-tema=claro] .app .vazio-medidas>svg {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .data-medida {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .data-medida strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .campo-medida {
+    background: var(--visual-rebaixo);
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .campo-medida>span {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .campo-medida strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .registro-medida {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .registro-medida>summary small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .registro-medida>summary svg {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .registro-medida dl>div {
+    border-top: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .registro-medida dt {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .registro-medida dd {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .acoes-medida>button {
+    border: 1px solid #7c8d76;
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .acoes-medida>button+button {
+    background: transparent;
+    color: #963e32;
+    border-color: #a76a5b
+}
+:root[data-tema=claro] .app .escolher-comparacao {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .escolher-comparacao span {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .escolher-comparacao strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .tabela-comparacao {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .tabela-comparacao>div {
+    border-bottom: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .tabela-comparacao small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .tabela-comparacao strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .cabecalho-comparacao {
+    color: var(--visual-suave);
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .lembrete-medidas {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .lembrete-medidas>svg {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .lembrete-medidas p {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .lembrete-medidas button {
+    color: #28431e
+}
+:root[data-tema=claro] .app .peso-resumo-medidas {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .peso-resumo-medidas span {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .peso-resumo-medidas strong small {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .peso-resumo-medidas>p {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .grade-resumo-medidas>div {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .grade-resumo-medidas>div>span {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .grade-resumo-medidas strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .grade-resumo-medidas strong small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .grade-resumo-medidas p {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .grafico-medidas-recolhivel {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .grafico-medidas-recolhivel>summary {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .grafico-medidas-recolhivel>summary small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .grafico-medidas-recolhivel>summary>svg {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .acoes-cardio button {
+    color: #28431e
+}
+:root[data-tema=claro] .app .acoes-cardio button+button {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto);
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .opcionais-cardio>summary {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .detalhe-cardio>p {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .detalhe-cardio>.verde {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .link-atividade {
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .atividade-hoje progress,
+:root[data-tema=claro] .app .tela-cardio progress {
+    accent-color: var(--visual-texto);
+    border: 0
+}
+:root[data-tema=claro] .app .atividade-hoje .data-medida small {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .cardio-do-dia>div>strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .linha-feriado {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .linha-feriado>button {
+    background: transparent;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .linha-feriado small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .linha-feriado>button+button {
+    color: #963e32
+}
+:root[data-tema=claro] .app .incluir-fotos {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .incluir-fotos input {
+    accent-color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .arquivo-backup {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .arquivo-backup>small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .formulario-conta input {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .marca-entrada>span {
+    color: #28431e
+}
+:root[data-tema=claro] .app .marca-entrada small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .apresentacao-entrada p {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .conta-entrada .formulario-conta label,
+:root[data-tema=claro] .app .campo-senha>label {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .conta-entrada .formulario-conta input {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .formulario-conta input::placeholder {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .formulario-conta input:focus-visible {
+    outline: 2px solid #7c8d76
+}
+:root[data-tema=claro] .app .campo-senha>div button {
+    background: transparent;
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .link-conta {
+    background: transparent;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .link-conta:hover {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .conta-entrada .recuperar-senha {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .alternativa-entrada>span {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .alternativa-entrada>span::before,
+:root[data-tema=claro] .app .alternativa-entrada>span::after {
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .alternativa-entrada p {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .entrada-conta .conta-entrada p[role=status] {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .atividade-hoje .cartoes-movimento progress {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto);
+    border: 0
+}
+:root[data-tema=claro] .app .cartoes-movimento progress::-webkit-progress-bar {
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .atividade-hoje>.data-medida+.nota-resumo {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .secao-config {
+    background: var(--visual-rebaixo);
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .icone-config {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .texto-config>strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .texto-config>small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .seta-config {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .secao-config.expandida>h2 {
+    border-bottom: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .conta .conta-vinculo>p {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .conta-rodape {
+    border-top: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .sair-conta {
+    background: transparent;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .sair-conta:hover {
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .conta .conta-rodape>p {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .ajuda-conta {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .ajuda-conta>summary {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .conta .ajuda-conta>p {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .conteudo-config .ajuda-conta {
+    border-top: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .saida-config {
+    border-top: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .saida-config>.sair-conta {
+    border: 1px solid #a76a5b;
+    background: #fff0ea;
+    color: #963e32
+}
+:root[data-tema=claro] .app .saida-config>.sair-conta:hover {
+    background: #fff0ea
+}
+:root[data-tema=claro] .app .saida-config>p:not(.erro) {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .treino-em-andamento .andamento-treino {
+    border: 1px solid #7c8d76;
+    background: linear-gradient(125deg,var(--visual-rebaixo),var(--visual-rebaixo))
+}
+:root[data-tema=claro] .app .treino-em-andamento .progresso-sessao {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .progresso-sessao>strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .progresso-sessao>strong>small {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .barra-sessao {
+    border: 0;
+    background: var(--visual-acento-fundo);
+    accent-color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .barra-sessao::-webkit-progress-bar {
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .treino-em-andamento .andamento-treino .manter-tela {
+    border: 0;
+    background: transparent;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .treino-em-andamento .exercicio-recolhivel {
+    border-color: #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .treino-em-andamento .exercicio-recolhivel[open]>.cabecalho-exercicio {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .treino-em-andamento .miniatura-exercicio {
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .treino-em-andamento .resumo-exercicio small:last-child {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .treino-em-andamento .conteudo-exercicio {
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .treino-em-andamento .ajuda-no-treino {
+    background: transparent;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .treino-em-andamento .conteudo-exercicio>.botao-descanso {
+    background: transparent;
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .treino-em-andamento .conteudo-exercicio>.botao-descanso>span::after {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .treino-em-andamento .cabecalho-series {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .treino-em-andamento .serie-compacta {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .treino-em-andamento .serie-compacta.proxima-serie {
+    background: var(--visual-rebaixo);
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .treino-em-andamento .valor-serie {
+    background: var(--visual-rebaixo);
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .treino-em-andamento .serie-compacta.concluida {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .treino-em-andamento .concluida .valor-serie {
+    background: transparent;
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .treino-em-andamento .conteudo-exercicio>.ultimo-desempenho {
+    border-top: 1px solid #7c8d76;
+    background: transparent
+}
+:root[data-tema=claro] .app .treino-em-andamento>.cancelar-sessao {
+    background: transparent;
+    color: #963e32
+}
+:root[data-tema=claro] .app .treino-em-andamento>.cancelar-sessao:hover {
+    background: #fff0ea
+}
+:root[data-tema=claro] .app .troca-treino-dialogo>button:last-of-type {
+    color: #963e32;
+    border: 1px solid #a76a5b;
+    background: #fff0ea
+}
+:root[data-tema=claro] .app .abas-catalogo {
+    background: var(--visual-rebaixo);
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .abas-catalogo>button {
+    background: transparent;
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .abas-catalogo>button[aria-pressed=true] {
+    color: #28431e
+}
+:root[data-tema=claro] .app .musculos-catalogo>button {
+    border: 1px solid #7c8d76;
+    background: transparent;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .musculos-catalogo>button[aria-pressed=true] {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto);
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .musculos-catalogo::-webkit-scrollbar-track {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .musculos-catalogo::-webkit-scrollbar-thumb {
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .contagem-catalogo {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .contagem-catalogo>span:first-child {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .item-catalogo {
+    border-bottom: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .nome-catalogo>strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .nome-catalogo>small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .lista-catalogo .miniatura-exercicio {
+    border: 1px solid #7c8d76;
+    background: linear-gradient(145deg,var(--visual-acento-fundo),var(--visual-rebaixo));
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .item-catalogo>.menu-ficha>summary {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .item-catalogo:hover {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .selecionar-exercicio {
+    border-bottom-color: #7c8d76
+}
+:root[data-tema=claro] .app .selecionar-exercicio[aria-pressed=true] {
+    background: var(--visual-rebaixo);
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .marcador-catalogo {
+    border: 1px solid #7c8d76;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .selecionar-exercicio[aria-pressed=true] .marcador-catalogo {
+    color: #28431e;
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .vazio-catalogo {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .confirmar-catalogo {
+    background: var(--visual-rebaixo);
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .confirmar-catalogo>span {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .ampliar-catalogo {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .ampliar-catalogo strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .ampliar-catalogo p {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .ampliar-catalogo>button {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .retomar-treino.retomar-compacto {
+    background: linear-gradient(130deg,var(--visual-acento-fundo),var(--visual-rebaixo));
+    color: var(--visual-texto);
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .retomar-identidade {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .retomar-identidade>small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .retomar-progresso>p {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .retomar-progresso>p>span {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .retomar-treino.retomar-compacto>button {
+    color: #28431e
+}
+:root[data-tema=claro] .app .ficha-nova.ficha-em-andamento {
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .ficha-em-andamento .abrir-ficha small {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .ficha-em-andamento .iniciar-ficha {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto);
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .abas-medidas {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .abas-medidas>button {
+    background: transparent;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .abas-medidas>button[aria-pressed=true] {
+    color: #28431e
+}
+:root[data-tema=claro] .app .par-resumo-medida {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .par-resumo-medida h3 {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .par-resumo-medida>header>span {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .par-resumo-medida>dl>div+div {
+    border-left: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .par-resumo-medida dt {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .par-resumo-medida dd {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .par-resumo-medida dd>small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .par-resumo-medida dl p {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .evolucao-medidas {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .evolucao-medidas>header>svg {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .evolucao-medidas header p {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .tela-medidas .tabela-comparacao strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .editor-medidas-grupos .campo-medida small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .editor-medidas-grupos .medida-vazia strong {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .par-editor-medidas>legend {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .aviso-desfazer>span>small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .historico-cartao>small {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .historico-cartao>small>span {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .sessao-exercicio>summary>span>small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .ultimo-concluido.ultimo-treino-atalho {
+    border: 0;
+    border-bottom: 1px solid #7c8d76;
+    background: transparent
+}
+:root[data-tema=claro] .app .ultimo-treino-atalho>.icone-ultimo-treino {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .texto-ultimo-treino>small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .texto-ultimo-treino>strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .ultimo-treino-atalho>.acao-ultimo-treino {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .ultimo-treino-atalho:hover .acao-ultimo-treino {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .ultimo-concluido.ultimo-treino-atalho:active {
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .modelos-card>button {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .modelos-card>button[aria-pressed=true] {
+    border-color: #7c8d76;
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .modelos-card strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .modelos-card small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .opcoes-adesivo>span {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .opcoes-adesivo>button {
+    border: 1px solid #7c8d76;
+    background: transparent;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .opcoes-adesivo>button[aria-pressed=true] {
+    border-color: #7c8d76;
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .area-preview-card {
+    background: var(--visual-rebaixo);
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .area-preview-card.preview-transparente {
+    background: repeating-conic-gradient(var(--visual-acento-fundo) 0 25%,var(--visual-acento-fundo) 0 50%) 0/22px 22px
+}
+:root[data-tema=claro] .app .area-preview-card>p {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .criador-card>.remover-foto-card {
+    background: transparent;
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .dica-story {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .aviso-card {
+    color: var(--visual-texto);
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .texto-compartilhar {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .texto-compartilhar>textarea {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .alternador-seletor {
+    background: var(--visual-rebaixo);
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .opcao-seletor {
+    background: transparent;
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .opcao-seletor.selecionada {
+    color: #28431e
+}
+:root[data-tema=claro] .app .botao-atalho-numero {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .botao-atalho-numero:active {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .input-com-unidade input {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .input-com-unidade input:focus-visible {
+    outline: 2px solid #7c8d76
+}
+:root[data-tema=claro] .app .unidade-input {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .formulario-cardio .opcionais-cardio {
+    border-top: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .formulario-cardio .opcionais-cardio>summary {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .grupo-campos-cardio>legend {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .digitar-duracao>label {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .digitar-duracao input {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .botao-destrutivo {
+    border: 1px solid #a76a5b;
+    background: transparent;
+    color: #963e32
+}
+:root[data-tema=claro] .app .botao-destrutivo:focus-visible {
+    outline: 2px solid #a76a5b
+}
+:root[data-tema=claro] .app .privacidade-alerta {
+    border: 1px solid #a76a5b;
+    background: #fff0ea
+}
+:root[data-tema=claro] .app .privacidade-alerta > strong {
+    color: #963e32
+}
+:root[data-tema=claro] .app .privacidade-alerta > p {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .botao-destrutivo:hover {
+    background: #fff0ea
+}
+:root[data-tema=claro] .app .confirmacao-app > p {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .aviso-backup {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .aviso-backup-titulo > svg {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .aviso-backup > p {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .formulario .opcao-copia-exercicio > input {
+    accent-color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .botao-secundario:active:not(:disabled) {
+    background: var(--visual-acento-fundo)
+}
+:root[data-tema=claro] .app .botao-principal:disabled,
+:root[data-tema=claro] .app .botao-secundario:disabled {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-suave);
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .botao-secundario.excluir-historico {
+    background: transparent;
+    color: #963e32;
+    border-color: #a76a5b
+}
+:root[data-tema=claro] .app .abas-treino,
+:root[data-tema=claro] .app .abas-medidas,
+:root[data-tema=claro] .app .abas-catalogo,
+:root[data-tema=claro] .app .alternador-seletor {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .abas-treino > button,
+:root[data-tema=claro] .app .abas-medidas > button,
+:root[data-tema=claro] .app .abas-catalogo > button,
+:root[data-tema=claro] .app .alternador-seletor > button {
+    background: transparent;
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app :is(.botao-principal, .botao-secundario, .abas-treino > button, .abas-medidas > button, .abas-catalogo > button, .alternador-seletor > button):focus-visible {
+    outline: 2px solid #7c8d76
+}
+:root[data-tema=claro] .app .aviso-confirmacao-conta {
+    border: 1px solid #7c8d76;
+    border-left: 4px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .aviso-confirmacao-conta > strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .conta .aviso-confirmacao-conta > p {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .aviso-confirmacao-conta b {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .campos-adesivo {
+    border: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .campos-adesivo legend {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .criador-card > .preview-story {
+    background: radial-gradient(ellipse at 20% 30%, var(--visual-acento-fundo), transparent 60%), linear-gradient(145deg, var(--visual-acento-fundo), var(--visual-rebaixo) 70%)
+}
+:root[data-tema=claro] .app .privacidade-grupo {
+    border-top: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .privacidade-grupo > summary {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .privacidade-grupo summary small {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .privacidade-contagem {
+    background: var(--visual-acento-fundo);
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .privacidade-dados .privacidade-grupo > h3 {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .backup-protecao {
+    border: 1px solid #7c8d76;
+    background: var(--visual-rebaixo)
+}
+:root[data-tema=claro] .app .backup-protecao > svg {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .backup-protecao strong {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .backup-config .backup-protecao p {
+    color: var(--visual-suave)
+}
+:root[data-tema=claro] .app .backup-config .opcao-fotos-backup {
+    border-bottom: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .backup-outros-formatos {
+    border-top: 1px solid #7c8d76
+}
+:root[data-tema=claro] .app .backup-outros-formatos > summary {
+    color: var(--visual-texto)
+}
+:root[data-tema=claro] .app .botao-secundario:hover:not(:disabled) {
+    border-color: #7c8d76
+}
+:root[data-tema=claro] .app .treino-em-andamento .conteudo-exercicio > .acoes > button:last-child {
+    background: transparent;
+    border-color: #a76a5b;
+    color: #963e32
+}

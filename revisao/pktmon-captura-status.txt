@@ -1,0 +1,30 @@
+﻿Filtro adicionado.
+
+Par├ómetros do Agente:
+    Nome do agente:        PktMon
+    Modo de registro em log:       Circular
+    Arquivo de log:           C:\Users\breno\Documents\Codex\2026-10-05\ol\outputs\vida-em-dia-novo-visual\revisao\wifi-iphone.etl
+    Tamanho m├íx. de arquivo:      4 MB
+    Mem├│ria usada:        384 MB
+
+Dados Coletados:
+    Contadores de pacotes, captura de pacotes
+
+Tipo de Captura:
+    Todos os pacotes
+
+Componentes Monitorados:
+    Todos
+
+Filtros de Pacote:
+     # Nome         Protocolo Endere├ºo IP  Porta 
+     - ----         --------- -----------  ----- 
+     1 VidaWifi5181 TCP       192.168.0.10  5181 
+Liberando logs...
+Mesclando metadados...
+Arquivo de log: C:\Users\breno\Documents\Codex\2026-10-05\ol\outputs\vida-em-dia-novo-visual\revisao\wifi-iphone.etl (Nenhum evento perdido)
+Processando...
+
+Eventos formatados:    93
+Arquivo formatado:      C:\Users\breno\Documents\Codex\2026-10-05\ol\outputs\vida-em-dia-novo-visual\revisao\wifi-iphone.txt
+Remover todos os filtros.

@@ -1,0 +1,65 @@
+[
+  {
+    "file": "src/index.css",
+    "bytes": 91500,
+    "gzip": 18210,
+    "rules": 1020,
+    "selectors": 1059,
+    "declarations": 3787,
+    "sha256": "8583e97bde88b9bbdadda0ab5451116e4a51a8d82103bd1ffd204a66bc17010a"
+  },
+  {
+    "file": "src/estilos/controles.css",
+    "bytes": 20162,
+    "gzip": 4480,
+    "rules": 153,
+    "selectors": 169,
+    "declarations": 507,
+    "sha256": "c941ec00088ad0fcbbb279903e42f0687424733e7e80af4d08e3d2f3889b8a22"
+  },
+  {
+    "file": "src/estilos/novo-visual.css",
+    "bytes": 21879,
+    "gzip": 4812,
+    "rules": 197,
+    "selectors": 210,
+    "declarations": 620,
+    "sha256": "8a2335e47e9d427dfb425bb0e57e9a5b288dfb9601c16c57eb95956408308c8f"
+  },
+  {
+    "file": "src/estilos/paleta-clara.css",
+    "bytes": 58993,
+    "gzip": 5502,
+    "rules": 551,
+    "selectors": 569,
+    "declarations": 800,
+    "sha256": "0a668722d48eb9aa85d42414fc1ced8b89ad56535045cc8e6c7d7ffb81c4a6bf"
+  },
+  {
+    "file": "src/estilos/contraste-claro.css",
+    "bytes": 3854,
+    "gzip": 1065,
+    "rules": 37,
+    "selectors": 40,
+    "declarations": 63,
+    "sha256": "78ba4ed77c8bd9eb36bebb5ec98bf5e0aa27ecedbe6c9a31d0ef464e01f5d597"
+  },
+  {
+    "file": "src/estilos/superficies.css",
+    "bytes": 12344,
+    "gzip": 2861,
+    "rules": 88,
+    "selectors": 89,
+    "declarations": 234,
+    "sha256": "5586cf64194742ca76bdb6f72a8acd75eb01a5917bc2fb2327b5d0f7f278090a"
+  },
+  {
+    "file": "src/estilos/transicoes.css",
+    "bytes": 133,
+    "gzip": 134,
+    "rules": 1,
+    "selectors": 1,
+    "declarations": 2,
+    "sha256": "372a54d8330313c594fddc7c990fdccb6b7bdd1fcaa543e3f311e60e9d65877f"
+  }
+]

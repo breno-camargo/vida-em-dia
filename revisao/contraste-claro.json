@@ -1,0 +1,86 @@
+[
+  {
+    "tela": "Hoje",
+    "falhas": []
+  },
+  {
+    "tela": "Treino",
+    "falhas": []
+  },
+  {
+    "tela": "Exercícios",
+    "falhas": []
+  },
+  {
+    "tela": "Cardio",
+    "falhas": []
+  },
+  {
+    "tela": "Comida",
+    "falhas": []
+  },
+  {
+    "tela": "Medidas",
+    "falhas": []
+  },
+  {
+    "tela": "Registrar medidas",
+    "falhas": []
+  },
+  {
+    "tela": "Seletor de medida",
+    "falhas": []
+  },
+  {
+    "tela": "Evolução",
+    "falhas": []
+  },
+  {
+    "tela": "Editar ficha",
+    "falhas": []
+  },
+  {
+    "tela": "Treino em andamento",
+    "falhas": []
+  },
+  {
+    "tela": "Resumo do treino",
+    "falhas": []
+  },
+  {
+    "tela": "Configurações",
+    "falhas": []
+  },
+  {
+    "tela": "titulo-config-conta",
+    "falhas": []
+  },
+  {
+    "tela": "titulo-config-aparencia",
+    "falhas": []
+  },
+  {
+    "tela": "titulo-config-medidas",
+    "falhas": []
+  },
+  {
+    "tela": "titulo-config-atividade",
+    "falhas": []
+  },
+  {
+    "tela": "titulo-config-backup",
+    "falhas": []
+  },
+  {
+    "tela": "titulo-config-aparelho",
+    "falhas": []
+  },
+  {
+    "tela": "titulo-config-instalar",
+    "falhas": []
+  },
+  {
+    "tela": "titulo-config-sobre",
+    "falhas": []
+  }
+]

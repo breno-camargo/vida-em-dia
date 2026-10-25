@@ -1,0 +1,1327 @@
+﻿{
+    "origem":  "C:\\Users\\breno\\Documents\\Codex\\2026-10-05\\ol\\outputs\\vida-em-dia",
+    "branch":  "test",
+    "commit":  "b9773dc6c0275555fa947890f6b0cade70732da2",
+    "arquivos":  [
+                     {
+                         "arquivo":  "revisao/DEVOLUTIVA-CODEX-REPAGINACAO.md",
+                         "sha256":  "3cdf5ce29c84c83e929b4b84ee038aaebd8597ba4e22bbcf097c1bdf8f709ab4"
+                     },
+                     {
+                         "arquivo":  "revisao/GEMINI-REFINO-VISUAL.md",
+                         "sha256":  "c66e7ac390ae31960409b0403786896956104ef78734793cc0b20eb74746a954"
+                     },
+                     {
+                         "arquivo":  "revisao/GEMINI-REPAGINACAO.md",
+                         "sha256":  "cf2acc453ccad43799cd31cff3f79252ec5d60bfe65db445f828e39b1397e312"
+                     },
+                     {
+                         "arquivo":  "revisao/INVENTARIO-PARIDADE.json",
+                         "sha256":  "ef98deac95e969e3d620e88b272b220ab04d162dd1560846580f18304329c8d5"
+                     },
+                     {
+                         "arquivo":  "revisao/PARIDADE-APP-PROTOTIPO.md",
+                         "sha256":  "a538f71e920668229b96892e77e1e59b28e91b4920817a2eb9b0089d06aa0431"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/app.js",
+                         "sha256":  "a5737f286fd9d382dbb16661ac8cd4f17d572c85e7c3a723628e7e4e6d6e9a35"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/01-hoje-390x844-escuro.png",
+                         "sha256":  "5d71a7dcd9984cbacbb65831db8da33f213a831c606ae3b83c160ad1e5979262"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/02-hoje-390x844-claro.png",
+                         "sha256":  "7675b510ae4301577590eacb449d0a318603643586a22808054b7f810589b076"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/03-hoje-360x800-escuro.png",
+                         "sha256":  "1698c723b659bf004a97aafc8b056df039d430a6e9e849aac0dd2c5cafe7b41c"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/04-hoje-desktop-escuro.png",
+                         "sha256":  "773b441c3966c458a4a3971b12b7b7253f9981610bb15220da976e0474da05c5"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/05-treino-fichas-390x844-escuro.png",
+                         "sha256":  "d778dcdc8fa0b2f9bbcff24c91ed149d79f7ad7e01fde7c5acc18d950ecebfd0"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/06-treino-exercicios-390x844-claro.png",
+                         "sha256":  "974248d5786538ed0def363726da34a2879eea043163d40913fe232623463567"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/07-treino-cardio-390x844-escuro.png",
+                         "sha256":  "0641b8db2a1e3ec5f35e0b5df10775b119f70ef9739a51137bec61fbd5474f22"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/08-comida-390x844-escuro.png",
+                         "sha256":  "1841f34213b7667f9855557c456eac4bf012ac332a4361feb33a769ffd28a94c"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/09-medidas-390x844-escuro.png",
+                         "sha256":  "6d5669687143a64051d935a3e73327fd12b3babf6c8f93c1a2b360176ba8add7"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/10-medidas-comparar-390x844-claro.png",
+                         "sha256":  "b3862e9afdb8c861806e720dd38539d462c93ecc3c472d99ab4a1d7504eb7eb5"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/11-evolucao-390x844-escuro.png",
+                         "sha256":  "920b624ee62fd3ca75bf2dc198359fcd8d18bea4f112fe40c65015e784f2c5aa"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/12-configuracoes-390x844-escuro.png",
+                         "sha256":  "95227608fcf1682bc352f80d63ce44f18e14bb974b028c01a8d470f3459fc856"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/13-popup-backup-390x844-escuro.png",
+                         "sha256":  "c0c278d63a24d9eafebe396b7a1ae2b95972df33c0a331ea015f4dd57b9d4350"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/14-popup-medida-390x844-claro.png",
+                         "sha256":  "350bd591c60b98a857b74923d648c6f7069115a8419e388f1fe2f53134531c11"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/15-popup-excluir-conta-390x844-escuro.png",
+                         "sha256":  "d1768aafc1450ac05d17a4958a94a61515354456695b9bd628bf1653b156d129"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/16-popup-card-congelado-390x844-escuro.png",
+                         "sha256":  "ddfb60fdddacec95e25786e77b7fd364f1a56d677cd740f53f38f604742a4a68"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/17-componentes-390x844-escuro.png",
+                         "sha256":  "422d51938c2f3f6c84052dd2456d24ad975ef1e3aaf7c65a3580ece7f1597ef2"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/18-componentes-390x844-claro.png",
+                         "sha256":  "80aaba4d34569bc8301e4b1229fc7da752bba712957a9b3944d4b2b5a1c2bdae"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/mobile_01_hoje_390.png",
+                         "sha256":  "bf9d6861fc42dfc7ef29f6a1b61f14b9f2dd162dfe4e4273de713864b49a7f95"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/mobile_02_treino_390.png",
+                         "sha256":  "74e52236184ec339e7868696b1816d26762a5863e6c36bd4ecb143799bcc5c50"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/mobile_03_comida_390.png",
+                         "sha256":  "88961e2bd91ceca6881324c1de15dc45614981e73145a843e3f769cca9f556d3"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/mobile_04_medidas_390.png",
+                         "sha256":  "afc3afa94a28c4e7af517775c753b35e495157d96c080e913a281c754e0cb576"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/mobile_05_evolucao_390.png",
+                         "sha256":  "bea232e3b5dd07cc8792014df6bb50dacad832ff15f37cc449f7c9e2cec7d43d"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/mobile_06_configuracoes_390.png",
+                         "sha256":  "7a083537d4f6b0400e179df2bbcfbf93c7f602b9bc51eee323fd1ebd07be2826"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/mobile_360_hoje.png",
+                         "sha256":  "87ff704b2db8d9bfdf9453123edf3b9f738ead72214122192b95cdc2d0d9d61a"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/mobile_360_medidas.png",
+                         "sha256":  "2c3ac44abd9d483825ae5c8af82a7108dffd81369eb87dac854b1b5b16d32e2f"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/teste_01_tela_treino.png",
+                         "sha256":  "74e52236184ec339e7868696b1816d26762a5863e6c36bd4ecb143799bcc5c50"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/capturas/teste_02_treino_andamento.png",
+                         "sha256":  "3984debbeb8100e523f76444594560417d8fe133333ec3cfff94519142e3b174"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/estilos/controles.css",
+                         "sha256":  "355ea751f7f647242c3bcc24d0e6f63015169fd2b1a3b86c3e587e3e1b95f86e"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/estilos/index.css",
+                         "sha256":  "8583e97bde88b9bbdadda0ab5451116e4a51a8d82103bd1ffd204a66bc17010a"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/estilos/refino.css",
+                         "sha256":  "4734b69cc35285b8ccc983e8c898b4d3bdd39f7cb364cb56510a99f229af55a2"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/index.html",
+                         "sha256":  "47e8b9e0b33acaea7b87197a04970fc7002da643226f239e59fc7ab2897d672a"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/scratch/test_treino_flow.mjs",
+                         "sha256":  "60ee830186a5f13f0856bb29130f9adcd60bf8e59883206ee58ea73a25da5b9e"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/servidor.mjs",
+                         "sha256":  "62ce0bcd0c78cc7dfc082d5d2ebe94a7a29175d9f178094049596b0533c6217d"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/treino-interativo.js",
+                         "sha256":  "2661afaa29bd9314b337383c11cc969f6df4981f7dd2fa37084d324d65af7b46"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/validar-treino.cjs",
+                         "sha256":  "c6190efd49f34f5934db5da54dd4e4b057d4995b1636faa2bbd710c2f169aaf5"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-refino-visual/verificar-refino-visual.mjs",
+                         "sha256":  "d407c7f1d1601ab9aa3c4e30ed7284c0740ddad3ea3002dc0443e204dbb8356c"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/REVISAO-CODEX.md",
+                         "sha256":  "edb910a8644928b298e91859c6d5d537581b217b8b993aebd3a13794acad6a50"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/acabamento-codex.js",
+                         "sha256":  "a4f58d9470495a4295ab31389350462f97f557d47edc24bcba3bcc1ab7b63724"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/agua-codex.js",
+                         "sha256":  "f5234cd78a1879f4e86e02df91cea9002e729ffaf5c8182d58737e970cfa1a9f"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/app.js",
+                         "sha256":  "a445ab54ff95b69c11f98e5f4a886b0403dc26961d18a06b6b0b479a7e6c415e"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/backup-demonstracao-codex.js",
+                         "sha256":  "77e38f2a41ec583bc409743096ca7ba11284a8b1a7cbcf75df10477300a44c05"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/compartilhamento-codex.js",
+                         "sha256":  "f78372078d69f63ad63469a042d85ed58dbe7478677da6a302f001c4bba08281"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/correcoes-codex.css",
+                         "sha256":  "a5788e309536329f241613838f9e6fb1bd6f3cd3c794c8d5aec8798ceebc9cc3"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/correcoes-codex.js",
+                         "sha256":  "595888c96cfc8cdb70719b4e75d2f5eb7915f052b6c94d5791d6ac05c5c66bf5"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/estilos.css",
+                         "sha256":  "d29338dce83b3abb4da10d7bc01a781140a906e49589c9e8c3e58d1695344c4b"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/01-tela-hoje-escuro-390.png",
+                         "sha256":  "c1810ab2f2684492bb74ff912ef0bb1cd343e039eade2a371476e3d7805ebe03"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/02-tela-hoje-visitante-390.png",
+                         "sha256":  "a18e25147ea8d74a122bb3362aa8b1829056e57fd2e43966cfa38bc66ec98c9d"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/03-tela-treino-390.png",
+                         "sha256":  "46148f47af8e176f39be24d8af5eda3f1910eb6471072ba7962e8f265ac4f6f7"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/04-tela-cardio-390.png",
+                         "sha256":  "14acddc99368abb0a555439f95d652b1f62ddd765873b61c1bb5c41460f043b5"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/04-tela-comida-390.png",
+                         "sha256":  "e7e98d499c334d3e5818adeec950cfb839b219f9e39e717b0294efd77893cace"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/05-tela-medidas-390.png",
+                         "sha256":  "8e1e03db950ffdd1bed26936de7c63b320837e2babd8ba240f6c9458942c4d3e"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/06-modal-editor-medidas-390.png",
+                         "sha256":  "8f227986d8a87de2cc9225726e0478464cccddeace2ee2a1b47db2f75ffa1273"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/07-modal-confirmacao-medidas-390.png",
+                         "sha256":  "8e1e03db950ffdd1bed26936de7c63b320837e2babd8ba240f6c9458942c4d3e"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/08-tela-evolucao-390.png",
+                         "sha256":  "06935392b5e3b3ef51356bc560964c8c2996f702f8b8bd879ce7c5d6db00d48b"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/09-modal-cards-congelados-390.png",
+                         "sha256":  "a998b102c6c27a3d3f590e190245191f9700e1bf6222ba09782dbe04c2a6bf9e"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/10-tela-configuracoes-390.png",
+                         "sha256":  "a295656833fa494af213dbebe99259ebe4fda497995ed2577aa764282c8c5127"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/11-modal-backup-390.png",
+                         "sha256":  "ac8b743019a31a41aedabc76b8e3e68cbc09251556edb2d299bee9c008ab749a"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/12-modal-privacidade-390.png",
+                         "sha256":  "518305bb8dcaf37229074fae86676e7a914090944d1a32c21a28df3d915e3bbb"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/12b-modal-confirmar-eliminacao.png",
+                         "sha256":  "cee40f336b04b9356ddcb5f69ba2a86186f16be4953a7b74f0fd63e4ce55b70f"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/13-modal-conta-390.png",
+                         "sha256":  "90e5a9fa0aacf6b08880fbbfa590a475412a82c8684231057404ecc5e2074af8"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/14-tela-hoje-claro-390.png",
+                         "sha256":  "5a817a0d4e97cf80e3ba705f9d1b7afb76a3d9b80b36f459be9fa6ac79e6364d"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/15-tela-hoje-compacto-360.png",
+                         "sha256":  "cdb0086f7513a1fff32b711ac346d308f8e0fcae430dee70b06330cf3c28f709"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/16-desktop-1280.png",
+                         "sha256":  "4c076f3ac580a60b764cce4c53c39f08245dbe5fd239ab5992e2816b6462ed0d"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/17-percurso-ficha-criada-2-exercicios.png",
+                         "sha256":  "7ad0ce2a91d3fd3ae76e822577f1aac44260a7985da690bee8a8bddff3149a0a"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/18-percurso-engrenagem-opcoes.png",
+                         "sha256":  "3d64a91bfce86778eea07ff434521744485d618c5662bee04f41722d27dfddbf"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/19-percurso-iniciar-ficha-controles.png",
+                         "sha256":  "0ffeac68eb75f1c55f503811f7645f53514b51f6c1acec85b92f2c060b87074d"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/20-percurso-treino-livre-exercicio-adicionado.png",
+                         "sha256":  "12d96429344355156548b8d5c017e990944756f8210aa3e7b4a46e300a65d00b"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/21-percurso-serie-concluida-descanso.png",
+                         "sha256":  "9c61a343c51431dccd6908cf6da2b041439cd1f30133f58838d0b304b7fdf304"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/22-percurso-resumo-finalizacao.png",
+                         "sha256":  "ea0beaa9f7ec13cafe75dd79e05bd544a732b2245958addd897f9a92454d56aa"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/23-percurso-historico-evolucao-atualizado.png",
+                         "sha256":  "677bb24a578cd7b3967e8bdbd730d69ed6de597db749390507f7621ab6083ef7"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/codex-rolagem-360.png",
+                         "sha256":  "b6d466255b51d75cb058d40df810d41d67e225960763d2cf390ed795cf79e97d"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/codex-rolagem-390.png",
+                         "sha256":  "89a6380cef5faec9890b0b038d8e7ab0817c774fc8e3bed20250e29b08d47527"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/codex-treino-dark-360.png",
+                         "sha256":  "ed65854a2da91e14b3166063f2b9b6cad8c757be0821a22263649b377bbb0944"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/codex-treino-dark-390.png",
+                         "sha256":  "42f35d53ff7ff5163d3a7ce1045de6093bc01b6c2c084cfa79fde90a64b6a2ee"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/codex-treino-light-360.png",
+                         "sha256":  "d5b02b165518486de030db0495b182efe44b860ea633cd108cda74e57eee81ec"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/exemplos/codex-treino-light-390.png",
+                         "sha256":  "5c1cd95f0da108c6c387a84ccdbb944218057f0677f39e81201460b1cb1e7ce3"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/funcionalidades-codex.js",
+                         "sha256":  "a744a10a58511f9bc989a4d69f9e901f186e1eee542d1299132c4781a303ef25"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/historico-codex.js",
+                         "sha256":  "3a028d13f30a4e94fce9b5796d43800030e39f13f5f2e6134826910967cf8555"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/index.html",
+                         "sha256":  "7c426869461060131fcd74c1a3a43ab52df1f2757dc1298b447f9b6444b6281f"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/modal_compartilhar_corrigido.png",
+                         "sha256":  "1ced6f636913ef8d250066165949869a912896cef31e6691c5bf64fc61c5400e"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/renderer-aprovado-copia.js",
+                         "sha256":  "24687deca29bba628b6a9a074f65f14069dfc98e8fcf7ebc4962a5800cc6f773"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/renderer-origem.json",
+                         "sha256":  "b11c8bf9feea4cecbbd60f99f019b335a960adc6eb0a379d1c169aa7f89b31a4"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/servidor.mjs",
+                         "sha256":  "96be49eb21296204a86e64a62a0f8c412fe7931c5d176ec0b5babd4eaa2d1429"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/validar-agua.cjs",
+                         "sha256":  "8bc01abad56fcfb321ffbbb6587fc2c349f84736dd48b79ecf9c1f1e29b39701"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/validar-codex.cjs",
+                         "sha256":  "078e635764a1c689c4c16025d02b2209af8fe11dcd4002fb445fd8ce129318fb"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-repaginacao/verificar-repaginacao.mjs",
+                         "sha256":  "d28b4664f2219bf8cc6265d7c93564fda9b23b3620c287cc9a5547ee07d36ed1"
+                     },
+                     {
+                         "arquivo":  ".github/dependabot.yml",
+                         "sha256":  "dcea6aaeb845c8878f2d23e9697708572f9cd83dcdbd2ded405c7d9cd5a25ec5"
+                     },
+                     {
+                         "arquivo":  ".github/workflows/validacao.yml",
+                         "sha256":  "078d669b2dd2d8a34c271f3f1b0d5ef1a394aaf96e52caa56fee421f21eac28f"
+                     },
+                     {
+                         "arquivo":  ".gitignore",
+                         "sha256":  "8ae84e96fe083f0c25c8d081cca17162760e67ab894a59ddb96e019c4ffb1aeb"
+                     },
+                     {
+                         "arquivo":  "AGENTS.md",
+                         "sha256":  "f797fd6c7739baf6fc8599f083d095dbda08e256417c70b6bd3f46561405c6d7"
+                     },
+                     {
+                         "arquivo":  "CHANGELOG.md",
+                         "sha256":  "8ecd718f6851cfd88cd3dcc28a1d3161c89b2c665e24842d9ece6a8b73de0d23"
+                     },
+                     {
+                         "arquivo":  "CONTINUAR-AMANHA.md",
+                         "sha256":  "196219cef3cd7df9982499c249e833562dfe92fa36e5d6e79491957a00123772"
+                     },
+                     {
+                         "arquivo":  "ENTREGA.md",
+                         "sha256":  "0a77eef325cbcb027f6145631f0b386551a2f6be0eb4240935140ca17decfa2e"
+                     },
+                     {
+                         "arquivo":  "GEMINI.md",
+                         "sha256":  "b5c290a2475f60d82dcecc948b7887a37f04844cf546e40d56a596d62ec7b165"
+                     },
+                     {
+                         "arquivo":  "PADROES-INTERFACE.md",
+                         "sha256":  "640574bb95766bd3e95bb8e0d40dc0887e8d9d4366704fa572a15af2cf50ff5c"
+                     },
+                     {
+                         "arquivo":  "README.md",
+                         "sha256":  "a98a630b3c666ac54be0c1570ab2e1cd95a1e8f9793c32b6c5f0fcf3d7e4a9e8"
+                     },
+                     {
+                         "arquivo":  "eslint.config.js",
+                         "sha256":  "8f2b84fecaf6b6481a25f8ac445b0d60c117d3b19e4955b02ff375ec634acdfb"
+                     },
+                     {
+                         "arquivo":  "index.html",
+                         "sha256":  "497763b13519936180f7ac90cc2ab8666a0c6c8edb71ad51b5ddedac638aaae2"
+                     },
+                     {
+                         "arquivo":  "package-lock.json",
+                         "sha256":  "141f0752d1cff30ddd00a8c6ecdb6e98e1f0abed416d85ffb1da7bd04fa1682f"
+                     },
+                     {
+                         "arquivo":  "package.json",
+                         "sha256":  "a1498096cf1f9fd12c24286bdb82d955075e603fd5470c5596b1c65ea14c2e09"
+                     },
+                     {
+                         "arquivo":  "public/icons/apple-touch-icon.png",
+                         "sha256":  "a192b9a7900899bccc3d12313bf2a9c43a031eb099316399c7643e5609f465ca"
+                     },
+                     {
+                         "arquivo":  "public/icons/icone-192.png",
+                         "sha256":  "25cc61c908c020eabdcd2094f47561a4e72ce0fcaf2538111dc3ce78aeac5972"
+                     },
+                     {
+                         "arquivo":  "public/icons/icone-512.png",
+                         "sha256":  "d19cb053445db14ddb1ef579c26808e38a51be4ae48bb5145c0045b56959e6b8"
+                     },
+                     {
+                         "arquivo":  "public/icons/icone-maskable.png",
+                         "sha256":  "d19cb053445db14ddb1ef579c26808e38a51be4ae48bb5145c0045b56959e6b8"
+                     },
+                     {
+                         "arquivo":  "revisao/APP-01-ISOLAMENTO.md",
+                         "sha256":  "f553860840e16ee95f7ea80fb2ad6a1642ccff1f1c677c5b121ffeda71376abd"
+                     },
+                     {
+                         "arquivo":  "revisao/APP-03-ELIMINACAO.md",
+                         "sha256":  "f8717065a2c722f36aee1d81ddd87f009e721a70c8bf24545d6be54b0b0ea976"
+                     },
+                     {
+                         "arquivo":  "revisao/APP-04-BACKUP.md",
+                         "sha256":  "3c4ba59e39e1ebd0c91d5af0087fa327da2013e32139f43643c7391604150f0a"
+                     },
+                     {
+                         "arquivo":  "revisao/CHECKLIST-PRODUCAO.md",
+                         "sha256":  "327222a518ce63ff93a8dfbfa43e5d37890e26aac57323ce013eb620d9636e7c"
+                     },
+                     {
+                         "arquivo":  "revisao/CODEX-A03.md",
+                         "sha256":  "81c56070c04126f17696a99ca249378498248dba4464ec00121f80a5610ff366"
+                     },
+                     {
+                         "arquivo":  "revisao/CODEX-A05.md",
+                         "sha256":  "b84045068aee1c57796d095348331157865a86302cf7759a573da080c16387ea"
+                     },
+                     {
+                         "arquivo":  "revisao/CODEX-A07.md",
+                         "sha256":  "12828ebff51779f7af5a1c355acb6b29fa8d72b8853a03d47736cf5060583a6e"
+                     },
+                     {
+                         "arquivo":  "revisao/CODEX-A09.md",
+                         "sha256":  "27a7ff62971fbba7b0fc370d1231ab90833b15f11698e6c8528644785dfb709a"
+                     },
+                     {
+                         "arquivo":  "revisao/CODEX-A10.md",
+                         "sha256":  "bef507f09f3c9706b5861eecfed0e7b7c4f461b95e097ac9fbdce4f9e58eedb0"
+                     },
+                     {
+                         "arquivo":  "revisao/CODEX-CATALOGO-ESTAVEL.md",
+                         "sha256":  "cbf8d3908872b9e0d24a00040d41ddd2ffd432d144b0a430b11bfcde3fc34ef6"
+                     },
+                     {
+                         "arquivo":  "revisao/CODEX-DETALHES-CARDIO.md",
+                         "sha256":  "3acb7613930e7ed436ad6c4f95493d685b2bfbdd5070df531b0766d880c99582"
+                     },
+                     {
+                         "arquivo":  "revisao/CODEX-DUPLICATAS.md",
+                         "sha256":  "247af307dc5f4d1ae6bcadd2f9b204a41f8971dc0fcb0157de6619d77e1f5161"
+                     },
+                     {
+                         "arquivo":  "revisao/CODEX-ISOLAMENTO-ENTRADA.md",
+                         "sha256":  "4c5fbf180b07d6010583b0788a9c82cc35bc2a0d93d7710473cc6783c0932959"
+                     },
+                     {
+                         "arquivo":  "revisao/CODEX-PROTOTIPO-CARDS.md",
+                         "sha256":  "91c5189ac00cc6678f006f41a79c1d4d2692e9818cf3a497e018d86321cb2728"
+                     },
+                     {
+                         "arquivo":  "revisao/CODEX-SELETORES-CARDIO.md",
+                         "sha256":  "a1bb80b77ed533af4196f9bc9115c30df0775be02a3b94e66efd547488c15c35"
+                     },
+                     {
+                         "arquivo":  "revisao/CODEX.md",
+                         "sha256":  "888645c47d39ce8340f0ac1a8f0d6f2e9d3edb002ccfcf3d8fbbce830fb8a5cb"
+                     },
+                     {
+                         "arquivo":  "revisao/CONSOLIDADO.md",
+                         "sha256":  "49f32fcf6e385e16af0e2fd78131c2feb23045fc1ae87cb263cd1007e5be5719"
+                     },
+                     {
+                         "arquivo":  "revisao/CORRECOES.md",
+                         "sha256":  "a48130e6afa73012848fc10d0850b0bab6302caf5e8ee39f831c1f899ac348f6"
+                     },
+                     {
+                         "arquivo":  "revisao/GEMINI-A05.md",
+                         "sha256":  "04520a4256c397e04f263b7826f7fdd947ab1a078416151caa8864d7f3c1bb56"
+                     },
+                     {
+                         "arquivo":  "revisao/GEMINI-A07.md",
+                         "sha256":  "b22814c03558f9b0ae29f867b1312f815c0ed5203049cbe9b98d582c09d294da"
+                     },
+                     {
+                         "arquivo":  "revisao/GEMINI-PROTOTIPO-CARDS.md",
+                         "sha256":  "a50dca4cc287a0223615534a9d9f44ca20c27ed127f97bb3a5a996ab8d572b27"
+                     },
+                     {
+                         "arquivo":  "revisao/GEMINI-SELETORES-CARDIO.md",
+                         "sha256":  "33f924bc9c3a24ec80e80a3e12a9e9a5c8d36ce06d4c3dc6702b91d0e971afca"
+                     },
+                     {
+                         "arquivo":  "revisao/GEMINI.md",
+                         "sha256":  "d21cf5475ce04a361907a999aa9e969c4f7d915f1f0315d0797e9751702cc0f8"
+                     },
+                     {
+                         "arquivo":  "revisao/LOTE-4-HEADERS-CI.md",
+                         "sha256":  "c6e9d004b3d4dadac52ce66ce3728f43e93ddf0e0f1478da400d850ca7650ff1"
+                     },
+                     {
+                         "arquivo":  "revisao/PLANO.md",
+                         "sha256":  "02385aa2f6082c206cdc370f3e3e4387603daca32fdac8704058d12317192642"
+                     },
+                     {
+                         "arquivo":  "revisao/REFERENCIAS-EXERCICIOS-OCR.json",
+                         "sha256":  "d1a7776adddf46155a17b42f6ce68328a037f31e2db6aa86eaeea5bdb89d7429"
+                     },
+                     {
+                         "arquivo":  "revisao/RUNBOOK-PRODUCAO.md",
+                         "sha256":  "351f1fb792dd2cbc2f1101112760d855b47284fa38646493a6e3e4227da42ec3"
+                     },
+                     {
+                         "arquivo":  "revisao/TAREFA-GEMINI-A05.md",
+                         "sha256":  "a801878b95a7ba6a20b14a9f7bbf59a840c571e9ea1575e00a3d107b4362c71c"
+                     },
+                     {
+                         "arquivo":  "revisao/TAREFA-GEMINI-PROTOTIPO-CARDS.md",
+                         "sha256":  "ec8c3b67d6245cbc30d36951563969bc5d43e4fb5573b84922498455f5152caf"
+                     },
+                     {
+                         "arquivo":  "revisao/TAREFA-GEMINI-SELETORES-CARDIO.md",
+                         "sha256":  "f61f9fffeaec1d7a85dc8862eb6deab25d226679ea3decde853851ab4e3ec798"
+                     },
+                     {
+                         "arquivo":  "revisao/auditoria.test.ts",
+                         "sha256":  "b7ef43ec9c11e947e8c74ae11f3ea7af21232e3d52d5d59ca886f087bbd108ca"
+                     },
+                     {
+                         "arquivo":  "revisao/gemini-entrada.test.tsx",
+                         "sha256":  "561d0548f8e5f295dd4cbf46184d2ebdd59b92608905b0708b42994cb009dda0"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-cards/exemplos/adesivo-preto-musculacao.png",
+                         "sha256":  "f205fe7b6647a3bb32f5aa1a48758baa5311427b1513f442c724d92998c123a8"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-cards/exemplos/adesivo-transparente-musculacao.png",
+                         "sha256":  "cd05fb504944e96d1b6810a5004f22491ec96aa381ec7e860129972d1b46d561"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-cards/exemplos/adesivo-transparente-sessao-curta.png",
+                         "sha256":  "1c7013201a80aaf768ee3914bc7b9d0aa2b0ccc7101cf67c7fedf11cd864f1ee"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-cards/exemplos/card-editorial-cardio.png",
+                         "sha256":  "66f9a05408c571b02d78afb48ca36bd3a79d7cd90e6d1c0f89315b3706061d45"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-cards/exemplos/card-editorial-musculacao.png",
+                         "sha256":  "c087e86fd8e1987ad34b3ac431849da27c668d985ae68c89c3dec7ffd1e58b1c"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-cards/exemplos/card-editorial-poucos-dados.png",
+                         "sha256":  "6ed0513d2df62acd261ad744abfc107d507a778f505f5f69e3fc59481a974500"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-cards/exemplos/card-editorial-sessao-curta.png",
+                         "sha256":  "99f81fdd1889182f207e72475426e035ed7f0e5f7f02a455d29d8eb56543f098"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-cards/exemplos/card-foto-com-foto-musculacao.png",
+                         "sha256":  "67834817c6235a224070b8efa0b15ef155510759d5cbe1a5672fc119fe474e84"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-cards/exemplos/card-foto-musculacao.png",
+                         "sha256":  "c087e86fd8e1987ad34b3ac431849da27c668d985ae68c89c3dec7ffd1e58b1c"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-cards/foto-teste.png",
+                         "sha256":  "abef16ae4be79dce0abc60c31f4b5c79d999b2cbdc907427edbdb2ae083dd384"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-cards/index.html",
+                         "sha256":  "8b81835610d62a64c937487644b303d85f810df6c918310523a9589b585d26a1"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-cards/referencia-aprovada.png",
+                         "sha256":  "98fbab38795bcfbf905d31c1709fab49e3d35000c1201ab5494b20c60f1926ee"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-cards/screenshot-prototipo-com-foto.png",
+                         "sha256":  "3f0c029809bc8e03b85abe500c6888b6356d02147d301abbba3c92c2db1e344a"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-cards/screenshot-prototipo-edge.png",
+                         "sha256":  "21e6eaf1510b748c4a28fa989b43f4f723b47254e61276ebffab6f00cf458374"
+                     },
+                     {
+                         "arquivo":  "revisao/prototipo-cards/verificar-prototipo.mjs",
+                         "sha256":  "562c1ff5f33c6bb0dae69f392c8377c1f4577d2e5914ec5dec487057c33e70cb"
+                     },
+                     {
+                         "arquivo":  "src/App.tsx",
+                         "sha256":  "e25f7e25dd8287bfe4901faba10ab31bb70149decb942a4effac55ee389ea7f6"
+                     },
+                     {
+                         "arquivo":  "src/componentes/AjudaExercicio.tsx",
+                         "sha256":  "03bb43ee2068cd03edfa92d00161a462e764a7b0e407e4ca4faadfa6b7cfd0dc"
+                     },
+                     {
+                         "arquivo":  "src/componentes/AtividadeHoje.tsx",
+                         "sha256":  "4727b7e26479304d6c2af7218b89bb21ae67e325b1cc3fec8d031c751d96eef3"
+                     },
+                     {
+                         "arquivo":  "src/componentes/AvisosPwa.tsx",
+                         "sha256":  "587c16074229871973652f20a1032098dc132481c60c27f38b323cca2ae4c3f5"
+                     },
+                     {
+                         "arquivo":  "src/componentes/BackupConfiguracoes.tsx",
+                         "sha256":  "e2e1aeae335754388e1cc15163c079e0d4d3fb88bbbb12abb842e18fcb2e30d2"
+                     },
+                     {
+                         "arquivo":  "src/componentes/CardCompartilhavel.tsx",
+                         "sha256":  "bf46aa3c2ae82e18def8c12da376b82b719edd35ce95cb17cf1929eb222d2644"
+                     },
+                     {
+                         "arquivo":  "src/componentes/CardioNoTreino.tsx",
+                         "sha256":  "0c767f8290509415b0072920559f4c99d3108c39b13bb12ca80d439744094c2e"
+                     },
+                     {
+                         "arquivo":  "src/componentes/CompartilharCardio.tsx",
+                         "sha256":  "cef694d47f9f6d4d8f72dc7a51138cfec3fc4083e1b3fdb278ffe5f69583f30d"
+                     },
+                     {
+                         "arquivo":  "src/componentes/CompartilharUltimo.tsx",
+                         "sha256":  "98e173117b8504ef2c49506c0f59d1e57f6bce5b112c699e284a84759d52e628"
+                     },
+                     {
+                         "arquivo":  "src/componentes/ConcluirPerfilCadastro.tsx",
+                         "sha256":  "aea144ff985185242272991b37086f33013be3a537241621364ff12d9aeb58a1"
+                     },
+                     {
+                         "arquivo":  "src/componentes/ConfigurarAtividade.tsx",
+                         "sha256":  "b8faa66ef3f3fc8f1b2481c8818b49e2f1392d7661b20b0f77614a6d79a834fd"
+                     },
+                     {
+                         "arquivo":  "src/componentes/ConfigurarLembreteMedidas.tsx",
+                         "sha256":  "bb4c0edcb7259edfb36a7f0e917ac6b466f375ab8e652c74013ae16b1deac2e8"
+                     },
+                     {
+                         "arquivo":  "src/componentes/ContaConfiguracoes.test.tsx",
+                         "sha256":  "e739d1c1d8a8f93fc304787905179f9cbfcb61189fe606c19162ca261a05f84e"
+                     },
+                     {
+                         "arquivo":  "src/componentes/ContaConfiguracoes.tsx",
+                         "sha256":  "a6718e5b9d5646855ae4e739778ab7bf857a28d320cafb04800e0e0fa2cce2e1"
+                     },
+                     {
+                         "arquivo":  "src/componentes/Descanso.tsx",
+                         "sha256":  "9b14e676a64fdf88b691fffd8fcda0db55665bbaa2367d1ce638bd133ae32889"
+                     },
+                     {
+                         "arquivo":  "src/componentes/EditorAtividade.tsx",
+                         "sha256":  "e99de878765d30963f5b3aaa86c6621d2f3a3a2e64401bf69052605a155d08cc"
+                     },
+                     {
+                         "arquivo":  "src/componentes/EditorCardio.tsx",
+                         "sha256":  "47b67bc11c706d566e8d22bfb8d877a3439b9a08bc7ac617b10e517e96493c6d"
+                     },
+                     {
+                         "arquivo":  "src/componentes/EditorExercicio.tsx",
+                         "sha256":  "1dbb95b1d3497211aec7562974574e5c6f53c57712956011a9c6c0df8e0b5a58"
+                     },
+                     {
+                         "arquivo":  "src/componentes/EditorFicha.tsx",
+                         "sha256":  "39dcc251daee486eef31b2efd11a1883f2ac2f60173fa942b393beeafd207c4e"
+                     },
+                     {
+                         "arquivo":  "src/componentes/EditorMedida.tsx",
+                         "sha256":  "7a829916e955b6d3ff911719cceaf5202b67b402bc387db70a503c4260905ab0"
+                     },
+                     {
+                         "arquivo":  "src/componentes/EscolherOpcao.tsx",
+                         "sha256":  "56677988ea932c9477040a72e6fe7bd3c954de2209569cfe46ac91f797af7d50"
+                     },
+                     {
+                         "arquivo":  "src/componentes/EstadoVazio.tsx",
+                         "sha256":  "365864b77493701d37ef2da6a6526588d3adb2d68229833211b928ffc866fc15"
+                     },
+                     {
+                         "arquivo":  "src/componentes/EvolucaoExercicio.tsx",
+                         "sha256":  "eea9b510c606f23d537998d4558fd679b536468d753a02807057454bb04e2f6f"
+                     },
+                     {
+                         "arquivo":  "src/componentes/FiltrosExercicios.tsx",
+                         "sha256":  "4e7e17e89d101e84dff147265766a8a50a18d912ef0c01f46c1dc956bbb5d823"
+                     },
+                     {
+                         "arquivo":  "src/componentes/GraficoAtividade.tsx",
+                         "sha256":  "a2fe3fb3799408fef256e379feda34fec577b95d04cd04cae25a2740ebb86bf1"
+                     },
+                     {
+                         "arquivo":  "src/componentes/GraficoCarga.tsx",
+                         "sha256":  "45c248c42ac5d51f02cb9f20471c3170f1d7df2b09e9de0fdfe85616c9d5be24"
+                     },
+                     {
+                         "arquivo":  "src/componentes/ImportarLegado.tsx",
+                         "sha256":  "9d09f3dd4db875aebc32b5c6bfb91669c9f9baf915a15de74cbe0d9265573b58"
+                     },
+                     {
+                         "arquivo":  "src/componentes/LembreteBackup.tsx",
+                         "sha256":  "99faebc5a6eee640fa41ee5e49c15de407e7458ff75786d981cc99d51297a96b"
+                     },
+                     {
+                         "arquivo":  "src/componentes/LembreteMedidas.tsx",
+                         "sha256":  "8af4a532330c7a81c26412e880e2fd9fe9d11d912f8f50afad3f2006648ee818"
+                     },
+                     {
+                         "arquivo":  "src/componentes/ListaExercicios.tsx",
+                         "sha256":  "d02c62674c601c2380e8eb98a9961c4301c9209a5798c02abe72ee193ede6ff2"
+                     },
+                     {
+                         "arquivo":  "src/componentes/MiniaturaExercicio.tsx",
+                         "sha256":  "c177ae3f4a8b1d2b3edbd2b979bf82a92fc92109a6d3d090f480655fff06fabc"
+                     },
+                     {
+                         "arquivo":  "src/componentes/Navegacao.tsx",
+                         "sha256":  "2971b57cf1b0fb2d92262ea056f0de897f02f0dcea295056b88616bf620363b7"
+                     },
+                     {
+                         "arquivo":  "src/componentes/Painel.tsx",
+                         "sha256":  "c688d1658909559fccaa9d7f35ba315c2ccef6ac3471a51256962ee751890294"
+                     },
+                     {
+                         "arquivo":  "src/componentes/PrivacidadeDados.tsx",
+                         "sha256":  "ae291bc9294db3c9a0ef7d1b8c6ce9878cdab54e1e68f1f64cea306a5bf73680"
+                     },
+                     {
+                         "arquivo":  "src/componentes/ResumoCardioDia.tsx",
+                         "sha256":  "a0d1f1d3f8360e41b8532ffe99acd56a8c161d3173b0de5a9ee574d932c575bb"
+                     },
+                     {
+                         "arquivo":  "src/componentes/ResumoMedidas.test.tsx",
+                         "sha256":  "8818e5436ac8e6c3381644f51b988a7f8faa08a5e975b07c2929e822eb0ff8f5"
+                     },
+                     {
+                         "arquivo":  "src/componentes/ResumoMedidas.tsx",
+                         "sha256":  "b22d05ef60f0dc9e086a7d54bc4ff2753c05737b0918387ce162adb2c53d7e91"
+                     },
+                     {
+                         "arquivo":  "src/componentes/ResumoTreino.tsx",
+                         "sha256":  "29e4ab4b0d06f91b35066b78a90f8a220731a47529dc1c8c9b23bd2155e84da0"
+                     },
+                     {
+                         "arquivo":  "src/componentes/RevisaoSincronizacao.tsx",
+                         "sha256":  "0185c6be56fdc5b03d420c10d0738e92d098fc7e6ea11c8f78fe91e0b22295f5"
+                     },
+                     {
+                         "arquivo":  "src/componentes/RevisarDuplicatas.tsx",
+                         "sha256":  "a247fd94f6f73beb84087dffc69c669e7795946cbab0a2bb2d2e65347a28c507"
+                     },
+                     {
+                         "arquivo":  "src/componentes/Rolagem.tsx",
+                         "sha256":  "091ad0caf27bfedb8a999853a4fc65db1a62c283b9a0640c6809e7fb2bff352b"
+                     },
+                     {
+                         "arquivo":  "src/componentes/SelecionarData.tsx",
+                         "sha256":  "05cf74ad975dfe035b314ebed9a30c54eec9498deaab11904e52e844341b1c96"
+                     },
+                     {
+                         "arquivo":  "src/componentes/SelecionarDescanso.tsx",
+                         "sha256":  "7016d8de1d449a28d6f41e843616067d3b4d10d32c54e51b28b841112733e721"
+                     },
+                     {
+                         "arquivo":  "src/componentes/SelecionarDistancia.tsx",
+                         "sha256":  "d8063312d1647f54de4148387e34242883243b4bdbfc174cbb2070074bcb28b4"
+                     },
+                     {
+                         "arquivo":  "src/componentes/SelecionarDuracao.tsx",
+                         "sha256":  "ac8a1bcb673052e621b063e5979f3f7e11205e169e6bf1bcef25a67390d33890"
+                     },
+                     {
+                         "arquivo":  "src/componentes/SelecionarNumero.test.tsx",
+                         "sha256":  "ee1fd9d4b787ae4a459cd99aa5f21f49d2ccb92c1a0fbbee17006d31ccc7bb0c"
+                     },
+                     {
+                         "arquivo":  "src/componentes/SelecionarNumero.tsx",
+                         "sha256":  "83c3a982f1eb70e0dd69646987f8ef67d6a04d1af9deda7917ab155e860da9d7"
+                     },
+                     {
+                         "arquivo":  "src/componentes/SelecionarSeries.tsx",
+                         "sha256":  "b78dee681c9399f98136daa548db074a3f1c5ad282e1dc491381135db1da2b9c"
+                     },
+                     {
+                         "arquivo":  "src/componentes/SelecionarValores.tsx",
+                         "sha256":  "221da638159322219fd3c976af588bf1565e2c27cb15c4cab0a150aa7282c2ee"
+                     },
+                     {
+                         "arquivo":  "src/componentes/Serie.tsx",
+                         "sha256":  "3deccf31ab4f08f8ae2d64c99d31ed40b095ba76aafdef193bc9cbcd4587adc4"
+                     },
+                     {
+                         "arquivo":  "src/componentes/TransicaoConteudo.tsx",
+                         "sha256":  "39de7057bed9557236e0793bc43c4ce3be7d0f5c69ef289a1781426842bcf56d"
+                     },
+                     {
+                         "arquivo":  "src/componentes/ValorMedida.tsx",
+                         "sha256":  "8ddad0b1a559643612aa418da1780760089aa6bf902855bde4c003b766b6bce1"
+                     },
+                     {
+                         "arquivo":  "src/dados/atividade.ts",
+                         "sha256":  "e00fc967a00ffdb5b86e29834a2c464bb20c1176ad5e3b8c2c2e241501728e22"
+                     },
+                     {
+                         "arquivo":  "src/dados/backup.test.ts",
+                         "sha256":  "e5af205bddeb24ca11448eaade96ba296f13ab144e93cceaa672ce9e33506406"
+                     },
+                     {
+                         "arquivo":  "src/dados/backup.ts",
+                         "sha256":  "5422a648475f024919e15f54a24358863b352c6a556b3e182a1f067cb0222148"
+                     },
+                     {
+                         "arquivo":  "src/dados/backupCriptografado.test.ts",
+                         "sha256":  "8ec16c09008f2770c5da38c3fa2d94adc9472248a129e46ad3ff0fd60599bcc7"
+                     },
+                     {
+                         "arquivo":  "src/dados/backupCriptografado.ts",
+                         "sha256":  "b83382c423b9fd71c13bc7560a96ee3faa24cf728e55946bc7a8203282e294e9"
+                     },
+                     {
+                         "arquivo":  "src/dados/banco.test.ts",
+                         "sha256":  "299b54f903d391c4f96c37f4bd8b585a82a9deeba55fcedd654aa44643e52ae1"
+                     },
+                     {
+                         "arquivo":  "src/dados/banco.ts",
+                         "sha256":  "f9978781fe81b59699f0f72638a21f10f71a5f7fda12b712ccee91d9de1399fc"
+                     },
+                     {
+                         "arquivo":  "src/dados/biblioteca.ts",
+                         "sha256":  "d067f383d1b834d4fd759e8a9258cd91f19d9bd93309c7e2848d0d1b07ef346f"
+                     },
+                     {
+                         "arquivo":  "src/dados/cardio.test.ts",
+                         "sha256":  "2af74c66c155df9e0537d82468a8aed5efdd93b69b715b70685cf7f1cdc54acc"
+                     },
+                     {
+                         "arquivo":  "src/dados/cardio.ts",
+                         "sha256":  "ef67fb6a6d5fcb534cb8f326ce874a1b69a042313469f44fa2e63c5899ed8916"
+                     },
+                     {
+                         "arquivo":  "src/dados/catalogo.test.ts",
+                         "sha256":  "75374e3162176f99246e97a746f4a56bf64d019afa9d620dd0b4f7c96a339a25"
+                     },
+                     {
+                         "arquivo":  "src/dados/catalogoAmpliado.ts",
+                         "sha256":  "eebb08228abcea091a3bc3b1b47910d2f5a74c44a5bcc8d68466317669833c43"
+                     },
+                     {
+                         "arquivo":  "src/dados/configuracoes.ts",
+                         "sha256":  "de83348646f487815cdbe86593a8ff5d5574ed791c2dbf85c455f8a365f87a72"
+                     },
+                     {
+                         "arquivo":  "src/dados/detalhesCardio.test.ts",
+                         "sha256":  "33291715e286f748a6724b37f837266025acb82216e14d30d299f5aebedd8fc7"
+                     },
+                     {
+                         "arquivo":  "src/dados/detalhesCardio.ts",
+                         "sha256":  "5f0f9dcd5f0278f2e54226ec7280ec57704417a6b056709c3e3686c6ce3e2bee"
+                     },
+                     {
+                         "arquivo":  "src/dados/duplicatasExercicios.test.ts",
+                         "sha256":  "f76e85d5e7efbf9907bdc647bb150cf8d71e529d4ae264438bcbfc8e1e408654"
+                     },
+                     {
+                         "arquivo":  "src/dados/duplicatasExercicios.ts",
+                         "sha256":  "e32b2de12ab5ada3c2901a55f9b43559695550d8ccb31d94ce40bd2ef3284eb7"
+                     },
+                     {
+                         "arquivo":  "src/dados/eliminacao.test.ts",
+                         "sha256":  "d557f9bb3b8094a7ce1068d62d84f3035575528488008fe13633730a971692da"
+                     },
+                     {
+                         "arquivo":  "src/dados/eliminacao.ts",
+                         "sha256":  "4272d22a66258bcef2367418ac3d177b22d744bde972315b4b3f3abc39bb4983"
+                     },
+                     {
+                         "arquivo":  "src/dados/fichas.test.ts",
+                         "sha256":  "08d6b41fcb87fb9876486b86ac3c3294b4c68efef7b2811bf0ad8cc0761152b9"
+                     },
+                     {
+                         "arquivo":  "src/dados/fichas.ts",
+                         "sha256":  "0e75ca83de98fab1e9ca40b385d8d5b5ce994845fbf1b8ee430ca56da02570a9"
+                     },
+                     {
+                         "arquivo":  "src/dados/historico.ts",
+                         "sha256":  "3dec28fc391f4746b3a3b7474a7bcb86edc8f3013c22e19f7aa8ef317d4e78f0"
+                     },
+                     {
+                         "arquivo":  "src/dados/identidade.test.ts",
+                         "sha256":  "a1e37070a29276cc3cd7b1bd29fd4a59cb6816547c94a928d3e442ebade2f8d6"
+                     },
+                     {
+                         "arquivo":  "src/dados/legado.test.ts",
+                         "sha256":  "33907cbb180820b5a2e1af5d9d2e231641bdf2a7a651b3d03c94404150eb31de"
+                     },
+                     {
+                         "arquivo":  "src/dados/legado.ts",
+                         "sha256":  "c08210708e41269e1dc0ab788a99dc7e2716e6c27f82f21848d4fd9241d7dd61"
+                     },
+                     {
+                         "arquivo":  "src/dados/lembreteBackup.test.ts",
+                         "sha256":  "bf097c31e8c44265547520a4788dba6ef5e9a442fee083f790cca117b1622540"
+                     },
+                     {
+                         "arquivo":  "src/dados/limpezaAparelho.test.ts",
+                         "sha256":  "c8e2eaa5c211143cebd4aaa2d66cf475a384e749b0aef0b150c1c2fa194b56a4"
+                     },
+                     {
+                         "arquivo":  "src/dados/limpezaAparelho.ts",
+                         "sha256":  "309d1cc66dfc5afd6c3899384425c9b92ec4a7cd996716d39eed24d0d3ac1f8c"
+                     },
+                     {
+                         "arquivo":  "src/dados/medidas.test.ts",
+                         "sha256":  "a362b9744c650c5f57f3cb4a0e7c7e8487aef7f45d6c0a988f2add09b7262c20"
+                     },
+                     {
+                         "arquivo":  "src/dados/medidas.ts",
+                         "sha256":  "40b6b47a1d297b29259fba9f4fe05654b447d0b16ead187114809882f61e686a"
+                     },
+                     {
+                         "arquivo":  "src/dados/modelos.ts",
+                         "sha256":  "8eb3f771530d7e13a6acfa29c431cd029723d8e322d8349192f230cdd321981e"
+                     },
+                     {
+                         "arquivo":  "src/dados/perfilCadastro.test.ts",
+                         "sha256":  "c2a9727ca793bca40ebfb2e84ded0b4c4c9db307ce016d20b07daaa104610e42"
+                     },
+                     {
+                         "arquivo":  "src/dados/perfilCadastro.ts",
+                         "sha256":  "0c101cd14279f4b607e097f43ae1273b9b2a06d1563ba4abd19141f477d08dc0"
+                     },
+                     {
+                         "arquivo":  "src/dados/pesoCorporal.ts",
+                         "sha256":  "1a2571c0719b96ae8b4405603d5909b401bc73de005e0006577584089e4c6fbf"
+                     },
+                     {
+                         "arquivo":  "src/dados/planejamentoTreino.test.ts",
+                         "sha256":  "e6067b35d71373e4f43cc9de7a3a3fd140907896bfaee382d488a1fe2d8be194"
+                     },
+                     {
+                         "arquivo":  "src/dados/planejamentoTreino.ts",
+                         "sha256":  "1bd009107d1b4dff08d804da7ddeff3f1ab0e027e1df318678964bc6be62aace"
+                     },
+                     {
+                         "arquivo":  "src/dados/repositorio.ts",
+                         "sha256":  "7debe87df5615991892e71f9aebad2e2e8db7f59eb482fbe29b1f1e5abe5d559"
+                     },
+                     {
+                         "arquivo":  "src/dados/retencao.ts",
+                         "sha256":  "97dacecc25978de30debc8d4faa3409c9318a324e725d4c3d6f4e56b31414727"
+                     },
+                     {
+                         "arquivo":  "src/dados/tiposCardio.ts",
+                         "sha256":  "d3743aecc89648f1df9905403995c443472fc6dd89c93a8dfc7b6ff3be437ca7"
+                     },
+                     {
+                         "arquivo":  "src/dados/treinos.test.ts",
+                         "sha256":  "42f92efe65e7a0d87ad1aab1d8b916b4c5b66d1c7321191148b6e55a576a6330"
+                     },
+                     {
+                         "arquivo":  "src/dados/treinos.ts",
+                         "sha256":  "1bfe65989d6446e9665175edfdfa01e5b82c38870548b37336b557129ebb2e84"
+                     },
+                     {
+                         "arquivo":  "src/dados/unirExercicios.test.ts",
+                         "sha256":  "f974b3e2ab5fa7b55852a131a4ad013d83df56c67f57b54b0744c92b1b98deb0"
+                     },
+                     {
+                         "arquivo":  "src/dados/unirExercicios.ts",
+                         "sha256":  "9cc5f70694ba06e199927db7980d4dccf5f16e68ed637a1fe30594c5ed43af16"
+                     },
+                     {
+                         "arquivo":  "src/dados/validacaoBackup.test.ts",
+                         "sha256":  "c6fc1152b001ff2a63b7e1a6e8aa6df38ed5e095ed3f67d1e208415ba696613e"
+                     },
+                     {
+                         "arquivo":  "src/dados/validacaoBackup.ts",
+                         "sha256":  "be34bf2fd18cb07e867655907c3ac67e06ba726ffbe5fd0e043ec12965792bc1"
+                     },
+                     {
+                         "arquivo":  "src/estilos/controles.css",
+                         "sha256":  "c8f3cb5dd0e1bf0dae670022ccbe63ade04a57ed3297944bff1827450c5204ce"
+                     },
+                     {
+                         "arquivo":  "src/hooks/useAmbiente.ts",
+                         "sha256":  "d0397de1236166f236c5ec262c38210e357773f11234f9d3c2a347ede7146f13"
+                     },
+                     {
+                         "arquivo":  "src/hooks/useConfirmacao.tsx",
+                         "sha256":  "c2688a537629b12a2635a6067e89323814bc620bab0f1017ff99a3f2f6cd0ed1"
+                     },
+                     {
+                         "arquivo":  "src/hooks/useEstadoTemporario.ts",
+                         "sha256":  "3a8f83d05d057bf0cc5ac12c66b3af73e2afa06591db0de7c651916294b36eb4"
+                     },
+                     {
+                         "arquivo":  "src/hooks/useTelaLigada.ts",
+                         "sha256":  "d9793c1eae7ee8234c4e72233019e45fc2f24e0486b635d675e3c8e526b958cb"
+                     },
+                     {
+                         "arquivo":  "src/index.css",
+                         "sha256":  "8583e97bde88b9bbdadda0ab5451116e4a51a8d82103bd1ffd204a66bc17010a"
+                     },
+                     {
+                         "arquivo":  "src/main.tsx",
+                         "sha256":  "e7f7b6ef273174b7c31a719f8159f32adaa022938ea61c1bfa8a24910de06ca9"
+                     },
+                     {
+                         "arquivo":  "src/sincronizacao/armazenamento.ts",
+                         "sha256":  "4f57aa9d107e85e7b2af945aa326690e756dd6d597d3dfd302a18a21d9c20bcd"
+                     },
+                     {
+                         "arquivo":  "src/sincronizacao/cadastro.test.ts",
+                         "sha256":  "28d28a583bc9de159b1e9f08574531babf6a63e97002e7e83d60fde26185411e"
+                     },
+                     {
+                         "arquivo":  "src/sincronizacao/cadastro.ts",
+                         "sha256":  "5199222933b3f4dd7733d4275d757c7b333d3253d901c022f4f57ea03aa9343c"
+                     },
+                     {
+                         "arquivo":  "src/sincronizacao/cliente.ts",
+                         "sha256":  "e6cb902285ea284851137495c58f17ae94c95ae87e6fed9c7bcad03913c297b7"
+                     },
+                     {
+                         "arquivo":  "src/sincronizacao/eliminacaoSql.test.ts",
+                         "sha256":  "a59bdde3fc64455132064541c5b2a10ecce8ca104fa73e78393e0b397356f393"
+                     },
+                     {
+                         "arquivo":  "src/sincronizacao/estado.ts",
+                         "sha256":  "50a8bda57f9542955ff136d70cd52aa9f4dd041b6061e55ab0f11f34f302fb4d"
+                     },
+                     {
+                         "arquivo":  "src/sincronizacao/excluirContaEdge.test.ts",
+                         "sha256":  "8cfae786b0935b7e88ff869f38b0775061277f333e502612b31ddc8eca4b219c"
+                     },
+                     {
+                         "arquivo":  "src/sincronizacao/identidadeEnvio.test.ts",
+                         "sha256":  "47797c693962e81e0b2487de0f0bf572d818d5216844e6d8d80144788b1a2d52"
+                     },
+                     {
+                         "arquivo":  "src/sincronizacao/motor.test.ts",
+                         "sha256":  "2e795772ee3cc75342f6e94ddeff251cedd4a375017506929521c963b0173f6a"
+                     },
+                     {
+                         "arquivo":  "src/sincronizacao/motor.ts",
+                         "sha256":  "5cdd298fd43fc0b46dea81f6a30f734a0fa747be084e8c732d1a596d671ddd63"
+                     },
+                     {
+                         "arquivo":  "src/sincronizacao/recuperacao.test.ts",
+                         "sha256":  "d8152ff9ba25251ba88d89931f6866e90ca28aaa025f015d2b87544956a6b194"
+                     },
+                     {
+                         "arquivo":  "src/sincronizacao/runtimeEdge.test.ts",
+                         "sha256":  "5e7d260e8bba5377a52db9f8f2a63d120526f31c51c05c3a3299a6f14ddfa59d"
+                     },
+                     {
+                         "arquivo":  "src/sincronizacao/seguranca.test.ts",
+                         "sha256":  "fcfff2a1412830543d0839fdcd2a8ebb8ffbadb5b146daa73d0e7a3d93e020d2"
+                     },
+                     {
+                         "arquivo":  "src/sincronizacao/sessaoLocal.test.ts",
+                         "sha256":  "04c045286762d3c51b95c61dafb873c08578f79fe9e465f5c8049bd430aa431a"
+                     },
+                     {
+                         "arquivo":  "src/sincronizacao/transporte.ts",
+                         "sha256":  "96db92de5403e002f426a9737f5a81d8a5e2a6fcd7265c7711aa340d2d34756c"
+                     },
+                     {
+                         "arquivo":  "src/sincronizacao/trocaIdentidade.test.ts",
+                         "sha256":  "ecdb0847ddf54098c48597afe2b21d974605bd6fd9b0937906ba29e79deab51d"
+                     },
+                     {
+                         "arquivo":  "src/sincronizacao/trocaIdentidade.ts",
+                         "sha256":  "4f68a21058e143a9ff3ba24ec908a9a0208ff554ef89474463bf3d646ede393e"
+                     },
+                     {
+                         "arquivo":  "src/telas/Cardio.tsx",
+                         "sha256":  "798ac21a784ae11122ea23db993d8fbbc4707e1d57760ee953a4b82a30e39d63"
+                     },
+                     {
+                         "arquivo":  "src/telas/Configuracoes.tsx",
+                         "sha256":  "18543e66679c4a343847564f515d70ec67fb4a3b30f47f8004edeb496860aed7"
+                     },
+                     {
+                         "arquivo":  "src/telas/Evolucao.tsx",
+                         "sha256":  "6dd30aa3e5c778d09a143fbb492b7dd0603f9d49d5895d626f1c4f1fff499139"
+                     },
+                     {
+                         "arquivo":  "src/telas/Hoje.tsx",
+                         "sha256":  "8cf6e396ba0c99a2428312a332d203fee6bcf69ae7011b8cf5c61cd869b6d7f6"
+                     },
+                     {
+                         "arquivo":  "src/telas/Medidas.tsx",
+                         "sha256":  "323ed574d1c0d3f708ca30b4b9b5c27e91d5c046a35bbf8dfae5e3a25e8aade7"
+                     },
+                     {
+                         "arquivo":  "src/telas/ModoTreino.tsx",
+                         "sha256":  "574507d5093c856153bbce33d16f48d4741bdb8ee3b81af3f742a90213e8c4a7"
+                     },
+                     {
+                         "arquivo":  "src/telas/Treino.tsx",
+                         "sha256":  "9192544dec28b027a428d1648d683c910e339adb8b8ddcca02aa73a5959eb7d3"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/adesivoTreino.ts",
+                         "sha256":  "4af1fb119100ab7772896ca50e3e07dbaa377b90f5486cf1ad1efbd577fbeff9"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/alerta.ts",
+                         "sha256":  "17b2dd83b5791a512ff3765c04b79fd9d07eae7e2b2640ddd571f1aa2d23f2eb"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/cardEditorial.ts",
+                         "sha256":  "8f37382c36b387ce588b2b78d5fc9e8205dbc3e9aaac51542a264b9b2203e681"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/cardTreino.test.ts",
+                         "sha256":  "1e0d9d7da6213833d12ac5d4a39d1de808d85e48cfac6dc70c69eabcd87ecfdb"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/cardTreino.ts",
+                         "sha256":  "2901b16bcc170de8347d9c66b940a8a1cfe22f90fa1c1fc111fd79ede4155ad6"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/data.ts",
+                         "sha256":  "896459526591abd0b83c0993046725e911889ee03fd191b349bc4011e342478b"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/distanciaCardio.test.ts",
+                         "sha256":  "f6a75738a9a64e9cb096ebe00e05ef6b0f01692233e2eb189a6a6efda2253980"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/distanciaCardio.ts",
+                         "sha256":  "5e0fd091d41921a939eaa82b512ab76c4f47622c09b2e63a30944ca64626b64e"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/duracaoCardio.test.ts",
+                         "sha256":  "68798ed94ebf70c1451c56b36224af232474cc36eca7d93d6cc6eaa877205fe9"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/duracaoCardio.ts",
+                         "sha256":  "54f624f083db04664309844daf9c5ab581b09ceddd8648ec142f30d813016b0e"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/evolucao.test.ts",
+                         "sha256":  "1b80aba18ebd6e14f971d438348047d6a19fbbcee7b77fa8332f0e49aeb9d91a"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/evolucao.ts",
+                         "sha256":  "3ed8b4066c5529cfc0ff520ec64f5ed91460adf393695ed875003819a382000f"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/iconeExercicio.ts",
+                         "sha256":  "500e8e6aadbc11d70ff85e82da7d24993d875ae41385e23effc23f0028c55660"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/imagem.ts",
+                         "sha256":  "1535054db746ea935529e6422a324f9310f6bc4057ee2dc612d329dd3e5cb535"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/imagensCardAprovado.ts",
+                         "sha256":  "f476da56b1c6613deac9672bb0e57060e54306bd7c276016e552072021a213cc"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/numero.test.ts",
+                         "sha256":  "f95d40e0060b7977744da73aad4ab0173d5645d3b9fb33c388dbd29d796440e8"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/numero.ts",
+                         "sha256":  "9da43c8a5ee543021d07b38d9d31f73f966f68cd76621516647fa70bcc3902b5"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/renderCardAprovado.test.ts",
+                         "sha256":  "062b5dc61052d9096567c082322d6ec9178e7aad3516e862c9740ca9ea489131"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/renderCardAprovado.ts",
+                         "sha256":  "2b60250ebc55e3243f7d624f51b330952618636989adbef0ef13adbd30e573e8"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/resumoHistorico.test.ts",
+                         "sha256":  "34a61468c3a52eebd113cbcfae27229721e7b1c25c9129aa02b8e46776ab5a79"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/resumoHistorico.ts",
+                         "sha256":  "dc35ea44f733a4bb3867516f9c39c01c92cf03c211e4ae2d657aa1220b3567a5"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/sessao.test.ts",
+                         "sha256":  "ab904fd8803b9c8088566a27e19651b146055bc6785f5067312a0a96b0a3c98c"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/sessao.ts",
+                         "sha256":  "23d4c4bc06d3e154188dd6754ff0e6a5b705d58070a455bdbe01ae26b97619b6"
+                     },
+                     {
+                         "arquivo":  "src/utilitarios/treino.ts",
+                         "sha256":  "11dcab2b7d27bd9fd7ed8b41cf5e590f8f7cc0e1cbc657e7372edf8544155ebe"
+                     },
+                     {
+                         "arquivo":  "src/vite-env.d.ts",
+                         "sha256":  "4be1bb2f7e750ef528e8bb6b3f4a87ea1378145463340ff706586619f3071db8"
+                     },
+                     {
+                         "arquivo":  "supabase/CONFIGURAR.md",
+                         "sha256":  "02babb0a053693ed422adfd9ab0e6738874d6d6e6b6d2695f29e8329d4f1095b"
+                     },
+                     {
+                         "arquivo":  "supabase/config.toml",
+                         "sha256":  "254a9dc014f0f9e3aa4c9b9330a9bd4109c9fdbe278e77d9e9db093efb4fd70d"
+                     },
+                     {
+                         "arquivo":  "supabase/confirmar-cadastro.html",
+                         "sha256":  "12c31a38abba85057338d71291394b4767e3c540f16742179d41975ca1e94f13"
+                     },
+                     {
+                         "arquivo":  "supabase/functions/_shared/handlers.ts",
+                         "sha256":  "045f25a4a742d69599cbbd175f688e9d63354b0c3731cb05fd78a982b7ed4192"
+                     },
+                     {
+                         "arquivo":  "supabase/functions/_shared/runtime.ts",
+                         "sha256":  "fc9659a874111d611c6f79878e21df06868fc68a04e0d2a253af2cecbaa7fe38"
+                     },
+                     {
+                         "arquivo":  "supabase/functions/_shared/servicos.ts",
+                         "sha256":  "f8b935e8c60a8896264fcdd32de299b104978b137a8b6b375abfbda98c433feb"
+                     },
+                     {
+                         "arquivo":  "supabase/functions/deno.json",
+                         "sha256":  "ea946aafbbe98986380d574ae485f44cd6d7da1927ebee28ccfff2ef3e42eb60"
+                     },
+                     {
+                         "arquivo":  "supabase/functions/excluir-conta/index.ts",
+                         "sha256":  "28781b20e20b18511b7ec76a0164c8bd3029d04e8142a64ae51af9e517ed7673"
+                     },
+                     {
+                         "arquivo":  "supabase/functions/purgar-removidos/index.ts",
+                         "sha256":  "148b0b949f4abc146e58a80e6f3862cd988535e42e510c23a0e8af1b61a519c9"
+                     },
+                     {
+                         "arquivo":  "supabase/migrations/202610140001_conta_sincronizacao.sql",
+                         "sha256":  "41e782bbc31a546cc301ccbf170d0035cae68dc0014641dda802412b4bdc2c45"
+                     },
+                     {
+                         "arquivo":  "supabase/migrations/202610210001_eliminacao.sql",
+                         "sha256":  "e2cc0009f85175301a63059c095a05dc8e0c65228e9fcdd174fa4a6a3e709426"
+                     },
+                     {
+                         "arquivo":  "supabase/templates/recuperar-senha.html",
+                         "sha256":  "85588a15798f7568122d5f450cee35e00aaee668584255a3e6a652910f2a8eef"
+                     },
+                     {
+                         "arquivo":  "supabase/verificacao/checagem_seguranca.sql",
+                         "sha256":  "4b960f250cc6bb66152255b222f91cee05ba7e7dae774e2f6c6977d309f71092"
+                     },
+                     {
+                         "arquivo":  "tsconfig.app.json",
+                         "sha256":  "bbcd078c923aa26585b32222f966a047948210372f3adbf41617e7553ef73e13"
+                     },
+                     {
+                         "arquivo":  "tsconfig.edge.json",
+                         "sha256":  "77aaebbe79d5bb53bb53f727ff7ede5d46503a605470580d719d26cb06fb4706"
+                     },
+                     {
+                         "arquivo":  "tsconfig.json",
+                         "sha256":  "ad28d132ee48d6e23917cf5827cace785d0fc01a44ca68b0dda51cc8c3fd3f52"
+                     },
+                     {
+                         "arquivo":  "tsconfig.node.json",
+                         "sha256":  "a9e6c7f6fd3ec455a6fe1d4fbb83091e774b62fe116008ab6d8c5e1e88af4629"
+                     },
+                     {
+                         "arquivo":  "vercel.json",
+                         "sha256":  "78f6da8f1e986c952c61a4c5e064ddcd27060af61ec147bec5661cca687b6ec2"
+                     },
+                     {
+                         "arquivo":  "vite.config.ts",
+                         "sha256":  "0e2d9a3bb639fc0efe6a6539bfbbe6a193729d856094bb3d5b62e09bdc746b1d"
+                     }
+                 ]
+}

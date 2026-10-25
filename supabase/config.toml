@@ -1,0 +1,8 @@
+# Handlers fazem sua própria validação: JWT remoto ou segredo de agendamento.
+[functions.excluir-conta]
+verify_jwt = false
+import_map = "./functions/deno.json"
+
+[functions.purgar-removidos]
+verify_jwt = false
+import_map = "./functions/deno.json"

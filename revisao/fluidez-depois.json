@@ -1,0 +1,26 @@
+[
+  {
+    "rodada": 0,
+    "exibirTodosMs": 384,
+    "leituras": {
+      "fotos.openCursor": 8
+    },
+    "itens": 488
+  },
+  {
+    "rodada": 1,
+    "exibirTodosMs": 236,
+    "leituras": {
+      "fotos.openCursor": 8
+    },
+    "itens": 488
+  },
+  {
+    "rodada": 2,
+    "exibirTodosMs": 234,
+    "leituras": {
+      "fotos.openCursor": 8
+    },
+    "itens": 488
+  }
+]
