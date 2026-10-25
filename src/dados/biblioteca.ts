@@ -8,6 +8,12 @@ const aliases = new Map(Object.entries(aliasesCatalogo).map(([a, b]) => [normali
 const chaveNome = (nome: string) => aliases.get(normalizar(nome)) ?? normalizar(nome)
 
 async function idCatalogo(nome: string) {
+ if (!globalThis.crypto?.subtle) {
+  const { idsCatalogoWifi } = await import('./idsCatalogoWifi')
+  const id = idsCatalogoWifi[chaveNome(nome)]
+  if (!id) throw new Error('Catálogo de teste desatualizado. Atualize o aplicativo.')
+  return id
+ }
  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`vida-em-dia:catalogo:1:${chaveNome(nome)}`))
  const bytes = new Uint8Array(digest).slice(0, 16)
  bytes[6] = (bytes[6] & 15) | 80; bytes[8] = (bytes[8] & 63) | 128
@@ -18,11 +24,7 @@ async function idCatalogo(nome: string) {
 export async function ampliarBiblioteca() {
   // IDs estáveis entre aparelhos evitam duplicações na sincronização do catálogo.
   const catalogo = await Promise.all(Object.entries(catalogoAmpliado).flatMap(([grupo, texto]) => texto.split('|').map(async nome => {
-    const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`vida-em-dia:catalogo:1:${chaveNome(nome)}`))
-    const bytes = new Uint8Array(digest).slice(0, 16)
-    bytes[6] = (bytes[6] & 15) | 80; bytes[8] = (bytes[8] & 63) | 128
-    const hex = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('')
-    return { nome, grupo, id: `${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20)}` }
+    return { nome, grupo, id: await idCatalogo(nome) }
   })))
   return banco.transaction('rw', tabela('exercicios'), tabela('configuracoes'), async () => {
     const config = await tabela('configuracoes').where('chave').equals('principal').first()

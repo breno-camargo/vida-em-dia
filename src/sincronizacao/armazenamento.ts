@@ -26,6 +26,7 @@ export function comExclusaoSync<T>(acao:()=>Promise<T>):Promise<T> {
   const geracao = geracaoAtual(), origem = banco
   const executar = () => { if (geracao !== geracaoAtual() || origem !== banco || !origem.isOpen()) throw new Error('A identidade mudou. Operação cancelada.'); return acao() }
   if(typeof navigator !== 'undefined' && navigator.locks) return navigator.locks.request('vida-em-dia-sincronizar',executar)
+  if(typeof window !== 'undefined' && window.isSecureContext === false) return Promise.reject(new Error('Esta ação precisa de HTTPS para proteger os dados entre abas. No computador, use 127.0.0.1; no celular, uma prévia HTTPS.'))
   // Na interface, falhe sem alterar dados quando não houver proteção entre abas.
   if(typeof window !== 'undefined') return Promise.reject(new Error('Este navegador não oferece proteção para sincronizar ou importar entre abas. Atualize-o e tente novamente.'))
   const resultado = sequencia.then(executar)

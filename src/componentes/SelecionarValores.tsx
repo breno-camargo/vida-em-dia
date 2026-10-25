@@ -18,7 +18,7 @@ export function SelecionarValores({ reps, peso, titulo, permitirProximas = false
     <p className="subtitulo-seletor">Deslize para escolher · confirme para salvar</p>
     <div className={`rodas-valores${semPeso ? ' somente-reps' : ''}`}><Rolagem valores={listaReps} inicial={Math.max(1, reps)} rotulo="REPS" escolher={definirReps} />{!semPeso && <><Rolagem valores={listaKg} inicial={Math.floor(peso)} rotulo="KG" escolher={definirInteiro} /><Rolagem valores={fracoes} inicial={Number((peso % 1).toFixed(3))} rotulo="DECIMAIS" escolher={definirFracao} formatar={v => v.toLocaleString('pt-BR', { minimumFractionDigits: 2 }).replace(/^0,/, '')} /></>}</div>
     <p className="valor-escolhido">{repeticoes} reps{!semPeso && ` · ${(inteiro + fracao).toLocaleString('pt-BR')} kg`}</p>
-    {permitirProximas && <label className="aplicar-proximas"><input type="checkbox" checked={proximas} onChange={e => definirProximas(e.target.checked)} />Aplicar às próximas séries pendentes</label>}
+    {permitirProximas && <label className="aplicar-proximas"><input type="checkbox" checked={proximas} disabled={ocupado} onChange={e => definirProximas(e.target.checked)} /><span><strong>Aplicar às próximas séries</strong><small>Somente às que ainda não foram concluídas.</small></span></label>}
     {erro && <p role="alert" className="erro">{erro}</p>}
     <button className="botao-principal largura-total" disabled={ocupado} onClick={async () => { definirOcupado(true); try { await confirmar(repeticoes, semPeso ? 0 : inteiro + fracao, proximas); fechar() } catch (error) { definirErro(error instanceof Error ? error.message : 'Não foi possível salvar os valores.') } finally { definirOcupado(false) } }}>Confirmar valores</button>
   </div></Painel>

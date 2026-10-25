@@ -59,6 +59,7 @@ function validarLinha(nome:string,r:LinhaBackup){
  if(r.reducoes!==undefined&&(!Array.isArray(r.reducoes)||r.reducoes.some(v=>!v||typeof v.peso_digitado!=='number'||typeof v.repeticoes!=='number')))throw new Error('Reduções inválidas no backup.')
  if(r.itens!==undefined&&!Array.isArray(r.itens))throw new Error('Itens inválidos no backup.')
  if(r.anos_feriados_inicializados!==undefined&&(!Array.isArray(r.anos_feriados_inicializados)||r.anos_feriados_inicializados.some(v=>!Number.isInteger(v))))throw new Error('Anos inválidos no backup.')
+ if(r.descanso_por_data!==undefined&&(typeof r.descanso_por_data!=='object'||r.descanso_por_data===null||Array.isArray(r.descanso_por_data)||Object.entries(r.descanso_por_data).some(([data,valor])=>!/^\d{4}-\d{2}-\d{2}$/.test(data)||new Date(`${data}T12:00:00`).toLocaleDateString('sv-SE')!==data||typeof valor!=='boolean')))throw new Error('Preferências de descanso inválidas no backup.')
  if(nome==='configuracoes'&&(r.chave!=='principal'||!Number.isInteger(r.dias_lembrete_backup)||Number(r.dias_lembrete_backup)<1||Number(r.dia_lembrete_medidas)<0||Number(r.dia_lembrete_medidas)>6))throw new Error('Configuração inválida no backup.')
  const tipos:Record<string,string[]>={exercicios:['forca','cardio'],series_treino:['normal','aquecimento','falha','dropset'],cardio_sessoes:tiposCardio.map(([tipo])=>tipo),fotos:['maquina','refeicao','progresso'],treino_exercicios:['forca','cardio']}
  if(r.tipo!==undefined&&tipos[nome]&&!tipos[nome].includes(String(r.tipo)))throw new Error(`Tipo inválido em ${nome}.`)

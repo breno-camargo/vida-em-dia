@@ -7,6 +7,12 @@ import { cargaTotal, validarSerie, caloriasMusculacao } from '../utilitarios/tre
 import { desempenho, efetivas } from '../utilitarios/evolucao'
 
 export async function treinoAtivo() { return tabela('treinos').filter(t => !t.fim && !t.apagado_em).first() }
+export async function treinoSemAtividade(treino: Treino) {
+  if (treino.fim || treino.apagado_em || treino.observacao.trim()) return false
+  const concluidas = await tabela('series_treino').where('treino_id').equals(treino.id).filter(s => !s.apagado_em && !!s.concluida_em).count()
+  const cardio = await tabela('cardio_sessoes').where('treino_id').equals(treino.id).filter(c => !c.apagado_em).count()
+  return concluidas === 0 && cardio === 0
+}
 export async function cancelarTreino(id: string) {
   return banco.transaction('rw', tabela('treinos'), tabela('treino_exercicios'), tabela('series_treino'), tabela('cardio_sessoes'), async () => {
     const treino = await tabela('treinos').get(id)
@@ -92,11 +98,8 @@ export async function iniciarTreino(ficha_id?: string, encerrarAtual: boolean | 
     const ativo = await treinoAtivo()
     if (ativo) {
       if (ativo.ficha_id === ficha_id) { await completarCardioDaFicha(ativo.id); return ativo.id }
-      const itensAtivos = await tabela('treino_exercicios').where('treino_id').equals(ativo.id).filter(i => !i.apagado_em).count()
-      const seriesAtivas = await tabela('series_treino').where('treino_id').equals(ativo.id).filter(s => !s.apagado_em).count()
-      if (!ativo.ficha_id && itensAtivos === 0 && seriesAtivas === 0 && !ativo.observacao.trim()) {
-        const agora = new Date().toISOString()
-        await tabela('treinos').update(ativo.id, { apagado_em: agora, atualizado_em: agora })
+      if (!encerrarAtual && await treinoSemAtividade(ativo)) {
+        await cancelarTreino(ativo.id)
       } else if (encerrarAtual === 'cancelar') {
         await cancelarTreino(ativo.id)
       } else if (encerrarAtual) {
@@ -135,8 +138,11 @@ export async function concluirSerie(dados: SerieTreino) {
     if (!treino || treino.fim || !salva || salva.apagado_em) throw new Error('Esta série não está disponível.')
     if (salva.concluida_em) return
     const agora = new Date().toISOString()
-    const anteriores = await tabela('treinos').filter(t => !!t.fim && !t.apagado_em).toArray()
-    const anterioresSeries = await tabela('series_treino').where('exercicio_id').equals(dados.exercicio_id).filter(s => !s.apagado_em && !!s.concluida_em && (anteriores.some(t => t.id === s.treino_id) || s.treino_id === treino.id)).toArray()
+    const concluidas = await tabela('series_treino').where('exercicio_id').equals(dados.exercicio_id).filter(s => !s.apagado_em && !!s.concluida_em).toArray()
+    const idsAnteriores = [...new Set(concluidas.filter(s => s.treino_id !== treino.id).map(s => s.treino_id))]
+    const anteriores = await tabela('treinos').bulkGet(idsAnteriores)
+    const finalizados = new Set(anteriores.filter(t => t && !!t.fim && !t.apagado_em).map(t => t!.id))
+    const anterioresSeries = concluidas.filter(s => finalizados.has(s.treino_id) || s.treino_id === treino.id)
     const serie = { ...dados, peso_total: cargaTotal(dados.peso_digitado, dados.modo_carga, dados.peso_barra), concluida_em: agora, atualizado_em: agora }
     const melhor = desempenho(anterioresSeries)
     const atual = desempenho([serie])

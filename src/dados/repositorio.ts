@@ -1,9 +1,10 @@
 import { tabela, banco, identidadeAtual, geracaoAtual } from './banco'
 import type { Registro, Tabelas } from './modelos'
+import { novoUuid } from '../utilitarios/uuid'
 
 export function criarRegistro(user_id: string | null = identidadeAtual()): Registro {
   const agora = new Date().toISOString()
-  return { id: crypto.randomUUID(), user_id, criado_em: agora, atualizado_em: agora, apagado_em: null }
+  return { id: novoUuid(), user_id, criado_em: agora, atualizado_em: agora, apagado_em: null }
 }
 export function repositorio<K extends keyof Tabelas>(nome: K) {
   const dados = tabela(nome)

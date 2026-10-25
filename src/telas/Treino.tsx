@@ -5,7 +5,7 @@ import { useEstadoTemporario } from '../hooks/useEstadoTemporario'
 import { exerciciosUnicos } from '../dados/duplicatasExercicios'
 import { Cardio } from './Cardio'
 import { MiniaturaExercicio } from '../componentes/MiniaturaExercicio'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { banco, tabela } from '../dados/banco'
 import { criarRegistro, repositorio } from '../dados/repositorio'
@@ -14,7 +14,7 @@ import type { Exercicio, Ficha, FichaExercicio } from '../dados/modelos'
 import { EditorExercicio } from '../componentes/EditorExercicio'
 import { EditorFicha } from '../componentes/EditorFicha'
 import { AjudaExercicio } from '../componentes/AjudaExercicio'
-import { iniciarTreino, treinoAtivo, descartarTreinoLivreVazio } from '../dados/treinos'
+import { iniciarTreino, treinoAtivo, treinoSemAtividade, descartarTreinoLivreVazio } from '../dados/treinos'
 import { ModoTreino } from './ModoTreino'
 import { Ellipsis, Play, Plus, ArrowRight, Dumbbell, Image } from 'lucide-react'
 import { Painel } from '../componentes/Painel'
@@ -46,13 +46,22 @@ export function Treino({ online }: { online: boolean }) {
   const [novoPedido, definirNovoPedido] = useState<{ fichaId?: string } | null>(null)
   const [secao, definirSecao] = useState<'fichas' | 'biblioteca' | 'cardio'>('fichas')
   const [busca, definirBusca] = useState('')
+  const [paginaFichas, definirPaginaFichas] = useState(0)
   const [avisoCatalogo, definirAvisoCatalogo] = useState('')
+  const [carregandoCatalogo, definirCarregandoCatalogo] = useState(true)
   const [edicao, definirEdicao] = useState<Exercicio | null>(null)
   const [ajuda, definirAjuda] = useState<Exercicio | null>(null)
   const [ficha, definirFicha] = useState<{ dados: Ficha; itens: FichaExercicio[] } | null>(null)
   const [erro, definirErro] = useState('')
   const [ocupado, definirOcupado] = useState(false)
   const [desfazer, definirDesfazer] = useEstadoTemporario<{ texto: string; executar: () => Promise<void> } | null>(null)
+  useEffect(() => {
+    let ativa = true
+    void ampliarBiblioteca().catch(() => {
+      if (ativa) definirErro('Não foi possível carregar o catálogo completo. Tente novamente em Exercícios → Ampliar catálogo.')
+    }).finally(() => { if (ativa) definirCarregandoCatalogo(false) })
+    return () => { ativa = false }
+  }, [])
   const executar = async (acao: () => Promise<void>) => {
     definirErro(''); definirOcupado(true)
     try { await acao() } catch (error) { definirErro(error instanceof Error ? error.message : 'Não foi possível concluir. Confira o armazenamento do aparelho.') }
@@ -60,7 +69,7 @@ export function Treino({ online }: { online: boolean }) {
   }
   const iniciar = async (fichaId?: string) => {
     const atual = await treinoAtivo()
-    if (atual && atual.ficha_id !== fichaId) { definirNovoPedido({ fichaId }); return }
+    if (atual && atual.ficha_id !== fichaId && !await treinoSemAtividade(atual)) { definirNovoPedido({ fichaId }); return }
     definirAbrirResumo(false)
     definirSessao(await iniciarTreino(fichaId))
   }
@@ -85,8 +94,10 @@ export function Treino({ online }: { online: boolean }) {
   }
   const { filtrados, visiveis, filtros, mais } = useFiltroExercicios(exercicios ?? [], busca)
   if (!exercicios || !fichas) return <p role="status">Carregando seu espaço…</p>
+  const totalPaginasFichas = Math.max(1, Math.ceil(fichas.length / 5))
+  const paginaAtualFichas = Math.min(paginaFichas, totalPaginasFichas - 1)
   if (sessao) return <ModoTreino id={sessao} online={online} abrirResumo={abrirResumo} fechar={() => void executar(async () => { await descartarTreinoLivreVazio(sessao); definirSessao(null); definirAbrirResumo(false) })} concluido={id => { definirSessao(null); definirAbrirResumo(false); definirCardFinalizado(id) }} />
-  return <>{dialogo}
+  return <>{dialogo}{carregandoCatalogo && <p className="nota-resumo" role="status">Carregando catálogo completo…</p>}
     {ativo && <section className="retomar-treino retomar-compacto">
       <div className="retomar-identidade"><span className="sinal-treino" aria-hidden="true" /><span>Em andamento</span><small>{ativo.data.split('-').reverse().slice(0, 2).join('/')}</small></div>
       <h2>{formatarNomeFicha(ativo.titulo ?? 'Treino livre')}</h2>
@@ -108,12 +119,13 @@ export function Treino({ online }: { online: boolean }) {
     {secao === 'fichas' ? <>
       <div className="barra-fichas"><span>{fichas.length} {fichas.length === 1 ? 'ficha' : 'fichas'} de treino</span><button className="botao-principal" onClick={() => definirFicha({ dados: { ...criarRegistro(), nome: '', ordem: Date.now() }, itens: [] })}><Plus size={18} />Nova ficha</button></div>
       {!fichas.length && <section className="painel"><h2>Sua primeira ficha</h2><p>Organize os exercícios, as séries planejadas e o descanso ou inicie um treino livre.</p></section>}
-      {fichas.map((item, indice) => <section className={`painel ficha-cartao ficha-nova${ativo?.ficha_id === item.id ? ' ficha-em-andamento' : ''}`} key={item.id}><div className="topo-ficha"><span className="icone-ficha"><Dumbbell size={24} /></span><button className="abrir-ficha" disabled={ocupado} onClick={() => void executar(() => editarFicha(item))}>{item.nome}<small>{planejamento?.filter(p => p.ficha_id === item.id).length ?? 0} exercícios · {ativo?.ficha_id === item.id ? 'Em andamento' : 'seu planejamento'}</small></button><details className="menu-ficha"><summary aria-label={`Opções da ficha ${item.nome}`}><Ellipsis size={22} /></summary><div className="acoes">
+      {fichas.slice(paginaAtualFichas*5,paginaAtualFichas*5+5).map((item, indiceDaPagina) => { const indice=paginaAtualFichas*5+indiceDaPagina; return <section className={`painel ficha-cartao ficha-nova${ativo?.ficha_id === item.id ? ' ficha-em-andamento' : ''}`} key={item.id}><div className="topo-ficha"><span className="icone-ficha"><Dumbbell size={24} /></span><button className="abrir-ficha" disabled={ocupado} onClick={() => void executar(() => editarFicha(item))}>{item.nome}<small>{planejamento?.filter(p => p.ficha_id === item.id).length ?? 0} exercícios · {ativo?.ficha_id === item.id ? 'Em andamento' : 'seu planejamento'}</small></button><details className="menu-ficha"><summary aria-label={`Opções da ficha ${item.nome}`}><Ellipsis size={22} /></summary><div className="acoes">
         <button disabled={ocupado || indice === 0} onClick={() => void executar(() => moverFicha(indice, -1))}>Subir</button>
         <button disabled={ocupado || indice === fichas.length - 1} onClick={() => void executar(() => moverFicha(indice, 1))}>Descer</button>
         <button disabled={ocupado} onClick={() => void executar(() => duplicarFicha(item))}>Duplicar</button>
         <button disabled={ocupado} onClick={() => void executar(() => removerFicha(item))}>Excluir</button>
-      </div></details></div><button className={`iniciar-ficha ${ativo?.ficha_id === item.id ? 'botao-secundario' : 'botao-principal'}`} disabled={ocupado} onClick={() => void executar(async () => { await iniciar(item.id) })}><Play size={16} aria-hidden="true" />{ativo?.ficha_id === item.id ? 'Continuar treino' : 'Iniciar treino'}<ArrowRight size={18} aria-hidden="true" /></button></section>)}
+      </div></details></div><button className={`iniciar-ficha ${ativo?.ficha_id === item.id ? 'botao-secundario' : 'botao-principal'}`} disabled={ocupado} onClick={() => void executar(async () => { await iniciar(item.id) })}><Play size={16} aria-hidden="true" />{ativo?.ficha_id === item.id ? 'Continuar treino' : 'Iniciar treino'}<ArrowRight size={18} aria-hidden="true" /></button></section>})}
+      {fichas.length>5&&<nav className="paginacao-fichas" aria-label="Páginas de fichas"><button type="button" className="botao-secundario" disabled={paginaAtualFichas===0} onClick={()=>definirPaginaFichas(paginaAtualFichas-1)}>Anterior</button><span role="status">{paginaAtualFichas+1} de {totalPaginasFichas}</span><button type="button" className="botao-secundario" disabled={paginaAtualFichas===totalPaginasFichas-1} onClick={()=>definirPaginaFichas(paginaAtualFichas+1)}>Próxima</button></nav>}
       <button className="treino-livre" disabled={ocupado} onClick={() => void executar(async () => { await iniciar() })}>{ativo && !ativo.ficha_id ? <Play size={20} aria-hidden="true" /> : <Plus size={20} aria-hidden="true" />}<span>{ativo && !ativo.ficha_id ? 'Continuar treino livre' : 'Treino livre'}<small>{ativo && !ativo.ficha_id ? 'Retome de onde parou' : 'Monte seu treino do dia'}</small></span><ArrowRight size={18} aria-hidden="true" /></button>
     </> : secao === 'biblioteca' ? <>
       <RevisarDuplicatas />
@@ -124,7 +136,7 @@ export function Treino({ online }: { online: boolean }) {
       {filtros}
       <div className="contagem-catalogo"><span>{filtrados.length} exercícios</span><span>Ordem alfabética</span></div>
       <div className="lista-catalogo">{visiveis.map(ex => <article className="item-catalogo" key={ex.id}>
-        <button type="button" className="abrir-exercicio-catalogo" onClick={() => definirAjuda(ex)}><MiniaturaExercicio id={ex.id} nome={ex.nome} /><span className="nome-catalogo"><strong>{ex.nome}</strong><small>{ex.grupo_muscular}{ex.equipamento ? ` · ${ex.equipamento}` : ''}</small></span></button>
+        <button type="button" className="abrir-exercicio-catalogo" onClick={() => definirAjuda(ex)}><MiniaturaExercicio id={ex.id} nome={ex.nome} dados={ex} /><span className="nome-catalogo"><strong>{ex.nome}</strong><small>{ex.grupo_muscular}{ex.equipamento ? ` · ${ex.equipamento}` : ''}</small></span></button>
         <details className="menu-ficha"><summary aria-label={`Opções de ${ex.nome}`}><Ellipsis size={22} /></summary><div className="acoes"><button type="button" onClick={() => definirEdicao(ex)}>Editar</button><button type="button" disabled={ocupado} onClick={() => void executar(async () => {
           const vinculos = await tabela('ficha_exercicios').where('exercicio_id').equals(ex.id).filter(item => !item.apagado_em).count()
           if (vinculos) throw new Error('Retire este exercício das fichas antes de excluí-lo.')

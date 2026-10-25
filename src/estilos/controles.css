@@ -141,7 +141,7 @@
 .centesimos-medida .coluna-roda > span { font-size: 10px; letter-spacing: .5px; }
 
 /* Movimento: alterações curtas de cor/opacidade, sem deslize de conteúdo. */
-:root { --movimento-curto: 120ms; --movimento-painel: 160ms; }
+:root { --movimento-curto: 160ms; --movimento-painel: 220ms; }
 .app :is(.abas-treino, .abas-medidas, .abas-catalogo, .alternador-seletor) > button {
   transition: background-color var(--movimento-curto) ease-out, color var(--movimento-curto) ease-out, border-color var(--movimento-curto) ease-out;
   transform: none;
@@ -233,7 +233,7 @@
 .backup-outros-formatos > summary { min-height: 48px; align-content: center; cursor: pointer; font-size: 12px; color: #b9cec0; }
 .backup-formatos-acoes { display: grid; gap: 8px; margin-top: 12px; }
 .backup-formatos-acoes > button { display: flex; justify-content: center; align-items: center; gap: 8px; }
-@keyframes aparecer-controle { from { opacity: .7; } to { opacity: 1; } }
+@keyframes aparecer-controle { from { opacity: .92; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
   .app :is(.abas-treino, .abas-medidas, .abas-catalogo, .alternador-seletor) > button,
   .app :is(.botao-principal, .botao-secundario, .botao-atalho-numero, .seta-config, .seta-exercicio, .interruptor-sync),
@@ -241,3 +241,58 @@
   .painel-modal[open], .painel-modal[open]::backdrop,
   :is(.resumo-todas-medidas, .evolucao-medidas, .historico-medidas, .comparacao-medidas, .rodas-numero, .rodas-medida, .campo-digitar-numero, .digitar-duracao, .conteudo-config:not([hidden])) { animation: none; }
 }
+/* Paleta da cópia visual; fonte única dos controles de ação. */
+:root {
+ --controle-superficie: #263e2b;
+ --controle-borda: #58764d;
+ --controle-texto: #e5f1de;
+}
+[data-tema=claro] {
+ --controle-destaque: #bcec86;
+ --controle-texto-escuro: #193017;
+ --controle-superficie: #dce9cd;
+ --controle-borda: #6f8560;
+ --controle-ativo-fundo: var(--visual-acento);
+ --controle-ativo-texto: #f8f7ee;
+ --controle-texto: #28431e;
+}
+.app .botao-secundario:hover:not(:disabled) { border-color: #94b678; }
+.app .concluir-compacto:not(:disabled) { background: var(--controle-destaque); color: var(--controle-texto-escuro); border: 1px solid var(--controle-destaque); font-weight: 650; }
+.app .concluida .concluir-compacto { background: var(--controle-superficie); color: var(--controle-texto); border-color: var(--controle-borda); }
+.app .treino-em-andamento .conteudo-exercicio > .acoes > button { min-height: 44px; padding: 10px 12px; border: 1px solid var(--controle-borda); background: var(--controle-superficie); color: var(--controle-texto); font-size: 12px; }
+.app .treino-em-andamento .conteudo-exercicio > .acoes > button:last-child { background: transparent; border-color: #795247; color: #edb6a7; }
+[data-tema=claro] .app .treino-em-andamento .conteudo-exercicio > .acoes > button:last-child { border-color: #c7978b; color: #973e31; }
+:root[data-tema=claro] .app .botao-principal:not(:disabled) { background: var(--controle-destaque); color: var(--controle-texto-escuro); }
+
+/* Prevalece sobre as cores legadas; tamanhos e estados partem do mesmo contrato. */
+:root[data-tema] .app :is(.botao-principal,.botao-secundario,.botao-destrutivo):not(:disabled) { min-height: var(--controle-altura); border-radius: var(--controle-raio); font-size: var(--controle-fonte); line-height: 1.4; gap: 8px; }
+:root[data-tema] .app .botao-principal:not(:disabled) { background: var(--controle-destaque); color: var(--controle-texto-escuro); border-color: var(--controle-destaque); }
+:root[data-tema] .app .botao-secundario:not(:disabled):not(.excluir-historico) { background: var(--controle-superficie); color: var(--controle-texto); border-color: var(--controle-borda); }
+:root[data-tema] .app :is(.abas-treino,.abas-medidas,.abas-catalogo,.alternador-seletor) { background: var(--visual-rebaixo); border-color: var(--visual-borda); border-radius: 16px; padding: 5px; gap: 4px; }
+:root[data-tema] .app :is(.abas-treino,.abas-medidas,.abas-catalogo,.alternador-seletor) > button { min-height: 44px; border-radius: 11px; font-size: 12px; color: var(--visual-suave); background: transparent; border-color: transparent; }
+:root[data-tema] .app :is(.abas-treino,.abas-medidas,.abas-catalogo,.alternador-seletor) > button:is([aria-pressed=true],[aria-selected=true]) { background: var(--controle-destaque); border-color: var(--controle-destaque); color: var(--controle-texto-escuro); }
+
+/* Acesso à tela ligada: ação discreta com o mesmo alvo de toque dos controles. */
+:root[data-tema] .app .treino-em-andamento .andamento-treino .manter-tela:not(:disabled) {
+  display: flex; align-items: center; justify-content: flex-start; width: 100%;
+  min-height: 48px; margin: 4px 0 0; padding: 8px 10px; gap: 10px;
+  border: 1px solid var(--controle-borda); border-radius: var(--controle-raio);
+  background: transparent; color: var(--controle-texto); text-align: left;
+  font-size: 12px; font-weight: 500; line-height: 1.5;
+}
+:root[data-tema] .app .manter-tela > svg { flex: 0 0 30px; width: 30px; height: 30px; padding: 6px; border-radius: 9px; background: var(--visual-acento-fundo); color: var(--visual-acento); }
+:root[data-tema] .app .manter-tela > span { flex: 1; min-width: 0; }
+:root[data-tema] .app .manter-tela::after { content: '›'; font-size: 20px; color: var(--visual-suave); }
+
+/* Seleção de alcance dos valores: todo o cartão aciona o checkbox nativo. */
+:root[data-tema] .app .seletor-valores .aplicar-proximas { display: flex; align-items: center; gap: 14px; min-height: 72px; margin: 20px 0 24px; padding: 14px; border: 1px solid var(--controle-borda); border-radius: var(--controle-raio); background: var(--visual-rebaixo); cursor: pointer; }
+:root[data-tema] .app .seletor-valores .aplicar-proximas:has(input:checked) { background: var(--visual-acento-fundo); border-color: var(--visual-acento); }
+:root[data-tema] .app .seletor-valores .aplicar-proximas input { flex: 0 0 22px; width: 22px; height: 22px; margin: 0; accent-color: var(--visual-acento); cursor: pointer; }
+:root[data-tema] .app .seletor-valores .aplicar-proximas span { display: grid; gap: 4px; min-width: 0; }
+:root[data-tema] .app .seletor-valores .aplicar-proximas strong { color: var(--visual-texto); font-size: 13px; line-height: 1.5; font-weight: 600; }
+:root[data-tema] .app .seletor-valores .aplicar-proximas small { color: var(--visual-suave); font-size: 11px; line-height: 1.5; }
+:root[data-tema] .app .seletor-valores .aplicar-proximas:has(input:focus-visible) { outline: 2px solid var(--visual-acento); outline-offset: 3px; }
+:root[data-tema] .app .treino-em-andamento .ferramentas-exercicio > .botao-descanso { display: inline-flex; align-items: center; width: auto; max-width: 100%; margin: 0; min-height: 48px; gap: 6px; padding: 8px 10px; border: 1px solid var(--controle-borda); background: var(--controle-superficie); color: var(--controle-texto); border-radius: var(--controle-raio); font-size: 11px; white-space: nowrap; }
+:root[data-tema] .app .treino-em-andamento .ferramentas-exercicio > .botao-descanso strong { color: var(--controle-texto); font-size: 13px; }
+:root[data-tema] .app .treino-em-andamento .ferramentas-exercicio > .botao-descanso > span { display: none; }
+:root[data-tema] .app .botao-descanso > span::after { content: none; }

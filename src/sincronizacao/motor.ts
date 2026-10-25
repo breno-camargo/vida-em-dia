@@ -1,4 +1,5 @@
 import { banco, identidadeAtual } from '../dados/banco'
+import { novoUuid } from '../utilitarios/uuid'
 import { comExclusaoSync, controle, conflitos, filaBanco, mensagemPausa, pausaRestauracao, pendencias, recibos, type ConflitoData } from './armazenamento'
 export { filaBanco } from './armazenamento'
 import type { LinhaBackup } from '../dados/backup'
@@ -37,7 +38,7 @@ export async function prepararPrimeiroLogin(usuario:string,transporte:Transporte
   // Só substitui o catálogo padrão intocado quando a conta já tem configuração.
   if(!dados.configuracoes.length)return
   const c=dados.configuracoes[0]
-  dados.configuracoes=[{...c,id:crypto.randomUUID(),sync_automatico:false}]
+  dados.configuracoes=[{...c,id:novoUuid(),sync_automatico:false}]
   if(!await aparelhoSemRegistros())throw new Error('Os dados locais mudaram durante a conexão. Confirme a mesclagem novamente.')
   await importarBackup({app:'vida-em-dia',versao:1,schema:banco.verno,criado_em:new Date().toISOString(),fotos_incluidas:false,tabelas:dados},'substituir',async()=>{
     if(!await aparelhoSemRegistros())throw new Error('Os dados locais mudaram durante a conexão. Confirme a mesclagem novamente.')
@@ -183,7 +184,7 @@ async function receber(usuario:string,nome:NomeSync,linhas:Remoto[]){
       let r:LinhaBackup={...remoto.dados,criado_em:new Date(remoto.criado_em).toISOString(),atualizado_em:new Date(remoto.atualizado_em).toISOString(),apagado_em:remoto.apagado_em?new Date(remoto.apagado_em).toISOString():null}
       if(nome==='configuracoes'){
         local=await t.where('chave').equals('principal').first()
-        r={...r,id:local?.id??crypto.randomUUID(),sync_automatico:local?.sync_automatico??false,ultimo_backup:local?.ultimo_backup,ultima_sincronizacao:local?.ultima_sincronizacao}
+        r={...r,id:local?.id??novoUuid(),sync_automatico:local?.sync_automatico??false,ultimo_backup:local?.ultimo_backup,ultima_sincronizacao:local?.ultima_sincronizacao}
       }
       if(!local||Date.parse(r.atualizado_em)>=Date.parse(local.atualizado_em)){
         if(['medidas_corporais','atividade_diaria','agua_dia','consumo_diario_meta'].includes(nome)&&!r.apagado_em){

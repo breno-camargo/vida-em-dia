@@ -94,6 +94,9 @@ export function abrirIdentidade(usuario: Identidade) {
   ouvintes.forEach(f => f())
   await banco.open()
   if(geracaoAbrindo!==geracao || abrindo!==banco){abrindo.close();throw new Error('Abertura cancelada por troca de identidade.')}
+  // Prévia HTTP em visitante: adiar a manutenção destrutiva até haver Web Locks.
+  // Importação, limpeza e sincronização continuam falhando de forma fechada.
+  if (usuario === null && typeof window !== 'undefined' && window.isSecureContext === false && !navigator.locks) return
   await (await import('./eliminacao')).purgarRemovidos()
  }
  const resultado = troca.then(abrir)

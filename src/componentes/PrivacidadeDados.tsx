@@ -23,7 +23,7 @@ export function PrivacidadeDados(){
  const fechar=()=>{if(!ocupado){setAcao(undefined);setSenha('');setConfirmacao('')}}
  return <section className="painel privacidade-dados"><h2>Privacidade e dados</h2>
   <p className="nota-resumo">Revise o que removeu ou gerencie os dados guardados neste navegador.</p>
-  <details className="privacidade-grupo"><summary><span>Itens removidos<small>Revisar e eliminar definitivamente</small></span><span className="privacidade-contagem">{removidos?.length??0}</span></summary>
+  <details className="privacidade-grupo"><summary><span>Itens removidos<small>Revisar e eliminar definitivamente</small></span><span className="privacidade-contagem">{removidos === undefined ? 'Carregando…' : `${removidos.length} ${removidos.length === 1 ? 'item' : 'itens'}`}</span></summary>
    <p className="nota-resumo">Remover permite Desfazer. Eliminar apaga o conteúdo e as fotos, sem volta. Após {RETENCAO_REMOVIDOS_DIAS} dias, o conteúdo dos removidos é eliminado automaticamente; neste aparelho, ao abrir seu espaço.</p>
    {!removidos?.length&&<p>Nenhum item removido aguardando eliminação.</p>}
    {removidos?.map(r=><div className="formulario" key={r.tabela+'/'+r.id}><p>{r.nome} · {r.tabela}</p><button className="botao-destrutivo" disabled={ocupado||conta.ocupado} onClick={()=>{setItem(r);abrir('registro')}}>Eliminar definitivamente</button></div>)}

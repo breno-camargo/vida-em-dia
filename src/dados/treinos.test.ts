@@ -57,6 +57,35 @@ test('avise sobre outro treino em andamento sem substituir seus registros', asyn
   expect((await tabela('treinos').get(livre))?.observacao).toBe('Meu treino de hoje')
   expect(await tabela('treinos').count()).toBe(1)
 })
+
+test('troque uma ficha sem séries concluídas sem exigir cancelamento e sem gerar sessão finalizada', async () => {
+  const { ficha } = await preparar()
+  const antigo = await iniciarTreino(ficha.id)
+  const novo = await iniciarTreino()
+  expect(novo).not.toBe(antigo)
+  expect((await treinoAtivo())?.id).toBe(novo)
+  const descartado = (await tabela('treinos').get(antigo))!
+  expect(descartado.apagado_em).toBeTruthy()
+  expect(descartado.fim).toBeUndefined()
+  expect((await tabela('series_treino').where('treino_id').equals(antigo).toArray()).every(s => !!s.apagado_em)).toBe(true)
+})
+
+test('uma série concluída impede substituição automática, inclusive aquecimento', async () => {
+  const { ficha } = await preparar()
+  const id = await iniciarTreino(ficha.id)
+  const serie = (await tabela('series_treino').where('treino_id').equals(id).first())!
+  await concluirSerie({ ...serie, tipo: 'aquecimento' })
+  await expect(iniciarTreino()).rejects.toThrow('Há um treino em andamento')
+  expect((await treinoAtivo())?.id).toBe(id)
+})
+
+test('cardio registrado protege uma sessão sem séries concluídas', async () => {
+  const { ficha } = await preparar()
+  const id = await iniciarTreino(ficha.id)
+  await tabela('cardio_sessoes').add({ ...criarRegistro(), treino_id: id, data: '2026-10-25', tipo: 'caminhada', duracao_minutos: 20, observacao: '' })
+  await expect(iniciarTreino()).rejects.toThrow('Há um treino em andamento')
+  expect((await treinoAtivo())?.id).toBe(id)
+})
 test('exclua aquecimento do volume e some reduções de drop set pela carga total', async () => {
   const { ficha } = await preparar(); const id = await iniciarTreino(ficha.id)
   const series = await tabela('series_treino').where('treino_id').equals(id).sortBy('numero_serie')

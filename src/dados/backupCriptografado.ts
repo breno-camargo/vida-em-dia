@@ -51,6 +51,7 @@ export function validarSenhaBackup(senha: string, repetida: string) {
 export async function criptografarBackup(texto: string, senha: string): Promise<EnvelopeBackup> {
  validarSenhaBackup(senha, senha)
  conferirTexto(texto)
+ if (!globalThis.crypto?.subtle) throw new Error('O backup protegido precisa de HTTPS. No computador, abra pelo endereço 127.0.0.1; no celular, use uma prévia HTTPS.')
  const conteudo = encoder.encode(texto)
  const salt = crypto.getRandomValues(new Uint8Array(16)), iv = crypto.getRandomValues(new Uint8Array(12))
  const c: Cabecalho = { formato: FORMATO, versao: 1, algoritmo: 'AES-256-GCM', kdf: { nome: 'PBKDF2', hash: 'SHA-256', iteracoes: 600000 }, salt: base64(salt), iv: base64(iv) }
@@ -72,6 +73,7 @@ export async function decifrarBackup(valor: unknown, senha: string): Promise<str
  conferirTamanho(c.dados.length)
  const corpo = bytes(c.dados)
  if (corpo.byteLength < 16) throw new Error(FORMATO_INVALIDO)
+ if (!globalThis.crypto?.subtle) throw new Error('O backup protegido precisa de HTTPS. No computador, abra pelo endereço 127.0.0.1; no celular, use uma prévia HTTPS.')
  conferirTamanho(corpo.byteLength - 16)
  let claro: ArrayBuffer
  try { claro = await crypto.subtle.decrypt({ name: 'AES-GCM', iv, additionalData: aad(c), tagLength: 128 }, await chave(senha, salt, c.kdf.iteracoes), corpo) }

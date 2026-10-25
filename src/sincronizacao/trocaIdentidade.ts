@@ -1,4 +1,5 @@
 import { fecharIdentidade } from '../dados/banco'
+import { novoUuid } from '../utilitarios/uuid'
 
 const chave = 'vida-em-dia:troca-identidade'
 export interface CanalIdentidade { postMessage(valor: unknown): void; close(): void; onmessage: ((evento: MessageEvent) => void) | null }
@@ -22,8 +23,8 @@ export function reiniciarIdentidade(publicar = true) {
  desmontar()
  fecharIdentidade()
  if (publicar) {
-  canal?.postMessage({ troca: crypto.randomUUID() })
-  localStorage.setItem(chave, crypto.randomUUID())
+  canal?.postMessage({ troca: novoUuid() })
+  localStorage.setItem(chave, novoUuid())
  }
  window.location.reload()
 }

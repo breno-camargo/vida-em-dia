@@ -4,7 +4,22 @@ import type { AtividadeDiaria, Feriado } from './modelos'
 import { dataMedida } from './medidas'
 import { validarDataAtividade } from './cardio'
 export function inicioSemana(data: string) { const d = new Date(`${data}T12:00:00`); d.setDate(d.getDate() - (d.getDay()+6)%7); return dataMedida(d) }
-export function tipoDia(data: string, feriados: Feriado[]) { const dia = new Date(`${data}T12:00:00`).getDay(); return dia === 0 || dia === 6 || feriados.some(f => !f.apagado_em && f.data === data) ? 'fds_feriado' as const : 'util' as const }
+export function tipoDia(data: string, feriados: Feriado[], descansoManual = false) { const dia = new Date(`${data}T12:00:00`).getDay(); return descansoManual || dia === 0 || dia === 6 || feriados.some(f => !f.apagado_em && f.data === data) ? 'fds_feriado' as const : 'util' as const }
+export function descansoDoDia(data: string, feriados: Feriado[], escolhas?: Record<string, boolean>) {
+  const escolha = escolhas?.[data]
+  return typeof escolha === 'boolean' ? escolha : tipoDia(data, feriados) === 'fds_feriado'
+}
+export async function definirDescansoDoDia(data: string, descansar: boolean) {
+  validarDataAtividade(data)
+  await banco.transaction('rw', tabela('configuracoes'), async () => {
+    const config = await tabela('configuracoes').where('chave').equals('principal').first()
+    if (!config) throw new Error('Reabra o app para carregar suas preferências.')
+    await tabela('configuracoes').update(config.id, {
+      descanso_por_data: { ...config.descanso_por_data, [data]: descansar },
+      atualizado_em: new Date().toISOString(),
+    })
+  })
+}
 export function feriadosNacionais(ano: number) {
   const fixos = [['01-01','Confraternização Universal'],['04-21','Tiradentes'],['05-01','Dia do Trabalho'],['09-07','Independência do Brasil'],['10-12','Nossa Senhora Aparecida'],['11-02','Finados'],['11-15','Proclamação da República'],['11-20','Consciência Negra'],['12-25','Natal']]
   // Computus gregoriano para a sexta-feira anterior à Páscoa.
@@ -40,7 +55,7 @@ export async function salvarAtividade(data: string, passos: number, calorias_gas
     if(edicao&&destino&&destino.id!==edicao.id)throw new Error('Já existe um registro nessa data. Seus valores preenchidos foram mantidos; escolha outro dia ou edite o registro pelo histórico.')
     const existente = origem ?? destino
     const manterMetas = existente?.data === data
-    const tipo = tipoDia(data, await tabela('feriados').toArray())
+    const tipo = tipoDia(data, await tabela('feriados').toArray(), config.descanso_por_data?.[data] === true)
     const atualizado = new Date(Math.max(Date.now(),existente ? Date.parse(existente.atualizado_em)+1 : 0)).toISOString()
     await tabela('atividade_diaria').put({ ...(existente ?? criarRegistro(config.user_id)), data, passos, calorias_gastas, tipo_dia:manterMetas ? existente.tipo_dia : tipo, meta_passos_aplicada:manterMetas ? existente.meta_passos_aplicada : (tipo === 'util' ? config.meta_passos_util : config.meta_passos_fds_feriado), meta_calorias_gastas_aplicada:manterMetas ? existente.meta_calorias_gastas_aplicada : (tipo === 'util' ? config.meta_calorias_gastas_util : config.meta_calorias_gastas_fds_feriado), atualizado_em:atualizado })
   })

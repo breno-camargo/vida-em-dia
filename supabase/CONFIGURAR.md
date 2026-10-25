@@ -76,6 +76,6 @@ Antes da homologação real, conferir no projeto Supabase que novos cadastros po
 
 O template de confirmação pronto para revisão está em `supabase/confirmar-cadastro.html`. Aplicá-lo manualmente ao e-mail de confirmação de cadastro permite digitar `{{ .Token }}` dentro do app (verifyOtp com type email). O template também inclui `{{ .ConfirmationURL }}`: após confirmar pelo link, voltar ao app e entrar com e-mail/senha. Como detectSessionInUrl está desligado, não se deve prometer login automático ao abrir o link. O template de recuperação de senha é independente e não deve ser substituído pelo de cadastro.
 
-Para homologação, usar a conta de teste autorizada pelo usuário, breteco@gmail.com, em perfil/janela sem os dados da conta principal. Senha deve ser definida pelo usuário no app, sem enviar no chat. Não cadastrar automaticamente, não apagar dados da conta principal e não mesclar seu armazenamento com a conta de teste.
+Para homologação, usar a conta de teste autorizada pelo usuário, teste@example.com, em perfil/janela sem os dados da conta principal. Senha deve ser definida pelo usuário no app, sem enviar no chat. Não cadastrar automaticamente, não apagar dados da conta principal e não mesclar seu armazenamento com a conta de teste.
 
 Fontes: https://supabase.com/docs/reference/javascript/auth-signup e https://supabase.com/docs/guides/auth/auth-email-templates . Envio real, confirmação, reenvio e recuperação ainda precisam de homologação no projeto configurado.

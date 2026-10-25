@@ -1,0 +1,338 @@
+/* Contrato de superfícies: mesma função, mesmo acabamento nos dois temas. */
+:root {
+  --superficie-raio: 18px;
+  --campo-raio: 12px;
+  --superficie-sombra: none;
+  --superficie-campo-borda: #58764d;
+  --superficie-topo: var(--visual-painel);
+}
+:root[data-tema=claro] {
+  --superficie-sombra: 0 3px 12px #29401c08;
+  --superficie-campo-borda: #6f8560;
+  --superficie-topo: var(--visual-painel);
+}
+:root[data-tema] .app :is(.painel,.cartao,.painel.ficha-cartao,.registro-medida,.historico-cartao,.config-lista,.peso-resumo-medidas,.par-resumo-medida,.evolucao-medidas,.privacidade-recolhida,.grade-resumo-medidas > div) {
+  background: var(--visual-painel);
+  color: var(--visual-texto);
+  border: 1px solid var(--visual-borda);
+  border-radius: var(--superficie-raio);
+  box-shadow: var(--superficie-sombra);
+}
+:root[data-tema] .app :is(.grade-resumo-medidas > div,.par-resumo-medida,.peso-resumo-medidas) { padding: 16px; }
+:root[data-tema] .app :is(.grade-resumo-medidas,.pares-resumo-medidas,.historico-medidas) { gap: 12px; }
+:root[data-tema] .app :is(.grade-resumo-medidas strong,.par-resumo-medida dd) { color: var(--visual-texto); font-size: 24px; font-weight: 650; line-height: 1.4; }
+:root[data-tema] .app :is(.grade-resumo-medidas p,.grade-resumo-medidas span,.par-resumo-medida dt,.par-resumo-medida dl p,.par-resumo-medida > header > span) { color: var(--visual-suave); font-size: 11px; line-height: 1.6; }
+:root[data-tema] .app .par-resumo-medida h3 { color: var(--visual-texto); font-size: 13px; }
+:root[data-tema] .app :is(.par-resumo-medida dd small,.grade-resumo-medidas strong small) { color: var(--visual-suave); font-size: 12px; font-weight: 400; }
+:root[data-tema] .app :is(.metricas-resumo > div,.campo-medida,.data-medida,.calorias-resumo,.arquivo-backup) {
+  background: var(--visual-rebaixo);
+  color: var(--visual-texto);
+  border: 1px solid var(--superficie-campo-borda);
+  border-radius: var(--campo-raio);
+  box-shadow: none;
+}
+:root[data-tema] .app :is(.formulario,.confirmacao-app,.editor-medidas-grupos) { gap: 20px; }
+:root[data-tema] .app .tela-medidas { gap: 20px; }
+:root[data-tema] .app .tela-medidas > :is(.topo-medidas,.painel,.peso-resumo-medidas,.abas-medidas) { margin: 0; }
+:root[data-tema] .app .formulario label { gap: 8px; }
+:root[data-tema] .app .painel-modal > .topo-painel,
+:root[data-tema] .app .painel-modal > .topo-painel > header { background: var(--superficie-topo); color: var(--visual-texto); border-color: var(--visual-borda); }
+:root[data-tema] .app .painel-modal > .conteudo-modal { background: var(--visual-painel); }
+:root[data-tema] .app .painel-modal > .topo-painel h2 { color: var(--visual-texto); }
+:root[data-tema] .app .painel-modal > .topo-painel > .alca-painel { background: var(--superficie-topo); border: 0; box-shadow: none; }
+:root[data-tema] .app .painel-modal > .topo-painel > .alca-painel > span { background: var(--visual-suave); opacity: .6; }
+:root[data-tema] .app .painel-modal > .topo-painel > .alca-painel:focus { outline: none; outline-offset: 0; }
+:root[data-tema] .app .painel-modal > .topo-painel > .alca-painel:focus-visible > span { opacity: 1; background: var(--visual-acento); box-shadow: 0 0 0 3px var(--visual-painel),0 0 0 5px var(--visual-acento); }
+/* Linhas e grupos internos não recebem uma segunda moldura. */
+:root[data-tema] .app .config-lista .secao-config { background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+:root[data-tema] .app .config-lista .secao-config + .secao-config { border-top: 1px solid var(--visual-borda); }
+:root[data-tema] .app .conteudo-config > .painel { border: 0; background: transparent; box-shadow: none; padding: 4px 0 0; }
+:root[data-tema] .app .ultimo-concluido.ultimo-treino-atalho { border: 0; border-bottom: 1px solid var(--visual-borda); border-radius: 0; background: transparent; box-shadow: none; }
+:root[data-tema] .app .conteudo-config:not([hidden]) { padding: 20px 16px 24px; }
+:root[data-tema] .app .conteudo-config > .painel > .nota-resumo + .abas-treino { margin: 16px 0 0; }
+:root[data-tema] .app .privacidade-recolhida { padding: 0 16px; }
+:root[data-tema] .app .privacidade-recolhida > summary { padding-block: 18px; line-height: 1.5; }
+:root[data-tema] .app .privacidade-recolhida > .painel.privacidade-dados {
+  display: grid; gap: 20px; padding: 12px 0 24px; margin: 0;
+  border: 0; border-radius: 0; background: transparent; box-shadow: none;
+}
+:root[data-tema] .app .privacidade-dados > h2 { margin: 0 0 -8px; }
+:root[data-tema] .app .privacidade-dados > .nota-resumo { margin: 0 0 4px; }
+:root[data-tema] .app .privacidade-dados > .privacidade-grupo {
+  padding: 16px; margin: 0; border: 1px solid var(--visual-borda);
+  border-radius: 14px; background: var(--visual-rebaixo);
+}
+:root[data-tema] .app .privacidade-grupo.formulario { gap: 16px; }
+:root[data-tema] .app .privacidade-grupo > summary { min-height: 44px; padding: 4px 0; line-height: 1.6; }
+:root[data-tema] .app .privacidade-grupo > summary small { display: block; margin-top: 6px; }
+:root[data-tema] .app details.privacidade-grupo[open] > summary { margin-bottom: 16px; }
+:root[data-tema] .app .privacidade-grupo > .formulario { margin-top: 20px; }
+:root[data-tema] .app .privacidade-grupo > p { line-height: 1.8; }
+:root[data-tema] .app details.privacidade-grupo > summary { display: flex; align-items: center; gap: 12px; list-style: none; }
+:root[data-tema] .app details.privacidade-grupo > summary::-webkit-details-marker { display: none; }
+:root[data-tema] .app details.privacidade-grupo > summary::before { content: '›'; flex: 0 0 16px; text-align: center; font-size: 20px; line-height: 1; color: var(--visual-suave); }
+:root[data-tema] .app details.privacidade-grupo[open] > summary::before { transform: rotate(90deg); }
+:root[data-tema] .app .privacidade-grupo > summary > span:first-child { flex: 1; min-width: 0; }
+:root[data-tema] .app .privacidade-contagem { margin-left: auto; flex-shrink: 0; min-width: 0; width: auto; height: auto; padding: 4px 8px; border-radius: 8px; background: var(--visual-acento-fundo); color: var(--visual-acento); font-size: 11px; white-space: nowrap; }
+:root[data-tema] .app .mais-exercicios { display: grid; gap: 12px; padding: 20px 0; }
+:root[data-tema] .app .mais-exercicios .mais-catalogo { margin: 0; width: 100%; }
+:root[data-tema] .app .privacidade-recolhida > summary { display: flex; align-items: center; gap: 12px; min-height: 68px; padding: 14px 0; list-style: none; cursor: pointer; }
+:root[data-tema] .app .privacidade-recolhida > summary::-webkit-details-marker { display: none; }
+:root[data-tema] .app .privacidade-recolhida > summary .icone-config { display: grid; place-items: center; flex: 0 0 34px; }
+:root[data-tema] .app .privacidade-recolhida > summary .texto-config { flex: 1; min-width: 0; }
+:root[data-tema] .app .privacidade-recolhida > summary .texto-config :is(strong,small) { display: block; }
+:root[data-tema] .app .privacidade-recolhida > summary .seta-config { flex-shrink: 0; color: var(--visual-suave); }
+:root[data-tema] .app .privacidade-recolhida[open] > summary .seta-config { transform: rotate(180deg); }
+
+/* Comparação solicitada: remover a classe do ModoTreino restaura a opção espaçosa. */
+:root[data-tema] .app .resumo-treino-compacto .andamento-treino { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 10px 12px; padding: 14px 16px; }
+:root[data-tema] .app .resumo-treino-compacto .titulo-andamento { min-width: 0; }
+:root[data-tema] .app .resumo-treino-compacto .titulo-andamento h2 { font-size: 18px; overflow-wrap: anywhere; }
+:root[data-tema] .app .resumo-treino-compacto .progresso-sessao { margin: 0; }
+:root[data-tema] .app .resumo-treino-compacto .progresso-sessao > span { display: none; }
+:root[data-tema] .app .resumo-treino-compacto .progresso-sessao > strong { font-size: 17px; }
+:root[data-tema] .app .resumo-treino-compacto .andamento-treino > :is(.barra-sessao,.manter-tela) { grid-column: 1 / -1; }
+:root[data-tema] .app .descanso.descanso-popup { position: static; display: grid; gap: 16px; margin: 0; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; text-align: center; }
+:root[data-tema] .app .descanso-popup > strong { font-size: 52px; line-height: 1.15; margin: 0; padding: 8px 0; color: var(--visual-acento); font-variant-numeric: tabular-nums; }
+:root[data-tema] .app .descanso-popup > p { margin: 0 0 4px; color: var(--visual-suave); font-size: 13px; line-height: 1.7; }
+:root[data-tema] .app .descanso-popup > button { width: 100%; margin: 0; }
+
+/* A prévia tem uma moldura própria; o PNG exportado não é estilizado aqui. */
+:root[data-tema] .app .criador-card > .area-preview-card { min-height: 160px; padding: 16px; background: var(--visual-rebaixo); border: 1px solid var(--visual-borda); border-radius: 16px; overflow: hidden; }
+:root[data-tema] .app .criador-card > .area-preview-card.preview-aprovada { background: repeating-conic-gradient(#354438 0 25%,#46574a 0 50%) 0 / 20px 20px; }
+:root[data-tema] .app .criador-card > .area-preview-card.preview-adesivo-escura { background: repeating-conic-gradient(#e0e5da 0 25%,#c6d0bd 0 50%) 0 / 20px 20px; }
+:root[data-tema] .app .criador-card > .area-preview-card.com-foto { padding: 12px; }
+:root[data-tema] .app .criador-card > .area-preview-card > .preview-card { display: block; width: 100%; height: auto; max-width: 100%; max-height: min(44dvh,360px); object-fit: contain; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
+:root[data-tema] .app .acoes-foto-card { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: stretch; gap: 12px; }
+:root[data-tema] .app .acoes-foto-card.sem-foto { grid-template-columns: 1fr; }
+:root[data-tema] .app .acoes-foto-card > :is(label,button) { margin: 0; min-width: 0; }
+
+/* O resumo usa ações no fluxo: não reserva a altura do antigo rodapé fixo. */
+:root[data-tema] .app .resumo-treino { padding-bottom: 0; margin-bottom: 0; }
+:root[data-tema] .app .tela-evolucao > .conteudo-alternado { min-height: 0; }
+:root[data-tema] .app .treino-em-andamento { padding-bottom: var(--reserva-acoes, 65px); }
+:root[data-tema] .app .treino-em-andamento > .cancelar-sessao { margin: 12px 0 0; }
+:root[data-tema] .app .ferramentas-exercicio { display: flex; align-items: center; gap: 12px; padding-top: 8px; }
+:root[data-tema] .app .treino-em-andamento .ferramentas-exercicio > .botao-descanso { flex: 1; min-width: 0; justify-content: center; min-height: 44px; padding-block: 6px; }
+:root[data-tema] .app .treino-em-andamento .ferramentas-exercicio > .ajuda-no-treino { flex: 0 0 auto; float: none; margin: 0; padding: 8px 4px; min-height: 48px; }
+
+/* Contraste claro: prevalece sobre as cores fixas da paleta legada. */
+:root[data-tema=claro] .app :is(.estado-rede i.online,.sinal-treino) {
+  background: var(--status-ponto);
+}
+:root[data-tema=claro] .app :is(.abas-treino,.abas-medidas,.abas-catalogo,.alternador-seletor) {
+  background: var(--controle-superficie);
+  border: 1px solid var(--controle-borda);
+}
+:root[data-tema=claro] .app :is(.abas-treino,.abas-medidas,.abas-catalogo,.alternador-seletor) > button:is([aria-pressed=true],[aria-selected=true]) {
+  background: var(--controle-ativo-fundo);
+  color: var(--controle-ativo-texto);
+  border-color: var(--controle-ativo-fundo);
+}
+:root[data-tema=claro] .app :is(.retomar-treino.retomar-compacto,.metricas-resumo > div,.calorias-resumo,.arquivo-backup) {
+  border: 1px solid var(--visual-borda);
+}
+:root[data-tema=claro] .app :is(input:not([type=checkbox]):not([type=radio]),select,textarea,.campo-medida,.data-medida,.botao-icone) {
+  border: 1px solid var(--controle-borda);
+}
+:root[data-tema=claro] .app .aviso-modo-visitante {
+  background: var(--aviso-fundo);
+  color: var(--aviso-texto);
+  border: 1px solid var(--aviso-borda);
+  border-left: 3px solid var(--visual-acento);
+}
+:root[data-tema=claro] .app :is(.aviso-modo-visitante) {
+  font-size: 12px;
+}
+
+/* Acabamento dos indicadores, chamada inicial e detalhes do cardio. */
+:root[data-tema] .app .estado-rede { gap: 6px; font-size: 12px; line-height: 16px; }
+:root[data-tema] .app .estado-rede i.online { background: var(--status-ponto, var(--visual-acento)); }
+:root[data-tema] .app .nota { gap: 12px; padding: 18px 4px; }
+:root[data-tema] .app .nota > .ponto { width: 8px; height: 8px; margin-top: 6px; background: var(--status-ponto, var(--visual-acento)); }
+:root[data-tema] .app .nota h3 { margin-bottom: 6px; font-size: 13px; line-height: 1.5; }
+:root[data-tema] .app .nota p { color: var(--visual-suave); font-size: 12px; line-height: 1.7; }
+:root[data-tema] .app .destaque .botao-principal:not(:disabled) {
+  background: #213e18;
+  border-color: #213e18;
+  color: #fff;
+  text-decoration: none;
+}
+:root[data-tema] .app .destaque .botao-principal:not(:disabled):hover { background: #294b1e; border-color: #294b1e; }
+:root[data-tema] .app .destaque .botao-principal :is(span,svg) { color: inherit; text-decoration: none; }
+:root[data-tema] .app .musculos-catalogo { scrollbar-width: none; }
+:root[data-tema] .app .musculos-catalogo::-webkit-scrollbar { display: none; }
+:root[data-tema] .app .formulario-cardio .opcionais-cardio {
+  background: transparent;
+  border: 1px solid var(--visual-borda);
+  border-radius: 16px;
+  padding: 0 16px 16px;
+}
+:root[data-tema] .app .formulario-cardio .opcionais-cardio:not([open]) { padding-bottom: 0; }
+:root[data-tema] .app .formulario-cardio .opcionais-cardio > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 48px;
+  padding: 12px 0;
+  color: var(--visual-texto);
+  font-size: 13px;
+  line-height: 1.5;
+  list-style: none;
+  cursor: pointer;
+}
+:root[data-tema] .app .formulario-cardio .opcionais-cardio > summary::-webkit-details-marker { display: none; }
+:root[data-tema] .app .formulario-cardio .opcionais-cardio > summary::after {
+  content: '';
+  width: 7px;
+  height: 7px;
+  margin-right: 3px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg);
+}
+:root[data-tema] .app .formulario-cardio .opcionais-cardio[open] > summary::after { transform: rotate(225deg); }
+:root[data-tema] .app .formulario-cardio .grupo-campos-cardio { margin: 12px 0 20px; }
+:root[data-tema] .app .formulario-cardio .grupo-campos-cardio > legend { margin-bottom: 10px; color: var(--visual-suave); font-size: 12px; line-height: 1.5; }
+:root[data-tema] .app .formulario-cardio .opcionais-cardio .campos-medidas { gap: 10px; }
+:root[data-tema] .app .formulario-cardio .opcionais-cardio .campo-medida { min-height: 72px; gap: 6px; padding: 12px; }
+:root[data-tema] .app .formulario-cardio .opcionais-cardio .campo-medida > span { font-size: 12px; line-height: 1.5; }
+:root[data-tema] .app .formulario-cardio .opcionais-cardio .campo-medida > strong { font-size: 15px; line-height: 1.4; font-weight: 600; }
+:root[data-tema] .app .formulario-cardio .opcionais-cardio > label { display: grid; gap: 8px; margin-top: 18px; color: var(--visual-suave); font-size: 12px; }
+:root[data-tema] .app .formulario-cardio .opcionais-cardio textarea { min-height: 88px; width: 100%; resize: vertical; }
+
+/* O destaque da próxima série não desloca suas colunas. */
+:root[data-tema] .app .treino-em-andamento .serie-compacta {
+  border-width: 1px;
+  border-style: solid;
+  padding: 8px;
+}
+:root[data-tema] .app .treino-em-andamento .cabecalho-series { padding-left: 9px; padding-right: 9px; }
+:root[data-tema] .app .treino-em-andamento .linha-serie > button { align-self: center; box-sizing: border-box; }
+
+/* Ajuda do exercício: leitura compacta e anexação com área inteira acionável. */
+:root[data-tema] .app .conteudo-modal:has(> .titulo-detalhe) > .capa-exercicio:has(> svg) { min-height: 120px; height: 120px; margin-bottom: 16px; }
+:root[data-tema] .app .conteudo-modal:has(> .titulo-detalhe) > .capa-exercicio > svg { width: 44px; height: 44px; }
+:root[data-tema] .app .titulo-detalhe .selo { padding: 6px 10px; font-size: 11px; line-height: 1.4; margin-bottom: 10px; }
+:root[data-tema] .app .titulo-detalhe h2 { font-size: 21px; line-height: 1.3; letter-spacing: -.4px; margin-bottom: 18px; }
+:root[data-tema] .app .abas-detalhe { margin-bottom: 20px; padding: 4px; gap: 3px; }
+:root[data-tema] .app .abas-detalhe > button { min-height: 44px; font-size: 11px; line-height: 1.35; }
+:root[data-tema] .app .conteudo-modal:has(> .titulo-detalhe) .ajuda-texto h3 { font-size: 14px; line-height: 1.5; margin: 16px 0 8px; }
+:root[data-tema] .app .conteudo-modal:has(> .titulo-detalhe) .ajuda-texto p { color: var(--visual-suave); font-size: 13px; line-height: 1.7; }
+:root[data-tema] .app .anexar-maquina {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 80px;
+  margin: 18px 0 0;
+  padding: 16px;
+  border: 1px dashed var(--superficie-campo-borda);
+  border-radius: 14px;
+  background: var(--visual-rebaixo);
+  color: var(--visual-acento);
+  cursor: pointer;
+}
+:root[data-tema] .app .anexar-maquina > span { display: grid; gap: 5px; min-width: 0; }
+:root[data-tema] .app .anexar-maquina strong { color: var(--visual-texto); font-size: 13px; line-height: 1.5; font-weight: 600; }
+:root[data-tema] .app .anexar-maquina small { color: var(--visual-suave); font-size: 12px; line-height: 1.5; }
+:root[data-tema] .app .anexar-maquina > input { position: absolute; width: 1px; height: 1px; min-height: 0; padding: 0; border: 0; opacity: 0; overflow: hidden; }
+:root[data-tema] .app .anexar-maquina:focus-within { outline: 2px solid var(--visual-acento); outline-offset: 3px; }
+:root[data-tema] .app .anexar-maquina[aria-disabled=true] { opacity: .6; cursor: wait; }
+:root[data-tema] .app .conteudo-modal:has(> .titulo-detalhe) > .editar-detalhe { margin-top: 20px; }
+:root[data-tema] .app .abas-detalhe > button {
+  background: transparent;
+  color: var(--visual-suave);
+  transition: background-color 200ms ease-out, color 200ms ease-out;
+}
+:root[data-tema] .app .abas-detalhe > button[aria-pressed=true] {
+  background: var(--controle-ativo-fundo, var(--controle-destaque));
+  color: var(--controle-ativo-texto, var(--controle-texto-escuro));
+  font-weight: 650;
+}
+:root[data-tema] .app .conteudo-aba-exercicio > .botao-principal { text-decoration: none; margin-bottom: 16px; }
+@media (prefers-reduced-motion: reduce) {
+  :root[data-tema] .app .abas-detalhe > button { transition: none; }
+}
+
+/* Série feita mantém os valores legíveis e repete o sinal de exercício concluído. */
+:root[data-tema] .app .treino-em-andamento .serie-compacta.concluida {
+  background: var(--visual-acento-fundo);
+  border-color: var(--visual-acento);
+  box-shadow: inset 0 3px 0 var(--visual-acento);
+}
+:root[data-tema] .app .treino-em-andamento .serie-compacta.concluida .valor-serie {
+  background: transparent;
+  color: var(--visual-texto);
+  border-color: transparent;
+  font-weight: 650;
+  opacity: 1;
+}
+:root[data-tema] .app .treino-em-andamento .serie-compacta.concluida .concluir-compacto {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: var(--controle-ativo-fundo, var(--controle-destaque));
+  color: var(--controle-ativo-texto, var(--controle-texto-escuro));
+  border: 1px solid transparent;
+}
+:root[data-tema] .app .treino-em-andamento .serie-compacta.concluida .concluir-compacto::before { content: '✓'; font-size: 13px; }
+
+/* O estado concluído também se destaca no cartão inteiro do exercício. */
+:root[data-tema] .app .treino-em-andamento .exercicio-treino.exercicio-finalizado {
+  border-color: var(--visual-acento);
+  box-shadow: inset 0 3px 0 var(--visual-acento);
+}
+:root[data-tema=claro] .app .treino-em-andamento .exercicio-treino.exercicio-finalizado {
+  background: var(--visual-acento-fundo);
+}
+:root[data-tema] .app .treino-em-andamento .exercicio-finalizado .resumo-exercicio::after { color: var(--visual-acento); font-weight: 700; }
+
+/* No escuro, lima cheia identifica a ação pendente; feita usa uma confirmação discreta. */
+:root[data-tema=escuro] .app .treino-em-andamento .serie-compacta.concluida {
+  background: var(--visual-painel);
+  border-color: var(--visual-borda);
+  box-shadow: inset 3px 0 0 var(--visual-acento);
+}
+:root[data-tema=escuro] .app .treino-em-andamento .serie-compacta.concluida .concluir-compacto {
+  background: var(--visual-acento-fundo);
+  color: var(--visual-acento);
+  border-color: var(--visual-borda);
+}
+:root[data-tema] .app .treino-em-andamento .exercicio-finalizado > .cabecalho-exercicio {
+  background: var(--visual-acento-fundo);
+  box-shadow: inset 0 3px 0 var(--visual-acento);
+}
+:root[data-tema] .app .treino-em-andamento .exercicio-finalizado > .cabecalho-exercicio .miniatura-exercicio {
+  background: var(--controle-ativo-fundo, var(--controle-destaque));
+  color: var(--controle-ativo-texto, var(--controle-texto-escuro));
+  border-color: transparent;
+}
+:root[data-tema] .app .atividade-hoje .descanso-hoje[aria-pressed=true] {
+  background: var(--visual-acento-fundo);
+  color: var(--visual-texto);
+  border-color: var(--visual-acento);
+  box-shadow: inset 3px 0 0 var(--visual-acento);
+  font-weight: 600;
+}
+:root[data-tema] .app .atividade-hoje .descanso-hoje[aria-pressed=true] > svg { color: var(--visual-acento); }
+:root[data-tema] .app .treino-em-andamento .andamento-treino .manter-tela:not(:disabled) {
+  min-height: 44px;
+  padding: 6px 10px;
+  background: var(--visual-rebaixo);
+}
+:root[data-tema] .app .treino-em-andamento .andamento-treino .manter-tela[aria-pressed=true] { background: var(--visual-acento-fundo); border-color: var(--visual-acento); }
+:root[data-tema] .app .manter-tela::after { content: none; }
+:root[data-tema] .app .manter-tela .texto-manter-tela { display: grid; gap: 0; }
+:root[data-tema] .app .manter-tela .texto-manter-tela strong { color: var(--visual-texto); font-size: 12px; font-weight: 650; line-height: 18px; white-space: nowrap; text-align: left; }
+:root[data-tema] .app .aviso-tela-ligada { margin: 8px 0 0; color: var(--visual-suave); font-size: 12px; line-height: 1.5; }
+:root[data-tema] .app .manter-tela .texto-manter-tela small { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+:root[data-tema] .app .manter-tela > .interruptor-tela { flex: 0 0 36px; width: 36px; height: 22px; padding: 3px; border-radius: 20px; background: var(--visual-borda); }
+:root[data-tema] .app .interruptor-tela > i { display: block; width: 16px; height: 16px; border-radius: 50%; background: var(--visual-texto); }
+:root[data-tema] .app .manter-tela[aria-pressed=true] .interruptor-tela { background: var(--visual-acento); }
+:root[data-tema] .app .manter-tela[aria-pressed=true] .interruptor-tela > i { transform: translateX(14px); background: var(--controle-ativo-texto, var(--controle-texto-escuro)); }
+@media (prefers-reduced-motion: no-preference) {
+  :root[data-tema] .app .interruptor-tela > i { transition: transform 160ms ease-out, background-color 160ms ease-out; }
+}
