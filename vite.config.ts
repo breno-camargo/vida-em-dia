@@ -30,9 +30,9 @@ export default defineConfig(({ mode }) => {
     start_url: '/', scope: '/', display: 'standalone', orientation: 'portrait',
     theme_color: '#101714', background_color: '#101714',
     icons: [
-      { src: '/icons/icone-192.png', sizes: '192x192', type: 'image/png' },
-      { src: '/icons/icone-512.png', sizes: '512x512', type: 'image/png' },
-      { src: '/icons/icone-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+      { src: '/icons/icone-universal-192.png', sizes: '192x192', type: 'image/png' },
+      { src: '/icons/icone-universal-512.png', sizes: '512x512', type: 'image/png' },
+      { src: '/icons/icone-universal-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
     ]
   },
   workbox: { globPatterns: ['**/*.{js,css,html,png,svg,ico,woff2}'], navigateFallback: '/index.html' }
