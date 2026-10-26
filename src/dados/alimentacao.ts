@@ -76,7 +76,7 @@ export function lerGramas(texto: string) {
 export function calcularPorcao(nutrientes: Nutrientes, base: number, quantidade: number): Nutrientes {
   if (!Number.isFinite(base) || base <= 0 || !Number.isFinite(quantidade) || quantidade <= 0 || quantidade > 20000) throw new Error('Porção inválida.')
   const resultado: Nutrientes = { kcal: 0 }
-  for (const campo of ['kcal', 'proteina_g', 'carbo_g', 'gordura_g', 'fibra_g', 'sodio_mg'] as const) {
+  for (const campo of ['kcal', 'proteina_g', 'carbo_g', 'gordura_g', 'fibra_g', 'sodio_mg', 'acucares_g'] as const) {
     const valor = nutrientes[campo]
     if (valor === undefined) continue
     if (!Number.isFinite(valor) || valor < 0) throw new Error('Nutriente inválido.')

@@ -29,7 +29,7 @@ export function validarDominioBackup(nome: string, r: LinhaBackup) {
   }
   if (nome === 'configuracoes' && r.alimentos_comuns_ocultos !== undefined && (!Array.isArray(r.alimentos_comuns_ocultos) || r.alimentos_comuns_ocultos.some(v => typeof v !== 'string' || !v || v.length > 200))) falhar('alimentos_comuns_ocultos')
   if (nome === 'alimentos_favoritos' || nome === 'refeicoes_dia' || nome === 'combos_refeicao') {
-    for (const campo of ['kcal', 'proteina_g', 'carbo_g', 'gordura_g', 'fibra_g', 'sodio_mg']) numero(campo, 0)
+    for (const campo of ['kcal', 'proteina_g', 'carbo_g', 'gordura_g', 'fibra_g', 'sodio_mg', 'acucares_g']) numero(campo, 0)
   }
   if (nome === 'alimentos_favoritos' && r.base_quantidade_g !== undefined) numero('base_quantidade_g', Number.MIN_VALUE, 5000)
   if (r.alimento_nome !== undefined && typeof r.alimento_nome !== 'string') falhar('alimento_nome')
@@ -66,7 +66,7 @@ export function validarDominioBackup(nome: string, r: LinhaBackup) {
       if (!item || typeof item !== 'object' || Array.isArray(item)) falhar('itens')
       const i = item as Record<string, unknown>
       if (typeof i.descricao !== 'string' || typeof i.kcal !== 'number') falhar('itens')
-      for (const campo of ['kcal', 'proteina_g', 'carbo_g', 'gordura_g', 'fibra_g', 'sodio_mg']) if (i[campo] !== undefined && (typeof i[campo] !== 'number' || !Number.isFinite(i[campo]) || Number(i[campo]) < 0)) falhar(`itens.${campo}`)
+      for (const campo of ['kcal', 'proteina_g', 'carbo_g', 'gordura_g', 'fibra_g', 'sodio_mg', 'acucares_g']) if (i[campo] !== undefined && (typeof i[campo] !== 'number' || !Number.isFinite(i[campo]) || Number(i[campo]) < 0)) falhar(`itens.${campo}`)
     }
   }
   if (nome === 'exercicios' && !['manual', 'banco_aberto'].includes(String(r.origem))) falhar('origem')
