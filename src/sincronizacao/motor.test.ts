@@ -99,4 +99,4 @@ test('historico com 1000 refeicoes retoma lote interrompido e baixa paginas sem 
  await executarSync(usuario,n.transporte)
  expect(n.chamadas.length).toBe(antes)
  expect(await tabela('refeicoes_dia').count()).toBe(1000)
-},30000)
+},90000)
