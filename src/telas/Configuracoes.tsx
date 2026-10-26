@@ -1,3 +1,4 @@
+import { GuiaInstalacao } from '../componentes/GuiaInstalacao'
 import { EditorMedida } from '../componentes/EditorMedida'
 import { novaMedida } from '../dados/medidas'
 import type { MedidaCorporal } from '../dados/modelos'
@@ -5,10 +6,10 @@ import { ConfigurarAgua } from '../componentes/ConfigurarAgua'
 import { ConfigurarEnergia } from '../componentes/PerfilEnergia'
 import { registrarTemaManual, usarTemaAutomatico } from '../utilitarios/tema'
 import { useTema, useModoTema } from '../hooks/useTema'
-import { recolherDetalhesSuavemente } from '../utilitarios/enquadrarDetalhes'
+import { enquadrarDetalhes, recolherDetalhesSuavemente } from '../utilitarios/enquadrarDetalhes'
 import { useEffect, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { ChevronDown, UserRound, DatabaseBackup, Ruler, Activity, Smartphone, Info, Download, Sun, ShieldCheck, Droplets, Share2 } from 'lucide-react'
+import { ChevronDown, UserRound, DatabaseBackup, Ruler, Activity, Smartphone, Info, Download, Sun, ShieldCheck, Droplets } from 'lucide-react'
 import { tabela } from '../dados/banco'
 import { BackupConfiguracoes } from '../componentes/BackupConfiguracoes'
 import { PrivacidadeDados } from '../componentes/PrivacidadeDados'
@@ -125,8 +126,8 @@ export function Configuracoes({ instalado, persistente, inicial, abrirAcesso }: 
       <div><dt><ShieldCheck size={17} aria-hidden="true"/>Armazenamento</dt><dd>{persistente===null?'Indisponível':persistente?'Persistente':'Padrão do navegador'}</dd></div>
       <div><dt><Sun size={17} aria-hidden="true"/>Tema atual</dt><dd>{tema==='claro'?'Claro':'Escuro'}</dd></div><div><dt><Activity size={17} aria-hidden="true"/>Última sincronização</dt><dd>{data(config?.ultima_sincronizacao)}</dd></div>
       <div><dt><DatabaseBackup size={17} aria-hidden="true"/>Último backup</dt><dd>{data(config?.ultimo_backup)}</dd></div>
-    </dl><p className="aparelho-nota"><ShieldCheck size={18} aria-hidden="true"/><span>Mantenha um backup fora do app. A proteção do armazenamento depende do navegador.</span></p></section>},
-    ...(!instalado?[{id:'instalar' as const,titulo:'Instalar no iPhone',resumo:'Adicionar à Tela de Início',icone:<Download size={20}/>,conteudo:<section className="painel instalar-guia"><h2>Instalar no iPhone</h2><p className="nota-resumo">Tenha o app na Tela de Início.</p><ol className="instalar-passos"><li><span className="passo-numero">1</span><div><strong>Abra no Safari</strong><small>Acesse o endereço do app.</small></div></li><li><span className="passo-numero">2</span><div><strong>Toque em Compartilhar</strong><small>Procure o ícone <Share2 size={14} aria-label="Compartilhar"/> na barra do Safari.</small></div></li><li><span className="passo-numero">3</span><div><strong>Adicionar à Tela de Início</strong><small>Confirme em Adicionar e abra pelo ícone.</small></div></li></ol><p className="aparelho-nota"><Info size={18} aria-hidden="true"/><span>Instale antes de começar seus registros. Safari e app instalado podem ter dados separados; cada endereço tem seu próprio armazenamento.</span></p></section>}]:[]),
+    </dl><p className="aparelho-nota"><ShieldCheck size={18} aria-hidden="true"/><span>Mantenha um backup fora do app. A proteção do armazenamento depende do navegador.</span></p>{instalado && <details onToggle={enquadrarDetalhes}><summary onClick={recolherDetalhesSuavemente}>Como instalar em outro celular</summary><GuiaInstalacao instalado={instalado}/></details>}</section>},
+    ...(!instalado ? [{id:'instalar' as const, titulo:'Instalar o aplicativo', resumo:'Ajuda para iPhone e Android', icone:<Download size={20}/>, conteudo:<GuiaInstalacao instalado={instalado}/>}]:[]),
     {id:'sobre' as const,titulo:'Sobre o Vida em Dia',resumo:'Recursos e armazenamento',icone:<Info size={20}/>,conteudo:<section className="painel"><h2>Sobre o Vida em Dia</h2><p>Seu espaço pessoal de treino, alimentação e evolução.</p><small>Novo visual · Temas claro, escuro e automático</small><h3>Seus dados</h3><p>Registros disponíveis offline, com backup e sincronização pela conta. As fotos ficam neste aparelho; inclua-as no backup para guardá-las.</p></section>},
   ]
   const grupos = [
