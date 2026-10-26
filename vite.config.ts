@@ -31,9 +31,9 @@ export default defineConfig({
         theme_color: '#101714',
         background_color: '#101714',
         icons: [
-          { src: '/icons/icone-universal-192.png', sizes: '192x192', type: 'image/png' },
-          { src: '/icons/icone-universal-512.png', sizes: '512x512', type: 'image/png' },
-          { src: '/icons/icone-universal-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
+          { src: '/icons/icone-claro-final-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/icons/icone-claro-final-512.png', sizes: '512x512', type: 'image/png' },
+          { src: '/icons/icone-claro-final-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' }
         ]
       },
       workbox: {

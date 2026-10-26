@@ -22,6 +22,10 @@
 
 ---
 
+## Plano de evolução
+
+Consulte o [plano atualizado de etapas e pendências](docs/PLANO.md). Entregas anteriores estão no [histórico](docs/HISTORICO.md).
+
 ## 📱 Visão Geral
 
 O **Vida em Dia** é um Progressive Web App (PWA) de alta performance criado para fornecer controle total sobre treinos, corridas/cardio, evolução de medidas e consistência diária.

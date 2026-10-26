@@ -60,7 +60,7 @@ export interface RefeicaoDia extends Registro, Nutrientes {
 }
 export interface AlimentoFavorito extends Registro, Nutrientes { nome: string; porcao: string; vezes_usado: number }
 export interface ComboRefeicao extends Registro { nome: string; itens: (Nutrientes & { descricao: string })[] }
-export interface AguaDia extends Registro { data: string; ml: number }
+export interface AguaDia extends Registro { data: string; ml: number; garrafas_ml?: number[] }
 export interface ConsumoDiarioMeta extends Registro {
   data: string; tipo_dia: TipoDia; meta_kcal_aplicada: number; meta_proteina_aplicada?: number
 }
@@ -74,7 +74,7 @@ export interface Configuracao extends Registro {
   meta_passos_util: number; meta_passos_fds_feriado: number
   meta_calorias_gastas_util: number; meta_calorias_gastas_fds_feriado: number
   meta_kcal_util: number; meta_kcal_fds_feriado: number; meta_proteina?: number
-  meta_agua_ml: number; meta_treinos_semana: number; meta_cardio_min_semana?: number
+  garrafa_ml?: number; meta_agua_ml: number; meta_treinos_semana: number; meta_cardio_min_semana?: number
   fator_calorias_cardio: number; modo_calorias_gastas: 'soma' | 'total_manual'
   prompt_ia_modelo: string; dia_lembrete_medidas: number; dias_lembrete_backup: number
   ultimo_backup?: string; ultima_sincronizacao?: string; sync_automatico: boolean

@@ -238,3 +238,26 @@ button,input,textarea,select { font: inherit; }
 
 /* Resumo de Hoje: o convite cabe na mesma linha dos valores dos demais cards. */
 .app .grade-equilibrio .cartao > .convite-treino { font-size: clamp(14px, 4.35vw, 17px); line-height: 40px; white-space: nowrap; letter-spacing: -.5px; }
+
+.app .grade-equilibrio { grid-auto-rows: auto; align-items: stretch; }
+.app .grade-equilibrio > .cartao { gap: 8px; padding: 14px; }
+.app .grade-equilibrio > .agua-hoje { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; row-gap: 6px; align-items: center; }
+.app .grade-equilibrio > .agua-hoje > svg { grid-column: 1; grid-row: 1; width: 20px; height: 20px; margin: 0; }
+.app .grade-equilibrio > .agua-hoje > span { grid-column: 1; grid-row: 2; }
+.app .grade-equilibrio > .agua-hoje > strong { grid-column: 1; grid-row: 3; line-height: 32px; }
+.app .grade-equilibrio > .agua-hoje > .resumo-agua { grid-column: 1; grid-row: 4; }
+.app .grade-equilibrio > .agua-hoje > progress { grid-column: 1 / -1; grid-row: 5; margin: 4px 0 0; }
+.app .grade-equilibrio > .agua-hoje > .botao-secundario { grid-column: 2; grid-row: 2 / 4; width: auto; padding-inline: 14px; }
+.app .grade-equilibrio > .agua-hoje > .desfazer-agua { grid-column: 2; grid-row: 4; width: auto; }
+.app .agua-hoje progress { width: 100%; height: 5px; accent-color: var(--visual-acento); }
+.app .agua-hoje > button { width: 100%; min-height: 48px; flex-shrink: 0; }
+
+.app .conteudo-config > .configurar-agua { display: grid; gap: 12px; }
+.app .configurar-agua > .data-medida { width: 100%; margin: 0; gap: 12px; }
+.app .configurar-agua > .data-medida > span { flex: 1; min-width: 0; text-align: left; }
+.app .configurar-agua > .data-medida > strong { flex-shrink: 0; white-space: nowrap; }
+.app .configurar-agua > p { margin: 4px 0 0; font-size: 12px; line-height: 1.65; color: var(--visual-suave); }
+
+.app .agua-hoje > strong { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.app .agua-hoje > .resumo-agua { display: grid; grid-template-rows: repeat(2, 18px); line-height: 18px; }
+.app .agua-hoje > .resumo-agua > span { white-space: nowrap; }

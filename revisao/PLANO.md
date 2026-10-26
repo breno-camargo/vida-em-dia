@@ -1,3 +1,5 @@
+> Registro histórico da auditoria de 16/10/2026. Planejamento atual: [docs/PLANO.md](../docs/PLANO.md).
+
 # Revisão antes de retomar a etapa 8
 
 Solicitada em 16/10/2026. Escopo: todo o trabalho existente, não apenas sincronização.
