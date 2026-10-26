@@ -1,6 +1,6 @@
 # Plano de evolução — Vida em Dia
 
-Atualizado em 25/10/2026. Referência atual das etapas; o [histórico](HISTORICO.md) preserva entregas anteriores.
+Atualizado em 26/10/2026. Referência atual das etapas; o [histórico](HISTORICO.md) preserva entregas anteriores.
 
 ## Estado atual
 
@@ -20,7 +20,7 @@ Publicação, implementação e homologação são estados diferentes. O histór
 | 6 | Cardio e atividade | Implementada: sessões, passos/calorias manuais, metas e calendário de descanso. Integração com Saúde é uma evolução separada. |
 | 7 | Backup e proteção | Implementada: exportação, restauração, criptografia e lembretes. Incluir fotos no backup para preservá-las. |
 | 8 | Conta e sincronização | Implementada e publicada. Consolidar evidências de dois aparelhos, reconexão, conflitos, restauração e isolamento entre contas. Fotos não sincronizam. |
-| 9 | Alimentação e chat | Em andamento local: diário manual, alimentos pessoais, refeição com vários itens, sódio, busca direta, edição/exclusão e seis referências TACO. Perfil energético com gasto em repouso, estimativa pela rotina e metas alimentares manuais. Aprovação mobile e ampliação do catálogo pendentes. IA por texto fica para depois. |
+| 9 | Alimentação e chat | Entrega manual publicada e aprovada pelo usuário em 26/10/2026: diário manual, alimentos pessoais, refeição com vários itens, sódio, busca direta, edição/exclusão e seis referências TACO. Perfil energético com gasto em repouso, estimativa pela rotina e metas alimentares manuais. Ampliação do catálogo e teste de carga em ambiente separado pendentes. IA por texto fica para depois. |
 | 10 | Escopo original não localizado | Confirmar a descrição original antes de iniciar ou renumerar. Não atribuir uma função por suposição. |
 | 11 | Fotos | Pendente: galeria de progresso, vínculo com medidas e sincronização de imagens. Fotos locais de equipamentos e backup já existem. |
 | 12 | Meta de peso e indicadores | Pendente: interface e acompanhamento da meta de peso e IMC. Campos no modelo não significam funcionalidade concluída. |
@@ -61,7 +61,7 @@ Esta ordem não autoriza iniciar todas as etapas de uma vez. Confirmar o escopo 
 - Perfil energético: fórmula de Mifflin–St Jeor para adultos de 19 a 78 anos, com último peso válido de Medidas, nascimento, sexo usado na equação e altura. Rotina opcional estima gasto diário sem somar novamente treino/cardio/passos. Metas alimentares continuam manuais e separadas. Detalhes em [ENERGIA.md](ENERGIA.md).
 - Exclusão local: alimentos pessoais usam exclusão lógica; pré-cadastrados podem ser removidos apenas do catálogo do perfil e restaurados. Refeições preservam seus snapshots e são desvinculadas do cadastro removido para continuarem no backup. Lista de referências ocultas é persistida nas configurações do perfil.
 - Montagem de refeição local: adicionar vários alimentos, ajustar/remover itens do rascunho, revisar totais e salvar todos em uma transação. Depois, editar/remover cada registro ou complementar a refeição. Rascunho fica apenas na tela durante a sessão; recarregar não salva o que ainda não foi confirmado.
-- Cadastro pessoal: edição de nome, marca opcional, porção e nutrientes; referências comuns permitem criar cópia pessoal. Alterações não recalculam refeições antigas. Edição concorrente ou de item removido é recusada. Implementação local, aguardando aprovação mobile.
+- Cadastro pessoal: edição de nome, marca opcional, porção e nutrientes; referências comuns permitem criar cópia pessoal. Alterações não recalculam refeições antigas. Edição concorrente ou de item removido é recusada. Publicado na main pelo PR #3, após aprovação mobile do usuário.
 - Primeira entrega manual local: alimentos por porção base, consumo em gramas, proteína, carboidratos, gordura e fibra; valores calculados preservados no histórico. Campos novos são opcionais para compatibilidade com registros anteriores.
 - Catálogo comum inicial: arroz tipo 1 cozido, pão francês, banana prata crua, pão integral, milho enlatado drenado e macarrão cru, TACO/NEPA/UNICAMP, 4ª edição. Alimentos pessoais são vinculados ao perfil existente; não entram no catálogo público.
 - Diário manual offline: refeições, porções, calorias, nutrientes, edição e exclusão.

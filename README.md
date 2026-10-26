@@ -1,220 +1,119 @@
 <div align="center">
 
-<img src="docs/assets/app-icon.png" width="128" height="128" alt="Vida em Dia Logo" style="border-radius: 28px; box-shadow: 0 8px 24px rgba(0,0,0,0.15);" />
+<img src="docs/assets/app-icon.png" width="112" height="112" alt="Vida em Dia" />
 
 # Vida em Dia
 
-**Seu espaço pessoal de treino, cardio, medidas e bem-estar.**
+**Treino, alimentação, água e evolução no seu ritmo.**
 
-[![Deploy com Vercel](https://img.shields.io/badge/Vercel-Produção-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://vida-em-dia-sable.vercel.app)
-[![React 19](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Dexie](https://img.shields.io/badge/Dexie.js-IndexedDB-2496ED?style=for-the-badge&logo=dexie&logoColor=white)](https://dexie.org/)
-[![Supabase](https://img.shields.io/badge/Supabase-Backend%20%26%20Auth-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)](https://supabase.com/)
-[![Testes Vitest](https://img.shields.io/badge/Testes-304%20Aprovados-brightgreen?style=for-the-badge&logo=vitest&logoColor=white)](https://vitest.dev/)
-[![PWA Ready](https://img.shields.io/badge/PWA-Offline--First-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white)](https://web.dev/progressive-web-apps/)
+[![Validacao](https://github.com/breno-camargo/vida-em-dia/actions/workflows/validacao.yml/badge.svg)](https://github.com/breno-camargo/vida-em-dia/actions/workflows/validacao.yml)
+[![PWA](https://img.shields.io/badge/PWA-offline--first-315b24)](https://vida-em-dia-breno-camargos-projects.vercel.app)
 
-<br />
-
-🚀 **[Acessar o Aplicativo Online (Vercel)](https://vida-em-dia-sable.vercel.app)**
+**[Abrir o aplicativo](https://vida-em-dia-breno-camargos-projects.vercel.app)**
 
 </div>
 
----
+## O que o app faz
 
-## Plano de evolução
+Vida em Dia e uma PWA para acompanhar a rotina pelo celular ou computador, com temas claro, escuro e automático. Os registros ficam primeiro no aparelho; conta e sincronização permitem acessar os dados em outros dispositivos.
 
-Consulte o [plano atualizado de etapas e pendências](docs/PLANO.md). Entregas anteriores estão no [histórico](docs/HISTORICO.md).
+- **Treinos:** catálogo ampliavel, fichas personalizadas, treino livre, séries, cargas, repetições, descanso por exercicio e histórico.
+- **Cardio e movimento:** duração, distância e detalhes por modalidade; calorias informadas ou estimadas, passos, metas e dias de descanso.
+- **Alimentacao:** monte uma refeição com varios alimentos e calcule a porção consumida em gramas. Acompanhe calorias, proteínas, carboidratos, gorduras totais, fibras e sódio opcional.
+- **Seus alimentos:** cadastre rótulos, edite seus produtos ou copie referencias do catálogo comum. Alterar o cadastro preserva os valores das refeições antigas.
+- **Metabolismo e metas:** estimativa de gasto em repouso e com a rotina; metas alimentares definidas manualmente e comparadas com o total do dia. [Metodo e limites](docs/ENERGIA.md).
+- **Agua:** capacidade da garrafa, meta diária, registro rápido e desfazer a última garrafa.
+- **Medidas e evolução:** peso, medidas corporais, histórico, comparação entre datas e gráficos.
+- **Compartilhamento:** cards do treino para salvar ou compartilhar pelos recursos disponiveis no navegador.
+- **Conta e backup:** nome completo com saudação pelo primeiro nome, recuperação de senha, sincronização e backup JSON criptografado com fotos opcionais; exportacoes sem proteção identificadas.
 
-## 📱 Visão Geral
+## Interface
 
-O **Vida em Dia** é um Progressive Web App (PWA) de alta performance criado para fornecer controle total sobre treinos, corridas/cardio, evolução de medidas e consistência diária.
+As imagens abaixo ilustram o visual; podem anteceder os refinamentos mais recentes. O app inclui tambem a aba Comida.
 
-Projetado com a filosofia **Offline-First**, o app salva tudo localmente no aparelho de forma instantânea através do **IndexedDB (Dexie.js)**. Ao se conectar à internet e entrar na sua conta, uma sincronização resiliente em segundo plano mantém seus dados replicados e seguros no **Supabase**.
+| Hoje | Treino | Medidas | Configurações |
+| --- | --- | --- | --- |
+| ![Tela Hoje](docs/assets/preview-hoje.png) | ![Tela Treino](docs/assets/preview-treino.png) | ![Tela Medidas](docs/assets/preview-medidas.png) | ![Configurações](docs/assets/preview-configuracoes.png) |
 
----
+## Armazenamento e limites
 
-## 📸 Demonstração da Interface
+- Registros locais usam IndexedDB (Dexie). Depois do primeiro carregamento e cache, os recursos locais podem funcionar offline; login, sincronização e videos externos precisam de internet.
+- Visitante e contas usam espaços locais separados. Dados do visitante não sao transferidos automaticamente ao criar uma conta.
+- Fotos ficam no aparelho e podem ser incluidas no backup. Sincronizacao de fotos ainda não esta implementada.
+- O descanso usa o horário de término para recompor o tempo ao voltar. O iPhone pode suspender áudio e execução em segundo plano; não ha garantia de bipes com a tela bloqueada.
+- Estimativas energeticas não sao medições nem prescricoes. O catálogo alimentar comum e inicial e usa referencias; produtos de marca devem usar os valores do rótulo.
+- Importacao de registros antigos e explicita. Mantenha uma copia de seguranca fora do app.
+- Capacidade simultanea ainda não foi medida. Teste de carga sera feito com dados ficticios e banco separado de produção.
 
-<div align="center">
-  <table>
-    <tr>
-      <td align="center" width="25%">
-        <strong>🏠 Hoje</strong><br/><br/>
-        <img src="docs/assets/preview-hoje.png" width="220" alt="Tela Hoje" />
-      </td>
-      <td align="center" width="25%">
-        <strong>🏋️ Treino</strong><br/><br/>
-        <img src="docs/assets/preview-treino.png" width="220" alt="Tela de Treino" />
-      </td>
-      <td align="center" width="25%">
-        <strong>📏 Medidas</strong><br/><br/>
-        <img src="docs/assets/preview-medidas.png" width="220" alt="Tela de Medidas" />
-      </td>
-      <td align="center" width="25%">
-        <strong>⚙️ Configurações</strong><br/><br/>
-        <img src="docs/assets/preview-configuracoes.png" width="220" alt="Tela de Configurações" />
-      </td>
-    </tr>
-  </table>
-</div>
+## Executar localmente
 
----
+Use **Node.js 24**, a mesma versao principal da validação automatizada, e npm.
 
-## ✨ Funcionalidades Principais
-
-### 🏋️ Musculação e Fichas
-- **Catálogo de 64+ Exercícios**: Pré-carregado com fotos de máquinas, instruções detalhadas, grupos musculares primários e secundários.
-- **Divisões e Fichas Personalizadas**: Crie, edite, duplique ou reordene fichas (ABC, ABCD, etc.).
-- **Séries Customizadas**: Suporte a séries normais, aquecimento, até a falha e *drop set* com múltiplas reduções de carga.
-- **Descanso com Timer e Bipes**: Contagem de descanso entre séries com bipes suaves nos últimos 10 segundos e persistência precisa mesmo com a tela bloqueada.
-- **Screen Wake Lock**: Opção para manter a tela do celular acesa durante todo o treino.
-- **Métricas de Performance**: Cálculo de 1RM estimado (fórmula de Epley), volume total de carga e histórico com recordes automáticos.
-
-### 🏃 Cardio e Atividade Diária
-- **8 Modalidades**: Esteira, Caminhada, Corrida, Ciclismo, Elíptico, Escada, Remo e outros.
-- **Métricas em Tempo Real**: Registro de distância (km), velocidade média, ritmo (*pace* em min/km), inclinação, passos e calorias calculadas pelo seu peso real (METs científicos).
-- **Metas Semanais e Feriados**: Acompanhamento de metas de passos e calorias, com feriados nacionais já calibrados no calendário.
-
-### 📏 Medidas Corporais e Evolução
-- **Registro Anatômico Completo**: Peso, bíceps, coxas, cintura, abdômen, quadril, panturrilhas e busto.
-- **Gráficos Interativos**: Evolução temporal de cada medida individualmente ou em conjunto.
-- **Comparador entre Datas**: Compare a evolução entre duas medições com cálculo automático de variação.
-- **Lembrete Inteligente**: Alerta na tela principal caso a semana fique sem medição registrada.
-
-### 📲 Cards para Stories
-- Gere imagens verticais de alta resolução (**1080 × 1920**) dos seus treinos finalizados.
-- Estilos exclusivos: *Editorial*, *Foto Inteira*, *Minimalista* e *Adesivo Transparente*.
-- Pronto para compartilhar direto no Instagram Stories, WhatsApp ou salvar na galeria.
-
-### ☁️ Nuvem, Segurança e Sincronização
-- **Offline-First Real**: O aplicativo funciona 100% sem sinal de internet. Nenhuma tela trava esperando resposta de rede.
-- **Sincronização com Supabase**: Envio em lote com resolução atômica de conflitos (*Last-Write-Wins*) e isolamento com *Row Level Security* (RLS).
-- **Recuperação por Código OTP**: Envio de código numérico de 6 dígitos via SMTP dedicado (`diaemvida.app@gmail.com`) com verificação direta no app.
-- **Backup e Restauração**: Exporte e importe todos os seus dados em formato JSON criptografado ou em planilhas CSV.
-
-### 🌓 Design & Ergonomia Mobile
-- **Temas**: Tema Escuro, Tema Claro ou Automático (acompanha o sistema do aparelho).
-- **Transições Suaves a 60fps**: Acordeão suave sem solavancos ou saltos bruscos de rolagem.
-- **Seletores Touch-First**: Componentes nativos de rolagem tátil para cargas, repetições e medidas.
-
----
-
-## 🛠️ Tecnologias Utilizadas
-
-| Camada | Ferramenta / Biblioteca | Descrição |
-| :--- | :--- | :--- |
-| **Interface** | [React 19](https://react.dev/) | Renderização e gerenciamento de estado moderno |
-| **Linguagem** | [TypeScript](https://www.typescriptlang.org/) | Tipagem estrita de ponta a ponta |
-| **Estilização** | [Tailwind CSS](https://tailwindcss.com/) & CSS Modules | Design responsivo otimizado para mobile |
-| **Banco Local** | [Dexie.js](https://dexie.org/) | Abstração reativa sobre o IndexedDB |
-| **Backend & Auth** | [Supabase](https://supabase.com/) | Autenticação, banco PostgreSQL e Edge APIs |
-| **Gráficos** | [Recharts](https://recharts.org/) | Visualização interativa de evolução de cargas e medidas |
-| **Ícones** | [Lucide React](https://lucide.dev/) | Ícones leves e consistentes |
-| **Build & PWA** | [Vite](https://vite.dev/) & [Vite PWA](https://vite-pwa-org.netlify.app/) | Empacotamento rápido e service worker para cache offline |
-| **Testes** | [Vitest](https://vitest.dev/) & [Playwright](https://playwright.dev/) | Suíte completa com **304 testes automatizados** |
-
----
-
-## 🚀 Como Executar Localmente
-
-### Pré-requisitos
-- **Node.js** 20 LTS ou 24 LTS
-- **npm** (ou yarn/pnpm)
-
-### Instalação
-
-1. Clone o repositório:
-```bash
+~~~bash
 git clone https://github.com/breno-camargo/vida-em-dia.git
 cd vida-em-dia
-```
-
-2. Instale as dependências:
-```bash
-npm install
-```
-
-3. (Opcional) Configure as variáveis de ambiente em um arquivo `.env.local`:
-```env
-VITE_SUPABASE_URL=https://ofzixbpliejnaiyuspti.supabase.co
-VITE_SUPABASE_PUBLISHABLE_KEY=sua_chave_publica_aqui
-```
-
-4. Inicie o servidor de desenvolvimento:
-```bash
+npm ci
 npm run dev
-```
+~~~
 
-Abra no navegador em `http://localhost:5173`.
+Abra o endereço exibido pelo Vite (normalmente http://localhost:5173).
+No Windows, use npm.cmd se o PowerShell bloquear npm.ps1.
 
----
+A pasta principal se chama **vida-em-dia**; o nome anterior vida-em-dia-novo-visual foi aposentado. Copias antigas e evidencias locais ficam fora da raiz do app e não sao necessarias para executar o projeto.
 
-## 🧪 Qualidade de Código e Testes
+### Conta e nuvem
 
-O projeto segue padrões rígidos de qualidade de software, com 100% da suíte de testes aprovada:
+Sem configuração de Supabase, o uso local permanece disponivel. Para habilitar conta e sincronização, copie .env.example para .env.local e preencha com os dados do seu projeto:
 
-```bash
-# Validar tipos estritos do TypeScript
+~~~env
+VITE_SUPABASE_URL=https://seu-projeto.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=sua_chave_publica
+~~~
+
+Variaveis VITE_ sao expostas ao navegador: nunca coloque service_role, senhas ou segredos nelas. Nao versione .env.local. A configuração do backend, migrações e funções esta em [supabase/](supabase/).
+
+## Verificação
+
+~~~bash
 npm run typecheck
-
-# Executar o linter (ESLint)
 npm run lint
-
-# Rodar a suíte completa de testes automatizados (304 testes)
 npm test
-
-# Gerar o build otimizado de produção
 npm run build
-```
+~~~
 
----
+Em **26/10/2026**, a entrega de alimentação passou em **322 testes, 56 arquivos**, tipagem, lint e build. O badge no topo mostra a situacao atual do CI; esta contagem e um registro datado, não uma garantia permanente. Conferencias de interface com Playwright foram feitas separadamente, com dados sinteticos.
 
-## 📲 Como Instalar no Celular (PWA)
+A main e protegida: mudancas entram por pull request e check verificar aprovado. Prévia e produção sao publicacoes distintas.
 
-### No iPhone (iOS / Safari)
-1. Abra o link [vida-em-dia-sable.vercel.app](https://vida-em-dia-sable.vercel.app) no **Safari**.
-2. Toque no botão de **Compartilhar** (ícone do quadrado com a seta para cima).
-3. Role para baixo e selecione **Adicionar à Tela de Início**.
-4. O ícone oficial do **Vida em Dia** será instalado no seu iPhone, rodando em tela cheia sem barras de navegador.
+## Instalar no celular
 
-### No Android (Chrome)
-1. Acesse o site pelo **Google Chrome**.
-2. Toque no menu de três pontos no canto superior direito.
-3. Selecione **Adicionar à tela inicial** ou **Instalar aplicativo**.
+**iPhone:** abra o [app](https://vida-em-dia-breno-camargos-projects.vercel.app) no Safari, toque em Compartilhar e escolha Adicionar a Tela de Inicio.
 
----
+**Android:** abra no Chrome e escolha Instalar aplicativo ou Adicionar a tela inicial no menu.
 
-## 📂 Estrutura do Projeto
+Instale preferencialmente antes de iniciar os registros. Safari e app instalado podem ter armazenamentos separados; cada endereço tambem possui seus proprios dados locais.
 
-```text
+## Estrutura
+
+~~~text
 vida-em-dia/
-├── .github/              # Workflows de CI/CD para GitHub Actions
-├── docs/                 # Documentação e imagens do repositório
-│   ├── assets/           # Screenshots e ícones de exibição
-│   └── HISTORICO.md      # Histórico completo de requisitos e etapas
-├── public/               # Ícones universais e manifest do PWA
-├── src/
-│   ├── componentes/      # Componentes reutilizáveis (Timer, Cards, Modal, Rolagem)
-│   ├── dados/            # Schemas do Dexie, repositórios e modelos locais
-│   ├── estilos/          # Paletas claro/escuro, superfícies e transições
-│   ├── hooks/            # Hooks customizados (useTema, useTransicaoSuave)
-│   ├── sincronizacao/    # Cliente Supabase, fila de envio, reconciliação LWW
-│   ├── telas/            # Telas principais (Hoje, Treino, Medidas, Evolução, Configurações)
-│   └── utilitarios/      # Cálculos de MET, 1RM, data local e criptografia
-├── supabase/             # Migrações SQL, RLS, Edge Functions e templates SMTP
-├── vercel.json           # Configuração de deploy contínuo na Vercel
-└── vite.config.ts        # Configurações do Vite e plugin PWA
-```
+  .github/workflows/   Validacao no GitHub Actions
+  docs/               Plano, historico, metodos e imagens
+  public/             Icones e arquivos estaticos
+  src/componentes/    Paineis, seletores e componentes compartilhados
+  src/dados/          Banco local, modelos, calculos e testes
+  src/estilos/        Temas, superficies e controles
+  src/hooks/          Comportamentos reutilizaveis
+  src/sincronizacao/  Autenticacao, fila e conciliacao
+  src/telas/          Hoje, Treino, Comida, Medidas e Evolucao
+  src/utilitarios/    Funcoes de apoio
+  supabase/           Migracoes, funcoes e configuracao do backend
+~~~
 
----
+Interface em React 19 e TypeScript, Vite, CSS com integracao Tailwind, IndexedDB/Dexie, Supabase, Recharts, Lucide e Vitest. As versoes efetivas estao no package.json e package-lock.json.
 
-## 📜 Histórico & Documentação Completa
+## Próximos passos
 
-Para detalhes de arquitetura profunda, auditorias de segurança e histórico detalhado das etapas implementadas, consulte o [Histórico do Projeto](docs/HISTORICO.md).
+[Plano atual](docs/PLANO.md) | [Historico](docs/HISTORICO.md) | [Energia e metabolismo](docs/ENERGIA.md)
 
----
-
-<div align="center">
-  <sub>Desenvolvido com foco em privacidade, robustez e consistência. 🌿</sub>
-</div>
+IA para registrar refeições por conversa, expansão do catálogo, sincronização de fotos e teste de carga seguem como evoluções; não fazem parte das funcionalidades concluídas.
