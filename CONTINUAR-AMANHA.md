@@ -1,3 +1,5 @@
+> Nota atual em 26/10/2026: documento historico. Recursos publicados e proxima sequencia estao em [docs/PLANO.md](docs/PLANO.md) e [docs/TESTES-CONFIABILIDADE.md](docs/TESTES-CONFIABILIDADE.md). Agua e alimentacao ja foram publicadas. Produção usa o banco anteriormente aprovado pelo usuario; nao tratar a previa como isolamento de banco. Um Supabase separado para carga ainda precisa ser criado. As restricoes de publicacao e configuracoes abaixo pertencem as datas registradas e nao substituem o estado atual.
+
 # Retomada — 22/10/2026
 
 Estado mais recente, prevalece sobre notas históricas abaixo:

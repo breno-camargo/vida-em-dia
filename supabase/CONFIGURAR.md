@@ -1,3 +1,5 @@
+> Nota atual em 26/10/2026: documento historico. Recursos publicados e proxima sequencia estao em [../docs/PLANO.md](../docs/PLANO.md) e [../docs/TESTES-CONFIABILIDADE.md](../docs/TESTES-CONFIABILIDADE.md). Agua e alimentacao ja foram publicadas. Produção usa o banco anteriormente aprovado pelo usuario; nao tratar a previa como isolamento de banco. Um Supabase separado para carga ainda precisa ser criado. As restricoes de publicacao e configuracoes abaixo pertencem as datas registradas e nao substituem o estado atual.
+
 # Configurar a etapa 8 no Supabase
 
 Para preparar o segundo projeto de produção, seguir [RUNBOOK-PRODUCAO.md](../revisao/RUNBOOK-PRODUCAO.md). Este guia histórico é de staging e não autoriza aplicação remota. O runtime atual exige o secret EXPECTED_PROJECT_REF por projeto; o antigo STAGING_PROJECT_REF não é utilizado.

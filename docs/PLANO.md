@@ -29,10 +29,11 @@ Publicação, implementação e homologação são estados diferentes. O histór
 
 ## Próxima sequência proposta
 
-1. Consolidar a validação da etapa 8 e reconciliar documentação antiga.
-2. Implementar água por garrafas como entrega própria, sem atribuir à etapa 10 sem confirmação.
-3. Iniciar a etapa 9 pelo diário alimentar offline; depois avaliar o chat.
-4. Planejar fotos, indicadores, tutorial e demonstrações em lotes separados.
+1. Executar verificacoes locais de sincronizacao, isolamento, backup e volume de registros com dados sinteticos.
+2. Criar um projeto Supabase exclusivo para testes e preparar a homologacao entre dois aparelhos.
+3. Medir carga progressiva nesse ambiente separado, sem atingir producao. Roteiro em [TESTES-CONFIABILIDADE.md](TESTES-CONFIABILIDADE.md).
+4. Ampliar o catalogo alimentar e avaliar refeicoes habituais; IA permanece para uma entrega posterior.
+5. Planejar fotos, indicadores, tutorial e demonstracoes em lotes separados.
 
 Esta ordem não autoriza iniciar todas as etapas de uma vez. Confirmar o escopo antes de cada entrega.
 
@@ -48,21 +49,19 @@ Esta ordem não autoriza iniciar todas as etapas de uma vez. Confirmar o escopo 
 - Registrar recuperação de senha, código inválido/expirado e nova senha.
 - Consolidar evidências do [checklist do Supabase](../supabase/CONFIGURAR.md), distinguindo testes automatizados e validação real.
 
-### Água por garrafas
+### Água por garrafas ? implementada
 
-- Configurar a capacidade da garrafa no perfil.
-- Registrar quantidade consumida por dia, calcular volume e acompanhar a meta.
-- Permitir corrigir registros; definir o tratamento de capacidade alterada sem recalcular indevidamente o histórico.
-- Integrar persistência, backup e sincronização, com testes de cálculo e edição.
-- O card Água atual é demonstrativo. A tabela existente não substitui o fluxo funcional.
+- Capacidade da garrafa e meta diaria configuraveis, registro rapido e desfazer a ultima garrafa.
+- Alterar a capacidade nao recalcula volumes anteriores; dados integrados a persistencia e backup.
+- O card mostra registros reais. Repetir validacao de sincronizacao entre aparelhos no ambiente separado.
 
 ### Alimentação e chat
 
 - Perfil energético: fórmula de Mifflin–St Jeor para adultos de 19 a 78 anos, com último peso válido de Medidas, nascimento, sexo usado na equação e altura. Rotina opcional estima gasto diário sem somar novamente treino/cardio/passos. Metas alimentares continuam manuais e separadas. Detalhes em [ENERGIA.md](ENERGIA.md).
 - Exclusão local: alimentos pessoais usam exclusão lógica; pré-cadastrados podem ser removidos apenas do catálogo do perfil e restaurados. Refeições preservam seus snapshots e são desvinculadas do cadastro removido para continuarem no backup. Lista de referências ocultas é persistida nas configurações do perfil.
-- Montagem de refeição local: adicionar vários alimentos, ajustar/remover itens do rascunho, revisar totais e salvar todos em uma transação. Depois, editar/remover cada registro ou complementar a refeição. Rascunho fica apenas na tela durante a sessão; recarregar não salva o que ainda não foi confirmado.
+- Montagem de refeição publicada: adicionar vários alimentos, ajustar/remover itens do rascunho, revisar totais e salvar todos em uma transação. Depois, editar/remover cada registro ou complementar a refeição. Rascunho fica apenas na tela durante a sessão; recarregar não salva o que ainda não foi confirmado.
 - Cadastro pessoal: edição de nome, marca opcional, porção e nutrientes; referências comuns permitem criar cópia pessoal. Alterações não recalculam refeições antigas. Edição concorrente ou de item removido é recusada. Publicado na main pelo PR #3, após aprovação mobile do usuário.
-- Primeira entrega manual local: alimentos por porção base, consumo em gramas, proteína, carboidratos, gordura e fibra; valores calculados preservados no histórico. Campos novos são opcionais para compatibilidade com registros anteriores.
+- Entrega manual publicada: alimentos por porção base, consumo em gramas, proteína, carboidratos, gordura e fibra; valores calculados preservados no histórico. Campos novos são opcionais para compatibilidade com registros anteriores.
 - Catálogo comum inicial: arroz tipo 1 cozido, pão francês, banana prata crua, pão integral, milho enlatado drenado e macarrão cru, TACO/NEPA/UNICAMP, 4ª edição. Alimentos pessoais são vinculados ao perfil existente; não entram no catálogo público.
 - Diário manual offline: refeições, porções, calorias, nutrientes, edição e exclusão.
 - Metas e resumo diário baseados em registros reais.
@@ -75,5 +74,5 @@ Esta ordem não autoriza iniciar todas as etapas de uma vez. Confirmar o escopo 
 - O tempo de descanso usa o horário de término; iOS pode suspender execução e áudio em segundo plano.
 - Saúde/HealthKit depende de avaliação de versão nativa e permissões; não está implementado na PWA.
 - Entrada e cadastro não substituem o tutorial planejado.
-- Reconciliar README, ENTREGA e notas históricas: não prometer som com tela bloqueada nem fotos/instruções completas pré-carregadas para todo o catálogo.
+- README reconciliado pelo PR #4. Notas historicas preservam o contexto da epoca; nao sao prova do estado atual. Som com tela bloqueada e demonstracoes completas pre-carregadas nao sao garantidos.
 - Preservar dados dos usuários, credenciais fora do Git e cards congelados. Validar cada lote com testes proporcionais, build e conferência mobile.
