@@ -242,3 +242,9 @@ button,input,textarea,select { font: inherit; }
 .app .grade-equilibrio { grid-auto-rows: 1fr; }
 .app .agua-hoje progress { width: 100%; height: 5px; accent-color: var(--visual-acento); }
 .app .agua-hoje > button { width: 100%; min-height: 44px; }
+
+.app .conteudo-config > .configurar-agua { display: grid; gap: 12px; }
+.app .configurar-agua > .data-medida { width: 100%; margin: 0; gap: 12px; }
+.app .configurar-agua > .data-medida > span { flex: 1; min-width: 0; text-align: left; }
+.app .configurar-agua > .data-medida > strong { flex-shrink: 0; white-space: nowrap; }
+.app .configurar-agua > p { margin: 4px 0 0; font-size: 12px; line-height: 1.65; color: var(--visual-suave); }
