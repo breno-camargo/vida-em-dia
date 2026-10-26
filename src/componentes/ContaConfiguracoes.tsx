@@ -1,3 +1,4 @@
+import { alterarSenha, requisitosSenha } from '../sincronizacao/senha'
 import { enquadrarDetalhes, recolherDetalhesSuavemente } from '../utilitarios/enquadrarDetalhes'
 import { useId, useState, type FormEvent } from 'react'
 import { Eye, EyeOff, LogOut, RefreshCw, CloudUpload } from 'lucide-react'
@@ -61,11 +62,10 @@ export function ContaConfiguracoes({entrada=false,resumida=false,abrirAcesso}:{e
   } else if(modo==='codigo'){
    const {error}=await supabase.auth.verifyOtp({email:email.trim(),token:codigo.trim(),type:'recovery'})
    if(error)throw new Error('Código inválido ou expirado. Solicite outro código.')
-   setCodigo('');setModo('nova')
+   setCodigo('');setConfirmacao('');setModo('nova')
   } else {
-   const {error}=await supabase.auth.updateUser({password:senha})
-   if(error)throw new Error('Não foi possível alterar a senha. Use pelo menos 8 caracteres e tente novamente.')
-   setSenha('');setModo('entrar');definirRecuperacao(false);setAviso('Senha atualizada.')
+   await alterarSenha(senha,confirmacao)
+   setSenha('');setConfirmacao('');setModo('entrar');definirRecuperacao(false);setAviso('Senha atualizada.')
   }
  })}
  return <section className={entrada?'conta conta-entrada':'painel conta'} aria-label={entrada?'Acesso à conta':'Conta e sincronização'}>{!entrada&&!resumida&&<h2>Conta e sincronização</h2>}
@@ -76,6 +76,7 @@ export function ContaConfiguracoes({entrada=false,resumida=false,abrirAcesso}:{e
  {modo==='cadastro'&&<label>Como você se chama?<input autoComplete="given-name" maxLength={80} required value={nome} onChange={e=>setNome(e.target.value)} disabled={ocupado}/></label>}
  {modo!=='nova'&&<label>E-mail<input type="email" autoComplete="email" autoCapitalize="none" spellCheck={false} placeholder="voce@exemplo.com" required value={email} onChange={e=>setEmail(e.target.value)} disabled={ocupado||modo==='confirmarCadastro'}/></label>}
  {(modo==='entrar'||modo==='nova'||modo==='cadastro')&&<div className="campo-senha"><label htmlFor={entrada?'senha-entrada':'senha-conta'}>{modo==='nova'?'Nova senha':'Senha'}</label><div><input id={entrada?'senha-entrada':'senha-conta'} type={mostrarSenha?'text':'password'} placeholder={modo==='nova'?'Pelo menos 8 caracteres':'Sua senha'} autoComplete={modo==='nova'||modo==='cadastro'?'new-password':'current-password'} minLength={modo==='nova'||modo==='cadastro'?8:1} required value={senha} onChange={e=>setSenha(e.target.value)} disabled={ocupado}/><button type="button" aria-label={mostrarSenha?'Ocultar senha':'Mostrar senha'} aria-pressed={mostrarSenha} onClick={()=>setMostrarSenha(!mostrarSenha)}>{mostrarSenha?<EyeOff size={19}/>:<Eye size={19}/>}</button></div></div>}
+ {modo==='nova'&&<><ul className="nota-resumo" aria-label="Requisitos da nova senha">{requisitosSenha(senha).map(r=><li key={r.texto}>{r.atendido?'✓':'○'} {r.texto}{r.atendido?' — atendido':''}</li>)}</ul><label>Confirmar nova senha<input type={mostrarSenha?'text':'password'} autoComplete="new-password" minLength={8} required value={confirmacao} onChange={e=>setConfirmacao(e.target.value)} disabled={ocupado}/></label>{confirmacao&&senha!==confirmacao&&<p className="nota-resumo">As senhas ainda não coincidem.</p>}</>}
  {(modo==='codigo'||modo==='confirmarCadastro')&&<label>Código recebido por e-mail<input inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6,10}" required value={codigo} onChange={e=>setCodigo(e.target.value.replace(/\D/g,''))}/></label>}
  {modo==='cadastro'&&<><p className="nota-resumo">Use uma senha com pelo menos 8 caracteres.</p><label>Confirmar senha<input type={mostrarSenha?'text':'password'} autoComplete="new-password" minLength={8} required value={confirmacao} onChange={e=>setConfirmacao(e.target.value)} disabled={ocupado}/></label></>}
  {modo==='cadastro'&&<details className="perfil-opcional-cadastro" onToggle={enquadrarDetalhes}><summary onClick={recolherDetalhesSuavemente}>Altura e medidas (opcional)</summary><div className="formulario"><p className="nota-resumo">Já tem suas medidas? Preencha apenas o que souber ou deixe para depois.</p><label>Altura em cm<input inputMode="decimal" placeholder="Ex.: 175" value={altura} onChange={e=>setAltura(e.target.value)} disabled={ocupado}/></label><button type="button" className="botao-secundario" disabled={ocupado} onClick={()=>setEditarMedidas(true)}>{medidaCadastro?'Editar medidas iniciais':'Adicionar peso e medidas'}</button>{medidaCadastro&&<><p className="nota-resumo">{camposMedidas.filter(([campo])=>medidaCadastro[campo]!==undefined).map(([campo,rotulo,unidade])=>`${rotulo}: ${formatarValorMedida(campo,medidaCadastro[campo]!)} ${unidade}`).join(' · ')}</p><button type="button" className="link-conta" disabled={ocupado} onClick={()=>setMedidaCadastro(undefined)}>Preencher medidas depois</button></>}<p className="nota-resumo">As medidas ficam como rascunho nesta aba. Após confirmar o e-mail e conectar o aparelho, você poderá salvá-las. Se fechar ou atualizar a página antes disso, preencha novamente na aba Medidas.</p></div></details>}

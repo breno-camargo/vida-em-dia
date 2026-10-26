@@ -30,6 +30,9 @@ test('sessão de recuperação restaurada abre nova senha, sem liberar conexão 
   const html=renderToStaticMarkup(<ContaConfiguracoes entrada />)
   expect(html).toContain('Nova senha')
   expect(html).toContain('Salvar nova senha')
+  expect(html).toContain('Confirmar nova senha')
+  expect(html).toContain('Uma letra maiúscula')
+  expect(html).toContain('Um caractere especial')
   expect(html).not.toContain('Conectar meus dados')
 })
 
