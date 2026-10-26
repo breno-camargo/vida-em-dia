@@ -53,12 +53,15 @@ export interface AtividadeDiaria extends Registro {
   meta_passos_aplicada: number; meta_calorias_gastas_aplicada: number
 }
 export interface Feriado extends Registro { data: string; nome: string }
-export interface Nutrientes { kcal: number; proteina_g?: number; carbo_g?: number; gordura_g?: number }
+export interface Nutrientes { kcal: number; proteina_g?: number; carbo_g?: number; gordura_g?: number; fibra_g?: number; sodio_mg?: number }
 export interface RefeicaoDia extends Registro, Nutrientes {
   data: string; refeicao: string; horario: string; descricao: string
   precisao: 'estimado' | 'exato'; foto_id?: string; alimento_id?: string
+  alimento_nome?: string; quantidade_g?: number
 }
-export interface AlimentoFavorito extends Registro, Nutrientes { nome: string; porcao: string; vezes_usado: number }
+export interface AlimentoFavorito extends Registro, Nutrientes {
+  nome: string; marca?: string; porcao: string; vezes_usado: number; base_quantidade_g?: number; fonte?: 'pessoal'
+}
 export interface ComboRefeicao extends Registro { nome: string; itens: (Nutrientes & { descricao: string })[] }
 export interface AguaDia extends Registro { data: string; ml: number; garrafas_ml?: number[] }
 export interface ConsumoDiarioMeta extends Registro {
@@ -82,6 +85,10 @@ export interface Configuracao extends Registro {
   descanso_por_data?: Record<string, boolean>
   anos_feriados_inicializados?: number[]
   biblioteca_inicializada?: boolean
+  alimentos_comuns_ocultos?: string[]
+  data_nascimento?: string
+  sexo_calculo_energia?: 'masculino' | 'feminino'
+  nivel_atividade_energia?: 'leve' | 'moderada' | 'intensa'
 }
 export interface Tabelas {
   exercicios: Exercicio; fichas: Ficha; ficha_exercicios: FichaExercicio

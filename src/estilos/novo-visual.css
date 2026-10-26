@@ -261,3 +261,140 @@ button,input,textarea,select { font: inherit; }
 .app .agua-hoje > strong { white-space: nowrap; font-variant-numeric: tabular-nums; }
 .app .agua-hoje > .resumo-agua { display: grid; grid-template-rows: repeat(2, 18px); line-height: 18px; }
 .app .agua-hoje > .resumo-agua > span { white-space: nowrap; }
+
+/* Diário alimentar: superfícies e controles compartilham os tokens dos temas. */
+.app .tela-comida { display: grid; grid-template-columns: minmax(0,1fr); gap: 18px; min-width: 0; width: 100%; }
+.app .tela-comida > * { min-width: 0; max-width: 100%; box-sizing: border-box; }
+.app .comida-cabecalho,.app .comida-titulo-lista,.app .comida-refeicao > header,.app .comida-resumo-topo { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.app .comida-cabecalho h2,.app .comida-titulo-lista h3,.app .comida-refeicao h3 { margin: 0; }
+.app .comida-cabecalho p,.app .comida-vazio p { margin: 6px 0 0; color: var(--visual-suave); font-size: 13px; }
+.app .comida-cabecalho > svg { flex-shrink: 0; color: var(--visual-acento); }
+.app .tela-comida .painel { margin: 0; }
+.app .comida-data,.app .comida-grade-nutrientes label { display: grid; grid-template-columns: minmax(0,1fr); gap: 8px; min-width: 0; font-size: 13px; color: var(--visual-suave); }
+.app :is(.comida-data,.comida-formulario) :is(input,select) { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; min-height: 48px; padding: 12px; border: 1px solid var(--superficie-campo-borda); border-radius: 12px; background: var(--visual-rebaixo); color: var(--visual-texto); font-size: 16px; }
+.app .comida-data input[type=date] { display: block; appearance: none; -webkit-appearance: none; text-align: left; }
+.app .comida-data input[type=date]::-webkit-date-and-time-value { min-width: 0; text-align: left; }
+.app .comida-cabecalho > div { min-width: 0; }
+.app .comida-titulo-lista > span { flex-shrink: 0; }
+.app .comida-resumo-topo strong { display: block; font-size: 30px; line-height: 1.4; font-variant-numeric: tabular-nums; }
+.app .comida-resumo-topo :is(span,small),.app .comida-titulo-lista > span { font-size: 12px; color: var(--visual-suave); }
+.app .comida-macros,.app .comida-grade-nutrientes { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
+.app .comida-macros { padding-block: 18px; margin-block: 12px; border-block: 1px solid var(--visual-borda); }
+.app .comida-macros span { display: grid; gap: 4px; font-size: 12px; color: var(--visual-suave); }
+.app .comida-macros strong { font-size: 17px; color: var(--visual-texto); }
+.app .comida-acoes { display: grid; gap: 10px; }
+.app .comida-vazio { display: grid; justify-items: center; gap: 10px; text-align: center; }
+.app .comida-vazio > svg { color: var(--visual-acento); }
+.app .comida-item { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding-top: 16px; margin-top: 16px; border-top: 1px solid var(--visual-borda); }
+.app .comida-item > div { flex: 1 1 170px; min-width: 0; display: grid; gap: 4px; }
+.app .comida-item strong { font-size: 14px; overflow-wrap: anywhere; }
+.app .comida-item :is(span,small),.app :is(.comida-nota,.comida-base,.comida-nota-form) { font-size: 12px; line-height: 1.7; color: var(--visual-suave); }
+.app .comida-remover { display: grid; place-items: center; min-width: 44px; min-height: 48px; background: transparent; color: var(--visual-suave); border-radius: 12px; }
+.app .comida-nota { display: flex; align-items: flex-start; gap: 8px; margin: 0; }
+.app .comida-nota > svg { flex-shrink: 0; margin-top: 4px; }
+.app .comida-formulario > p { margin: 0; }
+.app .comida-calculada { display: grid; gap: 8px; padding: 16px; border: 1px solid var(--visual-borda); border-radius: 14px; background: var(--visual-rebaixo); }
+.app .comida-calculada strong { font-size: 24px; }
+.app .comida-calculada span { font-size: 12px; color: var(--visual-suave); }
+.app .comida-resumo-topo strong > small { display: inline; font-weight: 400; }
+.app .comida-biblioteca { display: grid; grid-template-columns: minmax(0,1fr); gap: 16px; }
+.app .comida-biblioteca > .abas-catalogo { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
+.app .comida-biblioteca .comida-item { display: grid; grid-template-columns: minmax(0,1fr); gap: 12px; margin: 0; }
+.app .comida-biblioteca .comida-acoes-alimento { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+.app .comida-acoes-alimento > button { width: 100%; min-width: 0; }
+.app .comida-biblioteca > p { margin: 0; }
+.app .comida-rascunho { min-width: 0; padding-block: 14px; border-block: 1px solid var(--visual-borda); }
+.app .comida-rascunho h3 { margin: 0; }
+.app .comida-refeicao > .botao-secundario { width: 100%; margin-top: 16px; }
+.app .comida-escolher { display: grid; grid-template-columns: minmax(0,1fr); gap: 10px; min-width: 0; }
+.app .comida-escolher > p { margin: 0; }
+.app .comida-resultados { display: grid; gap: 8px; min-width: 0; }
+.app .comida-resultados:empty { display: none; }
+.app .comida-resultado { justify-content: space-between; width: 100%; min-height: 64px; text-align: left; }
+.app .comida-resultado > span { display: grid; gap: 4px; min-width: 0; }
+.app .comida-resultado strong { font-size: 13px; line-height: 1.5; overflow-wrap: anywhere; }
+.app .comida-resultado small { font-size: 11px; line-height: 1.5; font-weight: 400; }
+.app .comida-resultado > svg { flex-shrink: 0; }
+.app .comida-alimento-selecionado { display: grid; grid-template-columns: auto minmax(0,1fr) auto; align-items: center; gap: 10px; padding-block: 10px; border-bottom: 1px solid var(--visual-borda); }
+.app .comida-alimento-selecionado > svg { flex-shrink: 0; color: var(--visual-acento); }
+.app .comida-alimento-selecionado > div { display: grid; gap: 3px; flex: 1; min-width: 0; }
+.app .comida-alimento-selecionado > .botao-secundario { width: auto; min-width: 0; padding-inline: 14px; margin: 0; white-space: nowrap; }
+.app .comida-alimento-selecionado small { color: var(--visual-suave); font-size: 12px; }
+.app .comida-alimento-selecionado strong { font-size: 13px; overflow-wrap: anywhere; }
+.app .energia-resumo > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.app .energia-resumo h3 { margin: 0; }
+.app .energia-resumo > header > h3 { flex: 1; min-width: 0; font-size: 14px; font-weight: 650; line-height: 1.5; }
+.app .energia-resumo > header > .link-atividade { width: auto; flex: 0 0 auto; margin: 0; align-self: center; white-space: nowrap; }
+.app .energia-valores { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; margin: 16px 0; }
+.app .energia-valores > div { min-width: 0; display: grid; gap: 6px; }
+.app .energia-valores span,.app .energia-peso > span { font-size: 12px; color: var(--visual-suave); }
+.app .energia-valores strong { font-size: 22px; line-height: 1.4; overflow-wrap: anywhere; font-variant-numeric: tabular-nums; }
+.app .energia-valores small { display: inline; font-size: 12px; font-weight: 400; color: var(--visual-suave); }
+.app .energia-meta { padding-top: 14px; font-size: 13px; }
+.app .energia-peso { display: grid; gap: 8px; min-width: 0; }
+.app .energia-peso strong { font-size: 14px; }
+.app .energia-metas { border: 0; border-top: 1px solid var(--visual-borda); min-width: 0; padding: 16px 0 0; margin: 0; display: grid; grid-template-columns: minmax(0,1fr); gap: 16px; }
+.app .energia-metas legend { font-size: 14px; padding: 0 8px 0 0; }
+.app .energia-metas label { display: grid; gap: 8px; font-size: 13px; color: var(--visual-suave); }
+.app .energia-formulario { min-width: 0; }
+.app .energia-formulario input[type=date] { appearance: none; -webkit-appearance: none; display: block; }
+.app .energia-formulario input[type=date]::-webkit-date-and-time-value { min-width: 0; text-align: left; }
+.app .energia-metodo { font-size: 12px; color: var(--visual-suave); }
+.app .energia-metodo > summary { min-height: 44px; padding-block: 12px; cursor: pointer; }
+.app .energia-metodo a { color: var(--visual-acento); text-decoration: underline; }
+
+.app .energia-formulario .data-medida { box-sizing: border-box; width: 100%; min-height: 48px; padding: 12px; margin: 0; gap: 12px; font-size: 13px; }
+.app .energia-formulario .data-medida > span { text-align: left; min-width: 0; }
+.app .energia-formulario .data-medida > strong { margin-left: auto; text-align: right; font-size: 13px; }
+
+.app .comida-item-recolhido { border-top: 1px solid var(--visual-borda); margin-top: 12px; }
+.app .comida-item-recolhido > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 56px; padding-block: 10px; cursor: pointer; list-style: none; }
+.app .comida-item-recolhido > summary::-webkit-details-marker { display: none; }
+.app .comida-item-recolhido > summary > span { display: grid; gap: 4px; min-width: 0; }
+.app .comida-item-recolhido strong { font-size: 14px; overflow-wrap: anywhere; }
+.app .comida-item-recolhido small { font-size: 12px; color: var(--visual-suave); }
+.app .comida-item-recolhido > summary > svg { flex-shrink: 0; transition: transform 160ms; }
+.app .comida-item-recolhido[open] > summary > svg { transform: rotate(180deg); }
+.app .comida-item-edicao { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: end; gap: 10px; padding-bottom: 12px; }
+
+.app .comida-refeicao > summary { display: flex; align-items: center; gap: 12px; min-height: 44px; cursor: pointer; list-style: none; }
+.app .comida-refeicao > summary::-webkit-details-marker { display: none; }
+.app .comida-refeicao > summary h3 { flex: 1; min-width: 0; margin: 0; font-size: 15px; }
+.app .comida-refeicao > summary strong { font-size: 14px; white-space: nowrap; }
+.app .comida-refeicao > summary svg { flex-shrink: 0; transition: transform 160ms; }
+.app .comida-refeicao[open] > summary svg { transform: rotate(180deg); }
+
+.app .comida-refeicao .comida-item { display: grid; grid-template-columns: minmax(0,1fr); gap: 12px; }
+.app .comida-refeicao .comida-acoes-alimento { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+
+.app .comida-meta-diaria { display: grid; gap: 10px; padding-top: 16px; margin-top: 16px; border-top: 1px solid var(--visual-borda); font-size: 13px; color: var(--visual-suave); }
+.app .comida-meta-diaria > strong { color: var(--visual-texto); }
+.app .comida-meta-diaria progress { width: 100%; height: 6px; accent-color: var(--visual-acento); }
+
+.app .energia-resumo > .energia-registrar-peso { width: 100%; margin-block: 16px; }
+.app .energia-resumo > .energia-registrar-peso + .energia-meta { margin-top: 0; padding-top: 0; }
+
+.app .importar-legado { gap: 16px; padding-bottom: 24px; margin-bottom: 24px; border-bottom: 1px solid var(--visual-borda); }
+.app .importar-legado > :is(h3,p) { margin: 0; }
+.app .importar-legado > h3 { font-size: 14px; }
+.app .importar-legado > p { font-size: 12px; line-height: 1.7; }
+.app .importar-legado > .opcao-legado { display: flex; align-items: flex-start; gap: 12px; padding: 12px; margin: 0; min-height: 44px; border-radius: 12px; background: var(--visual-rebaixo); font-size: 12px; line-height: 1.7; }
+.app .importar-legado .opcao-legado > input[type=checkbox] { appearance: auto; -webkit-appearance: checkbox; width: 20px; height: 20px; min-width: 20px; min-height: 20px; flex: 0 0 20px; padding: 0; margin: 2px 0 0; border-radius: 4px; accent-color: var(--visual-acento); }
+.app .importar-legado .opcao-legado > span { min-width: 0; }
+.app .importar-legado > .botao-secundario { margin: 0; width: 100%; }
+
+.app .aparelho-resumo > .aparelho-status { display: grid; gap: 0; margin: 16px 0; }
+.app .aparelho-status > div { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--visual-borda); }
+.app .aparelho-status > div:last-child { border-bottom: 0; }
+.app .aparelho-status dt { display: flex; align-items: center; gap: 8px; font-size: 12px; line-height: 1.5; }
+.app .aparelho-status dt svg { flex-shrink: 0; color: var(--visual-suave); }
+.app .aparelho-status dd { min-width: 0; margin: 0; text-align: right; font-size: 12px; line-height: 1.5; color: var(--visual-texto); overflow-wrap: anywhere; }
+.app .aparelho-nota { display: flex; align-items: flex-start; gap: 10px; padding: 12px; border-radius: 12px; background: var(--visual-rebaixo); font-size: 12px; line-height: 1.7; margin: 16px 0 0; }
+.app .aparelho-nota > svg { flex-shrink: 0; margin-top: 2px; color: var(--visual-acento); }
+.app .instalar-passos { display: grid; gap: 16px; padding: 0; margin: 20px 0; list-style: none; }
+.app .instalar-passos > li { display: flex; align-items: flex-start; gap: 12px; }
+.app .passo-numero { display: grid; place-items: center; width: 28px; height: 28px; flex: 0 0 28px; border-radius: 50%; background: var(--visual-acento-fundo); color: var(--visual-texto); font-size: 12px; font-weight: 650; }
+.app .instalar-passos li > div { min-width: 0; display: grid; gap: 4px; }
+.app .instalar-passos strong { font-size: 13px; line-height: 1.5; }
+.app .instalar-passos small { font-size: 12px; line-height: 1.6; color: var(--visual-suave); }
+.app .instalar-passos small svg { display: inline; vertical-align: middle; }

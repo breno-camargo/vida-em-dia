@@ -8,11 +8,10 @@ import { ContaConfiguracoes } from './componentes/ContaConfiguracoes'
 import { lazy, Suspense, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useDeslizarAbas } from './hooks/useDeslizarAbas'
 import { useTransicaoSuave } from './hooks/useTransicaoSuave'
-import { Settings, X, Utensils, Ruler, ChartNoAxesCombined, Leaf, Sun, Moon } from 'lucide-react'
+import { Settings, X, Leaf, Sun, Moon } from 'lucide-react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { tabela } from './dados/banco'
 import { Navegacao, type Aba } from './componentes/Navegacao'
-import { EstadoVazio } from './componentes/EstadoVazio'
 import { AvisosPwa } from './componentes/AvisosPwa'
 import { Hoje } from './telas/Hoje'
 import type { SecaoConfiguracoes } from './telas/Configuracoes'
@@ -24,21 +23,20 @@ const Treino = lazy(carregarTreino)
 const Configuracoes = lazy(() => import('./telas/Configuracoes').then(m => ({ default: m.Configuracoes })))
 const Medidas = lazy(carregarMedidas)
 const Evolucao = lazy(carregarEvolucao)
+const Comida = lazy(() => import('./telas/Comida').then(m => ({ default: m.Comida })))
 const prepararAba = (aba: Aba) => {
   const carregar = aba === 'Treino' ? carregarTreino : aba === 'Medidas' ? carregarMedidas : aba === 'Evolução' ? carregarEvolucao : undefined
   if (carregar) void carregar().catch(() => { /* A navegação mantém seu tratamento de carregamento. */ })
 }
 
-const proximas = {
-  Comida: { icone: Utensils, titulo: 'Mais simples, mais constante', texto: 'Um diário rápido para acompanhar suas refeições, sem complicar a rotina.', etapa: 9 },
-  Medidas: { icone: Ruler, titulo: 'Cada mudança conta', texto: 'Acompanhe peso e medidas e descubra sua evolução ao longo do tempo.', etapa: 5 },
-  Evolução: { icone: ChartNoAxesCombined, titulo: 'Veja o caminho que percorreu', texto: 'Seus primeiros gráficos de treino estarão aqui. Cada registro conta uma parte da sua história.', etapa: 4 },
-}
 export default function App() {
   const [aba, definirAba] = useState<Aba>('Hoje')
   const [menu, definirMenu] = useState(false)
   const [acessoSolicitado, definirAcessoSolicitado] = useState(false)
   const conta = useConta()
+  const nomeCadastrado: unknown = conta.usuario?.user_metadata?.nome
+  const primeiroNome = typeof nomeCadastrado === 'string' ? nomeCadastrado.trim().split(/\s+/)[0] : ''
+  const saudacao = primeiroNome ? `Olá, ${primeiroNome}! Vamos cuidar de você?` : 'Olá, vamos cuidar de você?'
   const conteudoRef = useRef<HTMLElement>(null)
   useTransicaoSuave(conteudoRef, menu ? 'configuracoes' : aba)
   useEffect(() => {
@@ -100,11 +98,11 @@ export default function App() {
       <div className="acoes-cabecalho"><button className="botao-icone" aria-label={temaSalvo === 'claro' ? 'Usar tema escuro' : 'Usar tema claro'} onClick={() => { if(configVisual)void tabela('configuracoes').update(configVisual.id,{tema:temaSalvo==='claro'?'escuro':'claro',atualizado_em:new Date().toISOString()}).then(()=>registrarTemaManual(temaSalvo==='claro'?'escuro':'claro')).catch(()=>definirErro('Não foi possível salvar o tema.')) }}>{configVisual?.tema === 'claro' ? <Moon size={20}/> : <Sun size={20}/>}</button><button className="botao-icone" aria-label={menu ? 'Fechar configurações' : 'Abrir configurações'} aria-expanded={menu} onClick={() => menu ? definirMenu(false) : abrirConfiguracoes()}>{menu ? <X /> : <Settings size={22} />}</button></div>
     </header>
     <main ref={conteudoRef} id="conteudo"><div className="linha-data"><span>{new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' })}</span><span className="estado-rede"><i className={ambiente.online ? 'online' : ''} />{ambiente.online ? 'Online' : 'Offline'}</span></div>
-      <h1>{menu ? 'Configurações' : aba === 'Hoje' ? 'Olá, vamos cuidar de você?' : aba}</h1>
+      <h1>{menu ? 'Configurações' : aba === 'Hoje' ? saudacao : aba}</h1>
       {erro && <div role="alert" className="erro">{erro}</div>}
       <ConcluirPerfilCadastro abrirConta={() => abrirConfiguracoes('conta')} />
       {conta.visitante && <p className="nota-resumo aviso-modo-visitante">Modo visitante: estes registros ficam visíveis a quem usar este perfil do navegador. Eles não são transferidos ao criar ou acessar uma conta.</p>}
-      <div className="conteudo-pagina">{menu ? <Suspense fallback={<p role="status">Carregando configurações…</p>}><Configuracoes {...ambiente} inicial={secaoConfiguracoes} abrirAcesso={() => definirAcessoSolicitado(true)} /></Suspense> : aba === 'Hoje' ? <Hoje configurarAgua={() => abrirConfiguracoes('agua')} abrirBackup={() => abrirConfiguracoes('backup')} abrirConta={() => abrirConfiguracoes('conta')} abrir={selecionar} registrarMedida={() => selecionar('Medidas', true)} /> : aba === 'Treino' ? <Suspense fallback={<p role="status">Carregando treino…</p>}><Treino key={entradaTreino} online={ambiente.online} /></Suspense> : aba === 'Evolução' ? <Suspense fallback={<p role="status">Carregando evolução…</p>}><Evolucao /></Suspense> : aba === 'Medidas' ? <Suspense fallback={<p role="status">Carregando medidas…</p>}><Medidas registrarInicial={registrarMedida} /></Suspense> : <EstadoVazio {...proximas[aba]} />}</div>
+      <div className="conteudo-pagina">{menu ? <Suspense fallback={<p role="status">Carregando configurações…</p>}><Configuracoes {...ambiente} inicial={secaoConfiguracoes} abrirAcesso={() => definirAcessoSolicitado(true)} /></Suspense> : aba === 'Hoje' ? <Hoje configurarAgua={() => abrirConfiguracoes('agua')} abrirBackup={() => abrirConfiguracoes('backup')} abrirConta={() => abrirConfiguracoes('conta')} abrir={selecionar} registrarMedida={() => selecionar('Medidas', true)} /> : aba === 'Treino' ? <Suspense fallback={<p role="status">Carregando treino…</p>}><Treino key={entradaTreino} online={ambiente.online} /></Suspense> : aba === 'Evolução' ? <Suspense fallback={<p role="status">Carregando evolução…</p>}><Evolucao /></Suspense> : aba === 'Medidas' ? <Suspense fallback={<p role="status">Carregando medidas…</p>}><Medidas registrarInicial={registrarMedida} /></Suspense> : <Suspense fallback={<p role="status">Carregando alimentação…</p>}><Comida /></Suspense>}</div>
     </main>
     <AvisosPwa /><Navegacao atual={aba} selecionar={selecionar} preparar={prepararAba} />
   </div>

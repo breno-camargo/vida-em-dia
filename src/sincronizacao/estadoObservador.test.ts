@@ -1,4 +1,5 @@
 import 'fake-indexeddb/auto'
+import type { Session } from '@supabase/supabase-js'
 import { afterEach, expect, test, vi } from 'vitest'
 
 const mocks=vi.hoisted(()=>({preparar:vi.fn().mockResolvedValue(undefined),contar:vi.fn().mockResolvedValue(0)}))
@@ -19,6 +20,15 @@ test('iniciarConta agenda a fila, acompanha edições e desliga o observador ao 
   const {iniciarConta}=await import('./estado')
   try {
     await iniciarConta()
+    const {supabase}=await import('./cliente')
+    const evento=vi.mocked(supabase!.auth.onAuthStateChange).mock.calls[0][0]
+    const {usuarioAtual}=await import('./estado')
+    const usuario={...usuarioAtual()!,user_metadata:{nome:'Breno Camargo'}}
+    const sessao:Session={access_token:'token-ficticio-teste',refresh_token:'refresh-ficticio-teste',expires_in:3600,token_type:'bearer',user:usuario}
+    evento('USER_UPDATED',sessao)
+    expect(usuarioAtual()?.user_metadata.nome).toBe('Breno Camargo')
+    evento('USER_UPDATED',{...sessao,user:{...usuario,id:'22222222-2222-4222-8222-222222222222',user_metadata:{nome:'Outra Pessoa'}}})
+    expect(usuarioAtual()?.user_metadata.nome).toBe('Breno Camargo')
     await vi.waitFor(()=>expect(mocks.preparar).toHaveBeenCalledTimes(1),{timeout:2000})
     mocks.preparar.mockClear()
     await banco.table('series_treino').put({id:'serie-observacao',user_id:'11111111-1111-4111-8111-111111111111',repeticoes:10})

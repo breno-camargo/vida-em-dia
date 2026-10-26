@@ -1,10 +1,14 @@
+import { EditorMedida } from '../componentes/EditorMedida'
+import { novaMedida } from '../dados/medidas'
+import type { MedidaCorporal } from '../dados/modelos'
 import { ConfigurarAgua } from '../componentes/ConfigurarAgua'
+import { ConfigurarEnergia } from '../componentes/PerfilEnergia'
 import { registrarTemaManual, usarTemaAutomatico } from '../utilitarios/tema'
 import { useTema, useModoTema } from '../hooks/useTema'
 import { recolherDetalhesSuavemente } from '../utilitarios/enquadrarDetalhes'
 import { useEffect, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { ChevronDown, UserRound, DatabaseBackup, Ruler, Activity, Smartphone, Info, Download, Sun, ShieldCheck, Droplets } from 'lucide-react'
+import { ChevronDown, UserRound, DatabaseBackup, Ruler, Activity, Smartphone, Info, Download, Sun, ShieldCheck, Droplets, Share2 } from 'lucide-react'
 import { tabela } from '../dados/banco'
 import { BackupConfiguracoes } from '../componentes/BackupConfiguracoes'
 import { PrivacidadeDados } from '../componentes/PrivacidadeDados'
@@ -38,9 +42,15 @@ function assegurarVisivel(secao: HTMLElement | null | undefined) {
   }
 }
 
-export type SecaoConfiguracoes = 'conta' | 'backup' | 'medidas' | 'atividade' | 'aparelho' | 'instalar' | 'sobre' | 'aparencia' | 'agua'
+export type SecaoConfiguracoes = 'conta' | 'backup' | 'medidas' | 'atividade' | 'aparelho' | 'instalar' | 'sobre' | 'aparencia' | 'agua' | 'energia'
 
 export function Configuracoes({ instalado, persistente, inicial, abrirAcesso }: { instalado: boolean; persistente: boolean | null; inicial?:SecaoConfiguracoes; abrirAcesso?: () => void }) {
+  const [medidaAberta, setMedidaAberta] = useState<MedidaCorporal>()
+  const [erroMedida, setErroMedida] = useState('')
+  async function registrarPeso() {
+    try { setErroMedida(''); setMedidaAberta(await novaMedida()) }
+    catch { setErroMedida('Não foi possível abrir o registro de medidas.') }
+  }
   const raiz = useRef<HTMLDivElement>(null)
   const config = useLiveQuery(() => tabela('configuracoes').where('chave').equals('principal').first())
   const conta = useConta()
@@ -107,19 +117,20 @@ export function Configuracoes({ instalado, persistente, inicial, abrirAcesso }: 
     {id:'aparencia' as const,titulo:'Aparência',resumo:modoTema==='automatico'?'Acompanha o celular':tema==='claro'?'Tema claro':'Tema escuro',icone:<Sun size={20}/>,conteudo:<section className="painel"><h2>Aparência</h2><p className="nota-resumo">Escolha como você prefere ver seu espaço.</p><div className="abas-treino tres-abas"><button type="button" aria-pressed={modoTema==='automatico'} onClick={usarTemaAutomatico}>Auto</button><button type="button" aria-pressed={modoTema==='escuro'} onClick={()=>{if(config)void tabela('configuracoes').update(config.id,{tema:'escuro',atualizado_em:new Date().toISOString()}).then(()=>registrarTemaManual('escuro')).catch(()=>definirErroTema('Não foi possível salvar o tema.'))}}>Escuro</button><button type="button" aria-pressed={modoTema==='claro'} onClick={()=>{if(config)void tabela('configuracoes').update(config.id,{tema:'claro',atualizado_em:new Date().toISOString()}).then(()=>registrarTemaManual('claro')).catch(()=>definirErroTema('Não foi possível salvar o tema.'))}}>Claro</button></div>{modoTema==='automatico'&&<p className="nota-resumo">{tema==='claro'?'O navegador informa tema claro.':'O navegador informa tema escuro.'}</p>}{erroTema&&<p role="alert">{erroTema}</p>}</section>},
     {id:'backup' as const, titulo:'Backup dos seus dados', resumo:'Exportar, importar e configurar lembretes', icone:<DatabaseBackup size={20}/>, conteudo:<BackupConfiguracoes/>},
     {id:'agua' as const, titulo:'Minha garrafa e água', resumo:'Capacidade e meta diária', icone:<Droplets size={20}/>, conteudo:<ConfigurarAgua/>},
+    {id:'energia' as const, titulo:'Metabolismo e alimentação', resumo:'Gasto estimado e metas alimentares', icone:<Activity size={20}/>, conteudo:<ConfigurarEnergia registrarPeso={registrarPeso}/>},
     {id:'medidas' as const, titulo:'Lembrete de medidas', resumo:'Escolher o dia da semana', icone:<Ruler size={20}/>, conteudo:<ConfigurarLembreteMedidas/>},
     {id:'atividade' as const, titulo:'Cardio e movimento', resumo:'Metas, calorias e feriados', icone:<Activity size={20}/>, conteudo:<ConfigurarAtividade/>},
-    {id:'aparelho' as const, titulo:'Seu aparelho', resumo:'Instalação e proteção dos dados', icone:<Smartphone size={20}/>, conteudo:<section className="painel"><h2>Seu aparelho</h2><dl>
-      <div><dt>App instalado</dt><dd>{instalado?'Sim':'Não'}</dd></div>
-      <div><dt>Armazenamento persistente</dt><dd>{persistente===null?'Indisponível':persistente?'Concedido':'Não concedido'}</dd></div>
-      <div><dt>Tema</dt><dd>{config?.tema==='claro'?'Claro':'Escuro'}</dd></div><div><dt>Última sincronização</dt><dd>{data(config?.ultima_sincronizacao)}</dd></div>
-      <div><dt>Último backup</dt><dd>{data(config?.ultimo_backup)}</dd></div>
-    </dl><p>Instalar, sincronizar e exportar backups ajuda a proteger seus dados. A persistência depende do navegador.</p></section>},
-    ...(!instalado?[{id:'instalar' as const,titulo:'Instalar no iPhone',resumo:'Adicionar à Tela de Início',icone:<Download size={20}/>,conteudo:<section className="painel"><h2>Instalar no iPhone</h2><p>Abra no Safari → Compartilhar → Adicionar à Tela de Início.</p><p>Instale antes de registrar dados ou fazer login. Safari e app instalado podem ter dados separados; cada endereço tem seu próprio armazenamento.</p></section>}]:[]),
+    {id:'aparelho' as const, titulo:'Seu aparelho', resumo:'Instalação e proteção dos dados', icone:<Smartphone size={20}/>, conteudo:<section className="painel aparelho-resumo"><h2>Seu aparelho</h2><p className="nota-resumo">Como seus dados estão protegidos neste aparelho.</p><dl className="aparelho-status">
+      <div><dt><Smartphone size={17} aria-hidden="true"/>App instalado</dt><dd>{instalado?'Instalado':'No navegador'}</dd></div>
+      <div><dt><ShieldCheck size={17} aria-hidden="true"/>Armazenamento</dt><dd>{persistente===null?'Indisponível':persistente?'Persistente':'Padrão do navegador'}</dd></div>
+      <div><dt><Sun size={17} aria-hidden="true"/>Tema atual</dt><dd>{tema==='claro'?'Claro':'Escuro'}</dd></div><div><dt><Activity size={17} aria-hidden="true"/>Última sincronização</dt><dd>{data(config?.ultima_sincronizacao)}</dd></div>
+      <div><dt><DatabaseBackup size={17} aria-hidden="true"/>Último backup</dt><dd>{data(config?.ultimo_backup)}</dd></div>
+    </dl><p className="aparelho-nota"><ShieldCheck size={18} aria-hidden="true"/><span>Mantenha um backup fora do app. A proteção do armazenamento depende do navegador.</span></p></section>},
+    ...(!instalado?[{id:'instalar' as const,titulo:'Instalar no iPhone',resumo:'Adicionar à Tela de Início',icone:<Download size={20}/>,conteudo:<section className="painel instalar-guia"><h2>Instalar no iPhone</h2><p className="nota-resumo">Tenha o app na Tela de Início.</p><ol className="instalar-passos"><li><span className="passo-numero">1</span><div><strong>Abra no Safari</strong><small>Acesse o endereço do app.</small></div></li><li><span className="passo-numero">2</span><div><strong>Toque em Compartilhar</strong><small>Procure o ícone <Share2 size={14} aria-label="Compartilhar"/> na barra do Safari.</small></div></li><li><span className="passo-numero">3</span><div><strong>Adicionar à Tela de Início</strong><small>Confirme em Adicionar e abra pelo ícone.</small></div></li></ol><p className="aparelho-nota"><Info size={18} aria-hidden="true"/><span>Instale antes de começar seus registros. Safari e app instalado podem ter dados separados; cada endereço tem seu próprio armazenamento.</span></p></section>}]:[]),
     {id:'sobre' as const,titulo:'Sobre o Vida em Dia',resumo:'Recursos e armazenamento',icone:<Info size={20}/>,conteudo:<section className="painel"><h2>Sobre o Vida em Dia</h2><p>Seu espaço pessoal de treino, alimentação e evolução.</p><small>Novo visual · Temas claro, escuro e automático</small><h3>Seus dados</h3><p>Registros disponíveis offline, com backup e sincronização pela conta. As fotos ficam neste aparelho; inclua-as no backup para guardá-las.</p></section>},
   ]
   const grupos = [
-    {titulo:'SEU PERFIL',ids:['conta','agua']},
+    {titulo:'SEU PERFIL',ids:['conta','agua','energia']},
     {titulo:'PREFERÊNCIAS',ids:['aparencia','medidas','atividade']},
     {titulo:'DADOS E APLICATIVO',ids:['backup','aparelho','instalar','sobre']},
   ]
@@ -136,5 +147,5 @@ export function Configuracoes({ instalado, persistente, inicial, abrirAcesso }: 
         </div>
       </div>
     </section>
-  })}</div></section>)}<details className="privacidade-recolhida" onToggle={e => { if (e.target === e.currentTarget && e.currentTarget.open) assegurarVisivel(e.currentTarget) }}><summary onClick={recolherDetalhesSuavemente}><span className="icone-config"><ShieldCheck size={20} aria-hidden="true" /></span><span className="texto-config"><strong>Privacidade e eliminação</strong><small>Seus dados e itens removidos</small></span><ChevronDown className="seta-config" size={18} aria-hidden="true" /></summary><PrivacidadeDados/></details><BotaoSairDaConta/></div>
+  })}</div></section>)}<details className="privacidade-recolhida" onToggle={e => { if (e.target === e.currentTarget && e.currentTarget.open) assegurarVisivel(e.currentTarget) }}><summary onClick={recolherDetalhesSuavemente}><span className="icone-config"><ShieldCheck size={20} aria-hidden="true" /></span><span className="texto-config"><strong>Privacidade e eliminação</strong><small>Seus dados e itens removidos</small></span><ChevronDown className="seta-config" size={18} aria-hidden="true" /></summary><PrivacidadeDados/></details><BotaoSairDaConta/>{erroMedida && <p className="erro" role="alert">{erroMedida}</p>}{medidaAberta && <EditorMedida medida={medidaAberta} fechar={() => setMedidaAberta(undefined)} />}</div>
 }

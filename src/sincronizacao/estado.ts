@@ -53,6 +53,10 @@ export async function iniciarConta(){
    // Persistir antes da recarga que protege a troca do banco local.
    marcarRecuperacaoSenha(sessao.user.id)
   }
+  if(evento==='USER_UPDATED' && sessao?.user && sessao.user.id===estado.usuario?.id && sessao.user.id===identidadeAtual()){
+   alterar({usuario:sessao.user})
+   return
+  }
   if(evento==='SIGNED_OUT'){limparRecuperacaoSenha();alterar({recuperando:false})}
   if(!navigator.onLine&&!sessao?.user&&estado.usuario)return
   if(['SIGNED_IN','SIGNED_OUT','INITIAL_SESSION','PASSWORD_RECOVERY'].includes(evento)){

@@ -7,7 +7,7 @@ export function ImportarLegado(){
  const conta=useConta(), {confirmar,dialogo}=useConfirmacao()
  const [semDono, incluir]=useState(false),[ocupado, ocupar]=useState(false),[mensagem, avisar]=useState('')
  if(!conta.usuario)return null
- return <div className="formulario">{dialogo}<h3>Registros da versão anterior</h3><p>O arquivo local antigo permanece intacto. Apenas registros desta conta serão oferecidos para importação.</p><label><input type="checkbox" checked={semDono} disabled={ocupado} onChange={e=>incluir(e.target.checked)}/>Também considero meus os registros sem proprietário. Eles podem ter sido criados por outra pessoa neste navegador.</label><button type="button" className="botao-secundario" disabled={ocupado} onClick={async()=>{ocupar(true);try{
+ return <div className="formulario importar-legado">{dialogo}<h3>Registros da versão anterior</h3><p>O arquivo local antigo permanece intacto. Apenas registros desta conta serão oferecidos para importação.</p><label className="incluir-fotos opcao-legado"><input type="checkbox" checked={semDono} disabled={ocupado} onChange={e=>incluir(e.target.checked)}/><span>Também considero meus os registros sem proprietário. Eles podem ter sido criados por outra pessoa neste navegador.</span></label><button type="button" className="botao-secundario" disabled={ocupado} onClick={async()=>{ocupar(true);try{
   const usuario=conta.usuario!.id,dados=await consultarLegado(usuario,semDono)
   if(!dados){avisar('Nenhum banco antigo encontrado.');return}
   const total=Object.values(dados).reduce((s,r)=>s+r.length,0)

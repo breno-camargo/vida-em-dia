@@ -1,5 +1,5 @@
 import { enquadrarDetalhes, recolherDetalhesSuavemente } from '../utilitarios/enquadrarDetalhes'
-import { useState, type FormEvent } from 'react'
+import { useId, useState, type FormEvent } from 'react'
 import { Eye, EyeOff, LogOut, RefreshCw, CloudUpload } from 'lucide-react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { supabase } from '../sincronizacao/cliente'
@@ -87,6 +87,7 @@ export function ContaConfiguracoes({entrada=false,resumida=false,abrirAcesso}:{e
 
  </form>:<div className="conta-sessao">
  {!resumida&&<p>{conta.usuario.email}</p>}
+ <NomeDaConta key={conta.usuario.id} />
  {!conta.vinculado?<div className="conta-vinculo"><p>Conecte este aparelho para sincronizar seus registros.</p><button className="botao-principal" onClick={()=>setMesclar(true)}>Conectar meus dados</button></div>:<>
  <BotaoSincronizar/>
  <label className="opcao-sync-automatica"><span className="texto-sync-automatica"><strong>Sincronização automática</strong><span>Ao abrir, voltar ao app ou finalizar um treino.</span></span><input type="checkbox" role="switch" aria-label="Sincronização automática" checked={config?.sync_automatico??false} disabled={conta.ocupado||ocupado||!config} onChange={e=>{const ativar=e.target.checked;if(config)void executar(async()=>{await tabela('configuracoes').update(config.id,{sync_automatico:ativar})})}}/><span className="interruptor-sync" aria-hidden="true"/></label>
@@ -125,4 +126,31 @@ export function BotaoSincronizar({abrirConta}:{abrirConta?:()=>void}){
   <div className="detalhes-sync"><span>Última sincronização</span><time dateTime={config?.ultima_sincronizacao}>{ultima}</time>{conta.pendentes>0&&<span className="pendencias-sync">{conta.pendentes} {conta.pendentes===1?'alteração pendente':'alterações pendentes'}</span>}</div>
   {mensagem&&<p className="mensagem-sync" role="status">{mensagem}</p>}{conta.erro&&<p role="alert" className="erro">{conta.erro}</p>}<RevisaoSincronizacao pedido={pedidoRevisao}/>
  </div>
+}
+
+function NomeDaConta() {
+ const { usuario } = useConta()
+ const [aberto, setAberto] = useState(false)
+ const [nome, setNome] = useState('')
+ const [ocupado, setOcupado] = useState(false)
+ const [erro, setErro] = useState('')
+ const formulario = useId()
+ const cadastrado = typeof usuario?.user_metadata?.nome === 'string' ? usuario.user_metadata.nome.trim() : ''
+ async function salvar(evento: FormEvent) {
+  evento.preventDefault()
+  if (ocupado || !usuario || !supabase) return
+  const completo = nome.trim().replace(/\s+/g, ' ')
+  if (!completo || completo.length > 80) { setErro('Informe seu nome, com até 80 caracteres.'); return }
+  if (!navigator.onLine) { setErro('Conecte à internet para salvar seu nome na conta.'); return }
+  setOcupado(true); setErro('')
+  try {
+   const { error } = await supabase.auth.updateUser({ data: { nome: completo } })
+   if (error) throw new Error('Não foi possível salvar o nome. Tente novamente.')
+   setAberto(false)
+  } catch (e) { setErro(e instanceof Error ? e.message : 'Não foi possível salvar o nome.') }
+  finally { setOcupado(false) }
+ }
+ return <><button type="button" className="data-medida" onClick={() => { setNome(cadastrado); setErro(''); setAberto(true) }}><span>Nome completo</span><strong>{cadastrado || 'Informar nome'}</strong></button>
+ {aberto && <Painel titulo="Seu nome" fechar={() => { if (!ocupado) setAberto(false) }} acao={<button type="submit" form={formulario} className="botao-principal salvar-cabecalho" disabled={ocupado}>{ocupado ? 'Salvando…' : 'Salvar'}</button>}><form id={formulario} className="formulario formulario-conta" onSubmit={salvar}><label>Nome completo<input autoComplete="name" required maxLength={80} value={nome} disabled={ocupado} onChange={e => setNome(e.target.value)} placeholder="Ex.: Breno Camargo" /></label><p className="nota-resumo">Na tela inicial, mostramos apenas seu primeiro nome.</p>{erro && <p className="erro" role="alert">{erro}</p>}</form></Painel>}
+ </>
 }
