@@ -21,6 +21,10 @@ export function validarDominioBackup(nome: string, r: LinhaBackup) {
   numero('descanso_segundos', 0, 1800)
   for (const campo of ['peso', 'peso_corporal']) numero(campo, Number.MIN_VALUE, 400)
   for (const campo of ['busto', 'cintura', 'abdomen', 'quadril', 'biceps_d', 'biceps_e', 'coxa_d', 'coxa_e', 'panturrilha_d', 'panturrilha_e']) numero(campo, Number.MIN_VALUE, 300)
+  numero('garrafa_ml', 50, 5000, true)
+  if (nome === 'agua_dia' && r.garrafas_ml !== undefined) {
+    if (!Array.isArray(r.garrafas_ml) || r.garrafas_ml.some(v => !Number.isSafeInteger(v) || v < 50 || v > 5000) || r.garrafas_ml.reduce((a: number, v: number) => a + v, 0) > Number(r.ml)) falhar('garrafas_ml')
+  }
   if (nome === 'cardio_sessoes') {
     validarDetalhesCardio(r)
     numero('duracao_minutos', Number.MIN_VALUE, 1440)

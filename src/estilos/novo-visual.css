@@ -238,3 +238,7 @@ button,input,textarea,select { font: inherit; }
 
 /* Resumo de Hoje: o convite cabe na mesma linha dos valores dos demais cards. */
 .app .grade-equilibrio .cartao > .convite-treino { font-size: clamp(14px, 4.35vw, 17px); line-height: 40px; white-space: nowrap; letter-spacing: -.5px; }
+
+.app .grade-equilibrio { grid-auto-rows: 1fr; }
+.app .agua-hoje progress { width: 100%; height: 5px; accent-color: var(--visual-acento); }
+.app .agua-hoje > button { width: 100%; min-height: 44px; }

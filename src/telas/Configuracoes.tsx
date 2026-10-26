@@ -1,3 +1,4 @@
+import { ConfigurarAgua } from '../componentes/ConfigurarAgua'
 import { registrarTemaManual, usarTemaAutomatico } from '../utilitarios/tema'
 import { useTema, useModoTema } from '../hooks/useTema'
 import { recolherDetalhesSuavemente } from '../utilitarios/enquadrarDetalhes'
@@ -37,7 +38,7 @@ function assegurarVisivel(secao: HTMLElement | null | undefined) {
   }
 }
 
-export type SecaoConfiguracoes = 'conta' | 'backup' | 'medidas' | 'atividade' | 'aparelho' | 'instalar' | 'sobre' | 'aparencia'
+export type SecaoConfiguracoes = 'conta' | 'backup' | 'medidas' | 'atividade' | 'aparelho' | 'instalar' | 'sobre' | 'aparencia' | 'agua'
 
 export function Configuracoes({ instalado, persistente, inicial, abrirAcesso }: { instalado: boolean; persistente: boolean | null; inicial?:SecaoConfiguracoes; abrirAcesso?: () => void }) {
   const raiz = useRef<HTMLDivElement>(null)
@@ -105,6 +106,7 @@ export function Configuracoes({ instalado, persistente, inicial, abrirAcesso }: 
     {id:'conta' as const, titulo:'Conta e sincronização', resumo:conta.usuario?.email??'Entrar e conectar seus dados', icone:<UserRound size={20}/>, conteudo:<ContaConfiguracoes resumida abrirAcesso={abrirAcesso}/>},
     {id:'aparencia' as const,titulo:'Aparência',resumo:modoTema==='automatico'?'Acompanha o celular':tema==='claro'?'Tema claro':'Tema escuro',icone:<Sun size={20}/>,conteudo:<section className="painel"><h2>Aparência</h2><p className="nota-resumo">Escolha como você prefere ver seu espaço.</p><div className="abas-treino tres-abas"><button type="button" aria-pressed={modoTema==='automatico'} onClick={usarTemaAutomatico}>Auto</button><button type="button" aria-pressed={modoTema==='escuro'} onClick={()=>{if(config)void tabela('configuracoes').update(config.id,{tema:'escuro',atualizado_em:new Date().toISOString()}).then(()=>registrarTemaManual('escuro')).catch(()=>definirErroTema('Não foi possível salvar o tema.'))}}>Escuro</button><button type="button" aria-pressed={modoTema==='claro'} onClick={()=>{if(config)void tabela('configuracoes').update(config.id,{tema:'claro',atualizado_em:new Date().toISOString()}).then(()=>registrarTemaManual('claro')).catch(()=>definirErroTema('Não foi possível salvar o tema.'))}}>Claro</button></div>{modoTema==='automatico'&&<p className="nota-resumo">{tema==='claro'?'O navegador informa tema claro.':'O navegador informa tema escuro.'}</p>}{erroTema&&<p role="alert">{erroTema}</p>}</section>},
     {id:'backup' as const, titulo:'Backup dos seus dados', resumo:'Exportar, importar e configurar lembretes', icone:<DatabaseBackup size={20}/>, conteudo:<BackupConfiguracoes/>},
+    {id:'agua' as const, titulo:'Minha garrafa e água', resumo:'Capacidade e meta diária', icone:<Activity size={20}/>, conteudo:<ConfigurarAgua/>},
     {id:'medidas' as const, titulo:'Lembrete de medidas', resumo:'Escolher o dia da semana', icone:<Ruler size={20}/>, conteudo:<ConfigurarLembreteMedidas/>},
     {id:'atividade' as const, titulo:'Cardio e movimento', resumo:'Metas, calorias e feriados', icone:<Activity size={20}/>, conteudo:<ConfigurarAtividade/>},
     {id:'aparelho' as const, titulo:'Seu aparelho', resumo:'Instalação e proteção dos dados', icone:<Smartphone size={20}/>, conteudo:<section className="painel"><h2>Seu aparelho</h2><dl>
@@ -117,7 +119,7 @@ export function Configuracoes({ instalado, persistente, inicial, abrirAcesso }: 
     {id:'sobre' as const,titulo:'Sobre o Vida em Dia',resumo:'Recursos e armazenamento',icone:<Info size={20}/>,conteudo:<section className="painel"><h2>Sobre o Vida em Dia</h2><p>Seu espaço pessoal de treino, alimentação e evolução.</p><small>Novo visual · Temas claro, escuro e automático</small><h3>Seus dados</h3><p>Registros disponíveis offline, com backup e sincronização pela conta. As fotos ficam neste aparelho; inclua-as no backup para guardá-las.</p></section>},
   ]
   const grupos = [
-    {titulo:'SEU PERFIL',ids:['conta']},
+    {titulo:'SEU PERFIL',ids:['conta','agua']},
     {titulo:'PREFERÊNCIAS',ids:['aparencia','medidas','atividade']},
     {titulo:'DADOS E APLICATIVO',ids:['backup','aparelho','instalar','sobre']},
   ]
