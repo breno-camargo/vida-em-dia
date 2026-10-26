@@ -68,6 +68,7 @@ export function Comida() {
   const [erro, setErro] = useState('')
   const [salvando, setSalvando] = useState(false)
   const [editando, setEditando] = useState<RefeicaoDia | null>(null)
+  const [referenciaAtual, setReferenciaAtual] = useState<{ registroId: string; alimento: OpcaoAlimento } | null>(null)
   const [rascunho, setRascunho] = useState<ItemRascunho[]>([])
   const [dataRascunho, setDataRascunho] = useState(data)
   const travaSalvar = useRef(false)
@@ -91,7 +92,7 @@ export function Comida() {
     ...pessoais.filter(a => a.base_quantidade_g !== undefined).map(a => ({ ...a, id: `pessoal:${a.id}`, alimento_id: a.id, nome: nomeAlimento(a), base_quantidade_g: a.base_quantidade_g!, fonte: 'Meu alimento' })),
     ...alimentosComuns.filter(a => !config?.alimentos_comuns_ocultos?.includes(a.id)).map(a => ({ ...a })),
   ].filter(a => !rascunho.some(item => item.alimento.id === a.id) && textoBusca(a.nome).includes(textoBusca(busca.trim()))), [pessoais, busca, config, rascunho])
-  const selecionado: OpcaoAlimento | undefined = editando && editando.quantidade_g ? { ...editando, nome: editando.alimento_nome ?? editando.descricao, base_quantidade_g: editando.quantidade_g } : itens.find(a => a.id === alimentoId)
+  const selecionado: OpcaoAlimento | undefined = editando && editando.quantidade_g ? (referenciaAtual?.registroId === editando.id ? referenciaAtual.alimento : { ...editando, nome: editando.alimento_nome ?? editando.descricao, base_quantidade_g: editando.quantidade_g }) : itens.find(a => a.id === alimentoId)
   const doDia = registros.filter(r => r.data === data).sort((a, b) => b.horario.localeCompare(a.horario))
   const totais = doDia.reduce((s, r) => ({ kcal: s.kcal + r.kcal, proteina_g: s.proteina_g + (r.proteina_g ?? 0), carbo_g: s.carbo_g + (r.carbo_g ?? 0), gordura_g: s.gordura_g + (r.gordura_g ?? 0), fibra_g: s.fibra_g + (r.fibra_g ?? 0) }), { kcal: 0, proteina_g: 0, carbo_g: 0, gordura_g: 0, fibra_g: 0 })
   const comSodio = doDia.filter(r => r.sodio_mg !== undefined)
@@ -179,6 +180,9 @@ export function Comida() {
       }
       const horario = editando?.horario ?? new Date().toTimeString().slice(0, 5)
       const registro: RefeicaoDia = { ...(editando ?? criarRegistro()), data, refeicao: refeicaoEditando, horario, descricao: selecionado.nome, alimento_nome: selecionado.nome, quantidade_g: gramas, precisao: editando?.precisao ?? (selecionado.alimento_id ? 'exato' : 'estimado'), ...nutrientesCalculados, ...(selecionado.alimento_id ? { alimento_id: selecionado.alimento_id } : {}) }
+      for (const campo of ['proteina_g', 'carbo_g', 'gordura_g', 'fibra_g', 'sodio_mg', 'acucares_g'] as const) {
+        if (nutrientesCalculados[campo] === undefined) delete registro[campo]
+      }
       await repositorio('refeicoes_dia').salvar(registro)
       setPainel(null); setEditando(null); setAlimentoId(''); setQuantidade('100'); setBusca('')
     } catch { setErro('Não foi possível salvar. Se o registro mudou em outro aparelho, reabra a edição.') } finally { setSalvando(false) }
@@ -235,7 +239,7 @@ export function Comida() {
       const lista = doDia.filter(r => r.refeicao === grupo)
       if (!lista.length) return null
       const kcal = lista.reduce((s, r) => s + r.kcal, 0)
-      return <details className="painel comida-refeicao" key={grupo} onToggle={enquadrarDetalhes}><summary onClick={recolherDetalhesSuavemente}><h3>{grupo}</h3><strong>{formatar(kcal)} kcal</strong><ChevronDown size={18} aria-hidden="true" /></summary>{lista.map(registro => <article className="comida-item" key={registro.id}><div><strong>{registro.alimento_nome ?? registro.descricao}</strong><span>{registro.horario} · {registro.quantidade_g !== undefined ? `${formatar(registro.quantidade_g, 1)} g` : 'porção registrada'}</span><small>{formatar(registro.kcal)} kcal · P {formatar(registro.proteina_g ?? 0, 1)} g · C {formatar(registro.carbo_g ?? 0, 1)} g · Fibra {formatar(registro.fibra_g ?? 0, 1)} g · Açúcares {registro.acucares_g !== undefined ? `${formatar(registro.acucares_g, 1)} g` : 'não informado'} · Sódio {registro.sodio_mg !== undefined ? `${formatar(registro.sodio_mg, 1)} mg` : "não informado"}</small></div><div className="comida-acoes-alimento">{registro.quantidade_g && <button className="botao-secundario" onClick={() => { setEditando(registro); setQuantidade(String(registro.quantidade_g)); setRefeicaoEditando(registro.refeicao); setErro(''); setPainel('registro') }}>Editar</button>}<button type="button" className="botao-secundario excluir-historico" aria-label={`Remover ${registro.alimento_nome ?? registro.descricao}`} onClick={() => void removerRegistro(registro)}><Trash2 size={17} />Excluir</button></div></article>)}<button type="button" className="botao-secundario" onClick={() => abrirRefeicao(grupo)}>Adicionar alimentos</button></details>
+      return <details className="painel comida-refeicao" key={grupo} onToggle={enquadrarDetalhes}><summary onClick={recolherDetalhesSuavemente}><h3>{grupo}</h3><strong>{formatar(kcal)} kcal</strong><ChevronDown size={18} aria-hidden="true" /></summary>{lista.map(registro => <article className="comida-item" key={registro.id}><div><strong>{registro.alimento_nome ?? registro.descricao}</strong><span>{registro.horario} · {registro.quantidade_g !== undefined ? `${formatar(registro.quantidade_g, 1)} g` : 'porção registrada'}</span><small>{formatar(registro.kcal)} kcal · P {formatar(registro.proteina_g ?? 0, 1)} g · C {formatar(registro.carbo_g ?? 0, 1)} g · Fibra {formatar(registro.fibra_g ?? 0, 1)} g · Açúcares {registro.acucares_g !== undefined ? `${formatar(registro.acucares_g, 1)} g` : 'não informado'} · Sódio {registro.sodio_mg !== undefined ? `${formatar(registro.sodio_mg, 1)} mg` : "não informado"}</small></div><div className="comida-acoes-alimento">{registro.quantidade_g && <button className="botao-secundario" onClick={() => { setReferenciaAtual(null); setEditando(registro); setQuantidade(String(registro.quantidade_g)); setRefeicaoEditando(registro.refeicao); setErro(''); setPainel('registro') }}>Editar</button>}<button type="button" className="botao-secundario excluir-historico" aria-label={`Remover ${registro.alimento_nome ?? registro.descricao}`} onClick={() => void removerRegistro(registro)}><Trash2 size={17} />Excluir</button></div></article>)}<button type="button" className="botao-secundario" onClick={() => abrirRefeicao(grupo)}>Adicionar alimentos</button></details>
     })}
     <section className="painel comida-resumo" aria-label="Resumo nutricional do dia">
       <div className="comida-resumo-topo"><div><span>Total do dia</span><strong>{formatar(totais.kcal)} <small>kcal</small></strong></div><span>{doDia.length} {doDia.length === 1 ? 'item' : 'itens'}</span></div>
@@ -260,6 +264,14 @@ export function Comida() {
           {!itens.length && <button type="button" className="botao-secundario" onClick={() => abrirCadastro()}>Cadastrar meu alimento</button>}
         </>}
       </section>}
+      {editando && <><button type="button" className="botao-secundario" disabled={salvando} onClick={async () => {
+        setErro('')
+        try {
+          const atual = editando.alimento_id ? await repositorio('alimentos_favoritos').obter(editando.alimento_id) : undefined
+          if (!atual || atual.apagado_em || atual.eliminado_em || !atual.base_quantidade_g) { setErro('O cadastro original deste alimento não está disponível. Os valores registrados foram mantidos.'); return }
+          setReferenciaAtual({ registroId: editando.id, alimento: { ...atual, id: 'pessoal:' + atual.id, alimento_id: atual.id, nome: nomeAlimento(atual), base_quantidade_g: atual.base_quantidade_g } })
+        } catch { setErro('Não foi possível consultar o cadastro. Tente novamente.') }
+      }}>Atualizar com os dados atuais do alimento</button><p className="comida-base" role="status">{referenciaAtual?.registroId === editando.id ? 'Valores recalculados com o cadastro atual. Confira e toque em Salvar para aplicar somente a este registro.' : 'Os valores antigos ficam preservados. Use esta opção para recalcular todos os nutrientes com o cadastro atual, mantendo a quantidade consumida.'}</p></>}
       {selecionado && <p className="comida-base">Referência: {formatar(selecionado.kcal)} kcal, P {formatar(selecionado.proteina_g ?? 0, 1)} g, C {formatar(selecionado.carbo_g ?? 0, 1)} g e fibra {formatar(selecionado.fibra_g ?? 0, 1)} g por {formatar(selecionado.base_quantidade_g, 1)} g.</p>}
       <label>Quantidade consumida (g)<input ref={quantidadeRef} inputMode="decimal" type="text" value={quantidade} onChange={e => setQuantidade(e.target.value)} placeholder="Ex.: 63" /></label>
       {nutrientesCalculados && <div className="comida-calculada"><strong>{formatar(nutrientesCalculados.kcal)} kcal</strong><span>Proteína {formatar(nutrientesCalculados.proteina_g ?? 0, 1)} g · Carboidratos {formatar(nutrientesCalculados.carbo_g ?? 0, 1)} g</span><span>Fibras {formatar(nutrientesCalculados.fibra_g ?? 0, 1)} g · Gorduras {formatar(nutrientesCalculados.gordura_g ?? 0, 1)} g</span><span>Açúcares totais {nutrientesCalculados.acucares_g !== undefined ? `${formatar(nutrientesCalculados.acucares_g, 1)} g` : 'não informado'}</span><span>Sódio {nutrientesCalculados.sodio_mg !== undefined ? `${formatar(nutrientesCalculados.sodio_mg, 1)} mg` : "não informado"}</span></div>}
