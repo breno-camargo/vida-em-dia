@@ -53,7 +53,7 @@ export interface AtividadeDiaria extends Registro {
   meta_passos_aplicada: number; meta_calorias_gastas_aplicada: number
 }
 export interface Feriado extends Registro { data: string; nome: string }
-export interface Nutrientes { kcal: number; proteina_g?: number; carbo_g?: number; gordura_g?: number; fibra_g?: number; sodio_mg?: number }
+export interface Nutrientes { kcal: number; proteina_g?: number; carbo_g?: number; gordura_g?: number; fibra_g?: number; sodio_mg?: number; acucares_g?: number }
 export interface RefeicaoDia extends Registro, Nutrientes {
   data: string; refeicao: string; horario: string; descricao: string
   precisao: 'estimado' | 'exato'; foto_id?: string; alimento_id?: string

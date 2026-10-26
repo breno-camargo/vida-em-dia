@@ -1,3 +1,5 @@
+> Registro da entrega de alimentacao e de sua retomada. Estado atual: publicada pelo PR #3 em 26/10/2026; README reconciliado pelo PR #4. Projeto principal: outputs/vida-em-dia. Proxima atividade: [testes de confiabilidade e carga](TESTES-CONFIABILIDADE.md). Referencias abaixo a trabalho local ou sem push descrevem o momento original e nao o estado atual.
+
 # Retomar alimentacao - 26/10/2026
 
 Estado atualizado em 26/10/2026: usuario aprovou o acabamento e solicitou commits locais. Previa de homologacao publicada na Vercel; producao nao atualizada. Sem push nesta entrega.

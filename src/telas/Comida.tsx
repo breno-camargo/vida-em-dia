@@ -79,7 +79,7 @@ export function Comida() {
   const [buscaCadastro, setBuscaCadastro] = useState('')
   const [paraExcluir, setParaExcluir] = useState<AlimentoFavorito | typeof alimentosComuns[number] | null>(null)
   const [baseNova, setBaseNova] = useState('50')
-  const [nutrientesNovos, setNutrientesNovos] = useState({ kcal: '', proteina_g: '', carbo_g: '', gordura_g: '', fibra_g: '', sodio_mg: '' })
+  const [nutrientesNovos, setNutrientesNovos] = useState({ kcal: '', proteina_g: '', carbo_g: '', gordura_g: '', fibra_g: '', sodio_mg: '', acucares_g: '' })
   const registros = useLiveQuery(() => repositorio('refeicoes_dia').listar(), [], []) ?? []
   const pessoais = useLiveQuery(() => repositorio('alimentos_favoritos').listar(), [], nenhumAlimento)
   const config = useLiveQuery(async () => (await repositorio('configuracoes').listar()).find(c => c.chave === 'principal'))
@@ -95,6 +95,8 @@ export function Comida() {
   const doDia = registros.filter(r => r.data === data).sort((a, b) => b.horario.localeCompare(a.horario))
   const totais = doDia.reduce((s, r) => ({ kcal: s.kcal + r.kcal, proteina_g: s.proteina_g + (r.proteina_g ?? 0), carbo_g: s.carbo_g + (r.carbo_g ?? 0), gordura_g: s.gordura_g + (r.gordura_g ?? 0), fibra_g: s.fibra_g + (r.fibra_g ?? 0) }), { kcal: 0, proteina_g: 0, carbo_g: 0, gordura_g: 0, fibra_g: 0 })
   const comSodio = doDia.filter(r => r.sodio_mg !== undefined)
+  const comAcucares = doDia.filter(r => r.acucares_g !== undefined)
+  const acucaresDia = comAcucares.reduce((s,r) => s + (r.acucares_g ?? 0), 0)
   const sodioDia = comSodio.reduce((s, r) => s + (r.sodio_mg ?? 0), 0)
   const gramas = decimal(quantidade)
   const nutrientesCalculados = selecionado && Number.isFinite(gramas) && gramas > 0 && gramas <= 20000
@@ -105,7 +107,7 @@ export function Comida() {
     return { ...item, nutrientes: Number.isFinite(quantidade) && quantidade > 0 && quantidade <= 20000 ? calcularPorcao(item.alimento, item.alimento.base_quantidade_g, quantidade) : null }
   })
   const itensDaRefeicao = [...rascunhoCalculado, ...(selecionado ? [{ chave: 'selecionado', alimento: selecionado, quantidade, nutrientes: nutrientesCalculados }] : [])]
-  const totalRascunho = itensDaRefeicao.reduce((s, item) => ({ kcal: s.kcal + (item.nutrientes?.kcal ?? 0), proteina_g: s.proteina_g + (item.nutrientes?.proteina_g ?? 0), carbo_g: s.carbo_g + (item.nutrientes?.carbo_g ?? 0), gordura_g: s.gordura_g + (item.nutrientes?.gordura_g ?? 0), fibra_g: s.fibra_g + (item.nutrientes?.fibra_g ?? 0), sodio_mg: s.sodio_mg + (item.nutrientes?.sodio_mg ?? 0) }), { kcal: 0, proteina_g: 0, carbo_g: 0, gordura_g: 0, fibra_g: 0, sodio_mg: 0 })
+  const totalRascunho = itensDaRefeicao.reduce((s, item) => ({ kcal: s.kcal + (item.nutrientes?.kcal ?? 0), proteina_g: s.proteina_g + (item.nutrientes?.proteina_g ?? 0), carbo_g: s.carbo_g + (item.nutrientes?.carbo_g ?? 0), gordura_g: s.gordura_g + (item.nutrientes?.gordura_g ?? 0), fibra_g: s.fibra_g + (item.nutrientes?.fibra_g ?? 0), acucares_g: s.acucares_g + (item.nutrientes?.acucares_g ?? 0), sodio_mg: s.sodio_mg + (item.nutrientes?.sodio_mg ?? 0) }), { kcal: 0, proteina_g: 0, carbo_g: 0, gordura_g: 0, fibra_g: 0, sodio_mg: 0, acucares_g: 0 })
 
   function abrirRefeicao(grupo?: string) {
     if (!rascunho.length) setDataRascunho(data)
@@ -158,6 +160,7 @@ export function Comida() {
       carbo_g: alimento?.carbo_g !== undefined ? String(alimento.carbo_g) : '',
       gordura_g: alimento?.gordura_g !== undefined ? String(alimento.gordura_g) : '',
       fibra_g: alimento?.fibra_g !== undefined ? String(alimento.fibra_g) : '',
+      acucares_g: alimento?.acucares_g !== undefined ? String(alimento.acucares_g) : '',
       sodio_mg: alimento?.sodio_mg !== undefined ? String(alimento.sodio_mg) : '',
     })
     setVoltarParaAlimentos(retornar); setErro(''); setPainel('cadastro')
@@ -189,11 +192,15 @@ export function Comida() {
     if (!nomeNovo.trim() || nomeNovo.trim().length > 100 || marcaNova.trim().length > 100 || !Number.isFinite(base) || base <= 0 || base > 5000 || ['kcal', 'proteina_g', 'carbo_g', 'gordura_g', 'fibra_g'].some(c => !Number.isFinite(valores[c]) || valores[c] < 0 || valores[c] > 10000) || !nutrientesNovos.kcal || !nutrientesNovos.proteina_g || !nutrientesNovos.carbo_g) {
       setErro('Preencha nome, porção base, calorias, proteína, carboidratos e gorduras com valores válidos. Use 0 quando não houver o nutriente.'); return
     }
+    const acucares = nutrientesNovos.acucares_g.trim() ? decimal(nutrientesNovos.acucares_g) : undefined
+    if (acucares !== undefined && (!Number.isFinite(acucares) || acucares < 0)) { setErro('Informe os açúcares totais em g ou deixe vazio.'); return }
     const sodio = nutrientesNovos.sodio_mg.trim() ? decimal(nutrientesNovos.sodio_mg) : undefined
     if (sodio !== undefined && (!Number.isFinite(sodio) || sodio < 0)) { setErro('Informe o sódio em mg ou deixe o campo vazio.'); return }
     setSalvando(true)
     try {
       const alimento: AlimentoFavorito = { ...(alimentoEmEdicao ?? criarRegistro()), nome: nomeNovo.trim(), marca: marcaNova.trim(), porcao: `${formatar(base, 1)} g`, base_quantidade_g: base, fonte: 'pessoal', vezes_usado: alimentoEmEdicao?.vezes_usado ?? 0, kcal: valores.kcal, proteina_g: valores.proteina_g, carbo_g: valores.carbo_g, gordura_g: valores.gordura_g, fibra_g: valores.fibra_g }
+      if (acucares !== undefined) alimento.acucares_g = acucares
+      else delete alimento.acucares_g
       if (sodio !== undefined) alimento.sodio_mg = sodio
       else delete alimento.sodio_mg
       await salvarAlimentoPessoal(alimento, alimentoEmEdicao ?? undefined)
@@ -228,12 +235,12 @@ export function Comida() {
       const lista = doDia.filter(r => r.refeicao === grupo)
       if (!lista.length) return null
       const kcal = lista.reduce((s, r) => s + r.kcal, 0)
-      return <details className="painel comida-refeicao" key={grupo} onToggle={enquadrarDetalhes}><summary onClick={recolherDetalhesSuavemente}><h3>{grupo}</h3><strong>{formatar(kcal)} kcal</strong><ChevronDown size={18} aria-hidden="true" /></summary>{lista.map(registro => <article className="comida-item" key={registro.id}><div><strong>{registro.alimento_nome ?? registro.descricao}</strong><span>{registro.horario} · {registro.quantidade_g !== undefined ? `${formatar(registro.quantidade_g, 1)} g` : 'porção registrada'}</span><small>{formatar(registro.kcal)} kcal · P {formatar(registro.proteina_g ?? 0, 1)} g · C {formatar(registro.carbo_g ?? 0, 1)} g · Fibra {formatar(registro.fibra_g ?? 0, 1)} g · Sódio {registro.sodio_mg !== undefined ? `${formatar(registro.sodio_mg, 1)} mg` : "não informado"}</small></div><div className="comida-acoes-alimento">{registro.quantidade_g && <button className="botao-secundario" onClick={() => { setEditando(registro); setQuantidade(String(registro.quantidade_g)); setRefeicaoEditando(registro.refeicao); setErro(''); setPainel('registro') }}>Editar</button>}<button type="button" className="botao-secundario excluir-historico" aria-label={`Remover ${registro.alimento_nome ?? registro.descricao}`} onClick={() => void removerRegistro(registro)}><Trash2 size={17} />Excluir</button></div></article>)}<button type="button" className="botao-secundario" onClick={() => abrirRefeicao(grupo)}>Adicionar alimentos</button></details>
+      return <details className="painel comida-refeicao" key={grupo} onToggle={enquadrarDetalhes}><summary onClick={recolherDetalhesSuavemente}><h3>{grupo}</h3><strong>{formatar(kcal)} kcal</strong><ChevronDown size={18} aria-hidden="true" /></summary>{lista.map(registro => <article className="comida-item" key={registro.id}><div><strong>{registro.alimento_nome ?? registro.descricao}</strong><span>{registro.horario} · {registro.quantidade_g !== undefined ? `${formatar(registro.quantidade_g, 1)} g` : 'porção registrada'}</span><small>{formatar(registro.kcal)} kcal · P {formatar(registro.proteina_g ?? 0, 1)} g · C {formatar(registro.carbo_g ?? 0, 1)} g · Fibra {formatar(registro.fibra_g ?? 0, 1)} g · Açúcares {registro.acucares_g !== undefined ? `${formatar(registro.acucares_g, 1)} g` : 'não informado'} · Sódio {registro.sodio_mg !== undefined ? `${formatar(registro.sodio_mg, 1)} mg` : "não informado"}</small></div><div className="comida-acoes-alimento">{registro.quantidade_g && <button className="botao-secundario" onClick={() => { setEditando(registro); setQuantidade(String(registro.quantidade_g)); setRefeicaoEditando(registro.refeicao); setErro(''); setPainel('registro') }}>Editar</button>}<button type="button" className="botao-secundario excluir-historico" aria-label={`Remover ${registro.alimento_nome ?? registro.descricao}`} onClick={() => void removerRegistro(registro)}><Trash2 size={17} />Excluir</button></div></article>)}<button type="button" className="botao-secundario" onClick={() => abrirRefeicao(grupo)}>Adicionar alimentos</button></details>
     })}
     <section className="painel comida-resumo" aria-label="Resumo nutricional do dia">
       <div className="comida-resumo-topo"><div><span>Total do dia</span><strong>{formatar(totais.kcal)} <small>kcal</small></strong></div><span>{doDia.length} {doDia.length === 1 ? 'item' : 'itens'}</span></div>
       <div className="comida-meta-diaria" aria-live="polite">{metaDia > 0 ? <><span>Meta: <strong>{formatar(metaDia)} kcal</strong></span><strong>{Math.round(totais.kcal) === Math.round(metaDia) ? 'Meta atingida' : totais.kcal < metaDia ? 'Restam ' + formatar(metaDia - totais.kcal) + ' kcal' : formatar(totais.kcal - metaDia) + ' kcal acima da meta'}</strong><progress aria-label="Consumo em relação à meta alimentar" max={metaDia} value={Math.min(totais.kcal, metaDia)} /></> : <><span>Meta alimentar não definida</span><button type="button" className="botao-secundario" onClick={() => setMetaAberta(true)}>Definir meta</button></>}</div>
-      <div className="comida-macros"><span>Proteína<strong>{formatar(totais.proteina_g, 1)} g</strong></span><span>Carboidratos<strong>{formatar(totais.carbo_g, 1)} g</strong></span><span>Fibras<strong>{formatar(totais.fibra_g, 1)} g</strong></span><span>Gorduras totais<strong>{formatar(totais.gordura_g, 1)} g</strong></span><span>Sódio<strong>{comSodio.length ? `${formatar(sodioDia, 1)} mg` : "—"}</strong></span></div>{comSodio.length < doDia.length && <p className="comida-base">Sódio parcial: há alimentos sem esse valor informado.</p>}
+      <div className="comida-macros"><span>Proteína<strong>{formatar(totais.proteina_g, 1)} g</strong></span><span>Carboidratos<strong>{formatar(totais.carbo_g, 1)} g</strong></span><span>Fibras<strong>{formatar(totais.fibra_g, 1)} g</strong></span><span>Gorduras totais<strong>{formatar(totais.gordura_g, 1)} g</strong></span><span>Açúcares totais<strong>{comAcucares.length ? `${formatar(acucaresDia, 1)} g${comAcucares.length < doDia.length ? ' (parcial)' : ''}` : 'Não informado'}</strong></span><span>Sódio<strong>{comSodio.length ? `${formatar(sodioDia, 1)} mg` : "—"}</strong></span></div>{comSodio.length < doDia.length && <p className="comida-base">Sódio parcial: há alimentos sem esse valor informado.</p>}
     </section>
     {medidaAberta && <EditorMedida medida={medidaAberta} fechar={() => setMedidaAberta(undefined)} />}
     {metaAberta && <PainelEnergia registrarPeso={registrarPeso} fechar={() => setMetaAberta(false)} />}
@@ -255,7 +262,7 @@ export function Comida() {
       </section>}
       {selecionado && <p className="comida-base">Referência: {formatar(selecionado.kcal)} kcal, P {formatar(selecionado.proteina_g ?? 0, 1)} g, C {formatar(selecionado.carbo_g ?? 0, 1)} g e fibra {formatar(selecionado.fibra_g ?? 0, 1)} g por {formatar(selecionado.base_quantidade_g, 1)} g.</p>}
       <label>Quantidade consumida (g)<input ref={quantidadeRef} inputMode="decimal" type="text" value={quantidade} onChange={e => setQuantidade(e.target.value)} placeholder="Ex.: 63" /></label>
-      {nutrientesCalculados && <div className="comida-calculada"><strong>{formatar(nutrientesCalculados.kcal)} kcal</strong><span>Proteína {formatar(nutrientesCalculados.proteina_g ?? 0, 1)} g · Carboidratos {formatar(nutrientesCalculados.carbo_g ?? 0, 1)} g</span><span>Fibras {formatar(nutrientesCalculados.fibra_g ?? 0, 1)} g · Gorduras {formatar(nutrientesCalculados.gordura_g ?? 0, 1)} g</span><span>Sódio {nutrientesCalculados.sodio_mg !== undefined ? `${formatar(nutrientesCalculados.sodio_mg, 1)} mg` : "não informado"}</span></div>}
+      {nutrientesCalculados && <div className="comida-calculada"><strong>{formatar(nutrientesCalculados.kcal)} kcal</strong><span>Proteína {formatar(nutrientesCalculados.proteina_g ?? 0, 1)} g · Carboidratos {formatar(nutrientesCalculados.carbo_g ?? 0, 1)} g</span><span>Fibras {formatar(nutrientesCalculados.fibra_g ?? 0, 1)} g · Gorduras {formatar(nutrientesCalculados.gordura_g ?? 0, 1)} g</span><span>Açúcares totais {nutrientesCalculados.acucares_g !== undefined ? `${formatar(nutrientesCalculados.acucares_g, 1)} g` : 'não informado'}</span><span>Sódio {nutrientesCalculados.sodio_mg !== undefined ? `${formatar(nutrientesCalculados.sodio_mg, 1)} mg` : "não informado"}</span></div>}
       {!editando && <>
         <button className="botao-secundario" type="button" disabled={salvando || !nutrientesCalculados} onClick={adicionarAoRascunho}><Plus size={17} /> Adicionar à refeição</button>
         {selecionado && <p className="comida-base">O alimento selecionado será incluído ao salvar. Para escolher outro também, toque em “Adicionar à refeição”.</p>}
@@ -263,7 +270,7 @@ export function Comida() {
           {!rascunho.length && <p className="comida-base">{selecionado ? 'O alimento selecionado acima será salvo nesta refeição.' : 'Escolha os alimentos para montar sua refeição.'}</p>}
           {rascunhoCalculado.map(item => <details className="comida-item-recolhido" key={item.chave} onToggle={enquadrarDetalhes}><summary onClick={recolherDetalhesSuavemente}><span><strong>{item.alimento.nome}</strong><small>{item.quantidade || '0'} g · {item.nutrientes ? formatar(item.nutrientes.kcal) + ' kcal' : 'Quantidade inválida'}</small></span><ChevronDown size={18} aria-hidden="true" /></summary><div className="comida-item-edicao"><label className="comida-data">Quantidade (g)<input aria-label={`Quantidade de ${item.alimento.nome} (g)`} inputMode="decimal" value={item.quantidade} disabled={salvando} onChange={e => setRascunho(atual => atual.map(a => a.chave === item.chave ? { ...a, quantidade: e.target.value } : a))} /></label><button type="button" className="comida-remover" disabled={salvando} aria-label={`Retirar ${item.alimento.nome} da refeição`} onClick={() => setRascunho(atual => atual.filter(a => a.chave !== item.chave))}><Trash2 size={17} /></button></div></details>)}
         </section>
-        {!!itensDaRefeicao.length && <div className="comida-calculada" aria-live="polite"><span>Total da refeição</span><strong>{formatar(totalRascunho.kcal)} kcal</strong><span>Proteína {formatar(totalRascunho.proteina_g, 1)} g · Carboidratos {formatar(totalRascunho.carbo_g, 1)} g</span><span>Fibras {formatar(totalRascunho.fibra_g, 1)} g · Gorduras totais {formatar(totalRascunho.gordura_g, 1)} g</span><span>Sódio: {itensDaRefeicao.some(a => a.nutrientes?.sodio_mg !== undefined) ? `${formatar(totalRascunho.sodio_mg, 1)} mg` : 'não informado'}{itensDaRefeicao.some(a => a.nutrientes?.sodio_mg !== undefined) && itensDaRefeicao.some(a => a.nutrientes?.sodio_mg === undefined) ? ' (parcial)' : ''}</span></div>}
+        {!!itensDaRefeicao.length && <div className="comida-calculada" aria-live="polite"><span>Total da refeição</span><strong>{formatar(totalRascunho.kcal)} kcal</strong><span>Proteína {formatar(totalRascunho.proteina_g, 1)} g · Carboidratos {formatar(totalRascunho.carbo_g, 1)} g</span><span>Fibras {formatar(totalRascunho.fibra_g, 1)} g · Gorduras totais {formatar(totalRascunho.gordura_g, 1)} g</span><span>Açúcares totais: {itensDaRefeicao.some(a => a.nutrientes?.acucares_g !== undefined) ? `${formatar(totalRascunho.acucares_g, 1)} g${itensDaRefeicao.some(a => a.nutrientes?.acucares_g === undefined) ? ' (parcial)' : ''}` : 'não informado'}</span><span>Sódio: {itensDaRefeicao.some(a => a.nutrientes?.sodio_mg !== undefined) ? `${formatar(totalRascunho.sodio_mg, 1)} mg` : 'não informado'}{itensDaRefeicao.some(a => a.nutrientes?.sodio_mg !== undefined) && itensDaRefeicao.some(a => a.nutrientes?.sodio_mg === undefined) ? ' (parcial)' : ''}</span></div>}
       </>}
       {erro && <p className="erro" role="alert">{erro}</p>}
     </form></Painel>}
@@ -275,9 +282,9 @@ export function Comida() {
       <label>Marca (opcional)<input maxLength={100} value={marcaNova} onChange={e => setMarcaNova(e.target.value)} placeholder="Ex.: marca da embalagem" /></label>
       <label>Porção de referência (g)<input required inputMode="decimal" type="text" value={baseNova} onChange={e => setBaseNova(e.target.value)} placeholder="50" /></label>
       <div className="comida-grade-nutrientes">
-        {([['kcal', 'Calorias (kcal)'], ['proteina_g', 'Proteína (g)'], ['carbo_g', 'Carboidratos (g)'], ['fibra_g', 'Fibras (g, opcional)'], ['gordura_g', 'Gorduras totais (g)'], ['sodio_mg', 'Sódio (mg, opcional)']] as const).map(([campo, rotulo]) => <label key={campo}>{rotulo}<input required={campo !== 'sodio_mg' && campo !== 'fibra_g'} inputMode="decimal" type="text" value={nutrientesNovos[campo]} onChange={e => setNutrientesNovos(atual => ({ ...atual, [campo]: e.target.value }))} placeholder="0" /></label>)}
+        {([['kcal', 'Calorias (kcal)'], ['proteina_g', 'Proteína (g)'], ['carbo_g', 'Carboidratos (g)'], ['fibra_g', 'Fibras (g, opcional)'], ['gordura_g', 'Gorduras totais (g)'], ['sodio_mg', 'Sódio (mg, opcional)'], ['acucares_g', 'Açúcares totais (g, opcional)']] as const).map(([campo, rotulo]) => <label key={campo}>{rotulo}<input required={campo !== 'sodio_mg' && campo !== 'fibra_g' && campo !== 'acucares_g'} inputMode="decimal" type="text" value={nutrientesNovos[campo]} onChange={e => setNutrientesNovos(atual => ({ ...atual, [campo]: e.target.value }))} placeholder="0" /></label>)}
       </div>
-      <p className="comida-nota-form">Informe os valores para a porção de referência indicada acima. Sem fibras? Deixe o campo vazio para registrar 0 g. Sódio vazio continua como não informado.</p>
+      <p className="comida-nota-form">Informe os valores para a porção de referência indicada acima. Sem fibras? Deixe o campo vazio para registrar 0 g. Sódio e açúcares vazios continuam como não informados. Açúcares já fazem parte dos carboidratos e não somam calorias novamente.</p>
       {erro && <p className="erro" role="alert">{erro}</p>}
     </form></Painel>}
 

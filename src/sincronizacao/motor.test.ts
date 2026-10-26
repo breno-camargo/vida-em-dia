@@ -73,3 +73,30 @@ test('baixe todas as páginas e preserve data do último sync quando houver erro
  await expect(executarSync(usuario,{...n.transporte,async baixar(){throw new Error('Falhou')}})).rejects.toThrow('Falhou')
  expect((await tabela('configuracoes').get(c!.id))?.ultima_sincronizacao).toBe(c?.ultima_sincronizacao)
 })
+
+// Volume local sintetico: verifica lotes e recuperacao; nao mede capacidade do Supabase.
+test('historico com 1000 refeicoes retoma lote interrompido e baixa paginas sem duplicar',async()=>{
+ const n=nuvem()
+ const linhas=Array.from({length:1000},(_,i)=>({...criarRegistro(),id:'refeicao-volume-'+String(i).padStart(5,'0'),data:'2026-10-26',refeicao:'Lanche',horario:'12:00',descricao:'Alimento sintetico',precisao:'exato' as const,kcal:125,proteina_g:3.9,carbo_g:24,gordura_g:1.5,fibra_g:1.3,sodio_mg:217,quantidade_g:50}))
+ await tabela('refeicoes_dia').bulkAdd(linhas)
+ await vincular(usuario)
+ let envios=0
+ const lotes:number[]=[]
+ const falha:Transporte={...n.transporte,async enviar(nome,registros){if(nome==='refeicoes_dia'){lotes.push(registros.length);if(++envios===2)throw new Error('Interrupcao sintetica')}await n.transporte.enviar(nome,registros)}}
+ await expect(executarSync(usuario,falha)).rejects.toThrow('Interrupcao sintetica')
+ expect(await contarPendencias(usuario)).toBeGreaterThan(0)
+ await executarSync(usuario,{...n.transporte,async enviar(nome,registros){if(nome==='refeicoes_dia')lotes.push(registros.length);await n.transporte.enviar(nome,registros)}})
+ expect(Math.max(...lotes)).toBeLessThanOrEqual(100)
+ expect(n.tabelas.refeicoes_dia.size).toBe(1000)
+ expect(await contarPendencias(usuario)).toBe(0)
+ await tabela('refeicoes_dia').clear()
+ await executarSync(usuario,n.transporte)
+ expect(await tabela('refeicoes_dia').count()).toBe(1000)
+ const salvo=await tabela('refeicoes_dia').get(linhas[999].id)
+ expect(salvo?.sodio_mg).toBe(217)
+ expect(salvo?.quantidade_g).toBe(50)
+ const antes=n.chamadas.length
+ await executarSync(usuario,n.transporte)
+ expect(n.chamadas.length).toBe(antes)
+ expect(await tabela('refeicoes_dia').count()).toBe(1000)
+},90000)

@@ -1,6 +1,6 @@
 import { useEstadoTemporario } from '../hooks/useEstadoTemporario'
 import { SlidersHorizontal } from 'lucide-react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { repositorio } from '../dados/repositorio'
 import { estimarEnergia, niveisEnergia, pesoParaEnergia, salvarCampoEnergia } from '../dados/energia'
@@ -24,6 +24,11 @@ function useDadosEnergia() {
 function FormularioEnergia({ config, peso, registrarPeso }: { config: Configuracao; peso?: MedidaCorporal; registrarPeso?: () => void }) {
   const [escolha, setEscolha] = useState<'nascimento' | 'sexo' | 'nivel'>()
   const [dataRascunho, setDataRascunho] = useState((config.data_nascimento || '2000-01-01').split('-').map(Number))
+  const valoresData = useMemo(() => [
+    Array.from({ length: new Date().getFullYear() - 1900 + 1 }, (_, i) => 1900 + i),
+    Array.from({ length: 12 }, (_, i) => i + 1),
+    Array.from({ length: 31 }, (_, i) => i + 1),
+  ], [])
   const [campoNumero, setCampoNumero] = useState<'altura' | 'metaUtil' | 'metaFds'>()
   const [nascimento, setNascimento] = useState(config.data_nascimento ?? '')
   const [sexo, setSexo] = useState(config.sexo_calculo_energia ?? '')
@@ -56,7 +61,7 @@ function FormularioEnergia({ config, peso, registrarPeso }: { config: Configurac
     </fieldset>
     {erro && <p role="alert" className="erro">{erro}</p>}{mensagem && <p role="status" className="nota-resumo">{mensagem}</p>}
     {escolha && <Painel titulo={escolha === 'nascimento' ? 'Data de nascimento' : escolha === 'sexo' ? 'Sexo usado pela equação' : 'Rotina de atividade'} fechar={() => { if (!ocupado) setEscolha(undefined) }} acao={escolha === 'nascimento' ? <button type="button" className="botao-principal salvar-cabecalho" disabled={ocupado} onClick={() => void salvarNascimento()}>{ocupado ? 'Salvando…' : 'Salvar'}</button> : undefined}>
-      {escolha === 'nascimento' ? <><div className="rodas-data">{[2,1,0].map((indice) => <Rolagem key={indice} rotulo={indice === 2 ? 'DIA' : indice === 1 ? 'MÊS' : 'ANO'} inicial={dataRascunho[indice]} valores={Array.from({ length: indice === 2 ? 31 : indice === 1 ? 12 : new Date().getFullYear() - 1900 + 1 }, (_, i) => i + (indice === 0 ? 1900 : 1))} escolher={valor => setDataRascunho(atual => atual.map((v,i) => i === indice ? valor : v))} />)}</div></> : <div className="formulario">{(escolha === 'sexo' ? [{valor:'masculino',nome:'Masculino'},{valor:'feminino',nome:'Feminino'}] : [{valor:'',nome:'Calcular apenas repouso'},...niveisEnergia]).map(opcao => <button type="button" key={opcao.valor} className="botao-secundario" aria-pressed={(escolha === 'sexo' ? sexo : nivel) === opcao.valor} disabled={ocupado} onClick={async () => { try { if (escolha === 'sexo') { await persistir('sexo_calculo_energia', opcao.valor as Configuracao['sexo_calculo_energia']); setSexo(opcao.valor as typeof sexo) } else { await persistir('nivel_atividade_energia', (opcao.valor || undefined) as Configuracao['nivel_atividade_energia']); setNivel(opcao.valor as typeof nivel) } setEscolha(undefined) } catch (e) { setErro(e instanceof Error ? e.message : 'Não foi possível salvar.') } }}>{opcao.nome}{(escolha === 'sexo' ? sexo : nivel) === opcao.valor ? ' ✓' : ''}</button>)}</div>}
+      {escolha === 'nascimento' ? <><div className="rodas-data">{[2,1,0].map((indice) => <Rolagem key={indice} rotulo={indice === 2 ? 'DIA' : indice === 1 ? 'MÊS' : 'ANO'} inicial={dataRascunho[indice]} valores={valoresData[indice]} escolher={valor => setDataRascunho(atual => atual.map((v,i) => i === indice ? valor : v))} />)}</div></> : <div className="formulario">{(escolha === 'sexo' ? [{valor:'masculino',nome:'Masculino'},{valor:'feminino',nome:'Feminino'}] : [{valor:'',nome:'Calcular apenas repouso'},...niveisEnergia]).map(opcao => <button type="button" key={opcao.valor} className="botao-secundario" aria-pressed={(escolha === 'sexo' ? sexo : nivel) === opcao.valor} disabled={ocupado} onClick={async () => { try { if (escolha === 'sexo') { await persistir('sexo_calculo_energia', opcao.valor as Configuracao['sexo_calculo_energia']); setSexo(opcao.valor as typeof sexo) } else { await persistir('nivel_atividade_energia', (opcao.valor || undefined) as Configuracao['nivel_atividade_energia']); setNivel(opcao.valor as typeof nivel) } setEscolha(undefined) } catch (e) { setErro(e instanceof Error ? e.message : 'Não foi possível salvar.') } }}>{opcao.nome}{(escolha === 'sexo' ? sexo : nivel) === opcao.valor ? ' ✓' : ''}</button>)}</div>}
       {erro && <p role="alert" className="erro">{erro}</p>}
     </Painel>}
     {campoNumero && <SelecionarNumero titulo={campoNumero === 'altura' ? 'Altura' : campoNumero === 'metaUtil' ? 'Meta alimentar: dias úteis' : 'Meta alimentar: fins de semana'} unidade={campoNumero === 'altura' ? 'cm' : 'kcal'} valor={lerGramas(campoNumero === 'altura' ? altura : campoNumero === 'metaUtil' ? metaUtil : metaFds) || (campoNumero === 'altura' ? 170 : 0)} minimo={campoNumero === 'altura' ? 80 : 0} maximo={campoNumero === 'altura' ? 250 : 10000} decimal={campoNumero === 'altura'} permitirDigitar fechar={() => setCampoNumero(undefined)} confirmar={async valor => { if (valor === undefined) return; await persistir(campoNumero === 'altura' ? 'altura_cm' : campoNumero === 'metaUtil' ? 'meta_kcal_util' : 'meta_kcal_fds_feriado', valor); (campoNumero === 'altura' ? setAltura : campoNumero === 'metaUtil' ? setMetaUtil : setMetaFds)(String(valor)) }} />}
