@@ -32,3 +32,11 @@ test('sessão de recuperação restaurada abre nova senha, sem liberar conexão 
   expect(html).toContain('Salvar nova senha')
   expect(html).not.toContain('Conectar meus dados')
 })
+
+test('nome pode ser informado mesmo antes de conectar os dados, na conta resumida', () => {
+ estado.usuario = { email: 'teste@example.com' }
+ const html = renderToStaticMarkup(<ContaConfiguracoes resumida />)
+ expect(html).toContain('Nome completo')
+ expect(html).toContain('Informar nome')
+ expect(html).toContain('Conectar meus dados')
+})

@@ -22,6 +22,20 @@ export function validarDominioBackup(nome: string, r: LinhaBackup) {
   for (const campo of ['peso', 'peso_corporal']) numero(campo, Number.MIN_VALUE, 400)
   for (const campo of ['busto', 'cintura', 'abdomen', 'quadril', 'biceps_d', 'biceps_e', 'coxa_d', 'coxa_e', 'panturrilha_d', 'panturrilha_e']) numero(campo, Number.MIN_VALUE, 300)
   numero('garrafa_ml', 50, 5000, true)
+  if (nome === 'configuracoes') {
+    if (r.data_nascimento !== undefined && (typeof r.data_nascimento !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(r.data_nascimento) || new Date(`${r.data_nascimento}T12:00:00`).toLocaleDateString('sv-SE') !== r.data_nascimento)) falhar('data_nascimento')
+    if (r.sexo_calculo_energia !== undefined && (typeof r.sexo_calculo_energia !== 'string' || !['masculino', 'feminino'].includes(r.sexo_calculo_energia))) falhar('sexo_calculo_energia')
+    if (r.nivel_atividade_energia !== undefined && (typeof r.nivel_atividade_energia !== 'string' || !['leve', 'moderada', 'intensa'].includes(r.nivel_atividade_energia))) falhar('nivel_atividade_energia')
+  }
+  if (nome === 'configuracoes' && r.alimentos_comuns_ocultos !== undefined && (!Array.isArray(r.alimentos_comuns_ocultos) || r.alimentos_comuns_ocultos.some(v => typeof v !== 'string' || !v || v.length > 200))) falhar('alimentos_comuns_ocultos')
+  if (nome === 'alimentos_favoritos' || nome === 'refeicoes_dia' || nome === 'combos_refeicao') {
+    for (const campo of ['kcal', 'proteina_g', 'carbo_g', 'gordura_g', 'fibra_g', 'sodio_mg']) numero(campo, 0)
+  }
+  if (nome === 'alimentos_favoritos' && r.base_quantidade_g !== undefined) numero('base_quantidade_g', Number.MIN_VALUE, 5000)
+  if (r.alimento_nome !== undefined && typeof r.alimento_nome !== 'string') falhar('alimento_nome')
+  if (nome === 'alimentos_favoritos' && r.marca !== undefined && typeof r.marca !== 'string') falhar('marca')
+  if (nome === 'alimentos_favoritos' && r.fonte !== undefined && r.fonte !== 'pessoal') falhar('fonte')
+  if (nome === 'refeicoes_dia' && r.quantidade_g !== undefined) numero('quantidade_g', Number.MIN_VALUE, 20000)
   if (nome === 'agua_dia' && r.garrafas_ml !== undefined) {
     if (!Array.isArray(r.garrafas_ml) || r.garrafas_ml.some(v => !Number.isSafeInteger(v) || v < 50 || v > 5000) || r.garrafas_ml.reduce((a: number, v: number) => a + v, 0) > Number(r.ml)) falhar('garrafas_ml')
   }
@@ -52,7 +66,7 @@ export function validarDominioBackup(nome: string, r: LinhaBackup) {
       if (!item || typeof item !== 'object' || Array.isArray(item)) falhar('itens')
       const i = item as Record<string, unknown>
       if (typeof i.descricao !== 'string' || typeof i.kcal !== 'number') falhar('itens')
-      for (const campo of ['kcal', 'proteina_g', 'carbo_g', 'gordura_g']) if (i[campo] !== undefined && (typeof i[campo] !== 'number' || !Number.isFinite(i[campo]) || Number(i[campo]) < 0)) falhar(`itens.${campo}`)
+      for (const campo of ['kcal', 'proteina_g', 'carbo_g', 'gordura_g', 'fibra_g', 'sodio_mg']) if (i[campo] !== undefined && (typeof i[campo] !== 'number' || !Number.isFinite(i[campo]) || Number(i[campo]) < 0)) falhar(`itens.${campo}`)
     }
   }
   if (nome === 'exercicios' && !['manual', 'banco_aberto'].includes(String(r.origem))) falhar('origem')
