@@ -6,6 +6,7 @@ import { repositorio } from '../dados/repositorio'
 import { estimarEnergia, niveisEnergia, pesoParaEnergia, salvarCampoEnergia } from '../dados/energia'
 import { lerGramas } from '../dados/alimentacao'
 import { dataMedida, formatarDataMedida } from '../dados/medidas'
+import { referenciaAlimentar } from '../dados/referenciaAlimentar'
 import { tipoDia } from '../dados/atividade'
 import type { Configuracao, MedidaCorporal } from '../dados/modelos'
 import { Painel } from './Painel'
@@ -55,7 +56,7 @@ function FormularioEnergia({ config, peso, registrarPeso }: { config: Configurac
     <button type="button" className="data-medida" onClick={() => setCampoNumero('altura')}><span>Altura</span><strong>{altura ? `${altura} cm` : 'Informar'}</strong></button>
     <button type="button" className="data-medida" onClick={() => setEscolha('nivel')}><span>Rotina de atividade</span><strong>{niveisEnergia.find(n => n.valor === nivel)?.nome || 'Apenas repouso'}</strong></button>
     {nivel && <p className="nota-resumo">{niveisEnergia.find(n => n.valor === nivel)?.descricao} Considere a rotina inteira, incluindo os treinos.</p>}
-    <fieldset className="energia-metas"><legend>Sua meta alimentar (opcional)</legend><p className="nota-resumo">Defina uma meta própria ou orientada por profissional. O cálculo não preenche essas metas. Vazio ou zero significa sem meta.</p>
+    <fieldset className="energia-metas"><legend>Sua meta alimentar (opcional)</legend><p className="nota-resumo">Defina uma meta própria ou orientada por profissional. Sem meta manual, usamos a estimativa de manutenção quando o perfil e a rotina estão preenchidos.</p>
       <button type="button" className="data-medida" onClick={() => setCampoNumero('metaUtil')}><span>Dias úteis</span><strong>{Number(metaUtil) ? `${metaUtil} kcal/dia` : 'Sem meta'}</strong></button>
       <button type="button" className="data-medida" onClick={() => setCampoNumero('metaFds')}><span>Fins de semana e feriados</span><strong>{Number(metaFds) ? `${metaFds} kcal/dia` : 'Sem meta'}</strong></button>
     </fieldset>
@@ -86,15 +87,16 @@ export function ResumoEnergia({ registrarPeso }: { registrarPeso?: () => void })
   if (!dados?.config) return null
   const config = dados.config, calculo = estimarEnergia(config, dados.peso?.peso)
   const hoje = dataMedida(), dia = tipoDia(hoje, dados.feriados, config.descanso_por_data?.[hoje] === true)
-  const meta = dia === 'util' ? config.meta_kcal_util : config.meta_kcal_fds_feriado
+  const referencia = referenciaAlimentar(config, dados.peso?.peso, dia, hoje)
+  const meta = referencia.kcal
   const numero = (valor: number) => valor.toLocaleString('pt-BR')
-  return <section className="painel energia-resumo"><header><h3>Seu gasto estimado hoje</h3><button type="button" className="link-atividade" onClick={() => setAberto(true)}><SlidersHorizontal size={16} aria-hidden="true" />Configurar</button></header>
+  return <section className="painel energia-resumo"><header><h3>Seu gasto estimado hoje</h3></header><button type="button" className="botao-secundario energia-configurar" onClick={() => setAberto(true)}><SlidersHorizontal size={16} aria-hidden="true" />Configurar metabolismo</button>
     {calculo ? <><div className="energia-valores"><div><span>Em repouso</span><strong>≈ {numero(calculo.repouso)} <small>kcal/dia</small></strong></div><div><span>Com sua rotina</span><strong>{calculo.diario ? `≈ ${numero(calculo.diario)}` : 'Não definido'}{calculo.diario && <small> kcal/dia</small>}</strong></div></div>
       <p className="nota-resumo">Base: {numero(calculo.peso)} kg de {formatarDataMedida(dados.peso!.data)}, {numero(calculo.altura)} cm e {calculo.idade} anos.</p></> : <p className="nota-resumo">Configure nascimento, sexo usado no cálculo e altura, e registre seu peso em Medidas para estimar o gasto em repouso.</p>}
     {!dados.peso && registrarPeso && <button className="botao-secundario energia-registrar-peso" onClick={registrarPeso}>Registrar peso</button>}
-    <p className="energia-meta">Meta alimentar de hoje: <strong>{meta ? `${numero(meta)} kcal` : 'não definida'}</strong></p>
+    <p className="energia-meta">{referencia.origem === 'manutencao' ? 'Referência estimada de manutenção' : 'Meta alimentar de hoje'}: <strong>{meta ? `${numero(meta)} kcal` : 'não definida'}</strong></p>
     <p className="nota-resumo">São estimativas, não medições. A rotina já inclui atividade física; não somamos novamente as calorias de treino, cardio ou passos.</p>
-    <details className="energia-metodo" onToggle={enquadrarDetalhes}><summary onClick={recolherDetalhesSuavemente}>Como calculamos</summary><p>Repouso: equação de <a href="https://pubmed.ncbi.nlm.nih.gov/2305711/" target="_blank" rel="noreferrer">Mifflin–St Jeor</a>. A estimativa diária aplica um fator aproximado conforme a rotina, com referência nos <a href="https://www.fao.org/4/Y5686e/y5686e07.htm" target="_blank" rel="noreferrer">intervalos de atividade da FAO/WHO/UNU</a>. Não se destina a crianças, gestantes ou lactantes; nesses casos, use orientação individual.</p></details>
+    <details className="energia-metodo" onToggle={enquadrarDetalhes}><summary onClick={recolherDetalhesSuavemente}>Como calculamos</summary><p>Repouso: equação de <a href="https://pubmed.ncbi.nlm.nih.gov/2305711/" target="_blank" rel="noreferrer">Mifflin–St Jeor</a>. A estimativa diária aplica um fator aproximado conforme a rotina, usando 1,2 para a rotina sedentária (<a href="https://mohap.gov.ae/ar/awareness-centre/daily-calorie-requirements-calculator" target="_blank" rel="noreferrer">MOHAP</a>) e, para as demais opções, referência nos <a href="https://www.fao.org/4/Y5686e/y5686e07.htm" target="_blank" rel="noreferrer">intervalos de atividade da FAO/WHO/UNU</a>. Não se destina a crianças, gestantes ou lactantes; nesses casos, use orientação individual.</p></details>
     {aberto && <PainelEnergia registrarPeso={registrarPeso} fechar={() => setAberto(false)} />}
   </section>
 }

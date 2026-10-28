@@ -25,7 +25,7 @@ export function validarDominioBackup(nome: string, r: LinhaBackup) {
   if (nome === 'configuracoes') {
     if (r.data_nascimento !== undefined && (typeof r.data_nascimento !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(r.data_nascimento) || new Date(`${r.data_nascimento}T12:00:00`).toLocaleDateString('sv-SE') !== r.data_nascimento)) falhar('data_nascimento')
     if (r.sexo_calculo_energia !== undefined && (typeof r.sexo_calculo_energia !== 'string' || !['masculino', 'feminino'].includes(r.sexo_calculo_energia))) falhar('sexo_calculo_energia')
-    if (r.nivel_atividade_energia !== undefined && (typeof r.nivel_atividade_energia !== 'string' || !['leve', 'moderada', 'intensa'].includes(r.nivel_atividade_energia))) falhar('nivel_atividade_energia')
+    if (r.nivel_atividade_energia !== undefined && (typeof r.nivel_atividade_energia !== 'string' || !['sedentaria', 'leve', 'moderada', 'intensa'].includes(r.nivel_atividade_energia))) falhar('nivel_atividade_energia')
   }
   if (nome === 'configuracoes' && r.alimentos_comuns_ocultos !== undefined && (!Array.isArray(r.alimentos_comuns_ocultos) || r.alimentos_comuns_ocultos.some(v => typeof v !== 'string' || !v || v.length > 200))) falhar('alimentos_comuns_ocultos')
   if (nome === 'alimentos_favoritos' || nome === 'refeicoes_dia' || nome === 'combos_refeicao') {

@@ -49,6 +49,13 @@ test('reenvia somente confirmação de cadastro', async () => {
   expect(auth.resend).toHaveBeenCalledExactlyOnceWith({ type: 'signup', email: 'teste@example.com' })
 })
 
+test('reenvio distingue limite e falha do serviço sem anunciar sucesso', async () => {
+  auth.resend.mockResolvedValue({ error: { status: 429 } })
+  await expect(reenviarCadastro('teste@example.com')).rejects.toThrow('Limite de envio')
+  auth.resend.mockResolvedValue({ error: { status: 500, message: 'segredo interno' } })
+  await expect(reenviarCadastro('teste@example.com')).rejects.toThrow('envio de e-mails precisa ser verificado')
+})
+
 test('envia apenas nome ao Auth; altura e medidas não viram metadados', async () => {
   auth.signUp.mockResolvedValue({ data: { session: null }, error: null })
   await cadastrarConta('teste@example.com', 'senhaForte123', 'senhaForte123', { nome: ' Breno ', altura_cm: 175 })

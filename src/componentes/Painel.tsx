@@ -10,7 +10,7 @@ export function Painel({ titulo, fechar, children, centralizado = false, acao, f
     arrasto.current = null
   }
   useEffect(() => { ref.current?.showModal(); ref.current?.focus({ preventScroll: true }); const estilo = document.body.style.overflow; document.body.style.overflow = 'hidden'; return () => { document.body.style.overflow = estilo } }, [])
-  return <dialog ref={ref} tabIndex={-1} className={`painel-modal${centralizado ? ' painel-centralizado' : ''}`} aria-label={titulo} onCancel={e => { if (fechamentoLivre) fechar(); else e.preventDefault() }}>
+  return <dialog ref={ref} tabIndex={-1} className={`painel-modal${centralizado ? ' painel-centralizado' : ''}`} aria-label={titulo} onCancel={e => { e.preventDefault(); if (fechamentoLivre) fechar() }}>
     <div className={`topo-painel${!centralizado && fechamentoLivre ? ' topo-arrastavel' : ''}`}
       onPointerDown={e => {
         if (centralizado || !fechamentoLivre || !e.isPrimary || e.button !== 0) return

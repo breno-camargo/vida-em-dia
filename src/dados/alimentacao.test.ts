@@ -7,6 +7,23 @@ import { criarRegistro, repositorio } from './repositorio'
 import { banco } from './banco'
 import { exportarBackup, validarBackup } from './backup'
 import { iniciarBanco } from './configuracoes'
+import { tipoAlimento } from './tiposAlimentos'
+
+test('reabrir banco e inicializar app preserva alimento antigo sem categoria e configuracoes', async () => {
+  await banco.delete(); await banco.open(); await iniciarBanco()
+  const alimento = { ...criarRegistro(), nome: 'Cadastro anterior', marca: 'Marca pessoal', porcao: '50 g', base_quantidade_g: 50, vezes_usado: 3, kcal: 120, proteina_g: 4, carbo_g: 20, gordura_g: 2 }
+  await repositorio('alimentos_favoritos').salvar(alimento)
+  const salvo = await repositorio('alimentos_favoritos').obter(alimento.id)
+  const config = (await repositorio('configuracoes').listar())[0]
+  await repositorio('configuracoes').salvar({ ...config, garrafa_ml: 750, meta_agua_ml: 3000, altura_cm: 175 })
+  const configuracaoSalva = (await repositorio('configuracoes').listar())[0]
+  banco.close(); await banco.open(); await iniciarBanco()
+  expect(await repositorio('alimentos_favoritos').obter(alimento.id)).toEqual(salvo)
+  expect(tipoAlimento(salvo!)).toBe('Outros')
+  expect((await repositorio('configuracoes').listar())[0]).toEqual(configuracaoSalva)
+  const backup = validarBackup(await exportarBackup())
+  expect(backup.tabelas.alimentos_favoritos).toEqual([salvo])
+})
 
 test('calcula 63 g a partir de um rótulo de 50 g sem arredondar nutrientes a cada item', () => {
   expect(calcularPorcao({ kcal: 120, proteina_g: 5, carbo_g: 22, fibra_g: 3, gordura_g: 1 }, 50, 63)).toEqual({ kcal: 151.2, proteina_g: 6.3, carbo_g: 27.72, fibra_g: 3.78, gordura_g: 1.26 })
@@ -121,4 +138,40 @@ test('acucares sao proporcionais sem somar calorias novamente e aceitam ausencia
     expect(() => validarDominioBackup(tabela, { ...linha, acucares_g: 0 })).not.toThrow()
     for (const valor of [-1, '2', NaN, Infinity]) expect(() => validarDominioBackup(tabela, { ...linha, acucares_g: valor })).toThrow()
   }
+})
+
+test('editar refeicao inteira preserva snapshots e remove itens atomicamente', async () => {
+  await banco.delete(); await banco.open(); await iniciarBanco()
+  const item = (nome: string) => ({ ...criarRegistro(), data: '2026-10-25', refeicao: 'Almoco', horario: '12:00', descricao: nome, quantidade_g: 50, precisao: 'exato' as const, kcal: 125, acucares_g: 2 })
+  await salvarRefeicaoCompleta([item('Primeiro'), item('Segundo')])
+  const antes = await repositorio('refeicoes_dia').listar()
+  await expect(salvarRefeicaoCompleta([{ ...antes[0], quantidade_g: -1 }], antes)).rejects.toThrow()
+  expect(await repositorio('refeicoes_dia').listar()).toHaveLength(2)
+  await salvarRefeicaoCompleta([{ ...antes[0], quantidade_g: 100, kcal: 250, acucares_g: 4 }, item('Terceiro')], antes)
+  const depois = await repositorio('refeicoes_dia').listar()
+  expect(depois).toHaveLength(2)
+  expect(depois.find(r => r.id === antes[0].id)).toMatchObject({ kcal: 250, acucares_g: 4, criado_em: antes[0].criado_em, horario: antes[0].horario })
+  expect(depois.some(r => r.id === antes[1].id)).toBe(false)
+  await expect(salvarRefeicaoCompleta([antes[0]], antes)).rejects.toThrow('mudou')
+  expect(await repositorio('refeicoes_dia').listar()).toEqual(depois)
+})
+
+test('edicao rejeita inclusao concorrente sem perder alimentos', async () => {
+  await banco.delete(); await banco.open(); await iniciarBanco()
+  const r = { ...criarRegistro(), data: '2026-10-25', refeicao: 'Lanche', horario: '12:00', descricao: 'Teste', quantidade_g: 50, precisao: 'exato' as const, kcal: 125 }
+  await salvarRefeicaoCompleta([r])
+  const antes = await repositorio('refeicoes_dia').listar()
+  await salvarRefeicaoCompleta([{ ...r, ...criarRegistro() }])
+  await expect(salvarRefeicaoCompleta(antes, antes)).rejects.toThrow('mudou')
+  expect(await repositorio('refeicoes_dia').listar()).toHaveLength(2)
+})
+
+test('excluir refeicao inteira remove so o grupo escolhido e preserva outro', async () => {
+ await banco.delete(); await banco.open(); await iniciarBanco()
+ const item = { ...criarRegistro(), data: '2026-10-25', refeicao: 'Almoco', horario: '12:00', descricao: 'Teste', quantidade_g: 50, precisao: 'exato' as const, kcal: 125 }
+ await salvarRefeicaoCompleta([item])
+ await salvarRefeicaoCompleta([{ ...item, ...criarRegistro(), refeicao: 'Jantar' }])
+ const antes = (await repositorio('refeicoes_dia').listar()).filter(r => r.refeicao === 'Almoco')
+ await salvarRefeicaoCompleta([], antes)
+ expect((await repositorio('refeicoes_dia').listar()).map(r => r.refeicao)).toEqual(['Jantar'])
 })

@@ -6,7 +6,8 @@ import { repositorio } from './repositorio'
 // Aproximações centrais dos intervalos PAL da FAO/WHO/UNU (2004).
 // Aplicação ao REE estimado é uma aproximação de planejamento, não medição.
 export const niveisEnergia = [
-  { valor: 'leve', nome: 'Pouco ativa', fator: 1.55, descricao: 'Rotina principalmente sentada, com pouca atividade física.' },
+  { valor: 'sedentaria', nome: 'Sedentária', fator: 1.2, descricao: 'Maior parte do dia sentada, com pouco movimento e pouco ou nenhum exercício. Estimativa aproximada de manutenção.' },
+  { valor: 'leve', nome: 'Pouco ativa', fator: 1.55, descricao: 'Movimento regular ao longo do dia, além do tempo sentada. Se passa quase todo o dia sentada e se exercita pouco, prefira Sedentária.' },
   { valor: 'moderada', nome: 'Moderadamente ativa', fator: 1.85, descricao: 'Rotina com movimento e atividade física frequente.' },
   { valor: 'intensa', nome: 'Muito ativa', fator: 2.2, descricao: 'Rotina fisicamente exigente e atividade intensa.' },
 ] as const
@@ -46,6 +47,7 @@ export async function salvarPerfilEnergia(perfil: PerfilEnergia) {
     const atual = (await repo.listar()).find(c => c.chave === 'principal')
     if (!atual) throw new Error('Reabra o app para carregar o perfil.')
     const proximo = { ...atual, ...perfil }
+    proximo.nivel_atividade_energia_definido = true
     if (!perfil.nivel_atividade_energia) delete proximo.nivel_atividade_energia
     await repo.salvar(proximo)
   })
@@ -62,6 +64,7 @@ export async function salvarCampoEnergia<K extends keyof PerfilEnergia>(campo: K
     const atual = (await repo.listar()).find(c => c.chave === 'principal')
     if (!atual) throw new Error('Reabra o app para carregar o perfil.')
     const proximo = { ...atual, [campo]: valor }
+    if (campo === 'nivel_atividade_energia') proximo.nivel_atividade_energia_definido = true
     if (valor === undefined) delete proximo[campo]
     await repo.salvar(proximo)
   })

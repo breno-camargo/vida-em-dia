@@ -45,6 +45,8 @@ test('perfil persiste, mantém outras configurações e backup não gera meta au
   const backup = validarBackup(await exportarBackup())
   expect(backup.tabelas.configuracoes[0].data_nascimento).toBe('1996-10-25')
   expect(backup.tabelas.configuracoes[0].nivel_atividade_energia).toBe('moderada')
+  await salvarCampoEnergia('nivel_atividade_energia', 'sedentaria')
+  expect(validarBackup(await exportarBackup()).tabelas.configuracoes[0].nivel_atividade_energia).toBe('sedentaria')
   await salvarPerfilEnergia({ ...perfil, meta_kcal_util: 2000, meta_kcal_fds_feriado: 2200 })
   expect((await repositorio('configuracoes').listar())[0].nivel_atividade_energia).toBeUndefined()
   await expect(salvarPerfilEnergia({ ...perfil, altura_cm: NaN, meta_kcal_util: 0, meta_kcal_fds_feriado: 0 })).rejects.toThrow()

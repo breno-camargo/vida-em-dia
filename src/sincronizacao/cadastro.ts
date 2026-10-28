@@ -29,5 +29,9 @@ export async function confirmarCadastro(email: string, codigo: string) {
 export async function reenviarCadastro(email: string) {
   if (!supabase) throw new Error('A conexão com a conta ainda não foi configurada.')
   const { error } = await supabase.auth.resend({ type: 'signup', email: email.trim() })
-  if (error) throw new Error('Não foi possível reenviar. Aguarde um pouco e tente novamente.')
+  if (error) {
+    if (error.status === 429 || error.code === 'over_email_send_rate_limit') throw new Error('Limite de envio atingido. Aguarde antes de solicitar outra confirmação.')
+    if ((error.status ?? 0) >= 500) throw new Error('O serviço não conseguiu enviar a confirmação. O envio de e-mails precisa ser verificado.')
+    throw new Error('Não foi possível reenviar. Confira o e-mail e a conexão e tente novamente.')
+  }
 }

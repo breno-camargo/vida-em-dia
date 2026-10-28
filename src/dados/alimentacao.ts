@@ -30,19 +30,26 @@ export async function excluirAlimentoPessoal(id: string) {
   })
 }
 
-export async function salvarRefeicaoCompleta(registros: RefeicaoDia[]) {
-  if (!registros.length) throw new Error('Adicione pelo menos um alimento.')
-  const primeiro = registros[0]
+export async function salvarRefeicaoCompleta(registros: RefeicaoDia[], anteriores?: RefeicaoDia[]) {
+  if (!registros.length && !anteriores?.length) throw new Error('Adicione pelo menos um alimento.')
+  const primeiro = registros[0] ?? anteriores![0]
   if (!primeiro.refeicao.trim() || !/^\d{4}-\d{2}-\d{2}$/.test(primeiro.data) || dataMedida(new Date(`${primeiro.data}T12:00:00`)) !== primeiro.data || primeiro.data > dataMedida()) throw new Error('Confira a data e a refeição.')
   for (const item of registros) {
-    if (item.data !== primeiro.data || item.refeicao !== primeiro.refeicao || !item.descricao.trim() || item.apagado_em || !item.quantidade_g) throw new Error('Confira os alimentos da refeição.')
-    calcularPorcao(item, item.quantidade_g, item.quantidade_g)
+    if (item.data !== primeiro.data || item.refeicao !== primeiro.refeicao || !item.descricao.trim() || item.apagado_em || (!item.quantidade_g && !anteriores?.some(r => r.id === item.id && r.quantidade_g === undefined && r.kcal === item.kcal))) throw new Error('Confira os alimentos da refeição.')
+    calcularPorcao(item, item.quantidade_g ?? 1, item.quantidade_g ?? 1)
   }
   const repo = repositorio('refeicoes_dia')
   const alimentos = repositorio('alimentos_favoritos')
   return banco.transaction('rw', tabela('refeicoes_dia'), tabela('alimentos_favoritos'), async () => {
+    if (anteriores) {
+      if (!anteriores.length) throw new Error('Reabra a refeição.')
+      const origem = anteriores[0]
+      const atuais = (await repo.listar()).filter(r => r.data === origem.data && r.refeicao === origem.refeicao)
+      if (atuais.length !== anteriores.length || anteriores.some(r => !atuais.some(a => a.id === r.id && JSON.stringify(a) === JSON.stringify(r)))) throw new Error('A refeição mudou. Reabra a edição.')
+      for (const antigo of anteriores) if (!registros.some(r => r.id === antigo.id)) await repo.apagar(antigo.id)
+    }
     for (const registro of registros) {
-      if (await repo.obter(registro.id)) throw new Error('Este registro já foi salvo.')
+      if (await repo.obter(registro.id) && !anteriores?.some(r => r.id === registro.id)) throw new Error('Este registro já foi salvo.')
       const snapshot = { ...registro }
       if (snapshot.alimento_id) {
         const alimento = await alimentos.obter(snapshot.alimento_id)
