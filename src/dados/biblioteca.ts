@@ -73,7 +73,7 @@ export async function iniciarBiblioteca() {
         if (await tabela('exercicios').get(id) || await tabela('exercicios').where('nome').equals(nome).count()) continue
         await tabela('exercicios').add({ ...criarRegistro(config.user_id), id, nome,
           tipo: grupo === 'Cardio' ? 'cardio' : 'forca', grupo_muscular: grupo,
-          equipamento: '', descanso_padrao_segundos: 90, modo_carga: exerciciosPesoCorporal.has(nome) ? 'peso_corporal' : 'total', peso_barra: exerciciosPesoCorporal.has(nome) ? 0 : 20,
+          equipamento: '', descanso_padrao_segundos: 90, modo_carga: exerciciosPesoCorporal.has(nome) ? 'peso_corporal' : 'total', peso_barra: 0,
           nota_fixa: '', como_fazer: '', musculos: grupo, origem: 'manual',
         })
       }

@@ -12,5 +12,6 @@ Desktop.ini
 .vscode/
 .vercel/
 coverage/
+revisao/midias/
 *.tsbuildinfo
 .vercel

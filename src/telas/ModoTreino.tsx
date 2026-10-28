@@ -6,7 +6,7 @@ import { CardioNoTreino } from '../componentes/CardioNoTreino'
 import { EditorCardio } from '../componentes/EditorCardio'
 import { novoCardio } from '../dados/cardio'
 import { ListaExercicios } from '../componentes/ListaExercicios'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { banco, tabela } from '../dados/banco'
 import { criarRegistro, repositorio } from '../dados/repositorio'
@@ -40,6 +40,7 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
   const [nomeAberto, definirNomeAberto] = useState(false)
   const [nomeTreino, definirNomeTreino] = useState('')
   const adicaoExercicio = useRef<HTMLDetailsElement>(null)
+  const voltarBusca = useRef(false)
   const cards = useRef(new Map<string, HTMLDetailsElement>())
   const avisosRecordes = useRef(new Set<string>())
   const [avisoRecorde, definirAvisoRecorde] = useState<Record<string, { nome: string; marcas: string[] }>>({})
@@ -63,6 +64,13 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
   const [erro, definirErro] = useState('')
   useEffect(() => { let ativo = true; void completarCardioDaFicha(id).catch(() => { if (ativo) definirErro('Não foi possível carregar o cardio da ficha.') }); return () => { ativo = false } }, [id])
   const [ocupado, definirOcupado] = useState(false)
+  useLayoutEffect(() => {
+    if (!voltarBusca.current || ocupado || !adicaoExercicio.current?.open) return
+    voltarBusca.current = false
+    const campo = adicaoExercicio.current.querySelector('summary')
+    const area = adicaoExercicio.current.closest('main#conteudo')
+    if (campo && area) area.scrollTo({ top: area.scrollTop + campo.getBoundingClientRect().top - area.getBoundingClientRect().top - 12, behavior: 'instant' })
+  }, [itens, ocupado])
   const [removido, definirRemovido] = useEstadoTemporario<{ desfazer: () => Promise<void> } | null>(null)
   const [nomeFicha, definirNomeFicha] = useState('')
   const tela = useTelaLigada()
@@ -118,7 +126,7 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
       const feitas = grupo.filter(s => s.concluida_em).length
       const resumoReps = [...new Set(grupo.map(s => s.repeticoes))]
       const resumoCargas = [...new Set(grupo.map(s => s.peso_total))]
-      return <details onToggle={e => { const adicao = adicaoExercicio.current; if (e.target === e.currentTarget && e.currentTarget.open && adicao?.open) recolherSecaoSuavemente(adicao, () => { adicao.open = false }); enquadrarDetalhes(e) }} className={`exercicio-treino exercicio-recolhivel${grupo.length > 0 && feitas === grupo.length ? ' exercicio-finalizado' : ''}`} key={item.id} ref={elemento => { if (elemento) cards.current.set(item.id, elemento); else cards.current.delete(item.id) }}>
+      return <details name={`exercicios-${id}`} onToggle={e => { if (e.target === e.currentTarget && e.currentTarget.open) for (const outro of cards.current.values()) { if (outro !== e.currentTarget) outro.open = false } const adicao = adicaoExercicio.current; if (e.target === e.currentTarget && e.currentTarget.open && adicao?.open) recolherSecaoSuavemente(adicao, () => { adicao.open = false }); enquadrarDetalhes(e) }} className={`exercicio-treino exercicio-recolhivel${grupo.length > 0 && feitas === grupo.length ? ' exercicio-finalizado' : ''}`} key={item.id} ref={elemento => { if (elemento) cards.current.set(item.id, elemento); else cards.current.delete(item.id) }}>
         <summary onClick={recolherDetalhesSuavemente} className="cabecalho-exercicio"><MiniaturaExercicio id={item.exercicio_id} nome={item.nome} abrir={ex ? () => definirAjuda(ex) : undefined} /><span className="resumo-exercicio"><strong>{item.nome}</strong><small>{grupo.length} séries · {resumoReps.length === 1 ? resumoReps[0] : 'várias'} reps · {semPeso ? 'Peso corporal' : resumoCargas.length === 1 ? `${resumoCargas[0]} kg` : 'cargas variadas'}</small><small>{feitas}/{grupo.length} concluídas{proxima?.exercicio_id === item.exercicio_id ? ' · Próximo exercício' : ''}</small></span><ChevronDown className="seta-exercicio" size={20} aria-hidden="true" /></summary>
         <div className="conteudo-exercicio">
         {ex?.nota_fixa.trim() && <p className="nota-fixa">{ex.nota_fixa}</p>}
@@ -157,7 +165,7 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
         }} />)}
         {grupo.length > 0 && grupo.every(s => s.concluida_em) && <p className="nota">Exercício concluído. {itens[indice + 1] ? `Próximo: ${itens[indice + 1].nome}` : 'Você pode finalizar o treino.'}</p>}
         <Desempenho exercicioId={item.exercicio_id} semPeso={semPeso} /><div className="acoes"><button disabled={ocupado} onClick={() => void executar(async () => {
-          const ultima = grupo.at(-1) ?? { ...criarRegistro(treino.user_id), treino_id: id, exercicio_id: item.exercicio_id, numero_serie: 0, tipo: 'normal' as const, peso_digitado: 0, peso_total: 0, repeticoes: 10, recorde: false, modo_carga: ex?.modo_carga ?? 'total', peso_barra: ex?.peso_barra ?? 20 }
+          const ultima = grupo.at(-1) ?? { ...criarRegistro(treino.user_id), treino_id: id, exercicio_id: item.exercicio_id, numero_serie: 0, tipo: 'normal' as const, peso_digitado: 0, peso_total: 0, repeticoes: 10, recorde: false, modo_carga: ex?.modo_carga ?? 'total', peso_barra: 0 }
           const anteriores = await tabela('series_treino').where('[treino_id+exercicio_id]').equals([id, item.exercicio_id]).toArray()
           await tabela('series_treino').add({ ...ultima, ...criarRegistro(treino.user_id), concluida_em: undefined, recorde: false, numero_serie: Math.max(0, ...anteriores.map(s => s.numero_serie)) + 1 })
         })}>Série extra</button><button disabled={ocupado || indice === 0} onClick={() => void executar(async () => {
@@ -184,7 +192,23 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
     })}
     <button className="botao-secundario" onClick={() => definirCardioAberto(true)}>Registrar cardio neste treino</button>
     {cardioAberto && <EditorCardio sessao={novoCardio('esteira', id, treino.data)} fechar={() => definirCardioAberto(false)} />}
-    <details ref={adicaoExercicio} onToggle={enquadrarDetalhes} className="acao-treino"><summary onClick={recolherDetalhesSuavemente}><span className="icone-acao"><Plus size={20} /></span><span>Adicionar exercício<small>Somente neste treino</small></span><ChevronDown size={18} className="seta-acao" /></summary><div className="formulario"><label>Buscar<input type="search" value={busca} onChange={e => definirBusca(e.target.value)} /></label><ListaExercicios exercicios={exerciciosDisponiveis(exercicios, itens.map(i => i.exercicio_id))} busca={busca} ocupado={ocupado} adicionar={ex => void executar(() => adicionarExercicio(treino, ex))} /></div></details>
+    <details ref={adicaoExercicio} onToggle={enquadrarDetalhes} className="acao-treino"><summary onClick={e => {
+      const adicao = adicaoExercicio.current
+      if (!adicao?.open) return
+      e.preventDefault()
+      recolherSecaoSuavemente(adicao, () => {
+        adicao.open = false
+        const seguinte = itens.find(item => gruposSeries.get(item.exercicio_id)?.some(s => !s.concluida_em))
+        const card = seguinte && cards.current.get(seguinte.id)
+        if (!card) return
+        card.open = true
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          if (!card.isConnected || !card.open) return
+          const area = card.closest('main#conteudo')
+          if (area) area.scrollTo({ top: area.scrollTop + card.getBoundingClientRect().top - area.getBoundingClientRect().top - 12, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })
+        }))
+      })
+    }}><span className="icone-acao"><Plus size={20} /></span><span>Adicionar exercício<small>Somente neste treino</small></span><ChevronDown size={18} className="seta-acao" /></summary><div className="formulario"><label>Buscar<input type="search" value={busca} onChange={e => definirBusca(e.target.value)} /></label><ListaExercicios abrirDetalhes={definirAjuda} exercicios={exerciciosDisponiveis(exercicios, itens.map(i => i.exercicio_id))} busca={busca} ocupado={ocupado} adicionar={ex => void executar(async () => { await adicionarExercicio(treino, ex); definirBusca(''); voltarBusca.current = true })} /></div></details>
     <details onToggle={enquadrarDetalhes} className="acao-treino"><summary onClick={recolherDetalhesSuavemente}><span className="icone-acao"><MessageSquare size={20} /></span><span>Observação do treino<small>{treino.observacao.trim() ? 'Nota salva · toque para editar' : 'Opcional · toque para adicionar'}</small></span><ChevronDown size={18} className="seta-acao" /></summary><div className="formulario"><label>Como foi seu treino?<textarea placeholder="Ex.: boa disposição, última série mais difícil…" value={treino.observacao} onChange={e => { const observacao = e.target.value; void executar(async () => { await tabela('treinos').update(id, { observacao, atualizado_em: new Date().toISOString() }) }) }} /></label></div></details>
     {!treino.ficha_id && <details onToggle={enquadrarDetalhes} className="acao-treino"><summary onClick={recolherDetalhesSuavemente}><span className="icone-acao"><ClipboardPlus size={20} /></span><span>Salvar como ficha<small>Reutilize este planejamento</small></span><ChevronDown size={18} className="seta-acao" /></summary><div className="formulario"><label>Nome da ficha<input placeholder="Ex.: treino de costas" value={nomeFicha} onChange={e => definirNomeFicha(e.target.value)} /></label><p className="nota-resumo">A ficha guarda de 1 a 20 séries por exercício de força. Acima de 20, o planejamento fica com 20; as séries deste treino são preservadas. Cardio permanece como cardio, sem séries de força.</p><button className="botao-secundario salvar-planejamento" disabled={ocupado} onClick={() => void executar(async () => {
       const nova = { ...criarRegistro(treino.user_id), nome: nomeFicha, ordem: Date.now() }

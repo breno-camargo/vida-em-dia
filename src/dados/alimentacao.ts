@@ -4,6 +4,24 @@ import { repositorio } from './repositorio'
 import { dataMedida } from './medidas'
 import { alimentosComuns } from './alimentosComuns'
 
+// Consolidação somente para apresentação; nunca regrava os snapshots originais.
+export function agruparAlimentosRefeicao(registros: RefeicaoDia[]): RefeicaoDia[] {
+  const grupos = new Map<string, RefeicaoDia[]>()
+  for (const r of registros) {
+    const alimento = r.alimento_id ? `id:${r.alimento_id}` : `nome:${(r.alimento_nome ?? r.descricao).trim().toLocaleLowerCase('pt-BR')}`
+    const chave = JSON.stringify([r.data, r.refeicao, alimento])
+    grupos.set(chave, [...(grupos.get(chave) ?? []), r])
+  }
+  return [...grupos.values()].map(lista => {
+    const total = { ...lista[0] }
+    for (const campo of ['kcal', 'quantidade_g', 'proteina_g', 'carbo_g', 'gordura_g', 'fibra_g', 'sodio_mg', 'acucares_g'] as const) {
+      if (lista.every(r => r[campo] !== undefined)) total[campo] = lista.reduce((s, r) => s + r[campo]!, 0)
+      else delete total[campo]
+    }
+    return total
+  })
+}
+
 export async function alterarVisibilidadeAlimentosComuns(id?: string) {
   if (id && !alimentosComuns.some(a => a.id === id)) throw new Error('Alimento não encontrado.')
   const repo = repositorio('configuracoes')

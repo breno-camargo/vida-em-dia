@@ -50,7 +50,7 @@ export function EditorFicha({ ficha, iniciais, exercicios, fechar }: { ficha: Fi
       <div className="acoes"><button type="button" disabled={indice === 0} onClick={() => mover(indice, -1)} aria-label="Mover exercício para cima">Subir</button><button type="button" disabled={indice === itens.length - 1} onClick={() => mover(indice, 1)} aria-label="Mover exercício para baixo">Descer</button><button type="button" onClick={() => definirItens(itens.filter(i => i.id !== item.id))}>Retirar</button></div>
     </div></details>)}
     <label>Buscar para adicionar<input value={busca} onChange={e => definirBusca(e.target.value)} placeholder="Nome do exercício" /></label>
-    <ListaExercicios exercicios={disponiveis} busca={buscaFiltrada} adicionarVarios={adicionarVarios} adicionar={adicionar} />
+    <ListaExercicios abrirDetalhes={definirAjuda} exercicios={disponiveis} busca={buscaFiltrada} adicionarVarios={adicionarVarios} adicionar={adicionar} />
     {erro && <p className="erro" role="alert">{erro}</p>}
     <small>Durante o treino, você poderá alterar o planejamento só daquele dia.</small>
   </form>

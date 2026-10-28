@@ -130,7 +130,7 @@ export function Treino({ online }: { online: boolean }) {
       <RevisarDuplicatas />
       <div className="formulario"><label>Buscar exercício<input type="search" value={busca} onChange={e => definirBusca(e.target.value)} placeholder="Nome ou equipamento" /></label>
       </div>
-      <button className="botao-principal largura-total" onClick={() => definirEdicao({ ...criarRegistro(), nome: '', tipo: 'forca', grupo_muscular: '', equipamento: '', descanso_padrao_segundos: 90, modo_carga: 'total', peso_barra: 20, nota_fixa: '', como_fazer: '', musculos: '', origem: 'manual' })}>Adicionar exercício</button>
+      <button className="botao-principal largura-total" onClick={() => definirEdicao({ ...criarRegistro(), nome: '', tipo: 'forca', grupo_muscular: '', equipamento: '', descanso_padrao_segundos: 90, modo_carga: 'total', peso_barra: 0, nota_fixa: '', como_fazer: '', musculos: '', origem: 'manual' })}>Adicionar exercício</button>
       <section className="ampliar-catalogo"><div><strong>Mais opções para sua ficha</strong><p>Inclua as variações do catálogo sem substituir seus exercícios.</p></div><button type="button" disabled={ocupado} onClick={() => void executar(async () => { const total = await ampliarBiblioteca(); definirAvisoCatalogo(total ? `${total} exercícios adicionados à biblioteca.` : 'Seu catálogo já está atualizado.') })}>Ampliar catálogo<Plus size={16} aria-hidden="true" /></button>{avisoCatalogo && <p role="status">{avisoCatalogo}</p>}</section>
       {filtros}
       <div className="contagem-catalogo"><span>{filtrados.length} exercícios</span><span>Ordem alfabética</span></div>
