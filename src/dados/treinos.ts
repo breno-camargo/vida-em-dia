@@ -57,7 +57,7 @@ export async function montarExercicio(treino: Treino, ex: Exercicio, quantidade:
   const series: SerieTreino[] = Array.from({ length: quantidade }, (_, indice) => {
     const anterior = ultimas[indice] ?? ultimas.at(-1)
     const modo = ex.modo_carga === 'peso_corporal' ? 'peso_corporal' : anterior?.modo_carga ?? ex.modo_carga
-    const barra = anterior?.peso_barra ?? ex.peso_barra
+    const barra = anterior?.peso_barra ?? 0
     const peso = modo === 'peso_corporal' ? 0 : anterior?.peso_digitado ?? 0
     return { ...criarRegistro(treino.user_id), treino_id: treino.id, exercicio_id: ex.id, numero_serie: indice + 1, tipo: 'normal', peso_digitado: peso, peso_total: cargaTotal(peso, modo, barra), repeticoes: anterior?.repeticoes ?? 10, recorde: false, modo_carga: modo, peso_barra: barra }
   })

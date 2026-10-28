@@ -314,6 +314,53 @@ button,input,textarea,select { font: inherit; }
 .app .comida-biblioteca .comida-acoes-alimento { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
 .app .comida-acoes-alimento > button { width: 100%; min-width: 0; }
 .app .comida-biblioteca > p { margin: 0; }
+.app .catalogo-contagem { margin: 0 0 8px; }
+.app .catalogo-alimento { margin-top: 0; }
+.app .catalogo-alimento > summary { padding-block: 16px; }
+.app .catalogo-alimento > summary > span { gap: 5px; }
+.app .catalogo-alimento > summary strong { line-height: 1.5; }
+.app .catalogo-detalhes { display: grid; gap: 12px; padding-bottom: 16px; }
+.app .catalogo-detalhes > p { margin: 0; }
+.app .catalogo-vazio { display: grid; justify-items: center; gap: 12px; padding: 28px 16px; text-align: center; border: 1px dashed var(--visual-borda); border-radius: 16px; }
+.app .catalogo-vazio > svg { color: var(--visual-suave); }
+.app .catalogo-vazio > strong { font-size: 14px; }
+.app .catalogo-vazio > p { margin: 0; }
+.app .demonstracao-exercicio { display: grid; gap: 12px; margin-block: 16px; }
+.app .demonstracao-exercicio h3 { margin: 0; font-size: 14px; }
+.app .demonstracao-exercicio .capa-exercicio { margin: 0; }
+.app .capa-exercicio.capa-musculo { display: grid; justify-items: center; gap: 12px; padding: 18px 20px; border: 1px solid color-mix(in srgb,var(--visual-borda) 55%,transparent); background: radial-gradient(ellipse at 50% 46%,color-mix(in srgb,var(--visual-acento) 9%,transparent),transparent 65%),var(--visual-rebaixo); }
+.app .legenda-mapa-muscular { display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; color: var(--visual-suave); font-size: 10px; line-height: 1.5; }
+.app .legenda-mapa-muscular > span:first-child { font-weight: 650; }
+.app .legenda-mapa-muscular > span:last-child { display: inline-flex; align-items: center; gap: 5px; }
+.app .legenda-mapa-muscular > span:last-child::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--visual-acento); }
+.app .capa-musculo .indicador-musculo { --musculo-ativo: #c4fa79; --musculo-base: #304b3f; --musculo-luz: #668474; --musculo-contorno: #1c3529; display: block; width: 178px; height: 282px; }
+.app .capa-musculo .indicador-musculo > svg { display: block; width: 100%; height: 100%; }
+.app .capa-musculo > .nome-mapa-muscular { color: var(--visual-texto); font-size: 15px; font-weight: 650; line-height: 1.5; }
+[data-tema=claro] .app .capa-musculo .indicador-musculo { --musculo-base: #647e68; --musculo-luz: #92a68b; --musculo-contorno: #3d5942; }
+.app .capa-musculo .indicador-musculo path[fill*="musculo-ativo-"] { stroke: #e0ffbb; stroke-width: .22; filter: drop-shadow(0 0 .3px #bcec8650); }
+.app .guia-execucao { display: grid; gap: 20px; padding-block: 8px 24px; }
+.app .guia-execucao :is(h3,h4,p,ol,ul) { margin: 0; }
+.app .guia-execucao h3 { font-size: 19px; color: var(--visual-texto); }
+.app .guia-execucao h4 { font-size: 13px; font-weight: 650; margin-bottom: 8px; color: var(--visual-texto); }
+.app .guia-execucao p,.app .guia-execucao li { font-size: 14px; line-height: 1.75; color: var(--visual-suave); }
+.app .guia-execucao .passos-exercicio li { padding-block: 12px; }
+.app .guia-evite { padding: 16px; border: 1px solid var(--visual-borda); border-radius: 14px; background: var(--visual-rebaixo); }
+.app .guia-evite ul { padding-left: 18px; display: grid; gap: 8px; }
+.app .guia-execucao .nota-guia { font-size: 12px; line-height: 1.6; }
+.app .demonstracao-exercicio img { display: block; width: 100%; max-height: 360px; object-fit: contain; background: white; border-radius: 16px; }
+.app .demonstracao-exercicio video { display: block; width: 100%; max-height: 360px; border-radius: 16px; background: #101714; }
+.app .demonstracao-exercicio :is(p,small) { margin: 0; font-size: 12px; line-height: 1.6; color: var(--visual-suave); }
+.app .demonstracao-exercicio a { color: inherit; text-decoration: underline; }
+.app .miniatura-exercicio { position: relative; overflow: hidden; }
+.app .miniatura-exercicio > img { border-radius: inherit; }
+.app .miniatura-exercicio .indicador-musculo { --musculo-ativo: #c4fa79; --musculo-base: #426654; --musculo-luz: #87a58f; --musculo-contorno: #223f31; display: grid; place-items: center; width: 100%; height: 100%; padding: 6px; box-sizing: border-box; border-radius: inherit; pointer-events: none; }
+.app .miniatura-exercicio .indicador-musculo > svg { display: block; width: 100%; height: 100%; }
+.app .indicador-musculo path[fill="var(--musculo-ativo)"] { stroke: #d9ffa4; stroke-width: .55; filter: drop-shadow(0 0 1px #bcec8670); }
+.app .indicador-musculo path[fill*="musculo-ativo-"] { stroke: #c8f392; stroke-width: .3; filter: drop-shadow(0 0 .65px #bcec8650); }
+.app .opcao-exercicio { position: relative; min-width: 0; }
+.app .opcao-exercicio > .miniatura-exercicio { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); z-index: 1; padding: 0; }
+.app .opcao-exercicio > .selecionar-exercicio { padding-left: 84px; }
+@media (max-width: 360px) { .app .opcao-exercicio > .selecionar-exercicio { padding-left: 74px; } }
 .app .comida-rascunho { min-width: 0; padding-block: 14px; border-block: 1px solid var(--visual-borda); }
 .app .comida-rascunho h3 { margin: 0; }
 .app .comida-refeicao > .botao-secundario { width: 100%; margin-top: 16px; }
@@ -374,6 +421,8 @@ button,input,textarea,select { font: inherit; }
 .app .comida-refeicao > summary strong { font-size: 14px; white-space: nowrap; }
 .app .comida-refeicao > summary svg { flex-shrink: 0; transition: transform 160ms; }
 .app .comida-refeicao[open] > summary svg { transform: rotate(180deg); }
+.app .comida-total-refeicao { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--visual-borda); }
+.app .comida-total-refeicao .comida-macros { margin: 12px 0 0; padding: 0; border: 0; }
 
 .app .comida-refeicao .comida-item { display: grid; grid-template-columns: minmax(0,1fr); gap: 12px; }
 .app .comida-refeicao .comida-acoes-alimento { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }

@@ -8,6 +8,21 @@ import { banco } from './banco'
 import { exportarBackup, validarBackup } from './backup'
 import { iniciarBanco } from './configuracoes'
 import { tipoAlimento } from './tiposAlimentos'
+import { agruparAlimentosRefeicao } from './alimentacao'
+
+test('mesmo alimento na mesma refeicao soma porcoes sem alterar registros nem misturar cadastros', () => {
+  const arroz = { ...criarRegistro(), data: '2026-10-25', refeicao: 'Almoço', horario: '12:00', descricao: 'Arroz', quantidade_g: 100, precisao: 'exato' as const, kcal: 128, proteina_g: 2.5, carbo_g: 28.1, sodio_mg: 1 }
+  const outro = { ...arroz, ...criarRegistro(), horario: '13:00', sodio_mg: undefined }
+  const jantar = { ...arroz, ...criarRegistro(), refeicao: 'Jantar' }
+  const pessoal = { ...arroz, ...criarRegistro(), alimento_id: 'pessoal-diferente' }
+  const entrada = [arroz, outro, jantar, pessoal]
+  const antes = structuredClone(entrada)
+  const agrupados = agruparAlimentosRefeicao(entrada)
+  expect(agrupados).toHaveLength(3)
+  expect(agrupados[0]).toMatchObject({ quantidade_g: 200, kcal: 256, proteina_g: 5, carbo_g: 56.2 })
+  expect(agrupados[0].sodio_mg).toBeUndefined()
+  expect(entrada).toEqual(antes)
+})
 
 test('reabrir banco e inicializar app preserva alimento antigo sem categoria e configuracoes', async () => {
   await banco.delete(); await banco.open(); await iniciarBanco()

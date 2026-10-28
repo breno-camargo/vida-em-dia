@@ -3,6 +3,8 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { iconeExercicio } from '../utilitarios/iconeExercicio'
 import { tabela } from '../dados/banco'
 import type { Exercicio } from '../dados/modelos'
+import { grupoMuscularVisual } from '../dados/grupoMuscularVisual'
+import { IndicadorMusculo } from './IndicadorMusculo'
 
 const pendentes = new Map<Element, () => void>()
 let observador: IntersectionObserver | undefined
@@ -23,16 +25,10 @@ function observar(elemento: Element, mostrar: () => void) {
 type Props = { id: string; abrir?: () => void; nome?: string; dados?: Exercicio }
 function ConteudoMiniatura({ id, nome, dados }: Props) {
   const carregado = useLiveQuery(() => dados ? undefined : tabela('exercicios').get(id), [id, dados])
-  const foto = useLiveQuery(() => tabela('fotos').where('exercicio_id').equals(id).filter(f => !f.apagado_em && Boolean(f.miniatura_local)).first(), [id])
-  const ref = useRef<HTMLImageElement>(null)
-  useEffect(() => {
-    if (!foto?.miniatura_local) return
-    const url = URL.createObjectURL(foto.miniatura_local)
-    if (ref.current) ref.current.src = url
-    return () => URL.revokeObjectURL(url)
-  }, [foto])
   const exercicio = dados ?? carregado
-  return foto ? <img ref={ref} alt="" decoding="async" /> : iconeExercicio(exercicio?.grupo_muscular, exercicio?.nome ?? nome, exercicio?.tipo)
+  return grupoMuscularVisual(exercicio?.grupo_muscular, exercicio?.nome ?? nome, exercicio?.tipo)
+    ? <IndicadorMusculo grupo={exercicio?.grupo_muscular} nome={exercicio?.nome ?? nome} tipo={exercicio?.tipo} />
+    : iconeExercicio(exercicio?.grupo_muscular, exercicio?.nome ?? nome, exercicio?.tipo)
 }
 export const MiniaturaExercicio = memo(function MiniaturaExercicio({ id, abrir, nome, dados }: Props) {
   const ref = useRef<HTMLElement | null>(null)

@@ -7,17 +7,19 @@ import { tipoAlimento, tiposAlimentos } from '../dados/tiposAlimentos'
 import { EditorRefeicao } from '../componentes/EditorRefeicao'
 import { EditorMedida } from '../componentes/EditorMedida'
 import { Painel } from '../componentes/Painel'
+import { EscolherOpcao } from '../componentes/EscolherOpcao'
 import { PainelEnergia, ResumoEnergia } from '../componentes/PerfilEnergia'
 import { criarRegistro, repositorio } from '../dados/repositorio'
 import { referenciaAlimentar, registrarReferenciaHoje } from '../dados/referenciaAlimentar'
 import { pesoParaEnergia } from '../dados/energia'
 import { tipoDia } from '../dados/atividade'
 import { alimentosComuns } from '../dados/alimentosComuns'
-import { lerGramas, nomeAlimento, salvarAlimentoPessoal, excluirAlimentoPessoal, alterarVisibilidadeAlimentosComuns } from '../dados/alimentacao'
+import { agruparAlimentosRefeicao, lerGramas, nomeAlimento, salvarAlimentoPessoal, excluirAlimentoPessoal, alterarVisibilidadeAlimentosComuns } from '../dados/alimentacao'
 import { novaMedida, dataMedida, formatarDataMedida } from '../dados/medidas'
 import type { MedidaCorporal, AlimentoFavorito, RefeicaoDia } from '../dados/modelos'
 
-const refeicoes = ['Café da manhã', 'Almoço', 'Jantar', 'Lanche']
+const refeicoes = ['Café da manhã', 'Almoço', 'Jantar', 'Lanche', 'Pré-treino']
+const nutrientesRefeicao = [['proteina_g', 'Proteína', 'g'], ['carbo_g', 'Carboidratos', 'g'], ['gordura_g', 'Gorduras totais', 'g'], ['fibra_g', 'Fibras', 'g'], ['acucares_g', 'Açúcares totais', 'g'], ['sodio_mg', 'Sódio', 'mg']] as const
 const nenhumAlimento: AlimentoFavorito[] = []
 const formatar = (valor: number, casas = 0) => valor.toLocaleString('pt-BR', { maximumFractionDigits: casas, minimumFractionDigits: casas })
 const decimal = lerGramas
@@ -45,6 +47,7 @@ export function Comida() {
   const [listaAlimentos, setListaAlimentos] = useState<FiltroAlimentos>('todos')
   const [tipoCadastro, setTipoCadastro] = useState('')
   const [tipoNovo, setTipoNovo] = useState('Outros')
+  const [escolhendoTipo, setEscolhendoTipo] = useState(false)
   const [buscaCadastro, setBuscaCadastro] = useState('')
   const [paraExcluir, setParaExcluir] = useState<AlimentoFavorito | typeof alimentosComuns[number] | null>(null)
   const [baseNova, setBaseNova] = useState('50')
@@ -61,6 +64,7 @@ export function Comida() {
   const referencia = data === hoje ? referenciaAlimentar(config, pesoParaEnergia(medidas, data)?.peso, tipoMeta, data) : { kcal: historica?.meta_kcal_aplicada ?? 0, origem: historica?.origem_meta ?? 'manual' }
   const metaDia = referencia.kcal
   const comunsVisiveis = alimentosComuns.filter(a => !config?.alimentos_comuns_ocultos?.includes(a.id))
+  const alimentosCatalogo = (listaAlimentos === 'meus' ? pessoais : [...pessoais, ...comunsVisiveis]).filter(a => (listaAlimentos !== 'tipo' || !tipoCadastro || tipoAlimento(a) === tipoCadastro) && textoBusca(nomeAlimento(a)).includes(textoBusca(buscaCadastro.trim())))
   const doDia = registros.filter(r => r.data === data).sort((a, b) => b.horario.localeCompare(a.horario))
   const totais = doDia.reduce((s, r) => ({ kcal: s.kcal + r.kcal, proteina_g: s.proteina_g + (r.proteina_g ?? 0), carbo_g: s.carbo_g + (r.carbo_g ?? 0), gordura_g: s.gordura_g + (r.gordura_g ?? 0), fibra_g: s.fibra_g + (r.fibra_g ?? 0) }), { kcal: 0, proteina_g: 0, carbo_g: 0, gordura_g: 0, fibra_g: 0 })
   const comSodio = doDia.filter(r => r.sodio_mg !== undefined)
@@ -135,8 +139,9 @@ export function Comida() {
     {doDia.length === 0 ? <div className="painel comida-vazio"><Utensils aria-hidden="true" /><strong>Nenhum alimento registrado</strong><p>Adicione os alimentos e as quantidades para ver o cálculo do seu dia.</p></div> : [...new Set([...refeicoes, ...doDia.map(r => r.refeicao)])].map(grupo => {
       const lista = doDia.filter(r => r.refeicao === grupo)
       if (!lista.length) return null
+      const agrupados = agruparAlimentosRefeicao(lista)
       const kcal = lista.reduce((s, r) => s + r.kcal, 0)
-      return <details className="painel comida-refeicao" key={grupo} onToggle={enquadrarDetalhes}><summary onClick={recolherDetalhesSuavemente}><h3>{grupo}</h3><span>{lista.length} {lista.length === 1 ? 'alimento' : 'alimentos'}</span><strong>{formatar(kcal)} kcal</strong><ChevronDown size={18} aria-hidden="true" /></summary>{lista.map(registro => <article className="comida-item" key={registro.id}><div><strong>{registro.alimento_nome ?? registro.descricao}</strong><span>{registro.horario} · {registro.quantidade_g !== undefined ? `${formatar(registro.quantidade_g, 1)} g` : 'porção registrada'}</span><small>{formatar(registro.kcal)} kcal · P {formatar(registro.proteina_g ?? 0, 1)} g · C {formatar(registro.carbo_g ?? 0, 1)} g · Fibra {formatar(registro.fibra_g ?? 0, 1)} g · Açúcares {registro.acucares_g !== undefined ? `${formatar(registro.acucares_g, 1)} g` : '—'} · Sódio {registro.sodio_mg !== undefined ? `${formatar(registro.sodio_mg, 1)} mg` : "—"}</small></div></article>)}<div className="comida-acoes-alimento"><button type="button" className="botao-secundario" onClick={() => abrirRefeicao(grupo, lista)}>Editar refeição</button><button type="button" className="botao-secundario" onClick={() => abrirRefeicao(grupo)}>Adicionar alimento</button></div></details>
+      return <details className="painel comida-refeicao" key={grupo} onToggle={enquadrarDetalhes}><summary onClick={recolherDetalhesSuavemente}><h3>{grupo}</h3><span>{agrupados.length} {agrupados.length === 1 ? 'alimento' : 'alimentos'}</span><strong>{formatar(kcal)} kcal</strong><ChevronDown size={18} aria-hidden="true" /></summary><div className="comida-total-refeicao" aria-label={`Total nutricional de ${grupo}`}><span className="etiqueta">Total da refeição</span><div className="comida-macros">{nutrientesRefeicao.map(([campo, nome, unidade]) => <span key={campo}>{nome}<strong>{lista.every(r => r[campo] !== undefined) ? `${formatar(lista.reduce((s, r) => s + (r[campo] ?? 0), 0), 1)} ${unidade}` : '—'}</strong></span>)}</div></div>{agrupados.map(registro => <article className="comida-item" key={registro.id}><div><strong>{registro.alimento_nome ?? registro.descricao}</strong><span>{registro.horario} · {registro.quantidade_g !== undefined ? `${formatar(registro.quantidade_g, 1)} g` : 'porção registrada'}</span><small>{formatar(registro.kcal)} kcal · P {formatar(registro.proteina_g ?? 0, 1)} g · C {formatar(registro.carbo_g ?? 0, 1)} g · Fibra {formatar(registro.fibra_g ?? 0, 1)} g · Açúcares {registro.acucares_g !== undefined ? `${formatar(registro.acucares_g, 1)} g` : '—'} · Sódio {registro.sodio_mg !== undefined ? `${formatar(registro.sodio_mg, 1)} mg` : "—"}</small></div></article>)}<div className="comida-acoes-alimento"><button type="button" className="botao-secundario" onClick={() => abrirRefeicao(grupo, lista)}>Editar refeição</button><button type="button" className="botao-secundario" onClick={() => abrirRefeicao(grupo)}>Adicionar alimento</button></div></details>
     })}
     <section className="painel comida-resumo" aria-label="Resumo nutricional do dia">
       <div className="comida-resumo-topo"><div><span>Total do dia</span><strong>{formatar(totais.kcal)} <small>kcal</small></strong></div><span>{doDia.length} {doDia.length === 1 ? 'item' : 'itens'}</span></div>
@@ -149,11 +154,11 @@ export function Comida() {
     <p className="comida-nota"><BookOpen size={15} /> Valores do catálogo comum são referências por 100 g. Produtos de marca podem variar; cadastre os dados do rótulo para calcular a sua porção.</p>
 
     {editorRefeicao && <EditorRefeicao suspenso={painel === 'cadastro'} data={editorRefeicao.data} grupo={editorRefeicao.grupo} anteriores={editorRefeicao.anteriores} fechar={() => setEditorRefeicao(undefined)} cadastrar={() => { abrirCadastro(); setRetornoEditor(true) }} />}
-    {painel === 'cadastro' && <Painel titulo={alimentoEmEdicao ? 'Editar meu alimento' : copiandoAlimento ? 'Criar cópia pessoal' : 'Cadastrar meu alimento'} fechar={() => { if (!salvando) { setErro(''); setPainel(retornoEditor ? null : 'alimentos'); setRetornoEditor(false) } }} acao={<button className="botao-principal salvar-cabecalho" type="submit" form={formularioAlimento} aria-label="Salvar alimento" disabled={salvando}>{salvando ? 'Salvando…' : 'Salvar'}</button>}><form id={formularioAlimento} className="formulario comida-formulario" onSubmit={cadastrarAlimento}>
+    {painel === 'cadastro' && !escolhendoTipo && <Painel titulo={alimentoEmEdicao ? 'Editar meu alimento' : copiandoAlimento ? 'Criar cópia pessoal' : 'Cadastrar meu alimento'} fechar={() => { if (!salvando) { setErro(''); setPainel(retornoEditor ? null : 'alimentos'); setRetornoEditor(false) } }} acao={<button className="botao-principal salvar-cabecalho" type="submit" form={formularioAlimento} aria-label="Salvar alimento" disabled={salvando}>{salvando ? 'Salvando…' : 'Salvar'}</button>}><form id={formularioAlimento} className="formulario comida-formulario" onSubmit={cadastrarAlimento}>
       <p>Este alimento fica salvo só no seu perfil. Copie os valores do rótulo e informe a porção a que eles correspondem.</p>
       {alimentoEmEdicao && <p className="comida-base">As mudanças valem para os próximos registros. As refeições já salvas mantêm seus valores.</p>}
       <label>Nome do alimento<input required maxLength={100} value={nomeNovo} onChange={e => setNomeNovo(e.target.value)} placeholder="Ex.: Pão integral" /></label>
-      <label>Tipo do alimento<select value={tipoNovo} onChange={e => setTipoNovo(e.target.value)}>{tiposAlimentos.map(t => <option key={t}>{t}</option>)}</select></label>
+      <button type="button" className="data-medida" disabled={salvando} onClick={() => setEscolhendoTipo(true)}>Tipo do alimento<strong>{tipoNovo}</strong></button>
       <label>Marca (opcional)<input maxLength={100} value={marcaNova} onChange={e => setMarcaNova(e.target.value)} placeholder="Ex.: marca da embalagem" /></label>
       <label>Porção de referência (g)<input required inputMode="decimal" type="text" value={baseNova} onChange={e => setBaseNova(e.target.value)} placeholder="50" /></label>
       <div className="comida-grade-nutrientes">
@@ -163,12 +168,15 @@ export function Comida() {
       {erro && <p className="erro" role="alert">{erro}</p>}
     </form></Painel>}
 
-    {painel === 'alimentos' && <Painel titulo="Meu catálogo" fechar={() => setPainel(null)}><div className="comida-biblioteca"><button type="button" className="botao-principal" onClick={() => abrirCadastro()}><Plus size={17} />Cadastrar alimento</button>
+    {painel === 'cadastro' && escolhendoTipo && <EscolherOpcao titulo="Tipo do alimento" opcoes={[...tiposAlimentos]} inicial={tiposAlimentos.findIndex(t => t === tipoNovo)} fechar={() => setEscolhendoTipo(false)} confirmar={indice => setTipoNovo(tiposAlimentos[indice])} />}
+    {painel === 'alimentos' && <Painel titulo="Meu catálogo" fechar={() => setPainel(null)} acao={<button type="button" className="botao-principal salvar-cabecalho" onClick={() => abrirCadastro()}><Plus size={17} />Cadastrar</button>}><div className="comida-biblioteca">
+      <label className="comida-data">Buscar alimento<input type="search" value={buscaCadastro} onChange={e => setBuscaCadastro(e.target.value)} placeholder="Nome ou marca" /></label>
       <FiltrosAlimentos filtro={listaAlimentos} definirFiltro={setListaAlimentos} tipo={tipoCadastro} definirTipo={setTipoCadastro} />
-      <label className="comida-data">Buscar no catálogo<input value={buscaCadastro} onChange={e => setBuscaCadastro(e.target.value)} placeholder="Nome ou marca" /></label>
-      <p className="comida-base">{listaAlimentos === 'meus' ? 'Edite ou exclua seus alimentos. As refeições antigas ficam preservadas.' : 'Crie uma cópia para ajustar os valores ou exclua a referência do seu catálogo pessoal.'}</p>
-      {(listaAlimentos === 'meus' ? pessoais : [...pessoais, ...comunsVisiveis]).filter(a => (listaAlimentos !== 'tipo' || !tipoCadastro || tipoAlimento(a) === tipoCadastro) && textoBusca(nomeAlimento(a)).includes(textoBusca(buscaCadastro.trim()))).map(a => <article className="comida-item" key={a.id}><div><strong>{nomeAlimento(a)}</strong><span>{formatar(a.kcal)} kcal por {a.base_quantidade_g !== undefined ? `${formatar(a.base_quantidade_g, 1)} g` : 'porção sem peso definido'}</span></div><div className="comida-acoes-alimento"><button className="botao-secundario" onClick={() => abrirCadastro(a)}>{'user_id' in a ? 'Editar' : 'Criar cópia pessoal'}</button><button type="button" className="botao-secundario excluir-historico" aria-label={`Excluir ${nomeAlimento(a)}`} onClick={() => { setErro(''); setParaExcluir(a) }}><Trash2 size={17} />Excluir</button></div></article>)}
-      {listaAlimentos === 'meus' && !pessoais.length && <p className="comida-base">Você ainda não cadastrou alimentos. Cadastre o seu ou copie uma referência do catálogo comum.</p>}
+      <div className="catalogo-lista" aria-label="Alimentos do catálogo">
+        <p className="comida-base catalogo-contagem">{alimentosCatalogo.length} {alimentosCatalogo.length === 1 ? 'alimento' : 'alimentos'}</p>
+        {alimentosCatalogo.map(a => <details className="comida-item-recolhido catalogo-alimento" key={a.id}><summary><span><small>{tipoAlimento(a)}{'user_id' in a ? ' · Meu alimento' : ''}</small><strong>{nomeAlimento(a)}</strong><small>{formatar(a.kcal)} kcal por {a.base_quantidade_g !== undefined ? `${formatar(a.base_quantidade_g, 1)} g` : 'porção sem peso definido'}</small></span><ChevronDown size={18} aria-hidden="true" /></summary><div className="catalogo-detalhes"><p className="comida-base">{'user_id' in a ? 'Altere o cadastro sem mudar suas refeições anteriores.' : 'Use uma cópia pessoal para ajustar os valores desta referência.'}</p><div className="comida-acoes-alimento"><button type="button" className="botao-secundario" onClick={() => abrirCadastro(a)}>{'user_id' in a ? 'Editar alimento' : 'Criar cópia'}</button><button type="button" className="botao-secundario excluir-historico" aria-label={`Excluir ${nomeAlimento(a)}`} onClick={() => { setErro(''); setParaExcluir(a) }}><Trash2 size={17} />Excluir</button></div></div></details>)}
+        {!alimentosCatalogo.length && <div className="catalogo-vazio"><BookOpen size={28} aria-hidden="true" /><strong>{buscaCadastro.trim() || (listaAlimentos === 'tipo' && tipoCadastro) ? 'Nenhum alimento encontrado' : 'Seu catálogo começa aqui'}</strong><p className="comida-base">{buscaCadastro.trim() || (listaAlimentos === 'tipo' && tipoCadastro) ? 'Tente outro nome ou ajuste os filtros.' : 'Cadastre um alimento ou crie uma cópia das referências disponíveis em Todos.'}</p></div>}
+      </div>
       {listaAlimentos !== 'meus' && !!config?.alimentos_comuns_ocultos?.length && <button className="botao-secundario" disabled={salvando} onClick={async () => { setSalvando(true); setErro(''); try { await alterarVisibilidadeAlimentosComuns() } catch { setErro('Não foi possível restaurar os alimentos.') } finally { setSalvando(false) } }}>Restaurar pré-cadastrados excluídos</button>}
       {erro && !paraExcluir && <p role="alert" className="erro">{erro}</p>}
     </div></Painel>}

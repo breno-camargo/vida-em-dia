@@ -4,6 +4,7 @@ import { Plus, Trash2 } from 'lucide-react'
 import { FiltrosAlimentos, type FiltroAlimentos } from './FiltrosAlimentos'
 import { tipoAlimento } from '../dados/tiposAlimentos'
 import { Painel } from './Painel'
+import { EscolherOpcao } from './EscolherOpcao'
 import { calcularPorcao, lerGramas, nomeAlimento, salvarRefeicaoCompleta } from '../dados/alimentacao'
 import { alimentosComuns } from '../dados/alimentosComuns'
 import { criarRegistro, repositorio } from '../dados/repositorio'
@@ -11,7 +12,7 @@ import type { Nutrientes, RefeicaoDia } from '../dados/modelos'
 
 type Alimento = Nutrientes & { tipo_alimento?: string; id: string; nome: string; base_quantidade_g: number; alimento_id?: string }
 type Item = { chave: string; alimento: Alimento; quantidade: number; original?: RefeicaoDia }
-const grupos = ['Café da manhã', 'Almoço', 'Jantar', 'Lanche']
+const grupos = ['Café da manhã', 'Almoço', 'Jantar', 'Lanche', 'Pré-treino']
 const numero = (n: number) => n.toLocaleString('pt-BR', { maximumFractionDigits: 1 })
 const buscaNormal = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR')
 const campos = ['kcal', 'proteina_g', 'carbo_g', 'gordura_g', 'fibra_g', 'sodio_mg', 'acucares_g'] as const
@@ -23,9 +24,12 @@ export function EditorRefeicao({ data, grupo, anteriores, fechar, cadastrar, sus
   const travaSalvar = useRef(false)
   const buscaRef = useRef<HTMLInputElement>(null)
   const [refeicao, setRefeicao] = useState(grupo ?? grupos[0])
+  const [escolhendoRefeicao, setEscolhendoRefeicao] = useState(false)
+  const opcoesRefeicao = [...new Set([...grupos, refeicao])]
   const [itens, setItens] = useState<Item[]>(() => (anteriores ?? []).map(r => ({ chave: r.id, original: r, quantidade: r.quantidade_g ?? 1,
     alimento: { ...r, id: r.alimento_id ? `pessoal:${r.alimento_id}` : alimentosComuns.find(a => a.nome === (r.alimento_nome ?? r.descricao))?.id ?? r.id, nome: r.alimento_nome ?? r.descricao, base_quantidade_g: r.quantidade_g ?? 1 } })))
   const [buscando, setBuscando] = useState(!anteriores?.length)
+  const [buscaVeioDoResumo, setBuscaVeioDoResumo] = useState(false)
   const [filtro, setFiltro] = useState<FiltroAlimentos>('todos')
   const [tipo, setTipo] = useState('')
   const [busca, setBusca] = useState('')
@@ -56,6 +60,13 @@ export function EditorRefeicao({ data, grupo, anteriores, fechar, cadastrar, sus
     if (JSON.stringify({ refeicao, itens }) !== inicio.current) setConfirmarDescarte(true)
     else fechar()
   }
+  function fecharBusca() {
+    if (travaSalvar.current) return
+    if (buscaVeioDoResumo) {
+      setBuscando(false)
+      setBuscaVeioDoResumo(false)
+    } else solicitarFechamento()
+  }
   async function salvar() {
     if (travaSalvar.current || (!itens.length && !anteriores?.length)) return
     travaSalvar.current = true
@@ -77,22 +88,23 @@ export function EditorRefeicao({ data, grupo, anteriores, fechar, cadastrar, sus
     finally { travaSalvar.current = false; setSalvando(false) }
   }
   if (suspenso) return null
+  if (escolhendoRefeicao) return <EscolherOpcao titulo="Refeição" opcoes={opcoesRefeicao} inicial={opcoesRefeicao.indexOf(refeicao)} fechar={() => setEscolhendoRefeicao(false)} confirmar={indice => setRefeicao(opcoesRefeicao[indice])} />
   return <>
-    {!buscando && !escolha && !confirmarExclusao && !confirmarDescarte && <Painel titulo={anteriores ? 'Editar refeição' : 'Montar refeição'} fechar={() => { if (!travaSalvar.current) setBuscando(true) }} acao={<button type="submit" form={id} className="botao-principal salvar-cabecalho" disabled={salvando || (!itens.length && !anteriores?.length)}>{salvando ? 'Salvando…' : 'Salvar'}</button>}>
+    {!buscando && !escolha && !confirmarExclusao && !confirmarDescarte && <Painel titulo={anteriores ? 'Editar refeição' : 'Montar refeição'} fechar={() => { if (anteriores) solicitarFechamento(); else if (!travaSalvar.current) { setBuscaVeioDoResumo(false); setBuscando(true) } }} acao={<button type="submit" form={id} className="botao-principal salvar-cabecalho" disabled={salvando || (!itens.length && !anteriores?.length)}>{salvando ? 'Salvando…' : 'Salvar'}</button>}>
       <form id={id} className="formulario comida-formulario refeicao-editor" onSubmit={e => { e.preventDefault(); if (!itens.length && anteriores?.length) setConfirmarExclusao(true); else void salvar() }}>
-        <label>Refeição<select disabled={salvando} value={refeicao} onChange={e => setRefeicao(e.target.value)}>{[...new Set([...grupos, refeicao])].map(g => <option key={g}>{g}</option>)}</select></label>
+        <button type="button" className="data-medida" disabled={salvando} onClick={() => setEscolhendoRefeicao(true)}>Refeição<strong>{refeicao}</strong></button>
         <section className="refeicao-lista" aria-label="Alimentos da refeição">
           {!itens.length && <p className="comida-base">Escolha os alimentos e informe quanto comeu.</p>}
           {calculados.map(i => <div className="refeicao-linha" key={i.chave}><button type="button" disabled={salvando || (i.original !== undefined && i.original.quantidade_g === undefined)} className="refeicao-quantidade" onClick={() => escolher(i.alimento, i.chave, i.quantidade)}><strong>{i.alimento.nome}</strong><span>{i.original && i.original.quantidade_g === undefined ? 'Porção registrada' : `${numero(i.quantidade)} g`} · {numero(i.nutrientes.kcal)} kcal</span></button><button type="button" className="botao-secundario excluir-historico" disabled={salvando} aria-label={`Retirar ${i.alimento.nome}`} onClick={() => setItens(atual => atual.filter(a => a.chave !== i.chave))}><Trash2 size={17} /></button></div>)}
         </section>
-        <button type="button" className="botao-secundario" disabled={salvando} onClick={() => { setBusca(''); setBuscando(true) }}><Plus size={17} />{itens.length ? 'Adicionar outro alimento' : 'Escolher alimentos'}</button>
+        <button type="button" className="botao-secundario" disabled={salvando} onClick={() => { setBusca(''); setBuscaVeioDoResumo(true); setBuscando(true) }}><Plus size={17} />{itens.length ? 'Adicionar outro alimento' : 'Escolher alimentos'}</button>
         <div className="refeicao-total" aria-live="polite"><span>Total da refeição · {itens.length} {itens.length === 1 ? 'alimento' : 'alimentos'}</span><strong>{numero(kcal)} kcal</strong></div>
         {erro && <p className="erro" role="alert">{erro}</p>}
       </form>
     </Painel>}
     {confirmarDescarte && <Painel titulo="Descartar alterações?" centralizado fechar={() => setConfirmarDescarte(false)}><div className="formulario"><p>As alterações desta refeição ainda não foram salvas. Deseja sair sem salvar?</p><button type="button" className="botao-principal" onClick={() => setConfirmarDescarte(false)}>Continuar editando</button><button type="button" className="botao-secundario excluir-historico" onClick={fechar}>Descartar alterações</button></div></Painel>}
     {confirmarExclusao && <Painel titulo="Excluir refeição" centralizado fechar={() => { if (!salvando) setConfirmarExclusao(false) }}><div className="formulario"><p>Você retirou todos os alimentos. Excluir esta refeição do diário?</p><button type="button" className="botao-secundario" disabled={salvando} onClick={() => setConfirmarExclusao(false)}>Voltar</button><button type="button" className="botao-secundario excluir-historico" disabled={salvando} onClick={() => void salvar()}>Excluir refeição</button>{erro && <p role="alert" className="erro">{erro}</p>}</div></Painel>}
-    {buscando && !escolha && !confirmarDescarte && !confirmarExclusao && <Painel titulo="Adicionar alimento" fechar={solicitarFechamento} acao={<button type="button" className="botao-principal salvar-cabecalho" disabled={salvando || (!itens.length && !anteriores?.length)} onClick={() => { if (!itens.length && anteriores?.length) setConfirmarExclusao(true); else void salvar() }}>{salvando ? 'Salvando…' : 'Salvar'}</button>}><div className="formulario comida-formulario">
+    {buscando && !escolha && !confirmarDescarte && !confirmarExclusao && <Painel titulo="Adicionar alimento" fechar={fecharBusca} acao={<button type="button" className="botao-principal salvar-cabecalho" disabled={salvando || (!itens.length && !anteriores?.length)} onClick={() => { if (!itens.length && anteriores?.length) setConfirmarExclusao(true); else void salvar() }}>{salvando ? 'Salvando…' : 'Salvar'}</button>}><div className="formulario comida-formulario">
       <FiltrosAlimentos filtro={filtro} definirFiltro={setFiltro} tipo={tipo} definirTipo={setTipo} />
       <label>Buscar alimento<input ref={buscaRef} type="search" value={busca} onChange={e => setBusca(e.target.value)} placeholder="Nome ou marca" /></label>
       <div className="comida-resultados">{opcoes.slice(0, 12).map(a => <button type="button" className="botao-secundario comida-resultado" key={a.id} onClick={() => escolher(a)}><span><strong>{a.nome}</strong><small>{numero(a.kcal)} kcal por {numero(a.base_quantidade_g)} g</small></span><Plus size={17} /></button>)}</div>

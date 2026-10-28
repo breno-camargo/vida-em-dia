@@ -11,12 +11,32 @@ import { salvarFicha } from './fichas'
 import { cargaTotal, volumeSeries, segundosRestantes } from '../utilitarios/treino'
 
 beforeEach(async () => { await banco.delete(); await banco.open(); await iniciarBanco(); await iniciarBiblioteca() })
+test('biblioteca inicia com barra zero e preserva peso explicitamente salvo', async () => {
+  const exercicios = await tabela('exercicios').toArray()
+  expect(exercicios.every(e => e.peso_barra === 0)).toBe(true)
+  const ex = exercicios.find(e => e.tipo === 'forca' && e.modo_carga !== 'peso_corporal')!
+  await tabela('exercicios').update(ex.id, { peso_barra: 2 })
+  await iniciarBiblioteca()
+  expect((await tabela('exercicios').get(ex.id))?.peso_barra).toBe(2)
+  expect(cargaTotal(30, 'por_lado')).toBe(60)
+  expect(cargaTotal(30, 'por_lado', 2)).toBe(62)
+})
 async function preparar() {
   const ex = (await tabela('exercicios').toArray()).find(e => e.tipo === 'forca' && e.modo_carga !== 'peso_corporal')!
   const ficha = { ...criarRegistro(), nome: 'A', ordem: 0 }
   await salvarFicha(ficha, [{ ...criarRegistro(), ficha_id: ficha.id, exercicio_id: ex.id, ordem: 0, series_planejadas: 2, descanso_segundos: 120 }])
   return { ficha, ex }
 }
+
+test('primeira execucao ignora barra padrao do cadastro antigo', async () => {
+  const { ficha, ex } = await preparar()
+  await tabela('exercicios').update(ex.id, { modo_carga: 'por_lado', peso_barra: 20 })
+  const id = await iniciarTreino(ficha.id)
+  const series = await tabela('series_treino').where('treino_id').equals(id).toArray()
+  expect(series.length).toBeGreaterThan(0)
+  expect(series.every(s => s.peso_barra === 0 && s.peso_total === 0)).toBe(true)
+  expect((await tabela('exercicios').get(ex.id))?.peso_barra).toBe(20)
+})
 test('inicie um único treino e preserve o andamento ao reabrir', async () => {
   const { ficha } = await preparar()
   const ids = await Promise.all([iniciarTreino(ficha.id), iniciarTreino(ficha.id)])
