@@ -1,5 +1,13 @@
 # Perfil energético
 
+## Alteração local em 26/10/2026 — ainda não publicada
+
+Atualização local em 28/10/2026: acrescentada a rotina Sedentária (1,2 × repouso), com referência na [calculadora do MOHAP](https://mohap.gov.ae/ar/awareness-centre/daily-calorie-requirements-calculator). Não é garantia de manutenção individual. As opções anteriores e seus fatores permanecem; nenhuma escolha salva é convertida automaticamente. Apenas repouso mostra o gasto em repouso sem gerar referência de manutenção. A opção sedentária é aceita no backup e usa o transporte de configuração existente.
+
+Sem meta manual positiva para o tipo do dia, o diário usa o gasto estimado com a rotina como **Referência estimada de manutenção**. Exige perfil completo, peso válido e rotina informada; a basal sozinha não vira referência. A meta manual sempre tem prioridade e não é preenchida nem substituída pelo cálculo.
+
+Ao usar Comida, o valor e a origem da referência de hoje são guardados em `consumo_diario_meta`. Peso/perfil podem atualizar hoje; dias anteriores usam somente o valor registrado, sem reconstrução retroativa com dados atuais. Dias antigos sem snapshot ficam sem referência. Os registros nutricionais permanecem intactos. Esta regra local substitui, nesta versão, as descrições históricas sobre ausência de snapshots abaixo.
+
 Implementada em 25/10/2026 e publicada na main pelo PR #3 em 26/10/2026, apos aprovacao do usuario. Acesso em Comida → Seu gasto estimado hoje → Configurar ou Configurações → Metabolismo e alimentação.
 
 ## Cálculos e limites

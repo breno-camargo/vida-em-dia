@@ -60,11 +60,13 @@ export interface RefeicaoDia extends Registro, Nutrientes {
   alimento_nome?: string; quantidade_g?: number
 }
 export interface AlimentoFavorito extends Registro, Nutrientes {
+  tipo_alimento?: string
   nome: string; marca?: string; porcao: string; vezes_usado: number; base_quantidade_g?: number; fonte?: 'pessoal'
 }
 export interface ComboRefeicao extends Registro { nome: string; itens: (Nutrientes & { descricao: string })[] }
 export interface AguaDia extends Registro { data: string; ml: number; garrafas_ml?: number[] }
 export interface ConsumoDiarioMeta extends Registro {
+  origem_meta?: 'manual' | 'manutencao' | 'nenhuma'
   data: string; tipo_dia: TipoDia; meta_kcal_aplicada: number; meta_proteina_aplicada?: number
 }
 export interface Foto extends Registro {
@@ -73,6 +75,8 @@ export interface Foto extends Registro {
   imagem_local?: Blob; miniatura_local?: Blob; tamanho_bytes: number; medida_id?: string; exercicio_id?: string
 }
 export interface Configuracao extends Registro {
+  garrafa_atualizada_em?: string
+  meta_agua_atualizada_em?: string
   chave: 'principal'; tema: 'escuro' | 'claro'; unidade: 'kg'; altura_cm?: number; meta_peso?: number
   meta_passos_util: number; meta_passos_fds_feriado: number
   meta_calorias_gastas_util: number; meta_calorias_gastas_fds_feriado: number
@@ -87,8 +91,9 @@ export interface Configuracao extends Registro {
   biblioteca_inicializada?: boolean
   alimentos_comuns_ocultos?: string[]
   data_nascimento?: string
+  nivel_atividade_energia_definido?: boolean
   sexo_calculo_energia?: 'masculino' | 'feminino'
-  nivel_atividade_energia?: 'leve' | 'moderada' | 'intensa'
+  nivel_atividade_energia?: 'sedentaria' | 'leve' | 'moderada' | 'intensa'
 }
 export interface Tabelas {
   exercicios: Exercicio; fichas: Ficha; ficha_exercicios: FichaExercicio

@@ -106,8 +106,8 @@ async function baixarTabela(usuario:string,nome:NomeSync,transporte:Transporte){
   }
   return linhas
 }
-async function conferirDatas(usuario:string,nome:NomeSync,transporte:Transporte){
-  const remotos=await baixarTabela(usuario,nome,transporte)
+async function conferirDatas(usuario:string,nome:NomeSync,transporte:Transporte,leitura?:Remoto[]){
+  const remotos=leitura??await baixarTabela(usuario,nome,transporte)
   const locais=await banco.table(nome).toArray() as LinhaBackup[]
   const porId=new Map(remotos.map(r=>[r.id,r]))
   const localPorId=new Map(locais.map(r=>[r.id,r]))
@@ -184,7 +184,37 @@ async function receber(usuario:string,nome:NomeSync,linhas:Remoto[]){
       let r:LinhaBackup={...remoto.dados,criado_em:new Date(remoto.criado_em).toISOString(),atualizado_em:new Date(remoto.atualizado_em).toISOString(),apagado_em:remoto.apagado_em?new Date(remoto.apagado_em).toISOString():null}
       if(nome==='configuracoes'){
         local=await t.where('chave').equals('principal').first()
-        r={...r,id:local?.id??novoUuid(),sync_automatico:local?.sync_automatico??false,ultimo_backup:local?.ultimo_backup,ultima_sincronizacao:local?.ultima_sincronizacao}
+        if(local){
+          // Ausência em um aparelho antigo/novo não é uma instrução de apagar o perfil.
+          // Valores preenchidos concorrentes continuam seguindo a versão mais recente.
+          const vencedor=Date.parse(r.atualizado_em)>=Date.parse(local.atualizado_em)?r:local
+          const outro=vencedor===r?local:r
+          const combinado={...vencedor}
+          for(const [campo,marca,padrao] of [['garrafa_ml','garrafa_atualizada_em',undefined],['meta_agua_ml','meta_agua_atualizada_em',2000]] as const){
+            const escolha=(registro:LinhaBackup)=>{
+              const tempo=registro[marca]
+              if(typeof tempo==='string'&&Number.isFinite(Date.parse(tempo)))return Date.parse(tempo)
+              // Compatibilidade: o padrão antigo não prova uma escolha do usuário.
+              return registro[campo]!==undefined&&registro[campo]!==padrao?Date.parse(registro.atualizado_em):undefined
+            }
+            const tempoLocal=escolha(local),tempoRemoto=escolha(r)
+            const origem=tempoLocal!==undefined&&(tempoRemoto===undefined||tempoLocal>tempoRemoto)?local:tempoRemoto!==undefined?r:undefined
+            if(origem){
+              combinado[campo]=origem[campo]
+              combinado[marca]=new Date(escolha(origem)!).toISOString()
+            }
+          }
+          for(const campo of ['data_nascimento','sexo_calculo_energia','altura_cm']){
+            if((combinado[campo]===undefined||combinado[campo]==='')&&outro[campo]!==undefined)combinado[campo]=outro[campo]
+          }
+          if(combinado.nivel_atividade_energia===undefined&&!combinado.nivel_atividade_energia_definido){
+            if(outro.nivel_atividade_energia!==undefined)combinado.nivel_atividade_energia=outro.nivel_atividade_energia
+            if(outro.nivel_atividade_energia_definido)combinado.nivel_atividade_energia_definido=true
+          }
+          if(assinatura(combinado)!==assinatura(vencedor))combinado.atualizado_em=new Date(Math.max(Date.now(),Date.parse(r.atualizado_em),Date.parse(local.atualizado_em))+1).toISOString()
+          r=combinado
+        }
+        r={...r,user_id:usuario,id:local?.id??novoUuid(),sync_automatico:local?.sync_automatico??false,ultimo_backup:local?.ultimo_backup,ultima_sincronizacao:local?.ultima_sincronizacao}
       }
       if(!local||Date.parse(r.atualizado_em)>=Date.parse(local.atualizado_em)){
         if(['medidas_corporais','atividade_diaria','agua_dia','consumo_diario_meta'].includes(nome)&&!r.apagado_em){
@@ -206,9 +236,11 @@ export async function executarSync(usuario:string,transporte:Transporte){
   await prepararFilaInterna(usuario)
   for(const nome of nomesSync){
     // Eliminação remota sempre vence, antes de enviar uma edição offline antiga.
-    const eliminados=(await baixarTabela(usuario,nome,transporte)).filter(r=>eliminado(r.dados))
+    const leitura=await baixarTabela(usuario,nome,transporte)
+    const eliminados=leitura.filter(r=>eliminado(r.dados))
     if(eliminados.length){await receber(usuario,nome,eliminados);await prepararFilaInterna(usuario)}
-    if(tabelasPorData.includes(nome)&&await conferirDatas(usuario,nome,transporte))continue
+    if(nome==='configuracoes'&&leitura.length&&!eliminados.length){await receber(usuario,nome,leitura);await prepararFilaInterna(usuario)}
+    if(tabelasPorData.includes(nome)&&await conferirDatas(usuario,nome,transporte,leitura))continue
     const fila=await pendencias.where('usuario').equals(usuario).filter(p=>p.tabela===nome).toArray()
     // Exclusões liberam a data antes da gravação do registro escolhido.
     fila.sort((a,b)=>Number(!!b.registro.apagado_em)-Number(!!a.registro.apagado_em))
@@ -236,6 +268,9 @@ export async function executarSync(usuario:string,transporte:Transporte){
       for(const p of lote){await recibos.put({chave:p.chave,assinatura:p.assinatura});await pendencias.delete(p.chave)}
     }
     if(colisao)continue
+    // Sem envio, a leitura validada já representa a consulta deste ciclo.
+    // Após envio, consultar novamente para receber a versão confirmada pelo servidor.
+    if(!fila.length){await receber(usuario,nome,leitura);continue}
     let depois=''
     for(;;){
       const lote=await transporte.baixar(nome,depois)

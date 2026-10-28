@@ -297,6 +297,17 @@ button,input,textarea,select { font: inherit; }
 .app .comida-calculada strong { font-size: 24px; }
 .app .comida-calculada span { font-size: 12px; color: var(--visual-suave); }
 .app .comida-resumo-topo strong > small { display: inline; font-weight: 400; }
+.app .refeicao-lista { display: grid; gap: 8px; min-width: 0; }
+.app .refeicao-linha { display: grid; grid-template-columns: minmax(0,1fr) 48px; align-items: center; gap: 8px; border-bottom: 1px solid var(--visual-borda); padding-block: 8px; }
+.app .refeicao-quantidade { display: grid; gap: 4px; min-height: 56px; min-width: 0; text-align: left; background: transparent; color: var(--visual-texto); padding: 8px 0; }
+.app .refeicao-quantidade strong { font-size: 14px; overflow-wrap: anywhere; }
+.app .refeicao-quantidade span { font-size: 12px; color: var(--visual-suave); }
+.app .refeicao-linha > .excluir-historico { padding: 0; width: 48px; min-width: 0; }
+.app .refeicao-total { display: grid; gap: 4px; position: sticky; bottom: 0; padding: 12px 0; background: var(--visual-painel); border-top: 1px solid var(--visual-borda); }
+.app .refeicao-total span { font-size: 12px; color: var(--visual-suave); }
+.app .refeicao-total strong { font-size: 24px; }
+.app .comida-refeicao > .comida-acoes-alimento { margin-top: 16px; }
+.app .comida-refeicao > summary > span { font-size: 12px; color: var(--visual-suave); white-space: nowrap; }
 .app .comida-biblioteca { display: grid; grid-template-columns: minmax(0,1fr); gap: 16px; }
 .app .comida-biblioteca > .abas-catalogo { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); }
 .app .comida-biblioteca .comida-item { display: grid; grid-template-columns: minmax(0,1fr); gap: 12px; margin: 0; }
@@ -324,7 +335,7 @@ button,input,textarea,select { font: inherit; }
 .app .energia-resumo > header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .app .energia-resumo h3 { margin: 0; }
 .app .energia-resumo > header > h3 { flex: 1; min-width: 0; font-size: 14px; font-weight: 650; line-height: 1.5; }
-.app .energia-resumo > header > .link-atividade { width: auto; flex: 0 0 auto; margin: 0; align-self: center; white-space: nowrap; }
+.app .energia-resumo > .energia-configurar { width: 100%; margin-block: 12px 16px; }
 .app .energia-valores { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; margin: 16px 0; }
 .app .energia-valores > div { min-width: 0; display: grid; gap: 6px; }
 .app .energia-valores span,.app .energia-peso > span { font-size: 12px; color: var(--visual-suave); }

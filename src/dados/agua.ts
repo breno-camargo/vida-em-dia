@@ -7,7 +7,8 @@ export async function configurarAgua(campo: 'garrafa_ml' | 'meta_agua_ml', ml: n
   await banco.transaction('rw', tabela('configuracoes'), async () => {
     const c = await tabela('configuracoes').where('chave').equals('principal').first()
     if (!c) throw new Error('Reabra o app para carregar seu perfil.')
-    await tabela('configuracoes').update(c.id, { ...(campo === 'garrafa_ml' ? { garrafa_ml: ml } : { meta_agua_ml: ml }), atualizado_em: new Date().toISOString() })
+    const agora = new Date().toISOString()
+    await tabela('configuracoes').update(c.id, { ...(campo === 'garrafa_ml' ? { garrafa_ml: ml, garrafa_atualizada_em: agora } : { meta_agua_ml: ml, meta_agua_atualizada_em: agora }), atualizado_em: agora })
   })
 }
 export async function registrarGarrafa(data: string, desfazer = false) {

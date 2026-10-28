@@ -1,3 +1,9 @@
+# Retomada - 28/10/2026
+
+Estado atual e validacao: [Entrega de alimentacao e configuracoes](ENTREGA-ALIMENTACAO-CONFIGURACOES.md).
+
+As notas abaixo sao historicas.
+
 > Registro da entrega de alimentacao e de sua retomada. Estado atual: publicada pelo PR #3 em 26/10/2026; README reconciliado pelo PR #4. Projeto principal: outputs/vida-em-dia. Proxima atividade: [testes de confiabilidade e carga](TESTES-CONFIABILIDADE.md). Referencias abaixo a trabalho local ou sem push descrevem o momento original e nao o estado atual.
 
 # Retomar alimentacao - 26/10/2026
