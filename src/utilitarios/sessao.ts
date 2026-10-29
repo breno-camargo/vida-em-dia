@@ -10,5 +10,6 @@ export function duracaoSessao(treino: Pick<Treino, 'inicio' | 'fim' | 'duracao_m
   const total = Number.isFinite(segundos) && segundos >= 0 ? segundos : treino.duracao_minutos !== undefined && treino.duracao_minutos > 0 ? treino.duracao_minutos * 60 : NaN
   if (!Number.isFinite(total) || total < 0) return 'Duração não informada'
   const inteiro = Math.floor(total)
-  return `${String(Math.floor(inteiro / 60)).padStart(2, '0')}:${String(inteiro % 60).padStart(2, '0')}`
+  const minutosSegundos = `${String(Math.floor(inteiro / 60) % 60).padStart(2, '0')}:${String(inteiro % 60).padStart(2, '0')}`
+  return inteiro >= 3600 ? `${Math.floor(inteiro / 3600)}:${minutosSegundos}` : minutosSegundos
 }
