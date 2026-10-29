@@ -77,6 +77,15 @@ test('sessão curta mantém tempo como destaque e repetições como apoio', asyn
   expect(escrever.mock.calls.some(c => c[0] === '00:20')).toBe(true)
 })
 
+test('adesivo e imagem exportada mostram horas em treinos longos', async () => {
+  const longo = { ...treino, fim: '2026-10-16T12:07:09Z' }
+  expect(metricasAdesivo(longo, dados).find(m => m.id === 'duracao')?.valor).toBe('2:07:09')
+  expect(cenarioCard(longo, dados).duracaoLabel).toBe('2:07:09')
+  const { escrever } = prepararCanvas()
+  await criarCardTreino(longo, dados, undefined, { modelo: 'adesivo' })
+  expect(escrever.mock.calls.some(c => c[0] === '2:07:09')).toBe(true)
+})
+
 test('cardio usa somente métricas da sessão e identifica a origem das calorias', () => {
   const cardio = { ...treino, tipo: 'esteira' as const, duracao_minutos: 44 + 47 / 60, distancia_km: 6.07, passos: 6728, calorias_informadas: 609 }
   const metricas = metricasAdesivo(treino, { ...dados, cardio })
