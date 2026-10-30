@@ -6,6 +6,8 @@ import { CardioNoTreino } from '../componentes/CardioNoTreino'
 import { EditorCardio } from '../componentes/EditorCardio'
 import { novoCardio } from '../dados/cardio'
 import { ListaExercicios } from '../componentes/ListaExercicios'
+import { AguaHoje } from '../componentes/AguaHoje'
+import { ConfigurarAgua } from '../componentes/ConfigurarAgua'
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { banco, tabela } from '../dados/banco'
@@ -41,6 +43,7 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
   const [nomeTreino, definirNomeTreino] = useState('')
   const adicaoExercicio = useRef<HTMLDetailsElement>(null)
   const voltarBusca = useRef(false)
+  const acompanharExercicio = useRef<{ id: string; ordem: number } | null>(null)
   const cards = useRef(new Map<string, HTMLDetailsElement>())
   const avisosRecordes = useRef(new Set<string>())
   const [avisoRecorde, definirAvisoRecorde] = useState<Record<string, { nome: string; marcas: string[] }>>({})
@@ -61,6 +64,7 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
   const [ajuda, definirAjuda] = useState<Exercicio | null>(null)
   const [edicao, definirEdicao] = useState<Exercicio | null>(null)
   const [busca, definirBusca] = useState('')
+  const [aguaAberta, definirAguaAberta] = useState(false)
   const [erro, definirErro] = useState('')
   useEffect(() => { let ativo = true; void completarCardioDaFicha(id).catch(() => { if (ativo) definirErro('Não foi possível carregar o cardio da ficha.') }); return () => { ativo = false } }, [id])
   const [ocupado, definirOcupado] = useState(false)
@@ -70,6 +74,19 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
     const campo = adicaoExercicio.current.querySelector('summary')
     const area = adicaoExercicio.current.closest('main#conteudo')
     if (campo && area) area.scrollTo({ top: area.scrollTop + campo.getBoundingClientRect().top - area.getBoundingClientRect().top - 12, behavior: 'instant' })
+  }, [itens, ocupado])
+  useLayoutEffect(() => {
+    const movido = acompanharExercicio.current
+    if (!movido || ocupado || !itens?.some(item => item.id === movido.id && item.ordem === movido.ordem)) return
+    acompanharExercicio.current = null
+    const card = cards.current.get(movido.id)
+    const area = card?.closest<HTMLElement>('main#conteudo')
+    if (!card || !area) return
+    const quadro = requestAnimationFrame(() => {
+      if (!card.isConnected) return
+      area.scrollTo({ top: area.scrollTop + card.getBoundingClientRect().top - area.getBoundingClientRect().top - 12, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })
+    })
+    return () => cancelAnimationFrame(quadro)
   }, [itens, ocupado])
   const [removido, definirRemovido] = useEstadoTemporario<{ desfazer: () => Promise<void> } | null>(null)
   const [nomeFicha, definirNomeFicha] = useState('')
@@ -174,6 +191,7 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
             await tabela('treino_exercicios').update(item.id, { ordem: outro.ordem, atualizado_em: new Date().toISOString() })
             await tabela('treino_exercicios').update(outro.id, { ordem: item.ordem, atualizado_em: new Date().toISOString() })
           })
+          acompanharExercicio.current = { id: item.id, ordem: outro.ordem }
         })}>Subir exercício</button><button disabled={ocupado} onClick={() => void executar(async () => {
           const agora = new Date().toISOString()
           await banco.transaction('rw', tabela('treino_exercicios'), tabela('series_treino'), tabela('treinos'), async () => {
@@ -217,7 +235,8 @@ export function ModoTreino({ id, online, fechar, abrirResumo = false, concluido 
       await tabela('treinos').update(id, { ficha_id: nova.id, atualizado_em: new Date().toISOString() })
       })
     })}><Check size={16} aria-hidden="true" />Salvar ficha</button></div></details>}
-    <div ref={acoesTreino} className="finalizar-acoes"><button className="botao-principal" onClick={mostrarResumo}>Ver resumo e finalizar</button><button className="botao-secundario continuar-depois" onClick={fechar}><ArrowLeft size={18} aria-hidden="true" /><span>Continuar depois</span></button></div>
+    {aguaAberta && <Painel titulo="Água no treino" fechar={() => definirAguaAberta(false)}><ConfigurarAgua /></Painel>}
+    <div ref={acoesTreino} className="finalizar-acoes"><AguaHoje compacto configurar={() => definirAguaAberta(true)} /><button className="botao-principal" onClick={mostrarResumo}>Ver resumo e finalizar</button><button className="botao-secundario continuar-depois" onClick={fechar}><ArrowLeft size={18} aria-hidden="true" /><span>Continuar depois</span></button></div>
     <button type="button" className="cancelar-sessao" disabled={ocupado} onClick={async () => { if (!await confirmar('Cancelar este treino? Ele, suas séries e o cardio vinculado ficarão fora do histórico e das estatísticas.', "Cancelar treino")) return; void executar(async () => { await cancelarTreino(id); tela.parar(); fechar() }) }}>Cancelar treino</button>
     {perguntarFinalizacao && <Painel centralizado titulo="Todas as séries concluídas!" fechar={() => definirPerguntarFinalizacao(false)}><p className="subtitulo-seletor">Você concluiu todos os exercícios. Quer finalizar o treino?</p><button type="button" className="botao-principal largura-total" onClick={() => { definirPerguntarFinalizacao(false); mostrarResumo() }}>Ver resumo e finalizar</button><button type="button" className="botao-secundario" onClick={() => definirPerguntarFinalizacao(false)}>Continuar treino</button></Painel>}
     {ajuda && <AjudaExercicio exercicio={ajuda} online={online} fechar={() => definirAjuda(null)} editar={() => { definirEdicao(ajuda); definirAjuda(null) }} />}
