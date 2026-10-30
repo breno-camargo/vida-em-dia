@@ -250,6 +250,15 @@ button,input,textarea,select { font: inherit; }
 .app .grade-equilibrio > .agua-hoje > .botao-secundario { grid-column: 2; grid-row: 2 / 4; width: auto; padding-inline: 14px; }
 .app .grade-equilibrio > .agua-hoje > .desfazer-agua { grid-column: 2; grid-row: 4; width: auto; }
 .app .agua-hoje progress { width: 100%; height: 5px; accent-color: var(--visual-acento); }
+.app .agua-no-treino { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0,1fr) auto 44px; gap: 8px; align-items: center; }
+.app .agua-treino-resumo { display: flex; align-items: center; gap: 8px; min-width: 0; color: var(--visual-texto); }
+.app .agua-treino-resumo > svg { flex-shrink: 0; color: var(--visual-acento); }
+.app .agua-treino-resumo > span { display: grid; gap: 3px; }
+.app .agua-treino-resumo strong { font-size: 12px; }
+.app .agua-treino-resumo small { font-size: 10px; color: var(--visual-suave); font-variant-numeric: tabular-nums; }
+.app .agua-no-treino > .botao-secundario { font-size: 12px; padding-inline: 10px; }
+.app .agua-no-treino > .agua-treino-desfazer { width: 44px; min-width: 44px; padding: 0; }
+.app .agua-no-treino > .erro { grid-column: 1 / -1; margin: 6px 0 0; }
 .app .agua-hoje > button { width: 100%; min-height: 48px; flex-shrink: 0; }
 
 .app .conteudo-config > .configurar-agua { display: grid; gap: 12px; }
